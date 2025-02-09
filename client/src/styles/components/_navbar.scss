@@ -1,0 +1,50 @@
+@use '../variables' as *;
+
+.nav-bar {
+    width: 50%;
+    height: 50px;
+    border-radius: 50px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $navbar-bg;
+    color: $nav-font-color;
+    padding: 10px 15px;
+    margin: 0 auto;
+
+    form {
+        width: 100%;
+        display: flex;
+        justify-content: left;
+        gap: 22px;
+    }
+
+    button {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background-color: transparent;
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    input {
+        width: 100%;
+        border: none;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    #search {
+        font-family: $font-primary;
+        font-weight: $font-w-light;
+        font-size: $navbar-font-s;
+    }
+
+}

@@ -1,0 +1,138 @@
+@use '../variables' as *;
+
+#index-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+}
+
+#index-main {
+    width: 90%;
+    max-width: 2000px;
+    height: $main-height;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 20px;
+    margin: 20px auto;
+
+    #index-main-container{
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        padding: 20px;
+
+        h1 {
+            text-align: center;
+            font-family: $font-primary;
+            font-weight: $index-main-font-w-extrabold;
+            font-size: $index-main-font-s-title;
+            color: white;
+        }
+
+        a {
+            width: 200px;
+            max-width: 90%;
+            height: auto;
+            background-color: $index-main-button-bg;
+            color: $index-main-button-font-color;
+            font-weight: $font-w-light;
+            font-size: $index-main-font-s-text;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 20px;
+            padding: 20px;
+
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        a:hover {
+            background-color: $index-main-button-font-color;
+            color: $index-main-button-bg;
+            transform: scale(1.1);
+        }
+    }
+}
+
+#index-main-bg {
+    width: 100%;
+    height: 100%;
+    filter: brightness(0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    transition: background-image 0.3s ease-in-out;
+}
+
+#index-main-nombre-museo {
+    font-family: $font-primary;
+    font-weight: $font-w-extralight;
+    font-size: 16px;
+    color: white;
+    z-index: 1;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+
+    transition: content 0.2s ease-in-out;
+}
+
+// Responsive
+@media (max-width: 1072px) {
+
+    #nav-menu-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100px;
+    }
+
+    #menu-button {
+        display: block;
+    }
+
+    #nav-logo{
+        font-family: var(--font-primary);
+        font-weight: var(--nav-ul-font-w-semibold);
+        color: #fff;
+
+        /* Alinear a la izquierda*/
+        position: absolute;
+
+    }
+
+    .nav-a {
+        display: none;
+
+        a {
+            display: none;
+        }
+    }
+
+    .footer-info-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    #footer-logo {
+        display: none;
+    }
+}

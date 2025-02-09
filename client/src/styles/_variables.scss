@@ -1,0 +1,81 @@
+// IMPORTAR FUENTES
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+// VARIABLES
+// Fuentes
+$font-primary: 'Raleway', sans-serif;
+$font-secondary: 'Playfair', serif;
+$font-tertiary: 'Roboto', sans-serif;
+
+/* ! Colores */
+// Colores del fondo de la página
+$bg-grad-color-1: #777062;
+$bg-grad-color-2: #DDD0B6;
+$bg-grad-color-3: #FFF4E0;
+
+// Colores de texto
+$color-1: #B9AFA5;
+$color-a: #0033e1; // Color de los links
+$color-a-2: #080058; // Color de los links 2
+
+// Colores de la parte de la reseña
+$color-resena-bg: #DECBA7;
+$color-resena-button: #AC8863;
+
+// Colores de las cartas de museo
+$museo-card-bg: #D9D9D9;
+$museo-card-h1-color: #6f6f6f;
+$museo-card-text-color: #000;
+
+// Color del checkbox-radiobutton de los filtros
+$filter-checkbox-bg: #d9d9d9;
+
+/* NAV */
+$nav-font-color: #000;
+$nav-login-bg-color: #000;
+$nav-login-font-color: #fff;
+$nav-ul-font-s: 24px;
+$nav-login-font-s: 24px;
+
+/* NAVBAR */
+$navbar-bg: #fff;
+$navbar-font-color: #000;
+$navbar-font-w-light: 200;
+$navbar-font-s: 18px;
+
+/* INDEX MAIN */
+$index-main-button-bg: #fff;
+$index-main-button-font-color: #000;
+$index-main-button-font-w-light: 200;
+$index-main-font-w-extrabold: 800;
+$index-main-font-s-title: 64px;
+$index-main-font-s-text: 24px;
+
+/* FOOTER */
+$footer-bg: #000;
+$footer-font-color: #fff;
+$footer-font-w-thin: 100;
+$footer-font-w-semibold: 600;
+$footer-font-w-extralight: 200;
+$footer-font-s-title: 25px;
+$footer-font-s-text: 18px;
+$footer-font-s-cr: 27px;
+
+/* WEIGHTS */
+$font-w-thin: 100;
+$font-w-extralight: 200;
+$font-w-light: 300;
+$font-w-regular: 400;
+$font-w-medium: 500;
+$font-w-semibold: 600;
+$font-w-bold: 700;
+$font-w-extrabold: 800;
+$font-w-black: 900;
+
+// MAXWIDTHS para responsive
+$max-width-navbarmenu: 1072px; // Para el navbarmenu
+
+// Tamaño de Main
+$main-height: 70vh;

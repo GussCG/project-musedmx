@@ -1,0 +1,147 @@
+@use "variables" as *;
+
+/* Estilos Globales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    font-family: $font-primary;
+    background: linear-gradient(0deg, $bg-grad-color-1 0%, $bg-grad-color-2 35%, $bg-grad-color-3 100%);
+    overflow-x: hidden;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.eye {
+    width: 25px;
+    height: 25px;
+    opacity: 0.5;
+    margin-left: -30px;
+    margin-top: 10px;
+    cursor: pointer;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* El mismo scroll personalizado para todas las paginas */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: $bg-grad-color-2;
+    border-radius: 10px;
+}
+
+// Cuando el scroll no se esta usando se oculta el scroll
+::-webkit-scrollbar-thumb:window-inactive {
+    background-color: transparent;
+}
+
+/* Para el rate de estrellas */
+.stars-rate-container {
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+
+    margin-top: 20px;
+}
+
+.stars-rate {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    cursor: pointer;
+
+    input {
+        display: none;
+    }
+
+    input:checked ~ span {
+        background-image: url('../assets/icons/estrella-icon.png');
+    }
+
+    input ~ span:hover {
+        transform: scale(1.1);
+    }
+}
+
+.stars-checkbox-span {
+    /* position: absolute; */
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    transition: background-image 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.user-foto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+// Swiper
+.swiper-container {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+
+    .museo-card, .museo-card-img{
+        box-shadow: none;
+    }
+
+    .museo-card-img {
+        box-shadow: none;
+    }
+}
+
+.swiper-pagination span {
+    background: black;
+    height: 10px;
+    width: 10px;
+}
+
+.swiper-button-next::after, .swiper-button-prev::after {
+    color: #000;
+}
+
+.swiper-slide-button::after {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: $font-w-bold;
+}
+
+.swiper-slide-button:hover {
+    background-color: white;
+    color: black;
+}
+
+.ss {
+    box-shadow: none;
+}

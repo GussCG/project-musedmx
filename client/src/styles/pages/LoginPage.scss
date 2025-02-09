@@ -1,0 +1,144 @@
+@use '../variables' as *;
+
+#login-main {
+    width: 80%;
+    height: 100%;
+    min-height: $main-height;
+    background-color: $bg-grad-color-3;
+    margin: 10px auto;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
+
+    display: grid;
+    grid-template-columns: auto 0.05fr auto;
+    padding: 30px;
+
+    a {
+        font-family: $font-primary;
+        font-size: 16px;
+        font-weight: $font-w-semibold;
+        color: $color-a;
+        line-height: 23px;
+        text-decoration: none;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    a:hover {
+        opacity: 0.5;
+    }
+}
+
+#login-form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 62px;
+    }
+
+    form {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+    }
+}
+
+.login-field {
+    position: relative;
+    width: 100%;
+
+    input {
+        border: none;
+        border-bottom: 1px solid black;
+        background-color: unset;
+        outline: none;
+        width: 100%;
+        font-family: $font-primary;
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    label {
+        position: absolute;
+        left: 15px;
+        top: 10px;
+        font-family: $font-primary;
+        font-size: 16px;
+        font-weight: $font-w-semibold;
+        transform-origin: 0 0;
+        transition: transform 0.3s ease;
+        opacity: 0.5;
+    }
+
+    input:focus + label, input:not(:placeholder-shown) + label {
+        transform: translateY(-25px) scale(0.8);
+    }
+
+    input::placeholder {
+        color: transparent;
+    }
+}
+
+#login-button {
+    width: 158px;
+    height: 50px;
+    background-color: $color-1;
+    color: white;
+    font-family: $font-primary;
+    font-size: 24px;
+    font-weight: $font-w-semibold;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: opacity 0.5s ease-in-out;
+    margin-bottom: 36px;
+}
+
+#login-button:hover {
+    opacity: 0.5;
+}
+
+#login-linea {
+    width: 0;
+    height: 80%;
+    margin: auto auto;
+    border-left: 7px solid black;
+    opacity: 0.2;
+    border-radius: 100px;
+}
+
+#login-imagen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    img {
+        width: fit-content;
+        height: 700px;
+    }
+}
+
+/* Responsive */
+/* Quitamos la imagen y dejamos unicamente el formulario */
+@media screen and (max-width: 1153px) {
+    #login-main {
+        width: 90%;
+        grid-template-columns: 1fr;
+    }
+
+    #login-linea, #login-imagen {
+        display: none;
+    }
+}

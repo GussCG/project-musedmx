@@ -1,0 +1,13 @@
+// Importar variables y globales
+@use 'variables' as *;
+@use 'global' as *;
+
+// Componentes
+@use 'components/navbarmenu' as *;
+@use 'components/menucontainer' as *;
+@use 'components/footer' as *;
+@use 'components/navbar' as *;
+@use 'components/registrosfields' as *;
+@use 'components/menufiltro' as *;
+@use 'components/museocard' as *;
+@use 'components/mapmuseodetail' as *;
