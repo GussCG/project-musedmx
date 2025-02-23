@@ -1,26 +1,21 @@
-@use '../variables' as *;
+@use "../variables" as *;
 
 .menu-container {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 
-    position: fixed;
-    z-index: 97;
-    background-color: black;
+  position: fixed;
+  z-index: 97;
+  background-color: black;
 
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    top: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  top: 0;
 
-    clip-path: circle(0% at 95.3% 8.5%);
-    transition: clip-path 0.3s ease-in-out;
-}
+  clip-path: circle(0% at 95.3% 8.5%);
+  transition: clip-path 0.3s ease-in-out;
 
-.menu-container.show {
-    clip-path: circle(140% at 95.3% 8.5%);
-}
-
-.menu-header {
+  .menu-header {
     width: 100%;
     height: 200px;
 
@@ -30,103 +25,30 @@
     justify-content: center;
 
     h1 {
-        font-size: 36px;
-        font-weight: $font-w-bold;
-        color: white;
+      font-size: 36px;
+      font-weight: $font-w-bold;
+      color: white;
 
-        text-align: center;
+      text-align: center;
     }
-}
 
-.menu-header-logo {
-    width: 200px;
-    margin: 0 auto;
+    .menu-header-logo {
+      width: 200px;
+      margin: 0 auto;
 
-    img {
+      img {
         width: 100%;
 
         transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
-    }
+      }
 
-    img:hover {
+      img:hover {
         transform: scale(1.1);
+      }
     }
-}
+  }
 
-#menu-button {
-    display: none;
-    z-index: 98;
-    width: 60px;
-    height: 60px;
-    border: none;   
-    position: fixed;
-    right: 20px;
-
-    background-color: transparent;
-    transition: transform 0.3s ease-in-out;
-
-    span {
-        color: white;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;    
-        background-color: black;
-        border-radius: 50%;
-        border: 4px solid white;    
-        transition: background-image 0.3s ease-in-out, transform 0.3s ease-in-out;
-
-        img {
-            width: 65%;
-        }
-    }
-}
-
-#menu-button:hover{
-    transform: scale(1.1);
-}
-
-#menu-button.close{
-    span {
-        transform: rotate(180deg);
-        // background-image: url("../../assets/icons/salir-icon.png");
-    }
-}
-
-.menu-header-close-button {
-    width: 60px;
-    height: 60px;
-    border: none;
-    margin: 0 auto;
-
-    background-color: transparent;
-
-    span {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background-image: url('../../assets/icons/salir-w-icon.png');
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-
-        background-color: black;
-        border-radius: 50%;
-
-        transition: background-color 0.3s ease-in-out, background-image 0.3s ease-in-out;
-    }
-
-    span:hover {
-        background-color: white;
-        background-image: url('../../assets/icons/salir-icon.png');
-    }
-}
-
-.menu-body {
+  .menu-body {
     width: 100%;
     height: 100%;
 
@@ -136,55 +58,169 @@
     justify-content: center;
 
     ul {
-        width: 100%;
-        height: auto;
+      width: 100%;
+      height: auto;
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 50px;
 
-        li {
-            a {
-                font-size: 24px;
-                font-weight: $font-w-thin;
-                color: white;
-                text-decoration: none;
+      li {
+        a {
+          font-size: 24px;
+          font-weight: $font-w-thin;
+          color: white;
+          text-decoration: none;
 
-                transition: font-weight 0.3s ease-in-out;
-            }
-
-            a:hover {
-                font-weight: $font-w-semibold;
-            }
+          transition: font-weight 0.3s ease-in-out;
         }
-    }
-}
 
-.menu-footer {
+        a:hover {
+          font-weight: $font-w-semibold;
+        }
+      }
+    }
+  }
+
+  .menu-footer {
     width: 100%;
     height: 200px;
-    
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 20px;
+
+    a,
+    button {
+      width: 200px;
+      height: 60px;
+      background-color: white;
+      border: none;
+      border-radius: 50px;
+      font-family: $font-primary;
+      font-size: 24px;
+      font-weight: $font-w-semibold;
+      color: black;
+      text-decoration: none;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out,
+        border 0.3s ease-in-out;
+    }
+
+    a:hover,
+    button:hover {
+      background-color: black;
+      color: white;
+      border: 1px solid white;
+    }
+  }
+}
+
+.menu-container.show {
+  clip-path: circle(140% at 95.3% 8.5%);
+}
+
+#menu-button {
+  display: none;
+  z-index: 98;
+  width: 60px;
+  height: 60px;
+  border: none;
+  position: fixed;
+  right: 20px;
+
+  background-color: transparent;
+  transition: transform 0.3s ease-in-out;
+
+  span {
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    border-radius: 50%;
+    border: 4px solid white;
+    transition: background-image 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+    img {
+      width: 65%;
+    }
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+#menu-button.close {
+  span {
+    transform: rotate(180deg);
+    // background-image: url("../../assets/icons/salir-icon.png");
+  }
+}
+
+.menu-header-close-button {
+  width: 60px;
+  height: 60px;
+  border: none;
+  margin: 0 auto;
+
+  background-color: transparent;
+
+  span {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 
-    a {
-        background-color: white;
-        padding: 20px;
-        border-radius: 50px;
-        font-size: 24px;
-        font-weight: $font-w-semibold;
-        color: black;
-        text-decoration: none;
+    background-image: url("../../assets/icons/salir-w-icon.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
 
-        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border 0.3s ease-in-out;
-    }
+    background-color: black;
+    border-radius: 50%;
 
-    a:hover {
-        background-color: black;
-        color: white;
-        border: 1px solid white;
-    }
+    transition: background-color 0.3s ease-in-out,
+      background-image 0.3s ease-in-out;
+  }
+
+  span:hover {
+    background-color: white;
+    background-image: url("../../assets/icons/salir-icon.png");
+  }
+}
+
+.nav-user-img-container {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+
+  border: 2px solid black;
+  background-color: white;
+
+  transition: transform 0.3s ease-in-out, border 0.3s ease-in-out;
+
+  #nav-user-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    border: 2px solid white;
+  }
 }

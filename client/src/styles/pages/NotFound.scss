@@ -1,61 +1,50 @@
-@use '../variables' as *;
+@use "../variables" as *;
 
 #notfound-main {
-    width: 80%;
-    min-height: $main-height;
-    height: 100%;
-    background-color: $bg-grad-color-3;
-    margin: 10px auto;
-    border: none;
-    border-radius: 25px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-
-    position: relative;
-}
-
-#notfound-text {
+  #notfound-text {
     width: 90%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
 
-#notfound-text h1 {
-    font-size: 6rem;
-}
+    h1 {
+      font-size: 6rem;
+    }
 
-#notfound-text h2 {
-    font-size: 2rem;
-    margin-bottom: 100px;
-    text-align: center;
-}
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 100px;
+      text-align: center;
+    }
 
-#notfound-text p {
-    font-size: 1rem;
-    text-align: center;
-    position: absolute;
-    bottom: 60px;
-}
+    p {
+      font-size: 1rem;
+      text-align: center;
+      position: absolute;
+      bottom: 60px;
+    }
 
-#notfound-text a {
-    font-size: 1rem;
-    text-align: center;
-    position: absolute;
-    bottom: 30px;
-    color: $color-a;
+    a {
+      font-size: 1rem;
+      text-align: center;
+      position: absolute;
+      bottom: 30px;
+      color: $color-a;
 
-    text-decoration: none;
+      text-decoration: none;
 
-    transition: opacity 0.3s ease-in-out;
-}
+      transition: opacity 0.3s ease-in-out;
 
-#notfound-text a:hover {
-    opacity: 0.7;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
 }

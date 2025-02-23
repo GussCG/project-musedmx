@@ -1,13 +1,19 @@
 // Importar variables y globales
-@use 'variables' as *;
-@use 'global' as *;
+@use "variables" as *;
+@use "global" as *;
 
 // Componentes
-@use 'components/navbarmenu' as *;
-@use 'components/menucontainer' as *;
-@use 'components/footer' as *;
-@use 'components/navbar' as *;
-@use 'components/registrosfields' as *;
-@use 'components/menufiltro' as *;
-@use 'components/museocard' as *;
-@use 'components/mapmuseodetail' as *;
+@use "components/navbarmenu" as *;
+@use "components/menucontainer" as *;
+@use "components/footer" as *;
+@use "components/navbar" as *;
+@use "components/registrosfields" as *;
+@use "components/menufiltro" as *;
+@use "components/museocard" as *;
+@use "components/mapmuseodetail" as *;
+@use "components/museoslider" as *;
+@use "components/tabla" as *;
+@use "components/menuusuario" as *;
+@use "components/customadvancedmarker" as *;
+@use "components/buttons" as *;
+@use "components/popuploggin" as *;

@@ -1,82 +1,134 @@
-@use '../variables' as *;
+@use "../variables" as *;
 
 .museo-card {
-    width: 100%;
-    max-width: 30rem;
-    height: 360px;
-    background-color: $museo-card-bg;
-    border-radius: 20px;
-    margin: 0 auto;
+  position: relative;
+  width: 100%;
+  max-width: 30rem;
+  height: 360px;
+  background-color: $museo-card-bg;
+  border-radius: 20px;
+  margin: 0 auto;
 
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    /* border: 4px solid rgba(0, 0, 0, 0.21); */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.225);
-}
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  /* border: 4px solid rgba(0, 0, 0, 0.21); */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.225);
 
-.museo-card-img-container {
+  .museo-card-img-container {
     position: relative;
     width: 100%;
     height: 230px;
     margin: 0 auto;
-}
 
-.museo-card-fav-button-container {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    position: absolute;
-    margin: 10px 14px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .museo-card-fav-button-container {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      position: absolute;
+      margin: 10px 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-    input {
+      .museo-card-fav-button-span {
+        /* position: absolute; */
+        display: inline-block;
+        position: relative;
+        width: 30px;
+        height: 30px;
+        background: url("../assets/icons/corazon-gris-icon.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+        transition: transform 0.3s ease-in-out,
+          background-image 0.3s ease-in-out;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      input {
         display: none;
-    }
+      }
 
-    input:checked ~ span {
+      input:checked ~ span {
         background-image: url("../assets/icons/corazon-rojo-icon.png");
-    }
+      }
 
-    input ~ span:hover {
+      input ~ span:hover {
         transform: scale(1.2);
+      }
+
+      img {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        filter: drop-shadow(0px 4px 4px rgba(255, 255, 255, 0.7));
+
+        transition: transform 0.3s ease-in-out;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
     }
-}
 
-.museo-card-fav-button-span {
-    /* position: absolute; */
-    display: inline-block;
-    position: relative;
-    width: 30px;
-    height: 30px;
-    background: url("../assets/icons/corazon-gris-icon.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-    transition: transform 0.3s ease-in-out, background-image 0.3s ease-in-out;
+    .museo-card-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      margin: 0 auto;
+      object-fit: cover;
 
-    img {
-        width: 100%;
-        height: 100%;
+      //Inner-shadow para todos los navegadores
+      box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.5);
     }
-}
 
-.museo-card-img {
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    margin: 0 auto;
-    object-fit: cover;
+    .museo-card-info-header-rating {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
 
-    //Inner-shadow para todos los navegadores
-    box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.5);
-}
+      position: absolute;
+      right: 0;
+      top: 0;
 
-.museo-card-info-container {
+      margin: 10px;
+
+      img {
+        z-index: 19;
+        height: 60px;
+
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+      }
+
+      #museo-card-rating {
+        position: absolute;
+        z-index: 20;
+        font-size: 1.5rem;
+        color: white;
+        font-weight: $font-w-bold;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        left: 0;
+        right: 0;
+        top: 1;
+        bottom: 1;
+      }
+    }
+  }
+
+  .museo-card-info-container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -85,116 +137,82 @@
     align-items: center;
 
     padding: 10px;
-}
 
-.museo-card-info-header {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .museo-card-info-header {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-    #museo-card-nombre {
+      #museo-card-nombre {
         font-size: 1.2rem;
         color: $museo-card-h1-color;
         font-weight: $font-w-extrabold;
         text-align: left;
         margin: 0;
         padding-left: 0;
-    
+
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
+      }
 
-    a {
+      a {
         text-decoration: none;
 
         transition: opacity 0.3s ease-in-out;
-    }
+      }
 
-    a:hover {
+      a:hover {
         opacity: 0.7;
+      }
     }
-}
 
-.museo-card-info-header-rating {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
+    .museo-card-info-body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
 
-    position: absolute;
-    right: 0;
-    top: 0;
-
-    margin: 10px;
-
-    img {
-        z-index: 19;
-        height: 60px;
-
-        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-    }
-}
-
-#museo-card-rating {
-    position: absolute;
-    z-index: 20;
-    font-size: 1.5rem;
-    color: white;
-    font-weight: $font-w-bold;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    left: 0;
-    right: 0;
-    top: 1;
-    bottom: 1;
-}
-
-.museo-card-info-body {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-
-    p {
+      p {
         width: 300px;
         font-size: 14px;
         color: $museo-card-h1-color;
         font-weight: $font-w-light;
         text-align: left;
-    
-        white-space: nowrap;
-    }
-}
-
-.museo-card-info-body-horario {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-
-    p {
-        font-size: 1rem;
-        color: $museo-card-h1-color;
-        font-weight: $font-w-regular;
-        text-align: left;
 
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
+      }
 
-.museo-card-info-body-costo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
+      .museo-card-info-body-horario {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
 
-    img {
-        width: 30px;
+        p {
+          font-size: 1rem;
+          color: $museo-card-h1-color;
+          font-weight: $font-w-regular;
+          text-align: left;
+
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .museo-card-info-body-costo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+
+        img {
+          width: 40px;
+        }
+      }
     }
+  }
 }

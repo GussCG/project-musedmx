@@ -1,0 +1,153 @@
+@use "../variables" as *;
+
+#login-main {
+  width: 80%;
+
+  display: grid;
+  grid-template-columns: auto 0.05fr auto;
+  padding: 30px;
+
+  #login-form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 62px;
+    }
+
+    form {
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 50px;
+    }
+
+    a {
+      font-family: $font-primary;
+      font-size: 16px;
+      font-weight: $font-w-semibold;
+      color: $color-a;
+      line-height: 23px;
+      text-decoration: none;
+      transition: opacity 0.3s ease-in-out;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+
+    .login-field {
+      position: relative;
+      width: 100%;
+
+      input {
+        border: none;
+        border-bottom: 1px solid black;
+        background-color: unset;
+        outline: none;
+        width: 100%;
+        font-family: $font-primary;
+        font-size: 16px;
+        padding: 10px;
+      }
+
+      label {
+        position: absolute;
+        left: 15px;
+        top: 10px;
+        font-family: $font-primary;
+        font-size: 16px;
+        font-weight: $font-w-semibold;
+        transform-origin: 0 0;
+        transition: transform 0.3s ease;
+        opacity: 0.5;
+      }
+
+      input:focus + label,
+      input:not(:placeholder-shown) + label {
+        transform: translateY(-25px) scale(0.8);
+      }
+
+      input::placeholder {
+        color: transparent;
+      }
+    }
+  }
+
+  #login-linea {
+    width: 0;
+    height: 80%;
+    margin: auto auto;
+    border-left: 7px solid black;
+    opacity: 0.2;
+    border-radius: 100px;
+  }
+
+  #login-imagen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    img {
+      width: fit-content;
+      height: 700px;
+    }
+  }
+}
+
+#recuperar-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  // background-color: white;
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 45px;
+    text-align: center;
+  }
+
+  form {
+    width: 50%;
+    max-width: 400px;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+
+    p {
+      width: 100%;
+      text-align: center;
+      font-size: 1rem;
+    }
+  }
+}
+
+/* Responsive */
+/* Quitamos la imagen y dejamos unicamente el formulario */
+@media screen and (max-width: 1430px) {
+  #login-main {
+    width: 50%;
+    min-width: 400px;
+    grid-template-columns: 1fr;
+
+    #login-linea,
+    #login-imagen {
+      display: none;
+    }
+  }
+}

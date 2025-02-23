@@ -1,26 +1,21 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
-import ProfileEdit from "../pages/ProfileEdit";
-import ProfileHistory from "../pages/ProfileHistory.jsx";
-import ProfileHistoryDetail from "../pages/ProfileHistoryDetail";
-import ProfilePage from "../pages/ProfilePage";
+import "../styles/pages/ProfileLayout.scss";
+import "../styles/pages/AuthLayout.scss";
+import "../styles/pages/AdmModPage.scss";
+
+import NavBarMenu from "../components/NavBarMenu.jsx";
+import Footer from "../components/Footer.jsx";
 
 function ProfileLayout() {
-  return <div>ProfileLayout</div>;
-}
-
-function ProfileRoutes() {
   return (
-    <Routes>
-      <Route element={<ProfileLayout />} />
-      <Route index element={<ProfilePage />} />
-      <Route path="/Editar" element={<ProfileEdit />} />
-      <Route path="/Historial" element={<ProfileHistory />} />
-      <Route path="/Historial/:id" element={<ProfileHistoryDetail />} />
-    </Routes>
+    <div>
+      <NavBarMenu />
+      <Outlet />
+      <Footer />
+    </div>
   );
 }
 
-export { ProfileLayout };
-export default ProfileRoutes;
+export default ProfileLayout;
