@@ -120,9 +120,7 @@ function ModList() {
         id: "editar",
         header: "Editar",
         cell: (info) => (
-          <Link
-            to={`/Perfil/Admin/VerModeradores/Editar/${info.row.original.id}`}
-          >
+          <Link to={`/Admin/VerMods/Editar/${info.row.original.id}`}>
             <img src={editarModIcon} alt="Ver" />
           </Link>
         ),
@@ -156,7 +154,12 @@ function ModList() {
   return (
     <>
       <main id="tabla-main">
-        <h1>Moderadores</h1>
+        <div className="tabla-header">
+          <h1>Moderadores</h1>
+          <Link className="button-link" to="/Admin/Agregar">
+            Registrar Moderador
+          </Link>
+        </div>
         <div className="tabla-container">
           <table>
             <thead>

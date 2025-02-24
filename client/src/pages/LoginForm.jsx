@@ -7,6 +7,7 @@ import loginImage from "../assets/images/others/museo-login-image.png";
 
 import eyeOpenIcon from "../assets/icons/eye-opened-icon.png";
 import eyeClosedIcon from "../assets/icons/eye-closed-icon.png";
+import Eye from "../components/Eye";
 
 function LoginForm() {
   // Usar el hook useAuth para obtener las funciones y estados de autenticación
@@ -75,6 +76,7 @@ function LoginForm() {
                     id="eye"
                     className="eye"
                   />
+                  {/* <Eye /> */}
                 </div>
                 <input
                   type="submit"

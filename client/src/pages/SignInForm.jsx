@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import { toast, Bounce } from "react-toastify";
+import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
 
@@ -8,6 +10,135 @@ import eyeOpenIcon from "../assets/icons/eye-opened-icon.png";
 import eyeClosedIcon from "../assets/icons/eye-closed-icon.png";
 
 function SignInForm() {
+  // Estados
+  const [tel, setTel] = useState();
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [isValid, setIsValid] = useState(true);
+  const [isPasswordMatch, setIsPasswordMatch] = useState(true);
+  const [costo, setCosto] = useState("");
+  const [valorRango, setValorRango] = useState(0);
+  const [rangoHabilitado, setRangoHabilitado] = useState(false);
+  const [imagePreview, setImagePreview] = useState(userPlaceholder);
+  const [selectedTematicas, setSelectedTematicas] = useState([]);
+  const signInButtonRef = useRef(null);
+  const passwordRef = useRef(null);
+  const password2Ref = useRef(null);
+  const imageInputRef = useRef(null);
+
+  // Fecha de nacimiento
+  let today = new Date();
+  today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+  today = today.toISOString().split("T")[0];
+
+  // Expresion regular para validar la contraseña
+  // Al menos 8 caracteres, una letra mayuscula, una letra minuscula y un numero
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+
+  // Manejar el cambio de la contraseña
+  const handlePasswordChange = (event) => {
+    const newPassword = event.target.value;
+    setPassword(newPassword);
+    setIsValid(passwordRegex.test(newPassword));
+  };
+
+  // Manejar el cambio de la confirmacion de la contraseña
+  const handlePassword2Change = (event) => {
+    const confirmPassword = event.target.value;
+    setPassword2(confirmPassword);
+    setIsPasswordMatch(password === confirmPassword);
+  };
+
+  // Logica para habilitar el rango de costo dependiendo del tipo de costo
+  const handleCostoChange = (event) => {
+    const seleccion = event.target.value;
+    setCosto(seleccion);
+    setRangoHabilitado(
+      seleccion === "Siempre con costo" || seleccion === "A veces gratis"
+    );
+    if (seleccion !== "Siempre con costo" && seleccion !== "A veces gratis") {
+      setValorRango(0);
+    }
+  };
+
+  // Lógica para el cambio de imagen de perfil
+  const handleImageChange = (event, setFieldValue) => {
+    const file = event.target.files[0];
+    setFieldValue("signinfrmfoto", file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  // Manejo de temáticas
+  const handleTematicaChange = (event) => {
+    const { value, checked } = event.target;
+    if (selectedTematicas.length === 3 && checked) {
+      toast.error("Solamente 3 temáticas", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+      return;
+    }
+    setSelectedTematicas((prev) =>
+      checked ? [...prev, value] : prev.filter((tematica) => tematica !== value)
+    );
+  };
+
+  // Desabilitar el boton de registro si algun campo es invalido
+  const isFormValid =
+    isValid && isPasswordMatch && tel && costo && selectedTematicas > 0;
+
+  // Función para registrar al usuario
+  const handleRegister = async (values) => {
+    try {
+      const userData = new FormData();
+
+      if (!isPossiblePhoneNumber(tel)) {
+        toast.error("Número de teléfono inválido", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+        return;
+      }
+
+      userData.append("nombre", values.signinfrmnombre);
+      userData.append("apPaterno", values.signinfrmappaterno);
+      userData.append("apMaterno", values.signinfrmapmaterno);
+      userData.append("email", values.signinfrmemail);
+      userData.append("tel", tel);
+      userData.append("fecNac", values.signinfrmfecnac);
+      userData.append("password", password);
+      userData.append("tematicas", JSON.stringify(selectedTematicas));
+      userData.append("tipo_costo", costo);
+      userData.append("rango_costo", valorRango);
+      if (values.signinfrmfoto) userData.append("foto", values.signinfrmfoto);
+      else userData.append("foto", userPlaceholder);
+
+      console.log("Datos a enviar al backend:");
+      userData.forEach((value, key) => {
+        console.log(key, value);
+      });
+      // Lógica para enviar los datos al backend
+
+      // Manejo de la respuesta del backend
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // Para mostrar o no la contraseña
   const [shown1, setShown1] = useState(false);
   const [shown2, setShown2] = useState(false);
@@ -20,128 +151,8 @@ function SignInForm() {
     setShown2(!shown2);
   };
 
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-
-  const signInButtonRef = useRef(null);
-  const passwordRef = useRef(null);
-  const password2Ref = useRef(null);
-
-  // Para el rango de costo
-  const [costo, setCosto] = useState("");
-  const [valorRango, setValorRango] = useState(0);
-  const [rangoHabilitado, setRangoHabilitado] = useState(false);
-
-  const handleCostoChange = (event) => {
-    const seleccion = event.target.value;
-    setCosto(seleccion);
-
-    if (seleccion === "Siempre con costo" || seleccion === "A veces gratis") {
-      setRangoHabilitado(true);
-    } else {
-      setRangoHabilitado(false);
-      setValorRango(0); // Reseteamos el valor del rango
-    }
-  };
-
   const handleRangoChange = (event) => {
     setValorRango(event.target.value);
-  };
-
-  // Para el cambio de imagen de perfil
-  const [imagePreview, setImagePreview] = useState(userPlaceholder);
-  const imageInputRef = useRef(null);
-
-  const handleImageChange = (event, setFieldValue) => {
-    const file = event.target.files[0];
-
-    // Actualizar el estado de la imagen de perfil
-    setFieldValue("signinfrmfoto", file);
-
-    // Establece la imagen de vista previa
-    setImagePreview(URL.createObjectURL(file));
-  };
-
-  // Para la logica de seleccion de tematicas
-  const [selectedTematicas, setSelectedTematicas] = useState([]);
-  const notificacionPosition = "top-right";
-
-  const handleTematicaChange = (event) => {
-    const { value, checked } = event.target;
-
-    if (selectedTematicas.length === 3 && checked) {
-      toast.error("Solamente 3 temáticas", {
-        position: notificacionPosition,
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-      });
-      return;
-    }
-
-    setSelectedTematicas((prev) => {
-      if (checked && prev.length < 3) {
-        return [...prev, value];
-      } else if (!checked) {
-        return prev.filter((tematica) => tematica !== value);
-      }
-      return prev;
-    });
-  };
-
-  // Funcion para registrar al usuario
-  const handleRegister = async (values) => {
-    try {
-      // Preparar los datos para enviar al backend
-      const userData = new FormData();
-
-      // Agregar los datos personales
-      userData.append("nombre", values.signinfrmnombre);
-      userData.append("apellido_paterno", values.signinfrmappaterno);
-      userData.append("apellido_materno", values.signinfrmapmaterno);
-      userData.append("email", values.signinfrmemail);
-      userData.append("telefono", values.signinfrmtelefono);
-      userData.append("fecha_nacimiento", values.signinfrmfecnac);
-      userData.append("password", password);
-      userData.append("password2", password2);
-      userData.append("tematicas", JSON.stringify(selectedTematicas));
-      userData.append("tipo_costo", costo);
-      userData.append("rango_costo", valorRango);
-
-      if (values.signinfrmfoto) {
-        userData.append("foto", values.signinfrmfoto);
-      } else {
-        userData.append("foto", userPlaceholder);
-      }
-
-      // Si se selecciono una imagen de perfil se agrega al FormData
-      // if (imageInputRef.current.files[0]) {
-      //   userData.append("foto", imageInputRef.current.files[0]);
-      // } else {
-      //   userData.append("foto", userPlaceholder);
-      // }
-
-      userData.forEach((value, key) => {
-        console.log(key, value);
-      });
-
-      // const response = await axios.post("/api/auth/register", userData);
-
-      // // Manejar la respuesta del backend
-      // if (response.status === 200) {
-      //   console.log("Usuario registrado con éxito");
-      //   // Redirigir al usuario a la página de inicio de sesión
-      // } else {
-      //   console.error("Error al registrar al usuario");
-      // }
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   // Logica para validar las contraseñas
@@ -270,12 +281,18 @@ function SignInForm() {
                         Correo Electrónico
                       </label>
                     </div>
-                    <div className="registros-field">
-                      <Field
-                        type="tel"
-                        id="signin-frm-telefono"
-                        name="signinfrmtelefono"
+                    <div
+                      className={`registros-field-telefonos ${
+                        tel ? "has-value" : ""
+                      }`}
+                    >
+                      <PhoneInput
+                        defaultCountry="MX"
                         placeholder="Teléfono"
+                        name="signinfrmtelefono"
+                        id="signin-frm-telefono"
+                        value={tel}
+                        onChange={setTel}
                         required
                       />
                       <label
@@ -291,6 +308,7 @@ function SignInForm() {
                         id="signin-frm-fecnac"
                         name="signinfrmfecnac"
                         placeholder="Fecha de Nacimiento"
+                        max={today}
                         required
                       />
                       <label htmlFor="signin-frm-fecnac" className="frm-label">
@@ -304,7 +322,7 @@ function SignInForm() {
                         name="signinfrmpassword"
                         placeholder="Contraseña"
                         ref={passwordRef}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handlePasswordChange}
                         value={password}
                         required
                       />
@@ -321,6 +339,12 @@ function SignInForm() {
                         id="eye"
                         className="eye"
                       />
+                      {!isValid && (
+                        <span className="password-error">
+                          La contraseña debe tener al menos 8 caracteres, una
+                          letra mayúscula, una letra minúscula y un número
+                        </span>
+                      )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -329,7 +353,7 @@ function SignInForm() {
                         name="signinfrmrepassword"
                         placeholder="Repetir Contraseña"
                         ref={password2Ref}
-                        onChange={(e) => setPassword2(e.target.value)}
+                        onChange={handlePassword2Change}
                         value={password2}
                         required
                       />
@@ -531,7 +555,7 @@ function SignInForm() {
                   className="button"
                   id="registros-button"
                   ref={signInButtonRef}
-                  disabled={false}
+                  disabled={isFormValid ? false : true}
                 />
               </Form>
             )}

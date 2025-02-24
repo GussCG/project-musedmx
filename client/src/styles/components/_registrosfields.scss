@@ -133,6 +133,56 @@
   }
 }
 
+.registros-field-telefonos {
+  @extend .registros-field;
+  display: flex;
+  position: relative;
+
+  .PhoneInput {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .PhoneInputCountry {
+      width: 60px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+      background-color: $bg-grad-color-2;
+    }
+
+    .PhoneInputInput {
+      border: none;
+      border-bottom: 1px solid black;
+      background-color: unset;
+      outline: none;
+      width: 100%;
+      font-family: $font-primary;
+      font-size: 16px;
+      padding: 10px;
+    }
+  }
+
+  .frm-label {
+    position: absolute;
+    left: 70px;
+    top: 10px;
+    pointer-events: none;
+  }
+
+  &.has-value .frm-label,
+  &:focus-within .frm-label {
+    transform: translateY(-15px) scale(0.8);
+  }
+
+  .PhoneInputInput::placeholder {
+    color: transparent;
+  }
+}
+
 #registros-linea {
   position: absolute;
   top: 10%;

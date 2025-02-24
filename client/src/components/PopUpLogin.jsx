@@ -27,7 +27,10 @@ function PopUpLogin() {
       <main id="main-login-popup">
         <button
           id="close-login-popup"
-          onClick={() => setIsLogginPopupOpen(false)}
+          onClick={() => {
+            setIsLogginPopupOpen(false);
+            localStorage.removeItem("redirectPath");
+          }}
         >
           <img src={closeIcon} alt="Cerrar" />
         </button>

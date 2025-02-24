@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import { useParams } from "react-router-dom";
+import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import axios from "axios";
 import { toast, Bounce } from "react-toastify";
 
@@ -8,9 +10,6 @@ import { useAuth } from "../context/AuthProvider";
 
 import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
 import fotoPrueba from "../assets/images/others/museo-login-image.png";
-
-import eyeOpenIcon from "../assets/icons/eye-opened-icon.png";
-import eyeClosedIcon from "../assets/icons/eye-closed-icon.png";
 
 function ProfileEdit() {
   // Obtenemos el id de los parametros de la URL para saber que usuario editar
@@ -52,91 +51,64 @@ function ProfileEdit() {
     }
   }, [userId, user]);
 
-  // Para mostrar o no la contraseña
-  const [shown1, setShown1] = useState(false);
-  const [shown2, setShown2] = useState(false);
-
-  const switchShown1 = () => {
-    setShown1(!shown1);
-  };
-
-  const switchShown2 = () => {
-    setShown2(!shown2);
-  };
-
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-
-  const signInButtonRef = useRef(null);
-  const passwordRef = useRef(null);
-  const password2Ref = useRef(null);
-
-  // Para el rango de costo
+  // Estados
+  const [tel, setTel] = useState();
   const [costo, setCosto] = useState("");
   const [valorRango, setValorRango] = useState(0);
   const [rangoHabilitado, setRangoHabilitado] = useState(false);
+  const [imagePreview, setImagePreview] = useState(userPlaceholder);
+  const [selectedTematicas, setSelectedTematicas] = useState([]);
+  const signInButtonRef = useRef(null);
+  const imageInputRef = useRef(null);
 
+  // Fecha de nacimiento
+  let today = new Date();
+  today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+  today = today.toISOString().split("T")[0];
+
+  // Logica para habilitar el rango de costo dependiendo del tipo de costo
   const handleCostoChange = (event) => {
     const seleccion = event.target.value;
     setCosto(seleccion);
-
-    if (seleccion === "Siempre con costo" || seleccion === "A veces gratis") {
-      setRangoHabilitado(true);
-    } else {
-      setRangoHabilitado(false);
-      setValorRango(0); // Reseteamos el valor del rango
+    setRangoHabilitado(
+      seleccion === "Siempre con costo" || seleccion === "A veces gratis"
+    );
+    if (seleccion !== "Siempre con costo" && seleccion !== "A veces gratis") {
+      setValorRango(0);
     }
   };
 
-  const handleRangoChange = (event) => {
-    setValorRango(event.target.value);
-  };
-
-  // Para el cambio de imagen de perfil
-  const [imagePreview, setImagePreview] = useState(userPlaceholder);
-  const imageInputRef = useRef(null);
-
+  // Lógica para el cambio de imagen de perfil
   const handleImageChange = (event, setFieldValue) => {
     const file = event.target.files[0];
-
-    // Actualizar el estado de la imagen de perfil
     setFieldValue("signinfrmfoto", file);
-
-    // Establece la imagen de vista previa
     setImagePreview(URL.createObjectURL(file));
   };
 
-  // Para la logica de seleccion de tematicas
-  const [selectedTematicas, setSelectedTematicas] = useState([]);
-  const notificacionPosition = "top-right";
-
+  // Manejo de temáticas
   const handleTematicaChange = (event) => {
     const { value, checked } = event.target;
-
     if (selectedTematicas.length === 3 && checked) {
       toast.error("Solamente 3 temáticas", {
-        position: notificacionPosition,
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: false,
         pauseOnHover: false,
-        draggable: true,
+        draggable: false,
         progress: undefined,
         theme: "dark",
         transition: Bounce,
       });
       return;
     }
+    setSelectedTematicas((prev) =>
+      checked ? [...prev, value] : prev.filter((tematica) => tematica !== value)
+    );
+  };
 
-    setSelectedTematicas((prev) => {
-      if (checked && prev.length < 3) {
-        return [...prev, value];
-      } else if (!checked) {
-        return prev.filter((tematica) => tematica !== value);
-      }
-
-      return prev;
-    });
+  const handleRangoChange = (event) => {
+    setValorRango(event.target.value);
   };
 
   // Funcion para editar al usuario
@@ -145,15 +117,28 @@ function ProfileEdit() {
       // Preparar los datos para enviar al backend
       const userData = new FormData();
 
+      if (!isPossiblePhoneNumber(tel)) {
+        toast.error("Número de teléfono inválido", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+        return;
+      }
+
       // Agregar los datos personales
       userData.append("nombre", values.signinfrmnombre);
       userData.append("apellido_paterno", values.signinfrmappaterno);
       userData.append("apellido_materno", values.signinfrmapmaterno);
       userData.append("email", values.signinfrmemail);
-      userData.append("telefono", values.signinfrmtelefono);
+      userData.append("telefono", tel);
       userData.append("fecha_nacimiento", values.signinfrmfecnac);
-      userData.append("password", password);
-      userData.append("password2", password2);
       userData.append("tematicas", JSON.stringify(selectedTematicas));
       userData.append("tipo_costo", costo);
       userData.append("rango_costo", valorRango);
@@ -196,50 +181,14 @@ function ProfileEdit() {
       setSelectedTematicas(usuario.tematicas || []);
       setCosto(usuario.tipo_costo || "");
       setValorRango(usuario.rango_costo || 0);
+      setTel(usuario.tel || "");
       // Se establece la imagen de vista previa y el archivo de imagen
       setImagePreview(usuario.foto || userPlaceholder);
     }
+  }, [user, usuario]);
 
-    let password = passwordRef.current;
-    let password2 = password2Ref.current;
-    let signInButton = signInButtonRef.current;
-
-    // Validamos las contraseña y la confirmacion de la contraseña
-    // Si son iguales se pinta de verde y se activa el boton de registro
-    if (signInButton) {
-      signInButton.disabled = true;
-    }
-
-    const validatePasswords = () => {
-      if (password2.value == "") {
-        password2.style.borderColor = "black";
-        password2.style.borderWidth = "1px";
-        password2.setCustomValidity("");
-        signInButton.disabled = true;
-        return;
-      }
-
-      if (password.value !== password2.value) {
-        password2.setCustomValidity("Las contraseñas no coinciden");
-        password2.style.borderColor = "red";
-        password2.style.borderWidth = "2px";
-        signInButton.disabled = true;
-      } else {
-        password2.setCustomValidity("");
-        password2.style.borderColor = "green";
-        password2.style.borderWidth = "2px";
-        signInButton.disabled = false;
-      }
-    };
-
-    password?.addEventListener("input", validatePasswords);
-    password2?.addEventListener("input", validatePasswords);
-
-    return () => {
-      password?.removeEventListener("input", validatePasswords);
-      password2?.removeEventListener("input", validatePasswords);
-    };
-  }, []);
+  // Desactivar el botón de registro si el formulario no es válido
+  const isFormValid = true;
 
   return (
     <>
@@ -253,8 +202,6 @@ function ProfileEdit() {
               signinfrmemail: usuario?.email || "",
               signinfrmtelefono: usuario?.tel || "",
               signinfrmfecnac: usuario?.fecNac || "",
-              signinfrmpassword: "",
-              signinfrmrepassword: "",
               // Solo para usuarios tipo 1 (Usuario normal)
               signinfrmtematica:
                 user.tipoUsuario === 1 ? usuario?.tematicas || [] : [],
@@ -327,12 +274,18 @@ function ProfileEdit() {
                         Correo Electrónico
                       </label>
                     </div>
-                    <div className="registros-field">
-                      <Field
-                        type="tel"
-                        id="signin-frm-telefono"
-                        name="signinfrmtelefono"
+                    <div
+                      className={`registros-field-telefonos ${
+                        tel ? "has-value" : ""
+                      }`}
+                    >
+                      <PhoneInput
+                        defaultCountry="MX"
                         placeholder="Teléfono"
+                        name="signinfrmtelefono"
+                        id="signin-frm-telefono"
+                        value={tel}
+                        onChange={setTel}
                         required
                       />
                       <label
@@ -348,61 +301,12 @@ function ProfileEdit() {
                         id="signin-frm-fecnac"
                         name="signinfrmfecnac"
                         placeholder="Fecha de Nacimiento"
+                        max={today}
                         required
                       />
                       <label htmlFor="signin-frm-fecnac" className="frm-label">
                         Fecha de Nacimiento
                       </label>
-                    </div>
-                    <div className="registros-field">
-                      <Field
-                        type={shown1 ? "text" : "password"}
-                        id="signin-frm-password"
-                        name="signinfrmpassword"
-                        placeholder="Contraseña"
-                        ref={passwordRef}
-                        onChange={(e) => setPassword(e.target.value)}
-                        value={password}
-                        required
-                      />
-                      <label
-                        htmlFor="signin-frm-password"
-                        className="frm-label"
-                      >
-                        Contraseña
-                      </label>
-                      <img
-                        src={shown1 ? eyeOpenIcon : eyeClosedIcon}
-                        onClick={switchShown1}
-                        alt="Mostrar contraseña"
-                        id="eye"
-                        className="eye"
-                      />
-                    </div>
-                    <div className="registros-field">
-                      <Field
-                        type={shown2 ? "text" : "password"}
-                        id="signin-frm-repassword"
-                        name="signinfrmrepassword"
-                        placeholder="Repetir Contraseña"
-                        ref={password2Ref}
-                        onChange={(e) => setPassword2(e.target.value)}
-                        value={password2}
-                        required
-                      />
-                      <label
-                        htmlFor="signin-frm-repassword"
-                        className="frm-label"
-                      >
-                        Repetir Contraseña
-                      </label>
-                      <img
-                        src={shown2 ? eyeOpenIcon : eyeClosedIcon}
-                        onClick={switchShown2}
-                        alt="Mostrar contraseña"
-                        id="eye2"
-                        className="eye"
-                      />
                     </div>
                   </div>
                   {user.tipoUsuario === 1 ? (
@@ -603,6 +507,7 @@ function ProfileEdit() {
                   value="Guardar cambios"
                   id="registros-button"
                   ref={signInButtonRef}
+                  disabled={isFormValid ? false : true}
                 />
               </Form>
             )}
