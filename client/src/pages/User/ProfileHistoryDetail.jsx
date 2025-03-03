@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -10,10 +9,8 @@ import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Iconos
-import subirImagenIcon from "../assets/icons/subir-foto-icon.png";
-import fileIcon from "../assets/icons/imagen-icon.png";
-import checkIcon from "../assets/icons/paloma-icon.png";
-import eliminarIcon from "../assets/icons/eliminar-icon.png";
+import Icons from "../../components/IconProvider";
+const { subirImagenIcon, fileIcon, checkIcon, eliminarIcon, FaStar } = Icons;
 
 function ProfileHistoryDetail() {
   // Agarrar el id de la reseña a editar de la URL

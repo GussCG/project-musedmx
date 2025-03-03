@@ -3,7 +3,7 @@
 .museo-swiper {
   width: 90%;
   max-width: 100%;
-  height: fit-content;
+  height: auto;
   margin: 0 auto;
   overflow: hidden;
 
@@ -14,7 +14,7 @@
   .swiper {
     max-width: 100%;
     height: auto;
-    min-height: 300px;
+    min-height: 360px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -172,7 +172,8 @@
 @media screen and (max-width: 1500px) {
   .museo-swiper {
     .museo-card {
-      height: 150px;
+      height: 100%;
+      min-height: 200px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -190,11 +191,38 @@
         position: absolute;
         top: 0;
         left: 0;
+
+        .museo-card-img {
+          display: none;
+        }
+
+        .museo-card-img-distance {
+          bottom: 0;
+          left: 0;
+          transform: translateY(-30px);
+        }
+
+        .museo-card-img-rating {
+          img {
+            width: 50px;
+            height: 50px;
+          }
+        }
       }
 
-      .museo-card-img-container .museo-card-img,
-      .museo-card-info-header-rating {
-        display: none;
+      .museo-card-info-body {
+        .museo-card-info-body-horario {
+          align-items: center;
+          justify-content: center;
+
+          p {
+            width: 100%;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
       }
     }
   }

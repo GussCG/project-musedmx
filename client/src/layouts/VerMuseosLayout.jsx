@@ -3,9 +3,10 @@ import { Routes, Route, Outlet } from "react-router-dom";
 
 import NavBarMenu from "../components/NavBarMenu";
 import Footer from "../components/Footer";
-import MuseosList from "../pages/MuseosList";
-import MuseoDetail from "../pages/MuseoDetail";
-import RegistroVisita from "../pages/RegistroVisita";
+import MuseosList from "../pages/Museo/MuseosList";
+import MuseoEdit from "../pages/Museo/MuseoEdit";
+import MuseoDetail from "../pages/Museo/MuseoDetail";
+import RegistroVisita from "../pages/Museo/RegistroVisita";
 
 import "../styles/pages/VerMuseosLayout.scss";
 
@@ -23,6 +24,7 @@ const museoEjemplo = {
   },
   img: "../assets/images/others/museo-main-1.jpg",
   calificacion: 4,
+  distancia: 3.5,
   costo: 0,
   coords: {
     lat: 19.420458,
@@ -44,6 +46,7 @@ const museoEjemplo2 = {
   },
   img: "../assets/images/others/museo-main-2.jpg",
   calificacion: 5,
+  distancia: 2.5,
   costo: 2,
   coords: {
     lat: 19.432608,
@@ -64,7 +67,8 @@ const museoEjemplo3 = {
     Domingo: "",
   },
   img: "../assets/images/others/museo-main-2.jpg",
-  calificacion: 5,
+  calificacion: 1,
+  distancia: 1.5,
   costo: 3,
   coords: {
     lat: 19.42847,
@@ -121,6 +125,8 @@ function VerMuseosRoutes() {
         <Route path=":museoId" element={<MuseoDetail />} />
 
         <Route path=":museoId/RegistrarVisita" element={<RegistroVisita />} />
+
+        <Route path="/EditarInformacion/:museoId" element={<MuseoEdit />} />
       </Route>
     </Routes>
   );

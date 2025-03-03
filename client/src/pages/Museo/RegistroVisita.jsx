@@ -1,6 +1,8 @@
 import React, { use, useState, useEffect, useRef } from "react";
 
-import { FaStar } from "react-icons/fa";
+import Icons from "../../components/IconProvider";
+const { FaStar, subirImagenIcon } = Icons;
+
 import { Formik, Form, Field } from "formik";
 import axios from "axios";
 
@@ -8,42 +10,21 @@ import axios from "axios";
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Iconos de Servicios
-import WC from "../assets/icons/bano-icon.png";
-import Tienda from "../assets/icons/tienda-icon.png";
-import WiFi from "../assets/icons/wifi-icon.png";
-import Guardarropa from "../assets/icons/guardarropa-icon.png";
-import Biblioteca from "../assets/icons/bilbioteca-icon.png";
-import Estacionamiento from "../assets/icons/estacionamiento-icon.png";
-import VisitaGuiada from "../assets/icons/visita-guiada-icon.png";
-import ServicioMédico from "../assets/icons/medico-icon.png";
-import Cafeteria from "../assets/icons/cafeteria-icon.png";
-import Elevador from "../assets/icons/elevador-icon.png";
-import Braille from "../assets/icons/braille-icon.png";
-import LenguajedeSenas from "../assets/icons/lenguaje-de-senas-icon.png";
-import SilladeRuedas from "../assets/icons/silla-ruedas-icon.png";
-
 const iconosServicios = {
-  Tienda,
-  WiFi,
-  Guardarropa,
-  Biblioteca,
-  Estacionamiento,
-  VisitaGuiada,
-  ServicioMédico,
-  WC,
-  SilladeRuedas,
-  Cafeteria,
-  Elevador,
-  Braille,
-  LenguajedeSenas,
+  Tienda: Icons.tiendaIcon,
+  WiFi: Icons.wifiIcon,
+  Guardarropa: Icons.guardarropaIcon,
+  Biblioteca: Icons.bilbiotecaIcon,
+  Estacionamiento: Icons.estacionamientoIcon,
+  VisitaGuiada: Icons.visitaGuiadaIcon,
+  ServicioMédico: Icons.medicoIcon,
+  WC: Icons.banioIcon,
+  SilladeRuedas: Icons.sillaRuedasIcon,
+  Cafeteria: Icons.cafeteriaIcon,
+  Elevador: Icons.elevadorIcon,
+  Braille: Icons.brailleIcon,
+  LenguajedeSenas: Icons.lenguajeDeSenasIcon,
 };
-
-// Iconos
-import subirImagenIcon from "../assets/icons/subir-foto-icon.png";
-import fileIcon from "../assets/icons/imagen-icon.png";
-import checkIcon from "../assets/icons/paloma-icon.png";
-import eliminarIcon from "../assets/icons/eliminar-icon.png";
 
 function RegistroVisita() {
   // Variables para la reseña

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-import CerrarButton from "../assets/icons/salir-icon.png";
-
-import { FaStar } from "react-icons/fa";
+import Icons from "./IconProvider";
+const { CerrarButton, FaStar } = Icons;
 
 function MenuFiltroResena({ menuVisible, setMenuVisible }) {
   const [rating, setRating] = useState(null);

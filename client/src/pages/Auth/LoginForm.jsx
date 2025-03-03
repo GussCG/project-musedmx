@@ -1,13 +1,14 @@
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 
-import loginImage from "../assets/images/others/museo-login-image.png";
+import loginImage from "../../assets/images/others/museo-login-image.png";
 
-import eyeOpenIcon from "../assets/icons/eye-opened-icon.png";
-import eyeClosedIcon from "../assets/icons/eye-closed-icon.png";
-import Eye from "../components/Eye";
+import Icons from "../../components/IconProvider";
+const { eyeClosedIcon, eyeOpenIcon } = Icons;
+
+import Eye from "../../components/Eye";
 
 function LoginForm() {
   // Usar el hook useAuth para obtener las funciones y estados de autenticación

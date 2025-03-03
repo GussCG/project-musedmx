@@ -1,56 +1,58 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
-import HeaderMuseoButtons from "../components/HeaderMuseoButtons";
+import { useAuth } from "../../context/AuthProvider";
+import HeaderMuseoButtons from "../../components/HeaderMuseoButtons";
 
-import "../styles/pages/MuseoDetails.scss";
+import "../../styles/pages/MuseoDetails.scss";
 
-import museoPlaceholder from "../assets/images/others/museo-main-1.jpg";
-import tematicaIcon from "../assets/icons/antropologia-icon.png";
-import estrellaIcon from "../assets/icons/estrella-icon.png";
-import facebookIcon from "../assets/icons/facebook-sc-icon.png";
-import instagramIcon from "../assets/icons/instagram-sc-icon.png";
-import twitterIcon from "../assets/icons/twitter-sc-icon.png";
-import webIcon from "../assets/icons/pagina-web-icon.png";
-import filterIcon from "../assets/icons/filtrar-icon.png";
+import Icons from "../../components/IconProvider";
 
-// Iconos de Calificaciones
-import dormirIcon from "../assets/icons/dormir-icon.png";
-import limpioIcon from "../assets/icons/limpio-icon.png";
-import entendibleIcon from "../assets/icons/entendible-icon.png";
-import moneyIcon from "../assets/icons/money-icon.png";
-import ninoIcon from "../assets/icons/nino-icon.png";
+const {
+  tematicaIcon,
+  estrellaIcon,
+  dormirIcon,
+  limpioIcon,
+  entendibleIcon,
+  moneyIcon,
+  ninoIcon,
+  banioIcon,
+  tiendaIcon,
+  wifiIcon,
+  guardarropaIcon,
+  bilbiotecaIcon,
+  estacionamientoIcon,
+  visitaGuiadaIcon,
+  medicoIcon,
+  cafeteriaIcon,
+  elevadorIcon,
+  brailleIcon,
+  lenguajeDeSenasIcon,
+  sillaRuedasIcon,
+  filterIcon,
+  facebookIcon,
+  instagramIcon,
+  twitterIcon,
+  webIcon,
+  FaFilter,
+} = Icons;
 
-// Iconos de Servicios
-import banioIcon from "../assets/icons/bano-icon.png";
-import tiendaIcon from "../assets/icons/tienda-icon.png";
-import wifiIcon from "../assets/icons/wifi-icon.png";
-import guardarropaIcon from "../assets/icons/guardarropa-icon.png";
-import bilbiotecaIcon from "../assets/icons/bilbioteca-icon.png";
-import estacionamientoIcon from "../assets/icons/estacionamiento-icon.png";
-import visitaGuiadaIcon from "../assets/icons/visita-guiada-icon.png";
-import medicoIcon from "../assets/icons/medico-icon.png";
-import cafeteriaIcon from "../assets/icons/cafeteria-icon.png";
-import elevadorIcon from "../assets/icons/elevador-icon.png";
-import brailleIcon from "../assets/icons/braille-icon.png";
-import lenguajeDeSenasIcon from "../assets/icons/lenguaje-de-senas-icon.png";
-import sillaRuedasIcon from "../assets/icons/silla-ruedas-icon.png";
+import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
 
 // Galeria de fotos Placeholder
-import galeriaFoto1 from "../assets/images/others/museo-main-1.jpg";
-import galeriaFoto2 from "../assets/images/others/museo-main-2.jpg";
-import galeriaFoto3 from "../assets/images/others/museo-main-3.jpg";
-import galeriaFoto4 from "../assets/images/others/museo-main-4.jpg";
-import galeriaFoto5 from "../assets/images/others/museo-main-5.jpg";
+import galeriaFoto1 from "../../assets/images/others/museo-main-1.jpg";
+import galeriaFoto2 from "../../assets/images/others/museo-main-2.jpg";
+import galeriaFoto3 from "../../assets/images/others/museo-main-3.jpg";
+import galeriaFoto4 from "../../assets/images/others/museo-main-4.jpg";
+import galeriaFoto5 from "../../assets/images/others/museo-main-5.jpg";
 
 // Placeholder usuario
-import placeholderUserImage from "../assets/images/placeholders/user_placeholder.png";
+import placeholderUserImage from "../../assets/images/placeholders/user_placeholder.png";
 
-import MenuFiltroResena from "../components/MenuFiltroResena";
-import LightBox from "../components/LightBox";
-import MapMuseoDetail from "../components/MapMuseoDetail";
-import MuseoSlider from "../components/MuseoSlider";
-import ImagenesSlider from "../components/ImagenesSlider";
+import MenuFiltroResena from "../../components/MenuFiltroResena";
+import LightBox from "../../components/LightBox";
+import MapMuseoDetail from "../../components/MapMuseoDetail";
+import MuseoSlider from "../../components/MuseoSlider";
+import ImagenesSlider from "../../components/ImagenesSlider";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
@@ -374,7 +376,7 @@ function MuseoDetail() {
               className="museos-header-section-right-button"
               onClick={abrirMenu}
             >
-              <img src={filterIcon} alt="Filtrar" id="filtrar-button" />
+              <FaFilter />
             </button>
           </div>
           <div className="museo-section-5-crv">

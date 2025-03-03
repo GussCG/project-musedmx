@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { changeBackgroundImage } from "../utils/index-main";
+import { changeBackgroundImage } from "../../utils/index-main";
 
-import "../styles/pages/IndexPage.scss";
+import "../../styles/pages/IndexPage.scss";
 import { Link } from "react-router-dom";
 
-import NavBarMenu from "../components/NavBarMenu";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
-import { useAuth } from "../context/AuthProvider";
+import NavBarMenu from "../../components/NavBarMenu";
+import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
+import { useAuth } from "../../context/AuthProvider";
 
 function IndexPage() {
   const { user, tipoUsuario } = useAuth();

@@ -1,34 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
-import closeIcon from '../assets/icons/close-icon.png'
+import Icons from "./IconProvider";
+const { closeIcon } = Icons;
 
-function LightBox({lightBoxVisible, setLightBoxVisible, currentImage}) {
+function LightBox({ lightBoxVisible, setLightBoxVisible, currentImage }) {
+  const closeLightBox = () => {
+    setLightBoxVisible(false);
+  };
 
-    const closeLightBox = () => {
-        setLightBoxVisible(false)
-    }
-
-    if (!lightBoxVisible) {
-        return null
-    }
+  if (!lightBoxVisible) {
+    return null;
+  }
 
   return (
     <div className="lightbox show">
-        <button 
-            className="btn-close"
-            onClick={closeLightBox}
-        >
-            <img 
-                src={closeIcon}
-                alt="Cerrar" 
-            />
-        </button>
-        <img 
-            src={currentImage} 
-            className="show-img"
-        />
+      <button className="btn-close" onClick={closeLightBox}>
+        <img src={closeIcon} alt="Cerrar" />
+      </button>
+      <img src={currentImage} className="show-img" />
     </div>
-  )
+  );
 }
 
-export default LightBox
+export default LightBox;

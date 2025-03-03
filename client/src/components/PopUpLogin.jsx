@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import { useAuth } from "../context/AuthProvider";
 
-import closeIcon from "../assets/icons/close-b-icon.png";
-import eyeOpenIcon from "../assets/icons/eye-opened-icon.png";
-import eyeClosedIcon from "../assets/icons/eye-closed-icon.png";
 import { Formik, Form } from "formik";
 import { Link } from "react-router";
+
+import Icons from "../components/IconProvider";
+
+const { closeBIcon, eyeClosedIcon, eyeOpenIcon } = Icons;
 
 function PopUpLogin() {
   const { login, isLogginPopupOpen, setIsLogginPopupOpen, isLoading, error } =
@@ -32,7 +33,7 @@ function PopUpLogin() {
             localStorage.removeItem("redirectPath");
           }}
         >
-          <img src={closeIcon} alt="Cerrar" />
+          <img src={closeBIcon} alt="Cerrar" />
         </button>
         <h1>Iniciar Sesión</h1>
         <Formik

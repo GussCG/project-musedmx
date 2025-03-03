@@ -4,7 +4,7 @@ import { Link } from "react-router";
 function HeaderMuseoButtons() {
   return (
     <div className="header-buttons-container">
-      <Link className="button-link" to="">
+      <Link className="button-link" to="/Museos/EditarInformacion/">
         Editar Información
       </Link>
       <Link className="button-link" to="">

@@ -1,0 +1,86 @@
+@use "../variables" as *;
+
+.menu-sort-container {
+  position: absolute;
+  top: 65px;
+  right: 140px;
+  z-index: 1000;
+
+  background-color: white;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 20px;
+
+  .menu-sort-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .filtro-rad {
+      input {
+        display: none;
+
+        &:checked ~ .radio-filter-span {
+          background-color: black;
+
+          &::after {
+            opacity: 1;
+          }
+        }
+      }
+
+      .radio-filter-span {
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-color: #d9d9d9;
+        border-radius: 50%;
+        cursor: pointer;
+
+        transition: background-color 0.3s ease;
+
+        &::after {
+          content: "";
+          position: absolute;
+          border: solid white;
+          border-width: 0 3px 3px 0;
+          transform: rotate(45deg);
+          opacity: 0;
+          width: 8px;
+          height: 15px;
+
+          top: 5px;
+          left: 9px;
+
+          transition: opacity 0.3s ease;
+        }
+      }
+    }
+
+    .menu-sort-button {
+      margin-top: 10px;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      font-size: 1rem;
+      font-family: $font-primary;
+      color: $color-a;
+
+      transition: color 0.3s ease, font-weight 0.3s ease;
+
+      &:hover {
+        color: $color-a-2;
+        font-weight: bold;
+      }
+    }
+  }
+}

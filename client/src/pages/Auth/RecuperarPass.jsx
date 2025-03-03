@@ -22,7 +22,7 @@ function RecuperarPass() {
         {({ handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <p> Ingresa el correo electrónico con el que estás registrado</p>
-            <div class="registros-field">
+            <div className="registros-field">
               <Field
                 type="email"
                 id="rec_frm_email"
@@ -30,7 +30,7 @@ function RecuperarPass() {
                 placeholder="Correo Electrónico"
                 required
               />
-              <label for="rec_frm_email" class="frm-label">
+              <label htmlFor="rec_frm_email" className="frm-label">
                 Correo Electrónico
               </label>
             </div>

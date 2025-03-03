@@ -575,7 +575,7 @@
 #museo-section-4 {
   background-color: $bg-grad-color-3;
   width: 100%;
-  height: 480px;
+  height: fit-content;
   border-radius: 25px;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
 
@@ -622,6 +622,7 @@
     }
 
     .museos-header-section-right-button {
+      padding-right: 10px;
       border: none;
       background-color: transparent;
       cursor: pointer;
@@ -633,7 +634,8 @@
         opacity: 0.5;
       }
 
-      img {
+      svg {
+        color: black;
         width: 32px;
         height: 32px;
       }

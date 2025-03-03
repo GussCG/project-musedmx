@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import MapMuseo from "../components/MapMuseo";
+import MapMuseo from "../../components/MapMuseo";
 
-import buscarimg from "../assets/icons/buscar-icon.png";
 import { APIProvider } from "@vis.gl/react-google-maps";
+
+import Icons from "../../components/IconProvider";
+const { buscarimg } = Icons;
 
 // Para obtener la API de Google Maps
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;

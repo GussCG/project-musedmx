@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import { LuArrowUpDown } from "react-icons/lu";
+
+import Icons from "../../components/IconProvider";
+const { LuArrowUpDown, verIcon } = Icons;
+
 import { Link, useParams } from "react-router-dom";
 import {
   useReactTable,
@@ -8,8 +11,6 @@ import {
   flexRender,
   getSortedRowModel,
 } from "@tanstack/react-table";
-
-import verIcon from "../assets/icons/eye-opened-icon.png";
 
 function ModHistory() {
   // Obtener el museoId de la URL

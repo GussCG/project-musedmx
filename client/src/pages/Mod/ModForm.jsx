@@ -4,10 +4,8 @@ import { toast, Bounce } from "react-toastify";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
-import modPlaceholder from "../assets/images/placeholders/user_placeholder.png";
-
-import eyeOpenIcon from "../assets/icons/eye-opened-icon.png";
-import eyeClosedIcon from "../assets/icons/eye-closed-icon.png";
+import Icons from "../../components/IconProvider";
+const { eyeClosedIcon, eyeOpenIcon, modPlaceholder } = Icons;
 
 function ModForm() {
   // Estados

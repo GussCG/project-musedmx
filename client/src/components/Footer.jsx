@@ -1,9 +1,8 @@
 import { Link } from "react-router";
 
-import logo from "../assets/images/placeholders/logo_placeholder.png";
-import facebookLogo from "../assets/icons/facebook-w-icon.png";
-import instagramLogo from "../assets/icons/instagram-w-icon.png";
-import twitterLogo from "../assets/icons/twitter-icon.png";
+import Icons from "./IconProvider";
+const { logo, facebookFooterLogo, instagramFooterLogo, twitterFooterLogo } =
+  Icons;
 
 function Footer() {
   return (
@@ -37,7 +36,7 @@ function Footer() {
               <li>
                 <a href="#">
                   <div className="footer-social-media">
-                    <img src={facebookLogo} alt="Facebook" />
+                    <img src={facebookFooterLogo} alt="Facebook" />
                     <p>Facebook</p>
                   </div>
                 </a>
@@ -45,7 +44,7 @@ function Footer() {
               <li>
                 <a href="#">
                   <div className="footer-social-media">
-                    <img src={instagramLogo} alt="Instagram" />
+                    <img src={instagramFooterLogo} alt="Instagram" />
                     <p>Instagram</p>
                   </div>
                 </a>
@@ -53,7 +52,7 @@ function Footer() {
               <li>
                 <a href="#">
                   <div className="footer-social-media">
-                    <img src={twitterLogo} alt="Twitter" />
+                    <img src={twitterFooterLogo} alt="Twitter" />
                     <p>Twitter</p>
                   </div>
                 </a>

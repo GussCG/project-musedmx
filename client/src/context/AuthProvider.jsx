@@ -25,15 +25,15 @@ function AuthProvider({ children }) {
     apPaterno: "Perez",
     apMaterno: "Gonzalez",
     email: "mail@mail.com",
-    tipoUsuario: 3,
+    tipoUsuario: 1,
     fecNac: "2002-09-30",
     tel: "+525527167255",
     foto: "https://a.espncdn.com/i/headshots/nba/players/full/3975.png",
 
     //Preferencias
     tematicas: ["Arte", "Antropología", "Historia"],
-    tipo_costo: "Siempre gratis",
-    rango_costo: 0,
+    tipo_costo: "A veces gratis",
+    rango_costo: [10, 100],
   };
 
   // Tipos de usuario

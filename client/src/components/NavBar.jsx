@@ -2,7 +2,8 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import buscarimg from "../assets/icons/buscar-icon.png";
+import Icons from "./IconProvider";
+const { buscarimg } = Icons;
 
 function NavBar() {
   // Para el input de busqueda

@@ -22,7 +22,8 @@
 }
 
 .filtro-menu-container {
-  width: 600px;
+  width: fit-content;
+  min-width: 600px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -272,29 +273,37 @@
       font-weight: $font-w-bold;
     }
 
-    #rango-costo {
+    .slider-precio-container {
+      position: relative;
       width: 70%;
-      height: 10px;
-      border-radius: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
-      background-color: rgba(0, 0, 0, 0.2);
-      -webkit-appearance: none;
-
-      &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 25px;
-        height: 25px;
-        background: url("../assets/icons/money-icon.png");
-        border-radius: 100%;
-        background-repeat: no-repeat;
-        background-size: cover;
-        cursor: pointer;
-      }
     }
+
+    // #rango-costo {
+    //   width: 70%;
+    //   height: 10px;
+    //   border-radius: 100px;
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   gap: 10px;
+    //   background-color: rgba(0, 0, 0, 0.2);
+    //   -webkit-appearance: none;
+
+    //   &::-webkit-slider-thumb {
+    //     -webkit-appearance: none;
+    //     appearance: none;
+    //     width: 25px;
+    //     height: 25px;
+    //     background: url("../assets/icons/money-icon.png");
+    //     border-radius: 100%;
+    //     background-repeat: no-repeat;
+    //     background-size: cover;
+    //     cursor: pointer;
+    //   }
+    // }
   }
 
   #nmuseos {
@@ -445,6 +454,94 @@
         transform: translateX(0);
 
         transition: transform 0.3s ease-in-out;
+      }
+    }
+  }
+
+  @media screen and (max-width: 620px) {
+    min-width: 100%;
+
+    .filtro-menu-header {
+      h1 {
+        font-size: 24px;
+      }
+
+      .filtro-menu-close-button {
+        margin-left: 10px;
+      }
+    }
+
+    .filtro-menu-filter {
+      .filtro-menu-filter-header {
+        h2 {
+          font-size: 24px;
+        }
+
+        button {
+          margin-right: 100px;
+        }
+      }
+
+      .filtro-menu-filter-body {
+        .filtro-menu-filter-body-item {
+          label {
+            font-size: 20px;
+            padding-left: 100px;
+          }
+
+          .filtro-chk {
+            margin-right: 95px;
+          }
+
+          .filtro-rad {
+            margin-right: 50px;
+          }
+        }
+      }
+
+      .filtro-menu-filter-body.open {
+        max-height: 1000px;
+        transition: max-height 0.3s ease-in;
+      }
+    }
+
+    .filtro-menu-rango-precios {
+      label {
+        font-size: 20px;
+      }
+
+      #rango-costo {
+        width: 70%;
+      }
+    }
+
+    #nmuseos {
+      font-size: 20px;
+    }
+
+    .filtro-menu-botones {
+      .filtro-menu-boton {
+        width: 150px;
+        height: 50px;
+        font-size: 20px;
+      }
+    }
+
+    .switch-button {
+      width: 5rem;
+      height: 2.5rem;
+
+      .switch-button__label {
+        .switch-button-slider {
+          width: 2.5rem;
+          height: 2.5rem;
+        }
+
+        .switch-button-span-container {
+          span {
+            font-size: 1.2rem;
+          }
+        }
       }
     }
   }

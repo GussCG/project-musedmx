@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import { LuArrowUpDown } from "react-icons/lu";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
 
-import verIcon from "../assets/icons/eye-opened-icon.png";
-import eliminarIcon from "../assets/icons/eliminar-icon.png";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthProvider";
+
+import Icons from "../../components/IconProvider";
+const { LuArrowUpDown, editarModIcon, eliminarIcon } = Icons;
 
 import {
   useReactTable,
@@ -18,53 +18,41 @@ import {
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function ProfileHistory() {
-  // Definimos estado para el historial de visitas
-  const [visitas, setVisitas] = useState([]);
-  const { user } = useAuth();
+function ModList() {
+  const [moderadores, setModeradores] = useState([]);
 
-  const resenasPrueba = [
+  const moderadoresPrueba = [
     {
       id: 1,
-      museo: "Museo Nacional de Antropología e Historia",
-      usuario: "mail@mail.com",
-      fecHr: "30-04-2024 12:00",
-      comentario: "Excelente museo",
-      moderadorAprobo: "mail@mod.com",
-      status: false,
-      calificacion: 5,
+      nombre: "Juan",
+      apPaterno: "Perez",
+      apMaterno: "Gonzalez",
+      email: "mail1@mod.com",
+      tipoUsuario: 3,
+      fecNac: "2002-09-30",
+      tel: "5527167255",
+      foto: "https://a.espncdn.com/i/headshots/nba/players/full/3975.png",
     },
     {
       id: 2,
-      museo: "Museo Perfume",
-      usuario: "mail@mail.com",
-      fecHr: "30-04-2024 12:01",
-      comentario: "Excelente museo 2",
-      moderadorAprobo: "mail@mod.com",
-      status: true,
-      calificacion: 3,
+      nombre: "Pedro",
+      apPaterno: "Perez",
+      apMaterno: "Gonzalez",
+      email: "mail2@mod.com",
+      tipoUsuario: 3,
+      fecNac: "2002-09-30",
+      tel: "5527167255",
+      foto: "https://a.espncdn.com/i/headshots/nba/players/full/3974.png",
     },
   ];
 
   useEffect(() => {
-    setVisitas(resenasPrueba);
+    setModeradores(moderadoresPrueba);
   }, []);
 
-  // Funcion para eliminar una visita del historial
-  const eliminarVisita = (id) => {
-    // Hacemos una petición DELETE al backend para eliminar la visita
-    // De momento no se ha implementado el backend entonces se muestra un mensaje de alerta
-    // axios
-    //   .delete(`/api/usuario/historial/${id}`)
-    //   .then((response) => {
-    //     // Actualizamos el estado de visitas
-    //     setVisitas(visitas.filter((visita) => visita.id !== id));
-    //     alert("Visita eliminada");
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    toast.success(`Visita Eliminada`, {
+  const eliminarMod = (id) => {
+    // Logicar para eliminar un moderador
+    toast.success(`Moderador Eliminado`, {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -77,57 +65,63 @@ function ProfileHistory() {
     });
   };
 
-  // Cargamos el historial de visitas del usuario
-  useEffect(() => {
-    // Hacemos una petición GET al backend para obtener el historial de visitas
-    // Para el desarrollo local tenemos datos de prueba
-    // axios
-    //   .get("/api/usuario/historial")
-    //   .then((response) => {
-    //     setVisitas(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    setVisitas(resenasPrueba);
-  }, []);
-
   const columns = useMemo(
     () => [
+      //   {
+      //     accessorKey: "foto",
+      //     header: "Foto",
+      //     cell: (info) => (
+      //       <img
+      //         src={info.getValue()}
+      //         alt="Foto de perfil"
+      //         style={{
+      //           width: "100px",
+      //           height: "100px",
+      //           borderRadius: "50%",
+      //           objectFit: "cover",
+      //           backgroundColor: "white",
+      //           border: "2px solid black",
+      //         }}
+      //       />
+      //     ),
+      //     enableSorting: false,
+      //   },
       {
-        accessorKey: "fecHr",
-        header: "Fecha de la visita",
+        accessorKey: "email",
+        header: "Correo",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "museo",
-        header: "Museo",
+        accessorKey: "nombre",
+        header: "Nombre",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "calificacion",
-        header: "Calificación",
+        accessorKey: "apPaterno",
+        header: "Apellido Paterno",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "status",
-        header: "Estado",
+        accessorKey: "apMaterno",
+        header: "Apellido Materno",
+        cell: (info) => info.getValue(),
+        enableSorting: true,
+      },
+      {
+        accessorKey: "tel",
+        header: "Teléfono",
+        cell: (info) => info.getValue(),
+        enableSorting: true,
+      },
+      {
+        id: "editar",
+        header: "Editar",
         cell: (info) => (
-          <span className={info.getValue() ? "aprobada" : "pendiente"}>
-            {info.getValue() ? "Aprobado" : "Pendiente"}
-          </span>
-        ),
-        enableSorting: true,
-      },
-      {
-        id: "ver",
-        header: "Ver",
-        cell: (info) => (
-          <Link to={`./${info.row.index}`}>
-            <img src={verIcon} alt="Ver" />
+          <Link to={`/Admin/VerMods/Editar/${info.row.original.id}`}>
+            <img src={editarModIcon} alt="Ver" />
           </Link>
         ),
         enableSorting: false,
@@ -136,7 +130,7 @@ function ProfileHistory() {
         id: "eliminar",
         header: "Borrar",
         cell: (info) => (
-          <button onClick={() => eliminarVisita(info.row.index)}>
+          <button onClick={() => eliminarMod(info.row.original.id)}>
             <img src={eliminarIcon} alt="Eliminar" />
           </button>
         ),
@@ -149,7 +143,7 @@ function ProfileHistory() {
   const [sorting, setSorting] = useState([]);
 
   const table = useReactTable({
-    data: visitas,
+    data: moderadores,
     columns,
     state: { sorting },
     getCoreRowModel: getCoreRowModel(),
@@ -160,7 +154,12 @@ function ProfileHistory() {
   return (
     <>
       <main id="tabla-main">
-        <h1>Historial de Visitas</h1>
+        <div className="tabla-header">
+          <h1>Moderadores</h1>
+          <Link className="button-link" to="/Admin/Agregar">
+            Registrar Moderador
+          </Link>
+        </div>
         <div className="tabla-container">
           <table>
             <thead>
@@ -170,7 +169,7 @@ function ProfileHistory() {
                     <th key={header.id}>
                       <div
                         onClick={header.column.getToggleSortingHandler()}
-                        style={{ cursor: "pointer" }}
+                        style={{ display: "flex", alignItems: "center" }}
                       >
                         {flexRender(
                           header.column.columnDef.header,
@@ -186,7 +185,6 @@ function ProfileHistory() {
               ))}
             </thead>
             <tbody>
-              {/* Aquí se deberá hacer un map de las visitas del usuario */}
               {table.getRowModel().rows.map((row) => (
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
@@ -207,4 +205,4 @@ function ProfileHistory() {
   );
 }
 
-export default ProfileHistory;
+export default ModList;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
-import corazonIcon from "../assets/icons/corazon-rojo-icon.png";
-import buscarIcon from "../assets/icons/buscar-icon.png";
-import editarIcon from "../assets/icons/editar-w-icon.png";
+
+import Icons from "../components/IconProvider";
+const { corazonIcon, buscarIcon, editarIcon } = Icons;
 
 import MuseoSlider from "../components/MuseoSlider";
 import { Link } from "react-router";

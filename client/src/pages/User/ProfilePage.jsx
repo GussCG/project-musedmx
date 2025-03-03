@@ -1,12 +1,12 @@
 import React from "react";
-import { useAuth } from "../context/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 
-import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
+import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 
-import AdminPage from "../components/AdminPage";
-import ModPage from "../components/ModPage";
-import UsuarioPage from "../components/UsuarioPage";
-import HeaderButtons from "../components/HeaderButtons";
+import AdminPage from "../../components/AdminPage";
+import ModPage from "../../components/ModPage";
+import UsuarioPage from "../../components/UsuarioPage";
+import HeaderButtons from "../../components/HeaderButtons";
 
 function ProfilePage() {
   const { user, logout } = useAuth();

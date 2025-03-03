@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 // Imagen de prueba
 import museoImagen from "../assets/images/others/museo-main-1.jpg";
 
-// Icono
-import museoIcon from "../assets/icons/museo-w-icon.png";
+import Icons from "./IconProvider";
+const { museoIcon } = Icons;
 
 function CustomAdvancedMarker({ lat, lng, nombre, imagen, idMuseo }) {
   const [hovered, setHovered] = useState(false);

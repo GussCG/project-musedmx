@@ -1,12 +1,10 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-
-import editarPerfilIcon from "../assets/icons/editar-perfil-icon.png";
-import historialIcon from "../assets/icons/historial-icon.png";
 import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
-import modIcon from "../assets/icons/moderador-icon.png";
-import verResIcon from "../assets/icons/ver-resena-icon.png";
+
+import Icons from "../components/IconProvider";
+const { editarPerfilIcon, historialIcon, modIcon, verResIcon } = Icons;
 
 import { useAuth } from "../context/AuthProvider";
 

@@ -4,10 +4,13 @@ import { toast, Bounce } from "react-toastify";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
-import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 
-import eyeOpenIcon from "../assets/icons/eye-opened-icon.png";
-import eyeClosedIcon from "../assets/icons/eye-closed-icon.png";
+import Icons from "../../components/IconProvider";
+const { eyeClosedIcon, eyeOpenIcon } = Icons;
+
+import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 
 function SignInForm() {
   // Estados
@@ -17,7 +20,7 @@ function SignInForm() {
   const [isValid, setIsValid] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const [costo, setCosto] = useState("");
-  const [valorRango, setValorRango] = useState(0);
+  const [valorRango, setValorRango] = useState([0, 100]);
   const [rangoHabilitado, setRangoHabilitado] = useState(false);
   const [imagePreview, setImagePreview] = useState(userPlaceholder);
   const [selectedTematicas, setSelectedTematicas] = useState([]);
@@ -59,6 +62,10 @@ function SignInForm() {
     if (seleccion !== "Siempre con costo" && seleccion !== "A veces gratis") {
       setValorRango(0);
     }
+  };
+
+  const handleRangeChange = (value) => {
+    setValorRango(value);
   };
 
   // Lógica para el cambio de imagen de perfil
@@ -288,11 +295,13 @@ function SignInForm() {
                     >
                       <PhoneInput
                         defaultCountry="MX"
+                        countries={["MX"]}
                         placeholder="Teléfono"
                         name="signinfrmtelefono"
                         id="signin-frm-telefono"
                         value={tel}
                         onChange={setTel}
+                        limitMaxLength={true}
                         required
                       />
                       <label
@@ -378,7 +387,7 @@ function SignInForm() {
                     <div className="registros-chks">
                       <fieldset>
                         <legend>
-                          Selecciona tus temáticas favoritas (3 máx)
+                          Dale click a tus temáticas favoritas (3 máx)
                         </legend>
                         <div className="registros-chk-container">
                           <div className="registros-chk">
@@ -487,6 +496,9 @@ function SignInForm() {
                       </fieldset>
                     </div>
                     <div className="registros-field">
+                      <div className="registros-field-header">
+                        <h2>Tipo de Costo</h2>
+                      </div>
                       <select
                         name="signinfrmtipoCosto"
                         className="registros-frm-select"
@@ -505,27 +517,39 @@ function SignInForm() {
                         </option>
                       </select>
                     </div>
-                    <div className="registros-field-rango">
+                    <div
+                      className={`registros-field-rango ${
+                        costo === "Siempre con costo" ||
+                        costo === "A veces gratis"
+                          ? "rango-visible"
+                          : ""
+                      }`}
+                    >
                       <label
                         htmlFor="registros-frm-rango-costo"
                         id="frm-costo-label"
                       >
-                        Rango de Costo: $ <output>{valorRango}</output> MXN
+                        Rango de Costo (MXN) $ {valorRango[0]} - ${" "}
+                        {valorRango[1]}
                       </label>
-                      <Field
-                        type="range"
-                        min="0"
-                        max="100"
-                        step="5"
-                        value={valorRango}
-                        id="registros-frm-rango-costo"
-                        name="signinfrmrangocosto"
-                        placeholder="Rango de Costo"
-                        list="rango-costo"
-                        onChange={handleRangoChange}
-                        disabled={!rangoHabilitado}
-                        required
-                      />
+                      <div className="slider-precio-container">
+                        <Slider
+                          range
+                          min={0}
+                          max={100}
+                          step={5}
+                          value={valorRango}
+                          onChange={handleRangeChange}
+                          id="registros-frm-rango-costo"
+                          name="signinfrmrangocosto"
+                          handleStyle={[
+                            { backgroundColor: "#000", borderColor: "#000" },
+                            { backgroundColor: "#000", borderColor: "#000" },
+                          ]}
+                          trackStyle={[{ backgroundColor: "#000" }]}
+                          railStyle={{ backgroundColor: "#d9d9d9" }}
+                        />
+                      </div>
                     </div>
                     <hr />
                     <div className="registros-field-foto">

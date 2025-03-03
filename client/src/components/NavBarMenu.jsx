@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
-import logo from "../assets/images/placeholders/logo_placeholder.png";
-import menuIcon from "../assets/icons/menu-icon.png";
 import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
+
+import Icons from "./IconProvider";
+const { menuIcon, logo } = Icons;
 
 import MenuContainer from "./MenuContainer";
 import { useAuth } from "../context/AuthProvider";

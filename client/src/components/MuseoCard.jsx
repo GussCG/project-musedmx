@@ -6,13 +6,11 @@ import { useAuth } from "../context/AuthProvider";
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import estrellaIcon from "../assets/icons/estrella-icon.png";
-import moneyIcon from "../assets/icons/money-icon.png";
-import freeIcon from "../assets/icons/free-icon.png";
-import eliminarIcon from "../assets/icons/eliminar-icon.png";
-
 import imgPrueba from "../assets/images/others/museo-main-1.jpg";
 import PopUpLogin from "./PopUpLogin";
+
+import Icons from "./IconProvider";
+const { estrellaIcon, moneyIcon, freeIcon, eliminarIcon } = Icons;
 
 export default function MuseoCard({ museo, editMode }) {
   // Para obtener el usuario autenticado pero aun no se ha implementado el backend
@@ -63,6 +61,7 @@ export default function MuseoCard({ museo, editMode }) {
     img: museo.img,
     calificacion: museo.calificacion,
     costo: museo.costo,
+    distancia: museo.distancia,
   };
 
   // Funcion para agrupar los horarios por dia
@@ -197,13 +196,16 @@ export default function MuseoCard({ museo, editMode }) {
             alt={museoInfo.nombre}
             className="museo-card-img"
           />
-          <div className="museo-card-info-header-rating">
+          <div className="museo-card-img-rating">
             <p id="museo-card-rating">{museoInfo.calificacion}</p>
             <img
               src={estrellaIcon}
               alt="Estrella"
               className="museo-card-star"
             />
+          </div>
+          <div className="museo-card-img-distance">
+            <h2>{museoInfo.distancia} km</h2>
           </div>
         </div>
         <div className="museo-card-info-container">
@@ -214,13 +216,12 @@ export default function MuseoCard({ museo, editMode }) {
           </div>
           <div className="museo-card-info-body">
             <div className="museo-card-info-body-horario">
+              <p>
+                <b>Horarios:</b>
+              </p>
               {horarios.map((horario, index) => (
                 <p key={`${horario}-${index}`}>{horario}</p>
               ))}
-            </div>
-            <div className="museo-card-info-body-costo">
-              {/* Dependiendo el numero se ponen signos de peso */}
-              {costoImagen()}
             </div>
           </div>
         </div>

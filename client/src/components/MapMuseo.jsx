@@ -1,8 +1,12 @@
-import React, { useState, useEffect, useRef, use, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Map, AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import Circle from "./Circle";
 import CustomAdvancedMarker from "./CustomAdvancedMarker";
+
+import Icons from "./IconProvider";
+const { FaPerson } = Icons;
+
 // Toastify
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -107,7 +111,11 @@ function MapMuseo({ radioKM, museosMostrados, ubicacionCoords, tipo }) {
             />
           ) : null}
           {/* Marcador del usuario */}
-          <AdvancedMarker position={userLocation} />
+          <AdvancedMarker position={userLocation}>
+            <div className="user-marker">
+              <FaPerson />
+            </div>
+          </AdvancedMarker>
         </Map>
       )}
     </div>

@@ -2,10 +2,10 @@ import { Routes, Route, Router } from "react-router-dom";
 
 import "./styles/App.scss";
 
-import IndexPage from "./pages/IndexPage";
-import LoginForm from "./pages/LoginForm";
-import SignInForm from "./pages/SignInForm";
-import NotFound from "./pages/NotFound";
+import IndexPage from "./pages/Common/IndexPage";
+import LoginForm from "./pages/Auth/LoginForm";
+import SignInForm from "./pages/Auth/SignInForm";
+import NotFound from "./pages/Common/NotFound";
 
 import AuthLayout from "./layouts/AuthLayout";
 import VerMuseosLayout from "./layouts/VerMuseosLayout";
@@ -14,15 +14,15 @@ import ProfileLayout from "./layouts/ProfileLayout";
 import ProtectedRoute from "./hooks/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 
-import ProfileEdit from "./pages/ProfileEdit";
-import ProfileHistory from "./pages/ProfileHistory.jsx";
-import ProfileHistoryDetail from "./pages/ProfileHistoryDetail";
-import ProfilePage from "./pages/ProfilePage";
-import ModHistory from "./pages/ModHistory";
-import ModList from "./pages/ModList.jsx";
-import ModForm from "./pages/ModForm";
+import ProfileEdit from "./pages/Auth/ProfileEdit";
+import ProfileHistory from "./pages/User/ProfileHistory";
+import ProfileHistoryDetail from "./pages/User/ProfileHistoryDetail";
+import ProfilePage from "./pages/User/ProfilePage";
+import ModHistory from "./pages/Mod/ModHistory";
+import ModList from "./pages/Mod/ModList.jsx";
+import ModForm from "./pages/Mod/ModForm";
 import PopUpLogin from "./components/PopUpLogin.jsx";
-import RecuperarPass from "./pages/RecuperarPass.jsx";
+import RecuperarPass from "./pages/Auth/RecuperarPass";
 
 function App() {
   return (
