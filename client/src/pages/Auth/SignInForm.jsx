@@ -7,6 +7,11 @@ import "react-phone-number-input/style.css";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
+import { format } from "date-fns";
+import { es } from "react-day-picker/locale";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
+
 import Icons from "../../components/IconProvider";
 const { eyeClosedIcon, eyeOpenIcon } = Icons;
 
@@ -30,9 +35,20 @@ function SignInForm() {
   const imageInputRef = useRef(null);
 
   // Fecha de nacimiento
+  const [mes, setMes] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDayPickerSelect = (date) => {
+    if (!date) {
+      setSelectedDate(new Date());
+    } else {
+      setSelectedDate(date);
+    }
+  };
+
+  // Fecha actual en UTC -6
   let today = new Date();
-  today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-  today = today.toISOString().split("T")[0];
+  today.setHours(today.getHours() - 6);
 
   // Expresion regular para validar la contraseña
   // Al menos 8 caracteres, una letra mayuscula, una letra minuscula y un numero
@@ -87,7 +103,7 @@ function SignInForm() {
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        theme: "dark",
+        theme: "colored",
         transition: Bounce,
       });
       return;
@@ -115,18 +131,20 @@ function SignInForm() {
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          theme: "dark",
+          theme: "colored",
           transition: Bounce,
         });
         return;
       }
+
+      const parsedDate = selectedDate.toISOString();
 
       userData.append("nombre", values.signinfrmnombre);
       userData.append("apPaterno", values.signinfrmappaterno);
       userData.append("apMaterno", values.signinfrmapmaterno);
       userData.append("email", values.signinfrmemail);
       userData.append("tel", tel);
-      userData.append("fecNac", values.signinfrmfecnac);
+      userData.append("fecNac", parsedDate);
       userData.append("password", password);
       userData.append("tematicas", JSON.stringify(selectedTematicas));
       userData.append("tipo_costo", costo);
@@ -311,18 +329,34 @@ function SignInForm() {
                         Teléfono
                       </label>
                     </div>
-                    <div className="registros-field">
-                      <Field
-                        type="date"
-                        id="signin-frm-fecnac"
-                        name="signinfrmfecnac"
-                        placeholder="Fecha de Nacimiento"
-                        max={today}
-                        required
+                    <div className="registros-field-calendar">
+                      <label>Fecha de Nacimiento</label>
+                      <DayPicker
+                        hideNavigation
+                        animate
+                        locale={es}
+                        timeZone="UTC"
+                        captionLayout="dropdown"
+                        fixedWeeks
+                        month={mes}
+                        onMonthChange={setMes}
+                        autoFocus
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={handleDayPickerSelect}
+                        footer={
+                          selectedDate
+                            ? `Seleccionaste el ${format(
+                                selectedDate,
+                                "dd-MM-yyyy"
+                              )}`
+                            : "Selecciona una fecha"
+                        }
+                        modifiers={{
+                          disabled: { after: today },
+                        }}
+                        className="registros-calendar"
                       />
-                      <label htmlFor="signin-frm-fecnac" className="frm-label">
-                        Fecha de Nacimiento
-                      </label>
                     </div>
                     <div className="registros-field">
                       <Field

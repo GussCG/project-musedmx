@@ -180,6 +180,11 @@
       margin: 0 auto;
 
       .museo-card-info-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         padding: 30px;
 
         p {
@@ -211,62 +216,13 @@
       }
 
       .museo-card-info-body {
-        .museo-card-info-body-horario {
-          align-items: center;
-          justify-content: center;
-
-          p {
-            width: 100%;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-        }
+        display: none;
       }
     }
   }
 
   .swiper {
     height: 200px;
-  }
-}
-
-// Dejamos solo el nombre
-@media screen and (max-width: 1080px) {
-  .museo-swiper {
-    .museo-card {
-      .museo-card-info-container {
-        margin: 0 auto;
-      }
-
-      .museo-card-info-header {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      }
-
-      #museo-card-nombre {
-        width: 100%;
-        max-width: 80%;
-        height: auto;
-        font-size: 1.2rem;
-        color: $museo-card-h1-color;
-        padding: 10px;
-        text-align: center;
-
-        white-space: normal;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-      }
-
-      .museo-card-info-body {
-        display: none;
-      }
-    }
   }
 }
 

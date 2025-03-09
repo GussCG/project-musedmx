@@ -62,6 +62,7 @@ export default function MuseoCard({ museo, editMode }) {
     calificacion: museo.calificacion,
     costo: museo.costo,
     distancia: museo.distancia,
+    alcaldia: museo.alcaldia,
   };
 
   // Funcion para agrupar los horarios por dia
@@ -213,9 +214,10 @@ export default function MuseoCard({ museo, editMode }) {
             <Link to={`/Museos/${museoInfo.id}`} id="museo-card-nombre">
               {museoInfo.nombre}
             </Link>
+            <p id="museo-card-alcaldia">{museoInfo.alcaldia}</p>
           </div>
           <div className="museo-card-info-body">
-            <div className="museo-card-info-body-horario">
+            <div className="museo-card-info-body-item">
               <p>
                 <b>Horarios:</b>
               </p>

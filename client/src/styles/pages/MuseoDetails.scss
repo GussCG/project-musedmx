@@ -206,10 +206,12 @@
           transform: scale(1.1);
         }
 
+        svg,
         img {
           width: 30px;
           height: 30px;
           margin-right: 10px;
+          color: black;
         }
       }
     }
@@ -318,41 +320,53 @@
     justify-content: center;
     align-items: center;
 
-    overflow: auto;
-
     grid-area: 1 / 1 / 2 / 3;
 
     h1 {
       font-size: 32px;
       font-weight: $font-w-bold;
-      margin: 10px 0;
+      margin: 20px 0 0 0;
     }
 
     .museo-section-2-calificaciones-container {
-      display: flex;
-      justify-content: center;
+      width: 85%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+
+      overflow: auto;
+
       align-items: center;
-      gap: 10px;
+      justify-content: center;
 
       .calificacion-container {
-        width: 100px;
-        height: auto;
+        width: 100%;
+        min-width: 100px;
+        height: fit-content;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         gap: 5px;
-        padding-bottom: 25px;
+        padding: 20px;
 
         h2 {
-          font-size: 16px;
+          font-size: 18px;
           font-weight: $font-w-semibold;
-          margin: 0;
+          margin: 10px 0;
+        }
+
+        p {
+          width: 100%;
+          font-size: 12px;
+          font-weight: $font-w-semibold;
+          padding: 10px 0;
+          text-align: center;
         }
 
         .calificacion-icon {
-          width: 60px;
-          height: 60px;
+          width: 40px;
+          height: auto;
 
           img {
             width: 100%;
@@ -366,6 +380,10 @@
           background-color: $bg-grad-color-2;
           border-radius: 5px;
           margin-top: 5px;
+
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
 
           .calificacion-graph-bar-fill {
             width: 50%;
@@ -401,22 +419,30 @@
     }
 
     .servicios-container {
-      width: 100%;
-      height: 100%;
+      width: 90%;
+      height: auto;
       display: grid;
-      grid-template-columns: repeat(7, auto);
-      grid-template-rows: repeat(2, 50px);
-      padding: 0 20px;
-      align-items: flex-start;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      grid-column-gap: 10px;
+      grid-row-gap: 10px;
+
+      padding: 20px 0;
 
       .servicio-icon {
-        width: 40px;
-        height: 40px;
-        margin: 10px auto;
+        width: 100%;
+        max-width: 40px;
+        height: auto;
+
+        margin: 0 auto;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         img {
           width: 100%;
           height: 100%;
+          display: block;
         }
       }
     }
@@ -447,7 +473,8 @@
     }
 
     p {
-      max-height: 130px;
+      height: 100%;
+      max-height: 200px;
       font-size: 20px;
       font-weight: var(--font-w-regular);
       margin: 0 20px;
@@ -460,7 +487,7 @@
   .museo-section-2-ubicacion {
     background-color: $bg-grad-color-3;
     width: 100%;
-    height: 470px;
+    height: 100%;
     border-radius: 25px;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
     object-fit: cover;
@@ -942,8 +969,7 @@
 }
 
 /* Responsive */
-/* En 1700px se rompe el de calificaciones por lo que todo se va a una sola columna */
-@media screen and (max-width: 1700px) {
+@media screen and (max-width: 1500px) {
   #museo-section-1 {
     .header-buttons-container {
       display: flex;
@@ -980,8 +1006,7 @@
     }
 
     .museo-section-2-ubicacion {
-      height: auto;
-      min-height: 450px;
+      height: 450px;
     }
   }
 

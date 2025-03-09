@@ -26,7 +26,7 @@ function AuthProvider({ children }) {
     apMaterno: "Gonzalez",
     email: "mail@mail.com",
     tipoUsuario: 1,
-    fecNac: "2002-09-30",
+    fecNac: "2002-09-30T05:00:00.000Z",
     tel: "+525527167255",
     foto: "https://a.espncdn.com/i/headshots/nba/players/full/3975.png",
 

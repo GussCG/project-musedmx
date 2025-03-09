@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 
 import { useAuth } from "../context/AuthProvider";
+import LoginErrorMessage from "../components/LoginErrorMessage";
 
 import { Formik, Form } from "formik";
 import { Link } from "react-router";
 
 import Icons from "../components/IconProvider";
 
-const { closeBIcon, eyeClosedIcon, eyeOpenIcon } = Icons;
+const { IoClose, eyeClosedIcon, eyeOpenIcon } = Icons;
 
 function PopUpLogin() {
   const { login, isLogginPopupOpen, setIsLogginPopupOpen, isLoading, error } =
@@ -33,7 +34,7 @@ function PopUpLogin() {
             localStorage.removeItem("redirectPath");
           }}
         >
-          <img src={closeBIcon} alt="Cerrar" />
+          <IoClose />
         </button>
         <h1>Iniciar Sesión</h1>
         <Formik
@@ -86,6 +87,7 @@ function PopUpLogin() {
                     className="eye"
                   />
                 </div>
+                <LoginErrorMessage error={error} />
                 <input
                   type="submit"
                   value={isLoading ? "Cargando..." : "Iniciar Sesión"}

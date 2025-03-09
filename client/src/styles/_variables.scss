@@ -90,3 +90,15 @@ $box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
 // Map Markers
 $user-marker-bg: rgb(68, 0, 194);
 $user-marker-border: rgb(26, 0, 74);
+
+// PopUps Colors (LoginError, Toasts, etc)
+$pop-up-bg: #fff;
+$pop-up-text: #000;
+$pop-up-error-bg: rgba(128, 0, 0, 0.3);
+$pop-up-error-border: 3px solid #800000;
+$pop-up-error-text: #800000;
+$pop-up-border-radius: 10px;
+
+$pop-up-success-bg: rgba(0, 128, 0, 0.3);
+$pop-up-success-border: 3px solid #047c00;
+$pop-up-success-text: #047c00;
