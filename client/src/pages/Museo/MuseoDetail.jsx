@@ -7,33 +7,119 @@ import "../../styles/pages/MuseoDetails.scss";
 
 import Icons from "../../components/IconProvider";
 
+const iconosServicios = {
+  Tienda: Icons.tiendaIcon,
+  WiFi: Icons.wifiIcon,
+  Guardarropa: Icons.guardarropaIcon,
+  Biblioteca: Icons.bilbiotecaIcon,
+  Estacionamiento: Icons.estacionamientoIcon,
+  VisitaGuiada: Icons.visitaGuiadaIcon,
+  ServicioMédico: Icons.medicoIcon,
+  WC: Icons.banioIcon,
+  SilladeRuedas: Icons.sillaRuedasIcon,
+  Cafeteria: Icons.cafeteriaIcon,
+  Elevador: Icons.elevadorIcon,
+  Braille: Icons.brailleIcon,
+  LenguajedeSenas: Icons.lenguajeDeSenasIcon,
+};
+
+const titulosServicios = {
+  Tienda: "Tienda",
+  WiFi: "WiFi",
+  Guardarropa: "Guardarropa",
+  Biblioteca: "Biblioteca",
+  Estacionamiento: "Estacionamiento",
+  VisitaGuiada: "Visita Guiada",
+  ServicioMédico: "Servicio Médico",
+  WC: "Baños",
+  SilladeRuedas: "Silla de Ruedas",
+  Cafeteria: "Cafetería",
+  Elevador: "Elevador",
+  Braille: "Braille",
+  LenguajedeSenas: "Lenguaje de Señas",
+};
+
+const calificacionesConfig = {
+  Edad: {
+    promedio: 2.0,
+    rubricas: [
+      { valor: 3, titulo: "Para Adultos", icono: Icons.adultoIcon },
+      { valor: 2, titulo: "Para toda la familia", icono: Icons.familiarIcon },
+      { valor: 1, titulo: "Para Niños", icono: Icons.ninoIcon },
+    ],
+    width: 0,
+  },
+  Interesante: {
+    promedio: 4.5,
+    rubricas: [
+      { valor: 5, titulo: "Muy Interesante", icono: Icons.dormirIcon },
+      { valor: 4, titulo: "Interesante", icono: Icons.dormirIcon },
+      { valor: 3, titulo: "Poco Interesante", icono: Icons.dormirIcon },
+      { valor: 2, titulo: "Aburrido", icono: Icons.dormirIcon },
+    ],
+    width: 0,
+  },
+  Limpio: {
+    promedio: 0.5,
+    rubricas: [
+      { valor: 1, titulo: "Limpio", icono: Icons.limpioIcon },
+      { valor: 0.5, titulo: "Sucio", icono: Icons.limpioIcon },
+    ],
+    width: 0,
+  },
+  Entendible: {
+    promedio: 0.75,
+    rubricas: [
+      { valor: 1, titulo: "Entendible", icono: Icons.entendibleIcon },
+      { valor: 0.5, titulo: "Difícil", icono: Icons.entendibleIcon },
+    ],
+    witdh: 0,
+  },
+  Costo: {
+    promedio: 2.5,
+    rubricas: [
+      { valor: 4, titulo: "Muy Caro", icono: Icons.moneyIcon },
+      { valor: 3, titulo: "Caro", icono: Icons.moneyIcon },
+      { valor: 2, titulo: "Barato", icono: Icons.moneyIcon },
+      { valor: 1, titulo: "Gratis", icono: Icons.moneyIcon },
+    ],
+    width: 0,
+  },
+};
+
+const getCalificaciones = (config) => {
+  let data = { icono: null, titulo: "" };
+  for (const rubrica of config.rubricas) {
+    if (config.promedio >= rubrica.valor) {
+      data.icono = rubrica.icono;
+      data.titulo = rubrica.titulo;
+      break;
+    }
+  }
+  return data;
+};
+
+Object.keys(calificacionesConfig).forEach((calificacion) => {
+  const data = getCalificaciones(calificacionesConfig[calificacion]);
+  calificacionesConfig[calificacion].icono = data.icono;
+  calificacionesConfig[calificacion].titulo = data.titulo;
+  // Calcular el width de la barra de progreso
+  calificacionesConfig[calificacion].width = (
+    (calificacionesConfig[calificacion].promedio /
+      calificacionesConfig[calificacion].rubricas[0].valor) *
+    100
+  ).toFixed(0);
+  console.log(calificacionesConfig[calificacion]);
+});
+
 const {
+  FaSquareFacebook,
+  FaSquareXTwitter,
+  FaSquareInstagram,
+  FaFilter,
+  webIcon,
   tematicaIcon,
   estrellaIcon,
-  dormirIcon,
-  limpioIcon,
-  entendibleIcon,
-  moneyIcon,
-  ninoIcon,
-  banioIcon,
-  tiendaIcon,
-  wifiIcon,
-  guardarropaIcon,
-  bilbiotecaIcon,
-  estacionamientoIcon,
-  visitaGuiadaIcon,
-  medicoIcon,
-  cafeteriaIcon,
-  elevadorIcon,
-  brailleIcon,
-  lenguajeDeSenasIcon,
-  sillaRuedasIcon,
-  filterIcon,
-  facebookIcon,
-  instagramIcon,
-  twitterIcon,
-  webIcon,
-  FaFilter,
 } = Icons;
 
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
@@ -93,12 +179,14 @@ function MuseoDetail() {
       Domingo: "9:00 - 14:00",
     },
     img: galeriaFoto1,
-    calificacion: 4.5,
+    calificacion: 4,
     costo: 0,
     coords: {
       lat: 19.426111111111,
       lng: -99.186111111111,
     },
+    distancia: 2.4,
+    alcaldia: "Alcaldía de Prueba",
   };
 
   // Lista de museos para el slider
@@ -190,13 +278,13 @@ function MuseoDetail() {
                 </div>
                 <div className="museo-section-1-csm-social-media">
                   <a href="#">
-                    <img src={facebookIcon} alt="Facebook" />
+                    <FaSquareFacebook />
                   </a>
                   <a href="#">
-                    <img src={instagramIcon} alt="Instagram" />
+                    <FaSquareXTwitter />
                   </a>
                   <a href="#">
-                    <img src={twitterIcon} alt="Twitter" />
+                    <FaSquareInstagram />
                   </a>
                   <a href="#">
                     <img src={webIcon} alt="Página Web" />
@@ -210,105 +298,45 @@ function MuseoDetail() {
           <div className="museo-section-2-calificaciones">
             <h1 className="h1-section">Calificaciones</h1>
             <div className="museo-section-2-calificaciones-container">
-              <div className="calificacion-container">
-                <div className="calificacion-title">
-                  <h2>Interesante</h2>
+              {Object.keys(calificacionesConfig).map((calificacion) => (
+                <div className="calificacion-container" key={calificacion}>
+                  <div className="calificacion-title">
+                    <h2>{calificacion}</h2>
+                  </div>
+                  <div className="calificacion-icon">
+                    <img
+                      src={calificacionesConfig[calificacion].icono}
+                      alt={calificacion}
+                    />
+                  </div>
+                  <div
+                    className="calificacion-graph-bar"
+                    title={`${calificacionesConfig[calificacion].width}%`}
+                  >
+                    <div
+                      className="calificacion-graph-bar-fill"
+                      style={{
+                        width: `${calificacionesConfig[calificacion].width}%`,
+                      }}
+                    ></div>
+                  </div>
+                  <p>{calificacionesConfig[calificacion].titulo}</p>
                 </div>
-                <div className="calificacion-icon">
-                  <img src={dormirIcon} alt="Interesante" />
-                </div>
-                <div className="calificacion-graph-bar">
-                  <div className="calificacion-graph-bar-fill"></div>
-                </div>
-              </div>
-              <div className="calificacion-container">
-                <div className="calificacion-title">
-                  <h2>Limpieza</h2>
-                </div>
-                <div className="calificacion-icon">
-                  <img src={limpioIcon} alt="Interesante" />
-                </div>
-                <div className="calificacion-graph-bar">
-                  <div className="calificacion-graph-bar-fill"></div>
-                </div>
-              </div>
-              <div className="calificacion-container">
-                <div className="calificacion-title">
-                  <h2>Entendible</h2>
-                </div>
-                <div className="calificacion-icon">
-                  <img src={entendibleIcon} alt="Interesante" />
-                </div>
-                <div className="calificacion-graph-bar">
-                  <div className="calificacion-graph-bar-fill"></div>
-                </div>
-              </div>
-              <div className="calificacion-container">
-                <div className="calificacion-title">
-                  <h2>Costo</h2>
-                </div>
-                <div className="calificacion-icon">
-                  <img src={moneyIcon} alt="Interesante" />
-                </div>
-                <div className="calificacion-graph-bar">
-                  <div className="calificacion-graph-bar-fill"></div>
-                </div>
-              </div>
-              <div className="calificacion-container">
-                <div className="calificacion-title">
-                  <h2>Edad</h2>
-                </div>
-                <div className="calificacion-icon">
-                  <img src={ninoIcon} alt="Interesante" />
-                </div>
-                <div className="calificacion-graph-bar">
-                  <div className="calificacion-graph-bar-fill"></div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
           <div className="museo-section-2-servicios">
             <h1>Servicios</h1>
             <div className="servicios-container">
-              <div className="servicio-icon">
-                <img src={banioIcon} alt="Baño" />
-              </div>
-              <div className="servicio-icon">
-                <img src={tiendaIcon} alt="Tienda" />
-              </div>
-              <div className="servicio-icon">
-                <img src={wifiIcon} alt="WiFi" />
-              </div>
-              <div className="servicio-icon">
-                <img src={guardarropaIcon} alt="Guardarropa" />
-              </div>
-              <div className="servicio-icon">
-                <img src={bilbiotecaIcon} alt="Biblioteca" />
-              </div>
-              <div className="servicio-icon">
-                <img src={estacionamientoIcon} alt="Estacionamiento" />
-              </div>
-              <div className="servicio-icon">
-                <img src={visitaGuiadaIcon} alt="Visita Guiada" />
-              </div>
-              <div className="servicio-icon">
-                <img src={medicoIcon} alt="Servicio Médico" />
-              </div>
-              <div className="servicio-icon">
-                <img src={cafeteriaIcon} alt="Cafetería" />
-              </div>
-              <div className="servicio-icon">
-                <img src={elevadorIcon} alt="Elevador" />
-              </div>
-              <div className="servicio-icon">
-                <img src={brailleIcon} alt="Braille" />
-              </div>
-              <div className="servicio-icon">
-                <img src={lenguajeDeSenasIcon} alt="Lenguaje de Señas" />
-              </div>
-              <div className="servicio-icon">
-                <img src={sillaRuedasIcon} alt="Silla de Ruedas" />
-              </div>
+              {Object.keys(iconosServicios).map((servicio) => (
+                <div className="servicio-icon" key={servicio}>
+                  <img
+                    src={iconosServicios[servicio]}
+                    alt={servicio}
+                    title={titulosServicios[servicio]}
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <div className="museo-section-2-descripcion">

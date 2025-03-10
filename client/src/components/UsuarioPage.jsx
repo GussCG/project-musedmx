@@ -28,6 +28,8 @@ function UsuarioPage() {
     img: "../assets/images/others/museo-main-1.jpg",
     calificacion: 4,
     costo: 0,
+    distancia: 4.5,
+    alcaldia: "Cuauhtémoc",
   };
 
   const museoEjemplo2 = {
@@ -45,6 +47,8 @@ function UsuarioPage() {
     img: "../assets/images/others/museo-main-2.jpg",
     calificacion: 5,
     costo: 2,
+    distancia: 3.5,
+    alcaldia: "Cuauhtémoc",
   };
 
   const museoEjemplo3 = {
@@ -62,6 +66,8 @@ function UsuarioPage() {
     img: "../assets/images/others/museo-main-2.jpg",
     calificacion: 5,
     costo: 3,
+    distancia: 2.5,
+    alcaldia: "Cuauhtémoc",
   };
 
   const museoEjemplo4 = {
@@ -79,6 +85,8 @@ function UsuarioPage() {
     img: "../assets/images/others/museo-main-2.jpg",
     calificacion: 5,
     costo: 3,
+    distancia: 1.5,
+    alcaldia: "Cuauhtémoc",
   };
 
   const museoEjemplo5 = {
@@ -96,6 +104,8 @@ function UsuarioPage() {
     img: "../assets/images/others/museo-main-2.jpg",
     calificacion: 5,
     costo: 3,
+    distancia: 0.5,
+    alcaldia: "Cuauhtémoc",
   };
 
   const museosFavoritos = {

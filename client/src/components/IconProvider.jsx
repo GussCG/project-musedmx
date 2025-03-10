@@ -9,9 +9,11 @@ import museoIcon from "../assets/icons/museo-w-icon.png";
 
 // Footer
 import logo from "../assets/images/placeholders/logo_placeholder.png";
-import facebookFooterLogo from "../assets/icons/facebook-w-icon.png";
-import instagramFooterLogo from "../assets/icons/instagram-w-icon.png";
-import twitterFooterLogo from "../assets/icons/twitter-icon.png";
+import {
+  FaSquareFacebook,
+  FaSquareXTwitter,
+  FaSquareInstagram,
+} from "react-icons/fa6";
 
 // Lightbox
 import closeIcon from "../assets/icons/close-icon.png";
@@ -65,6 +67,8 @@ import dormirIcon from "../assets/icons/dormir-icon.png";
 import limpioIcon from "../assets/icons/limpio-icon.png";
 import entendibleIcon from "../assets/icons/entendible-icon.png";
 import ninoIcon from "../assets/icons/nino-icon.png";
+import familiarIcon from "../assets/icons/familiar-icon.png";
+import adultoIcon from "../assets/icons/adulto-icon.png";
 
 // Iconos de Servicios
 import banioIcon from "../assets/icons/bano-icon.png";
@@ -93,10 +97,12 @@ import checkIcon from "../assets/icons/paloma-icon.png";
 
 // MapMuseo
 import { FaPerson, FaFilter } from "react-icons/fa6";
-import { IoFilter } from "react-icons/io5";
+import { IoFilter, IoClose } from "react-icons/io5";
 import { FaMap } from "react-icons/fa";
 
 import { TbCardsFilled } from "react-icons/tb";
+
+import { LuEyeClosed, LuEye } from "react-icons/lu";
 
 const Icons = {
   estrellaIcon,
@@ -105,9 +111,9 @@ const Icons = {
   eliminarIcon,
   museoIcon,
   logo,
-  facebookFooterLogo,
-  instagramFooterLogo,
-  twitterFooterLogo,
+  FaSquareFacebook,
+  FaSquareXTwitter,
+  FaSquareInstagram,
   closeIcon,
   closeBIcon,
   CerrarButton,
@@ -160,6 +166,11 @@ const Icons = {
   FaFilter,
   FaMap,
   TbCardsFilled,
+  IoClose,
+  LuEyeClosed,
+  LuEye,
+  familiarIcon,
+  adultoIcon,
 };
 
 export default Icons;

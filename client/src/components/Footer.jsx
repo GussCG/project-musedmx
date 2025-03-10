@@ -1,8 +1,7 @@
 import { Link } from "react-router";
 
 import Icons from "./IconProvider";
-const { logo, facebookFooterLogo, instagramFooterLogo, twitterFooterLogo } =
-  Icons;
+const { logo, FaSquareFacebook, FaSquareXTwitter, FaSquareInstagram } = Icons;
 
 function Footer() {
   return (
@@ -36,7 +35,7 @@ function Footer() {
               <li>
                 <a href="#">
                   <div className="footer-social-media">
-                    <img src={facebookFooterLogo} alt="Facebook" />
+                    <FaSquareFacebook />
                     <p>Facebook</p>
                   </div>
                 </a>
@@ -44,7 +43,7 @@ function Footer() {
               <li>
                 <a href="#">
                   <div className="footer-social-media">
-                    <img src={instagramFooterLogo} alt="Instagram" />
+                    <FaSquareInstagram />
                     <p>Instagram</p>
                   </div>
                 </a>
@@ -52,7 +51,7 @@ function Footer() {
               <li>
                 <a href="#">
                   <div className="footer-social-media">
-                    <img src={twitterFooterLogo} alt="Twitter" />
+                    <FaSquareXTwitter />
                     <p>Twitter</p>
                   </div>
                 </a>

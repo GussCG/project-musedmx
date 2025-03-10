@@ -8,6 +8,11 @@ import * as Yup from "yup";
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { format } from "date-fns";
+import { es, se } from "react-day-picker/locale";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
+
 // Iconos
 import Icons from "../../components/IconProvider";
 const { subirImagenIcon, fileIcon, checkIcon, eliminarIcon, FaStar } = Icons;
@@ -51,7 +56,15 @@ function ProfileHistoryDetail() {
   });
 
   // Para la fecha de visita
-  const [fechaVisita, setFechaVisita] = useState("");
+  const [fechaVisita, setFechaVisita] = useState(new Date());
+  const handleDayPickerSelect = (date) => {
+    if (!date) {
+      setFechaVisita(new Date());
+    } else {
+      setFechaVisita(date);
+    }
+  };
+
   // Para el comentario
   const [comentario, setComentario] = useState("");
   // Para las estrellas
@@ -82,7 +95,7 @@ function ProfileHistoryDetail() {
         pauseOnHover: false,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "colored",
         transition: Bounce,
       });
       return;
@@ -115,7 +128,7 @@ function ProfileHistoryDetail() {
         pauseOnHover: false,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "colored",
         transition: Bounce,
       });
     }
@@ -173,7 +186,7 @@ function ProfileHistoryDetail() {
       values.regresFrmCalif = parseInt(values.regresFrmCalif);
 
       // Agregar los datos de la reseña
-      resenaData.append("fechaVisita", values.regresFrmFecVis);
+      resenaData.append("fechaVisita", fechaVisita);
       resenaData.append("calificacion", values.regresFrmCalif);
       resenaData.append("comentario", values.regresFrmComentario);
 
@@ -190,6 +203,10 @@ function ProfileHistoryDetail() {
       //     console.log(err);
       // });
 
+      resenaData.forEach((value, key) => {
+        console.log(key, value);
+      });
+
       toast.success(`Se han registrado sus cambios correctamente`, {
         position: "top-right",
         autoClose: 5000,
@@ -198,7 +215,7 @@ function ProfileHistoryDetail() {
         pauseOnHover: false,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
         transition: Bounce,
       });
       toast.warn(`Un moderador revisará los cambios`, {
@@ -209,7 +226,7 @@ function ProfileHistoryDetail() {
         pauseOnHover: false,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
         transition: Bounce,
       });
     } catch (error) {
@@ -245,19 +262,44 @@ function ProfileHistoryDetail() {
       >
         {({ setFieldValue, values }) => (
           <Form>
-            <div className="editar-res-p1">
+            <div className="editar-res-p2">
+              <h2>Comentario</h2>
               <div className="registros-field">
-                <Field
-                  type="date"
-                  id="regres-frm-fecVis"
-                  name="regresFrmFecVis"
-                  placeholder="Fecha de Visita"
+                <textarea
+                  id="regres-frm-comentario"
+                  name="regresFrmComentario"
+                  value={values.regresFrmComentario}
+                  onChange={(e) =>
+                    setFieldValue("regresFrmComentario", e.target.value)
+                  }
                   required
+                ></textarea>
+                <ErrorMessage name="regresFrmComentario" component="div" />
+              </div>
+            </div>
+            <div className="editar-res-p1">
+              <div className="registros-field-calendar">
+                <label>Fecha de la visita</label>
+                <DayPicker
+                  hideNavigation
+                  animate
+                  locale={es}
+                  timeZone="UTC"
+                  captionLayout="dropdown"
+                  fixedWeeks
+                  month={fechaVisita}
+                  onMonthChange={setFechaVisita}
+                  autoFocus
+                  mode="single"
+                  selected={fechaVisita}
+                  onSelect={handleDayPickerSelect}
+                  footer={
+                    fechaVisita
+                      ? `Seleccionaste el ${format(fechaVisita, "dd-MM-yyyy")}`
+                      : "Selecciona una fecha"
+                  }
+                  className="registros-calendar"
                 />
-                <label htmlFor="regres-frm-fecVis" className="frm-label">
-                  Fecha de Visita
-                </label>
-                <ErrorMessage name="regresFrmFecVis" component="div" />
               </div>
               <div className="registros-field-calif">
                 <h2>Calificación</h2>
@@ -295,21 +337,7 @@ function ProfileHistoryDetail() {
               </div>
               <ErrorMessage name="regresFrmCalif" component="div" />
             </div>
-            <div className="editar-res-p2">
-              <h2>Comentario</h2>
-              <div className="registros-field">
-                <textarea
-                  id="regres-frm-comentario"
-                  name="regresFrmComentario"
-                  value={values.regresFrmComentario}
-                  onChange={(e) =>
-                    setFieldValue("regresFrmComentario", e.target.value)
-                  }
-                  required
-                ></textarea>
-                <ErrorMessage name="regresFrmComentario" component="div" />
-              </div>
-            </div>
+
             <div className="editar-res-p3">
               <div className="registros-field-fotos">
                 <h2>Fotos de la Visita</h2>

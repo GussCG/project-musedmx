@@ -21,6 +21,7 @@
     "lottie-web": "^5.12.2",
     "rc-slider": "^11.1.8",
     "react": "^19.0.0",
+    "react-day-picker": "^9.6.1",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-ionicons": "^1.5.7",

@@ -9,11 +9,14 @@ import Icons from "../../components/IconProvider";
 const { eyeClosedIcon, eyeOpenIcon } = Icons;
 
 import Eye from "../../components/Eye";
+import LoginErrorMessage from "../../components/LoginErrorMessage";
 
 function LoginForm() {
   // Usar el hook useAuth para obtener las funciones y estados de autenticación
   const { login, isLoading, error } = useAuth();
   const [shown, setShown] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   const switchShown = () => {
     setShown(!shown);
@@ -41,7 +44,7 @@ function LoginForm() {
                   password: values.login_frm_password,
                 });
               } catch (error) {
-                console.error(error);
+                setErrorMessage(error.message);
               } finally {
                 setSubmitting(false);
               }
@@ -79,6 +82,7 @@ function LoginForm() {
                   />
                   {/* <Eye /> */}
                 </div>
+                <LoginErrorMessage error={errorMessage} />
                 <input
                   type="submit"
                   value={isLoading ? "Cargando..." : "Iniciar Sesión"}
@@ -89,7 +93,6 @@ function LoginForm() {
               </Form>
             )}
           </Formik>
-          {error && <p>{error}</p>}
           <Link to="/Auth/Recuperar">¿Olvidaste tu contraseña?</Link>
           <p>
             ¿No tienes una cuenta aún?{" "}

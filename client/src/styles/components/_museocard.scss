@@ -4,7 +4,7 @@
   position: relative;
   width: 100%;
   max-width: 30rem;
-  height: 100%;
+  height: fit-content;
   max-height: 400px;
   background-color: $museo-card-bg;
   border-radius: 20px;
@@ -165,9 +165,11 @@
 
     .museo-card-info-header {
       width: 100%;
+      height: fit-content;
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
 
       #museo-card-nombre {
         font-size: 1.2rem;
@@ -180,6 +182,12 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+
+      #museo-card-alcaldia {
+        font-size: 14px;
+        color: $museo-card-h1-color;
+        font-weight: $font-w-semibold;
       }
 
       a {
@@ -197,33 +205,22 @@
       width: 100%;
       height: 100%;
       display: flex;
-      flex-direction: row;
-      justify-content: space-around;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
 
-      p {
-        width: 300px;
-        font-size: 14px;
-        color: $museo-card-h1-color;
-        font-weight: $font-w-light;
-        text-align: left;
-
-        white-space: nowrap;
-      }
-
-      .museo-card-info-body-horario {
+      .museo-card-info-body-item {
         width: 100%;
+        height: fit-content;
         display: flex;
         align-items: flex-start;
         justify-content: center;
         flex-direction: column;
 
-        margin: 0 20px;
-
         p {
-          font-size: 1rem;
+          font-size: 16px;
           color: $museo-card-h1-color;
-          font-weight: $font-w-regular;
+          font-weight: $font-w-light;
           text-align: left;
 
           white-space: nowrap;

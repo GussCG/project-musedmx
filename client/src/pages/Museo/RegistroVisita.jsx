@@ -6,6 +6,11 @@ const { FaStar, subirImagenIcon } = Icons;
 import { Formik, Form, Field } from "formik";
 import axios from "axios";
 
+import { format } from "date-fns";
+import { es } from "react-day-picker/locale";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
+
 // Toastify
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -31,6 +36,20 @@ function RegistroVisita() {
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
   const [comment, setComment] = useState("");
+
+  // Para la fecha de la visita
+  const [diaSelected, setDiaSelected] = useState(new Date());
+  const handleDayPickerSelect = (date) => {
+    if (!date) {
+      setDiaSelected(new Date());
+    } else {
+      setDiaSelected(date);
+    }
+  };
+
+  // Fecha actual en UTC -6
+  let today = new Date();
+  today.setHours(today.getHours() - 6);
 
   // Para las imagenes de la reseña
   const fileInputRef = useRef(null);
@@ -233,7 +252,7 @@ function RegistroVisita() {
         <h1>Reseña</h1>
         <Formik
           initialValues={{
-            regresfrmfecVis: "",
+            regresfrmfecVis: diaSelected,
             regresfrmcomentario: "",
             regresfrmrating: "",
             regresfrmfotos: uploadedFiles.length ? uploadedFiles : [],
@@ -249,7 +268,33 @@ function RegistroVisita() {
         >
           {({ setFieldValue, values }) => (
             <Form id="registros-encuesta-form">
-              <div className="registros-field">
+              <div className="registros-field-calendar">
+                <label>Fecha de la visita</label>
+                <DayPicker
+                  hideNavigation
+                  animate
+                  locale={es}
+                  timeZone="UTC"
+                  captionLayout="dropdown"
+                  fixedWeeks
+                  month={diaSelected}
+                  onMonthChange={setDiaSelected}
+                  autoFocus
+                  mode="single"
+                  selected={diaSelected}
+                  onSelect={handleDayPickerSelect}
+                  footer={
+                    diaSelected
+                      ? `Seleccionaste el ${format(diaSelected, "dd-MM-yyyy")}`
+                      : "Selecciona una fecha"
+                  }
+                  modifiers={{
+                    disabled: { after: today },
+                  }}
+                  className="registros-calendar"
+                />
+              </div>
+              {/* <div className="registros-field">
                 <Field
                   type="date"
                   id="regres-frm-fecVis"
@@ -260,7 +305,7 @@ function RegistroVisita() {
                 <label htmlFor="regres-frm-fecVis" className="frm-label">
                   Fecha de Visita
                 </label>
-              </div>
+              </div> */}
               <div className="registros-field">
                 <textarea
                   id="regres-frm-comentario"
@@ -529,7 +574,11 @@ function RegistroVisita() {
                       "Braille",
                       "LenguajedeSenas",
                     ].map((servicio) => (
-                      <label className="registros-chk-serv" key={servicio}>
+                      <label
+                        title={servicio}
+                        className="registros-chk-serv"
+                        key={servicio}
+                      >
                         <Field
                           type="checkbox"
                           name="registrosfrmservicios"

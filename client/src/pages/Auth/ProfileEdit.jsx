@@ -9,6 +9,11 @@ import { toast, Bounce } from "react-toastify";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
+import { format, set } from "date-fns";
+import { es } from "react-day-picker/locale";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
+
 import { useAuth } from "../../context/AuthProvider";
 
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
@@ -65,9 +70,19 @@ function ProfileEdit() {
   const imageInputRef = useRef(null);
 
   // Fecha de nacimiento
-  let today = new Date();
-  today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-  today = today.toISOString().split("T")[0];
+  const [mes, setMes] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDayPickerSelect = (date) => {
+    if (!date) {
+      setSelectedDate(new Date());
+    } else {
+      setSelectedDate(date);
+    }
+  };
+
+  const today = new Date();
+  today.setHours(today.getHours() - 6);
 
   // Logica para habilitar el rango de costo dependiendo del tipo de costo
   const handleCostoChange = (event) => {
@@ -104,7 +119,7 @@ function ProfileEdit() {
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        theme: "dark",
+        theme: "colored",
         transition: Bounce,
       });
       return;
@@ -133,11 +148,14 @@ function ProfileEdit() {
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          theme: "dark",
+          theme: "colored",
           transition: Bounce,
         });
         return;
       }
+
+      // Convertir la fecha de nacimiento
+      const parsedDate = selectedDate.toISOString();
 
       // Agregar los datos personales
       userData.append("nombre", values.signinfrmnombre);
@@ -145,7 +163,7 @@ function ProfileEdit() {
       userData.append("apellido_materno", values.signinfrmapmaterno);
       userData.append("email", values.signinfrmemail);
       userData.append("telefono", tel);
-      userData.append("fecha_nacimiento", values.signinfrmfecnac);
+      userData.append("fecha_nacimiento", parsedDate);
       userData.append("tematicas", JSON.stringify(selectedTematicas));
       userData.append("tipo_costo", costo);
       userData.append("rango_costo", valorRango);
@@ -189,6 +207,8 @@ function ProfileEdit() {
       setCosto(usuario.tipo_costo || "");
       setValorRango(usuario.rango_costo || [0, 100]);
       setTel(usuario.tel || "");
+      setSelectedDate(new Date(usuario.fecNac) || new Date());
+      setMes(selectedDate || new Date());
       // Se establece la imagen de vista previa y el archivo de imagen
       setImagePreview(usuario.foto || userPlaceholder);
     }
@@ -208,7 +228,6 @@ function ProfileEdit() {
               signinfrmapmaterno: usuario?.apMaterno || "",
               signinfrmemail: usuario?.email || "",
               signinfrmtelefono: usuario?.tel || "",
-              signinfrmfecnac: usuario?.fecNac || "",
               // Solo para usuarios tipo 1 (Usuario normal)
               signinfrmtematica:
                 user.tipoUsuario === 1 ? usuario?.tematicas || [] : [],
@@ -304,18 +323,34 @@ function ProfileEdit() {
                         Teléfono
                       </label>
                     </div>
-                    <div className="registros-field">
-                      <Field
-                        type="date"
-                        id="signin-frm-fecnac"
-                        name="signinfrmfecnac"
-                        placeholder="Fecha de Nacimiento"
-                        max={today}
-                        required
+                    <div className="registros-field-calendar">
+                      <label>Fecha de Nacimiento</label>
+                      <DayPicker
+                        hideNavigation
+                        animate
+                        locale={es}
+                        timeZone="America/Mexico_City"
+                        captionLayout="dropdown"
+                        fixedWeeks
+                        month={mes}
+                        onMonthChange={setMes}
+                        autoFocus
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={handleDayPickerSelect}
+                        footer={
+                          selectedDate
+                            ? `Seleccionaste el ${format(
+                                selectedDate,
+                                "dd-MM-yyyy"
+                              )}`
+                            : "Selecciona una fecha"
+                        }
+                        modifiers={{
+                          disabled: { after: today },
+                        }}
+                        className="registros-calendar"
                       />
-                      <label htmlFor="signin-frm-fecnac" className="frm-label">
-                        Fecha de Nacimiento
-                      </label>
                     </div>
                   </div>
                   {user.tipoUsuario === 1 ? (

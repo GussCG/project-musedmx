@@ -30,6 +30,7 @@ const museoEjemplo = {
     lat: 19.420458,
     lng: -99.182228,
   },
+  alcaldia: "Cuauhtémoc",
 };
 
 const museoEjemplo2 = {
@@ -52,6 +53,7 @@ const museoEjemplo2 = {
     lat: 19.432608,
     lng: -99.133209,
   },
+  alcaldia: "Miguel Hidalgo",
 };
 
 const museoEjemplo3 = {
@@ -74,6 +76,7 @@ const museoEjemplo3 = {
     lat: 19.42847,
     lng: -99.18129,
   },
+  alcaldia: "Miguel Hidalgo",
 };
 
 const MuseosMostrados = [museoEjemplo, museoEjemplo2, museoEjemplo3];
