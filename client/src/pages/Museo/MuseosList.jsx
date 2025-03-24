@@ -8,6 +8,7 @@ import NavBar from "../../components/NavBar";
 import MuseoCard from "../../components/MuseoCard";
 import MuseosMapView from "./MuseosMapView";
 import MenuSort from "../../components/MenuSort";
+import MapIndicaciones from "../../components/MapIndicaciones";
 
 import Icons from "../../components/IconProvider";
 const {
@@ -91,6 +92,7 @@ function MuseosList({ titulo, MuseosMostrados, tipo }) {
         menuVisible={menuVisible}
         setMenuVisible={setMenuVisible}
       />
+      {isMapView ? <MapIndicaciones /> : null}
       <main id="vermuseos-main">
         <section className="museos-header-section">
           <div className="museos-header-section-left">
@@ -99,52 +101,56 @@ function MuseosList({ titulo, MuseosMostrados, tipo }) {
               {isMapView ? <TbCardsFilled /> : <FaMap />}
             </button>
           </div>
-          <div className="museos-header-section-right">
-            <>
+          {isMapView ? null : (
+            <div className="museos-header-section-right">
+              <>
+                <button
+                  className="museos-header-section-right-button"
+                  title="Ordenar"
+                  onClick={(event) => toggleSortedMenu(event)}
+                  ref={menuSortButtonRef}
+                >
+                  <p>Ordenar por</p>
+                  <LuArrowUpDown />
+                </button>
+                {isSortedMenuOpen && (
+                  <MenuSort
+                    ref={menuSortRef}
+                    onSortChange={setSortBy}
+                    sortBy={sortBy}
+                  />
+                )}
+              </>
               <button
+                type="button"
                 className="museos-header-section-right-button"
-                title="Ordenar"
-                onClick={(event) => toggleSortedMenu(event)}
-                ref={menuSortButtonRef}
+                onClick={(event) => {
+                  abrirMenu();
+                }}
+                title="Filtrar"
               >
-                <p>Ordenar por</p>
-                <LuArrowUpDown />
+                <p>Filtrar</p>
+                <FaFilter />
               </button>
-              {isSortedMenuOpen && (
-                <MenuSort
-                  ref={menuSortRef}
-                  onSortChange={setSortBy}
-                  sortBy={sortBy}
-                />
-              )}
-            </>
-            <button
-              type="button"
-              className="museos-header-section-right-button"
-              onClick={(event) => {
-                abrirMenu();
-              }}
-              title="Filtrar"
-            >
-              <p>Filtrar</p>
-              <FaFilter />
-              {/* <img src={filtrarButton} alt="Filtrar" id="filtrar-button" /> */}
-            </button>
-          </div>
+            </div>
+          )}
         </section>
-        <section className="museos-container-section">
-          {isMapView ? (
+
+        {isMapView ? (
+          <section className="museos-container-map-section">
             <MuseosMapView
               titulo={titulo}
               MuseosMostrados={MuseosMostrados}
               tipo={tipo}
             />
-          ) : (
-            sortedMuseos.map((museo) => (
+          </section>
+        ) : (
+          <section className="museos-container-section">
+            {sortedMuseos.map((museo) => (
               <MuseoCard key={museo.id} museo={museo} />
-            ))
-          )}
-        </section>
+            ))}
+          </section>
+        )}
       </main>
     </>
   );

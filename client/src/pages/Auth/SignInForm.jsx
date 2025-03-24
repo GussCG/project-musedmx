@@ -1,11 +1,15 @@
 import React, { useRef, useEffect, useState } from "react";
+
+import useUsuario from "../../hooks/Usuario/useUsuario";
+
 import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 import { toast, Bounce } from "react-toastify";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
-import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
+// import Slider from "rc-slider";
+// import "rc-slider/assets/index.css";
 
 import { format } from "date-fns";
 import { es } from "react-day-picker/locale";
@@ -16,17 +20,43 @@ import Icons from "../../components/IconProvider";
 const { eyeClosedIcon, eyeOpenIcon } = Icons;
 
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
+import ValidPassword from "../../components/ValidPassword";
+import ErrorCampo from "../../components/ErrorCampo";
+
+const validationSchema = Yup.object({
+  signinfrmnombre: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El nombre solo puede contener letras"
+    )
+    .required("Campo requerido"),
+  signinfrmappaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido paterno solo puede contener letras"
+    )
+    .required("Campo requerido"),
+  signinfrmapmaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido materno solo puede contener letras"
+    )
+    .required("Campo requerido"),
+  signinfrmemail: Yup.string()
+    .email("Correo inválido")
+    .required("Campo requerido"),
+});
 
 function SignInForm() {
   // Estados
-  const [tel, setTel] = useState();
+  const [tel, setTel] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
-  const [isValid, setIsValid] = useState(true);
+  const [isValidPass, setIsValidPass] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
-  const [costo, setCosto] = useState("");
-  const [valorRango, setValorRango] = useState([0, 100]);
-  const [rangoHabilitado, setRangoHabilitado] = useState(false);
+  // const [costo, setCosto] = useState("");
+  // const [valorRango, setValorRango] = useState([0, 100]);
+  // const [rangoHabilitado, setRangoHabilitado] = useState(false);
   const [imagePreview, setImagePreview] = useState(userPlaceholder);
   const [selectedTematicas, setSelectedTematicas] = useState([]);
   const signInButtonRef = useRef(null);
@@ -50,39 +80,21 @@ function SignInForm() {
   let today = new Date();
   today.setHours(today.getHours() - 6);
 
-  // Expresion regular para validar la contraseña
-  // Al menos 8 caracteres, una letra mayuscula, una letra minuscula y un numero
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  // // Logica para habilitar el rango de costo dependiendo del tipo de costo
+  // const handleCostoChange = (event) => {
+  //   const seleccion = event.target.value;
+  //   setCosto(seleccion);
+  //   setRangoHabilitado(
+  //     seleccion === "Siempre con costo" || seleccion === "A veces gratis"
+  //   );
+  //   if (seleccion !== "Siempre con costo" && seleccion !== "A veces gratis") {
+  //     setValorRango(0);
+  //   }
+  // };
 
-  // Manejar el cambio de la contraseña
-  const handlePasswordChange = (event) => {
-    const newPassword = event.target.value;
-    setPassword(newPassword);
-    setIsValid(passwordRegex.test(newPassword));
-  };
-
-  // Manejar el cambio de la confirmacion de la contraseña
-  const handlePassword2Change = (event) => {
-    const confirmPassword = event.target.value;
-    setPassword2(confirmPassword);
-    setIsPasswordMatch(password === confirmPassword);
-  };
-
-  // Logica para habilitar el rango de costo dependiendo del tipo de costo
-  const handleCostoChange = (event) => {
-    const seleccion = event.target.value;
-    setCosto(seleccion);
-    setRangoHabilitado(
-      seleccion === "Siempre con costo" || seleccion === "A veces gratis"
-    );
-    if (seleccion !== "Siempre con costo" && seleccion !== "A veces gratis") {
-      setValorRango(0);
-    }
-  };
-
-  const handleRangeChange = (value) => {
-    setValorRango(value);
-  };
+  // const handleRangeChange = (value) => {
+  //   setValorRango(value);
+  // };
 
   // Lógica para el cambio de imagen de perfil
   const handleImageChange = (event, setFieldValue) => {
@@ -113,10 +125,73 @@ function SignInForm() {
     );
   };
 
-  // Desabilitar el boton de registro si algun campo es invalido
-  const isFormValid =
-    isValid && isPasswordMatch && tel && costo && selectedTematicas > 0;
+  // Para validar la contraseña validaciones individuales
+  // Tiene que tener minimo 8 caracteres, una letra mayúscula, una letra minúscula, un número y un caracter especial
+  const [faltaNumero, setFaltaNumero] = useState(false);
+  const [faltaMayuscula, setFaltaMayuscula] = useState(false);
+  const [faltaMinuscula, setFaltaMinuscula] = useState(false);
+  const [faltaCaracterEspecial, setFaltaCaracterEspecial] = useState(false);
+  const [longitud, setLongitud] = useState(false);
 
+  // Expresiones regulares para validar la contraseña
+  const numeroRegex = /\d/;
+  const mayusculaRegex = /[A-Z]/;
+  const minusculaRegex = /[a-z]/;
+  const caracterEspecialRegex = /[^A-Za-z0-9]/;
+
+  useEffect(() => {
+    if (password === "") {
+      setIsValidPass(false);
+      setFaltaNumero(false);
+      setFaltaMayuscula(false);
+      setFaltaMinuscula(false);
+      setFaltaCaracterEspecial(false);
+      setLongitud(false);
+      return;
+    }
+
+    const esNumeroValido = numeroRegex.test(password);
+    const esMayusculaValida = mayusculaRegex.test(password);
+    const esMinusculaValida = minusculaRegex.test(password);
+    const esCaracterEspecialValido = caracterEspecialRegex.test(password);
+    const esLongitudValida = password.length >= 8;
+
+    // Actualizamos los estados
+    setFaltaNumero(esNumeroValido);
+    setFaltaMayuscula(esMayusculaValida);
+    setFaltaMinuscula(esMinusculaValida);
+    setFaltaCaracterEspecial(esCaracterEspecialValido);
+    setLongitud(esLongitudValida);
+
+    setIsValidPass(
+      esNumeroValido &&
+        esMayusculaValida &&
+        esMinusculaValida &&
+        esCaracterEspecialValido &&
+        esLongitudValida
+    );
+  }, [password]);
+
+  // Validar la confirmación de la contraseña
+  useEffect(() => {
+    setIsPasswordMatch(
+      password !== "" && password2 !== "" && password === password2
+    );
+  }, [password, password2]);
+
+  // Desabilitar el boton de registro si algun campo es invalido
+  const [isFormValid, setIsFormValid] = useState(false);
+  useEffect(() => {
+    setIsFormValid(
+      isValidPass &&
+        isPasswordMatch &&
+        isPossiblePhoneNumber(tel) &&
+        selectedTematicas.length === 3 &&
+        selectedDate !== null
+    );
+  }, [isValidPass, isPasswordMatch, tel, selectedTematicas, selectedDate]);
+
+  const { registrarUsuario } = useUsuario();
   // Función para registrar al usuario
   const handleRegister = async (values) => {
     try {
@@ -147,16 +222,47 @@ function SignInForm() {
       userData.append("fecNac", parsedDate);
       userData.append("password", password);
       userData.append("tematicas", JSON.stringify(selectedTematicas));
-      userData.append("tipo_costo", costo);
-      userData.append("rango_costo", valorRango);
+      // userData.append("tipo_costo", costo);
+      // userData.append("rango_costo", valorRango);
       if (values.signinfrmfoto) userData.append("foto", values.signinfrmfoto);
       else userData.append("foto", userPlaceholder);
 
-      console.log("Datos a enviar al backend:");
+      // Convertir a un objeto
+      let userObject = {};
       userData.forEach((value, key) => {
-        console.log(key, value);
+        userObject[key] = value;
       });
+
       // Lógica para enviar los datos al backend
+      const response = await registrarUsuario(userObject);
+
+      if (response) {
+        toast.success("Usuario registrado correctamente", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+        // Redirigir al perfil del usuario
+        history.push("/perfil");
+      } else {
+        toast.error("Error al registrar el usuario", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
 
       // Manejo de la respuesta del backend
     } catch (error) {
@@ -176,52 +282,52 @@ function SignInForm() {
     setShown2(!shown2);
   };
 
-  const handleRangoChange = (event) => {
-    setValorRango(event.target.value);
-  };
+  // const handleRangoChange = (event) => {
+  //   setValorRango(event.target.value);
+  // };
 
-  // Logica para validar las contraseñas
-  useEffect(() => {
-    let password = passwordRef.current;
-    let password2 = password2Ref.current;
-    let signInButton = signInButtonRef.current;
+  // // Logica para validar las contraseñas
+  // useEffect(() => {
+  //   let password = passwordRef.current;
+  //   let password2 = password2Ref.current;
+  //   let signInButton = signInButtonRef.current;
 
-    // Validamos las contraseña y la confirmacion de la contraseña
-    // Si son iguales se pinta de verde y se activa el boton de registro
-    if (signInButton) {
-      signInButton.disabled = true;
-    }
+  //   // Validamos las contraseña y la confirmacion de la contraseña
+  //   // Si son iguales se pinta de verde y se activa el boton de registro
+  //   if (signInButton) {
+  //     signInButton.disabled = true;
+  //   }
 
-    const validatePasswords = () => {
-      if (password2.value == "") {
-        password2.style.borderColor = "black";
-        password2.style.borderWidth = "1px";
-        password2.setCustomValidity("");
-        signInButton.disabled = true;
-        return;
-      }
+  //   const validatePasswords = () => {
+  //     if (password2.value == "") {
+  //       password2.style.borderColor = "black";
+  //       password2.style.borderWidth = "1px";
+  //       password2.setCustomValidity("");
+  //       signInButton.disabled = true;
+  //       return;
+  //     }
 
-      if (password.value !== password2.value) {
-        password2.setCustomValidity("Las contraseñas no coinciden");
-        password2.style.borderColor = "red";
-        password2.style.borderWidth = "2px";
-        signInButton.disabled = true;
-      } else {
-        password2.setCustomValidity("");
-        password2.style.borderColor = "green";
-        password2.style.borderWidth = "2px";
-        signInButton.disabled = false;
-      }
-    };
+  //     if (password.value !== password2.value) {
+  //       password2.setCustomValidity("Las contraseñas no coinciden");
+  //       password2.style.borderColor = "red";
+  //       password2.style.borderWidth = "2px";
+  //       signInButton.disabled = true;
+  //     } else {
+  //       password2.setCustomValidity("");
+  //       password2.style.borderColor = "green";
+  //       password2.style.borderWidth = "2px";
+  //       signInButton.disabled = false;
+  //     }
+  //   };
 
-    password?.addEventListener("input", validatePasswords);
-    password2?.addEventListener("input", validatePasswords);
+  //   password?.addEventListener("input", validatePasswords);
+  //   password2?.addEventListener("input", validatePasswords);
 
-    return () => {
-      password?.removeEventListener("input", validatePasswords);
-      password2?.removeEventListener("input", validatePasswords);
-    };
-  }, []);
+  //   return () => {
+  //     password?.removeEventListener("input", validatePasswords);
+  //     password2?.removeEventListener("input", validatePasswords);
+  //   };
+  // }, []);
 
   return (
     <>
@@ -238,16 +344,17 @@ function SignInForm() {
               signinfrmpassword: "",
               signinfrmrepassword: "",
               signinfrmtematica: [],
-              signinfrmtipoCosto: "",
-              signinfrmrangocosto: 0,
+              // signinfrmtipoCosto: "",
+              // signinfrmrangocosto: 0,
               signinfrmfoto: "",
             }}
+            validationSchema={validationSchema}
             onSubmit={(values) => {
               // console.log(values);
               handleRegister(values);
             }}
           >
-            {({ setFieldValue, values }) => (
+            {({ errors, touched, setFieldValue, isValid }) => (
               <Form id="signin-form">
                 <div className="registros-container">
                   <div className="registros-datos">
@@ -263,6 +370,9 @@ function SignInForm() {
                       <label htmlFor="signin-frm-nombre" className="frm-label">
                         Nombre
                       </label>
+                      {errors.signinfrmnombre && touched.signinfrmnombre && (
+                        <ErrorCampo mensaje={errors.signinfrmnombre} />
+                      )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -278,6 +388,10 @@ function SignInForm() {
                       >
                         Apellido Paterno
                       </label>
+                      {errors.signinfrmappaterno &&
+                        touched.signinfrmappaterno && (
+                          <ErrorCampo mensaje={errors.signinfrmappaterno} />
+                        )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -293,6 +407,10 @@ function SignInForm() {
                       >
                         Apellido Materno
                       </label>
+                      {errors.signinfrmapmaterno &&
+                        touched.signinfrmapmaterno && (
+                          <ErrorCampo mensaje={errors.signinfrmapmaterno} />
+                        )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -305,6 +423,9 @@ function SignInForm() {
                       <label htmlFor="signin-frm-email" className="frm-label">
                         Correo Electrónico
                       </label>
+                      {errors.signinfrmemail && touched.signinfrmemail && (
+                        <ErrorCampo mensaje={errors.signinfrmemail} />
+                      )}
                     </div>
                     <div
                       className={`registros-field-telefonos ${
@@ -365,7 +486,7 @@ function SignInForm() {
                         name="signinfrmpassword"
                         placeholder="Contraseña"
                         ref={passwordRef}
-                        onChange={handlePasswordChange}
+                        onChange={(e) => setPassword(e.target.value)}
                         value={password}
                         required
                       />
@@ -382,11 +503,14 @@ function SignInForm() {
                         id="eye"
                         className="eye"
                       />
-                      {!isValid && (
-                        <span className="password-error">
-                          La contraseña debe tener al menos 8 caracteres, una
-                          letra mayúscula, una letra minúscula y un número
-                        </span>
+                      {password.length > 0 && !isValidPass && (
+                        <ValidPassword
+                          faltaNumero={faltaNumero}
+                          faltaMayuscula={faltaMayuscula}
+                          faltaMinuscula={faltaMinuscula}
+                          faltaCaracterEspecial={faltaCaracterEspecial}
+                          longitud={longitud}
+                        />
                       )}
                     </div>
                     <div className="registros-field">
@@ -396,9 +520,14 @@ function SignInForm() {
                         name="signinfrmrepassword"
                         placeholder="Repetir Contraseña"
                         ref={password2Ref}
-                        onChange={handlePassword2Change}
+                        onChange={(e) => setPassword2(e.target.value)}
                         value={password2}
                         required
+                        style={
+                          isPasswordMatch
+                            ? { borderColor: "green", borderWidth: "2px" }
+                            : { borderColor: "red", borderWidth: "2px" }
+                        }
                       />
                       <label
                         htmlFor="signin-frm-repassword"
@@ -529,7 +658,7 @@ function SignInForm() {
                         </div>
                       </fieldset>
                     </div>
-                    <div className="registros-field">
+                    {/* <div className="registros-field">
                       <div className="registros-field-header">
                         <h2>Tipo de Costo</h2>
                       </div>
@@ -584,7 +713,7 @@ function SignInForm() {
                           railStyle={{ backgroundColor: "#d9d9d9" }}
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <hr />
                     <div className="registros-field-foto">
                       <div className="registros-field-foto-input">
@@ -610,10 +739,12 @@ function SignInForm() {
                 <Field
                   type="submit"
                   value="Registrarse"
-                  className="button"
+                  className={
+                    `button ` + (isFormValid && isValid ? "" : "disabled")
+                  }
                   id="registros-button"
                   ref={signInButtonRef}
-                  disabled={isFormValid ? false : true}
+                  disabled={isFormValid && isValid ? false : true}
                 />
               </Form>
             )}

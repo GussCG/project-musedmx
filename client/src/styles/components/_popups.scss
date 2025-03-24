@@ -18,7 +18,7 @@
   width: 90%;
   height: auto;
   max-width: 600px;
-  min-height: 500px;
+  min-height: 700px;
 
   position: fixed;
   top: 50%;
@@ -129,6 +129,141 @@
 
       &:hover {
         opacity: 0.5;
+      }
+    }
+  }
+}
+
+#main-map-indicaciones {
+  z-index: 1001;
+
+  background-color: $rose-w;
+  width: 95%;
+  height: 50%;
+  max-width: 600px;
+  min-height: 750px;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  gap: 20px;
+
+  padding: 20px;
+
+  #close-login-popup {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    transition: transform 0.3s ease, opacity 0.3s ease;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover {
+      transform: scale(1.2);
+      opacity: 0.7;
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-top: 20px;
+  }
+
+  .map-indicaciones-item {
+    width: 90%;
+    height: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-direction: column;
+
+    h2 {
+      width: 100%;
+      height: auto;
+      font-family: $font-primary;
+      font-size: 1.5rem;
+      font-weight: $font-w-bold;
+      text-align: left;
+    }
+
+    p {
+      width: 100%;
+      height: auto;
+      font-family: $font-primary;
+      font-size: 1rem;
+      font-weight: $font-w-light;
+      text-align: justify;
+
+      a {
+        color: $color-a;
+        text-decoration: none;
+        font-weight: $font-w-semibold;
+        transition: opacity 0.3s ease-in-out;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    ul {
+      padding-left: 20px;
+      li {
+        width: 100%;
+        height: auto;
+        text-align: justify;
+        font-family: $font-primary;
+        font-size: 1rem;
+        font-weight: $font-w-light;
+
+        margin-top: 10px;
+      }
+    }
+
+    .map-indicaciones-simbolo-container {
+      width: 100%;
+      height: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      grid-column-gap: 10px;
+      grid-row-gap: 10px;
+
+      .map-indicaciones-simbolo {
+        padding: 10px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 20px;
+
+        p {
+          font-family: $font-primary;
+          font-size: 1rem;
+          font-weight: $font-w-semibold;
+          text-align: center;
+        }
       }
     }
   }

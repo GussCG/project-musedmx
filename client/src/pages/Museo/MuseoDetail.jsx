@@ -277,16 +277,16 @@ function MuseoDetail() {
                   <img src={estrellaIcon} alt="Estrella" />
                 </div>
                 <div className="museo-section-1-csm-social-media">
-                  <a href="#">
+                  <a href="#" title="Facebook">
                     <FaSquareFacebook />
                   </a>
-                  <a href="#">
+                  <a href="#" title="Twitter">
                     <FaSquareXTwitter />
                   </a>
-                  <a href="#">
+                  <a href="#" title="Instagram">
                     <FaSquareInstagram />
                   </a>
-                  <a href="#">
+                  <a href="#" title="Página Web">
                     <img src={webIcon} alt="Página Web" />
                   </a>
                 </div>
@@ -401,9 +401,12 @@ function MuseoDetail() {
           <div className="museo-section-5-header">
             <h1 className="h1-section">Reseñas y Comentarios</h1>
             <button
+              type="button"
               className="museos-header-section-right-button"
               onClick={abrirMenu}
+              title="Filtrar"
             >
+              <p>Filtrar</p>
               <FaFilter />
             </button>
           </div>

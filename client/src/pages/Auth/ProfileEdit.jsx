@@ -1,16 +1,17 @@
 import React, { useRef, useEffect, useState } from "react";
+
+import useUsuario from "../../hooks/Usuario/useUsuario";
+
 import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import axios from "axios";
 import { toast, Bounce } from "react-toastify";
-
-import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
-import { format, set } from "date-fns";
-import { es } from "react-day-picker/locale";
+import { format } from "date-fns";
+import { es, se } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 
@@ -18,12 +19,40 @@ import { useAuth } from "../../context/AuthProvider";
 
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 import fotoPrueba from "../../assets/images/others/museo-login-image.png";
+import ErrorCampo from "../../components/ErrorCampo";
+
+const validationSchema = Yup.object({
+  signinfrmnombre: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El nombre solo puede contener letras"
+    )
+    .required("Campo requerido"),
+  signinfrmappaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido paterno solo puede contener letras"
+    )
+    .required("Campo requerido"),
+  signinfrmapmaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido materno solo puede contener letras"
+    )
+    .required("Campo requerido"),
+  signinfrmemail: Yup.string()
+    .email("Correo inválido")
+    .required("Campo requerido"),
+  signinfrmtelefono: Yup.string()
+    .matches(/^\+?[1-9]\d{1,14}$/, "Número de teléfono inválido")
+    .required("Campo requerido"),
+});
 
 function ProfileEdit() {
   // Obtenemos el id de los parametros de la URL para saber que usuario editar
   // Si no hay parametros se edita el usuario autenticado
   const { userId } = useParams();
-  const { user } = useAuth();
+  const { user, tipoUsuario } = useAuth();
 
   // Datos de prueba para el formulario
   const testUser = {
@@ -61,9 +90,9 @@ function ProfileEdit() {
 
   // Estados
   const [tel, setTel] = useState();
-  const [costo, setCosto] = useState("");
-  const [valorRango, setValorRango] = useState([0, 100]);
-  const [rangoHabilitado, setRangoHabilitado] = useState(false);
+  // const [costo, setCosto] = useState("");
+  // const [valorRango, setValorRango] = useState([0, 100]);
+  // const [rangoHabilitado, setRangoHabilitado] = useState(false);
   const [imagePreview, setImagePreview] = useState(userPlaceholder);
   const [selectedTematicas, setSelectedTematicas] = useState([]);
   const signInButtonRef = useRef(null);
@@ -84,21 +113,21 @@ function ProfileEdit() {
   const today = new Date();
   today.setHours(today.getHours() - 6);
 
-  // Logica para habilitar el rango de costo dependiendo del tipo de costo
-  const handleCostoChange = (event) => {
-    const seleccion = event.target.value;
-    setCosto(seleccion);
-    setRangoHabilitado(
-      seleccion === "Siempre con costo" || seleccion === "A veces gratis"
-    );
-    if (seleccion !== "Siempre con costo" && seleccion !== "A veces gratis") {
-      setValorRango(0);
-    }
-  };
+  // // Logica para habilitar el rango de costo dependiendo del tipo de costo
+  // const handleCostoChange = (event) => {
+  //   const seleccion = event.target.value;
+  //   setCosto(seleccion);
+  //   setRangoHabilitado(
+  //     seleccion === "Siempre con costo" || seleccion === "A veces gratis"
+  //   );
+  //   if (seleccion !== "Siempre con costo" && seleccion !== "A veces gratis") {
+  //     setValorRango(0);
+  //   }
+  // };
 
-  const handleRangeChange = (value) => {
-    setValorRango(value);
-  };
+  // const handleRangeChange = (value) => {
+  //   setValorRango(value);
+  // };
 
   // Lógica para el cambio de imagen de perfil
   const handleImageChange = (event, setFieldValue) => {
@@ -134,6 +163,7 @@ function ProfileEdit() {
   };
 
   // Funcion para editar al usuario
+  const { editarUsuario } = useUsuario();
   const handleEditar = async (values) => {
     try {
       // Preparar los datos para enviar al backend
@@ -165,8 +195,8 @@ function ProfileEdit() {
       userData.append("telefono", tel);
       userData.append("fecha_nacimiento", parsedDate);
       userData.append("tematicas", JSON.stringify(selectedTematicas));
-      userData.append("tipo_costo", costo);
-      userData.append("rango_costo", valorRango);
+      // userData.append("tipo_costo", costo);
+      // userData.append("rango_costo", valorRango);
 
       // Si el usuario no selecciono una imagen de perfil no se cambia la imagen
       if (values.signinfrmfoto) {
@@ -182,15 +212,42 @@ function ProfileEdit() {
       //   userData.append("foto", userPlaceholder);
       // }
 
-      // const response = await axios.post("/api/auth/register", userData);
+      // Convertir el FormData a un objeto
+      const userObject = {};
+      userData.forEach((value, key) => {
+        userObject[key] = value;
+      });
 
-      // // Manejar la respuesta del backend
-      // if (response.status === 200) {
-      //   console.log("Usuario registrado con éxito");
-      //   // Redirigir al usuario a la página de inicio de sesión
-      // } else {
-      //   console.error("Error al registrar al usuario");
-      // }
+      // Enviar los datos al backend
+      const response = await editarUsuario(userObject);
+
+      if (response) {
+        toast.success("Usuario editado correctamente", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+        // Recargar la página con los nuevos datos
+        window.location.reload();
+      } else {
+        toast.error("Error al editar el usuario", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
 
       userData.forEach((value, key) => {
         console.log(key, value);
@@ -204,8 +261,8 @@ function ProfileEdit() {
   useEffect(() => {
     if (user) {
       setSelectedTematicas(usuario.tematicas || []);
-      setCosto(usuario.tipo_costo || "");
-      setValorRango(usuario.rango_costo || [0, 100]);
+      // setCosto(usuario.tipo_costo || "");
+      // setValorRango(usuario.rango_costo || [0, 100]);
       setTel(usuario.tel || "");
       setSelectedDate(new Date(usuario.fecNac) || new Date());
       setMes(selectedDate || new Date());
@@ -215,7 +272,15 @@ function ProfileEdit() {
   }, [user, usuario]);
 
   // Desactivar el botón de registro si el formulario no es válido
-  const isFormValid = true;
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    if (tipoUsuario === "Usuario") {
+      setIsFormValid(tel && selectedDate && selectedTematicas.length === 3);
+    } else {
+      setIsFormValid(tel && selectedDate);
+    }
+  }, [tel, selectedDate, selectedTematicas, tipoUsuario]);
 
   return (
     <>
@@ -231,19 +296,24 @@ function ProfileEdit() {
               // Solo para usuarios tipo 1 (Usuario normal)
               signinfrmtematica:
                 user.tipoUsuario === 1 ? usuario?.tematicas || [] : [],
-              signinfrmtipoCosto:
-                user.tipoUsuario === 1 ? usuario?.tipo_costo || "" : "",
-              signinfrmrangocosto:
-                user.tipoUsuario === 1 ? usuario?.rango_costo : 0,
+              // signinfrmtipoCosto:
+              //   user.tipoUsuario === 1 ? usuario?.tipo_costo || "" : "",
+              // signinfrmrangocosto:
+              //   user.tipoUsuario === 1 ? usuario?.rango_costo : 0,
               signinfrmfoto: "",
             }}
+            validationSchema={validationSchema}
             onSubmit={(values) => {
               handleEditar(values);
             }}
           >
-            {({ setFieldValue, values }) => (
+            {({ setFieldValue, errors, touched, isValid }) => (
               <Form id="signin-form">
-                <div className="registros-container">
+                <div
+                  className={`registros-container ${
+                    tipoUsuario === "Usuario" ? "" : "admod"
+                  }`}
+                >
                   <div className="registros-datos">
                     <h1>Editar Datos Personales</h1>
                     <div className="registros-field">
@@ -257,6 +327,9 @@ function ProfileEdit() {
                       <label htmlFor="signin-frm-nombre" className="frm-label">
                         Nombre
                       </label>
+                      {errors.signinfrmnombre && touched.signinfrmnombre && (
+                        <ErrorCampo mensaje={errors.signinfrmnombre} />
+                      )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -272,6 +345,10 @@ function ProfileEdit() {
                       >
                         Apellido Paterno
                       </label>
+                      {errors.signinfrmappaterno &&
+                        touched.signinfrmappaterno && (
+                          <ErrorCampo mensaje={errors.signinfrmappaterno} />
+                        )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -287,6 +364,10 @@ function ProfileEdit() {
                       >
                         Apellido Materno
                       </label>
+                      {errors.signinfrmapmaterno &&
+                        touched.signinfrmapmaterno && (
+                          <ErrorCampo mensaje={errors.signinfrmapmaterno} />
+                        )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -299,6 +380,9 @@ function ProfileEdit() {
                       <label htmlFor="signin-frm-email" className="frm-label">
                         Correo Electrónico
                       </label>
+                      {errors.signinfrmemail && touched.signinfrmemail && (
+                        <ErrorCampo mensaje={errors.signinfrmemail} />
+                      )}
                     </div>
                     <div
                       className={`registros-field-telefonos ${
@@ -322,6 +406,10 @@ function ProfileEdit() {
                       >
                         Teléfono
                       </label>
+                      {errors.signinfrmtelefono &&
+                        touched.signinfrmtelefono && (
+                          <ErrorCampo mensaje={errors.signinfrmtelefono} />
+                        )}
                     </div>
                     <div className="registros-field-calendar">
                       <label>Fecha de Nacimiento</label>
@@ -475,7 +563,7 @@ function ProfileEdit() {
                             </div>
                           </fieldset>
                         </div>
-                        <div className="registros-field">
+                        {/* <div className="registros-field">
                           <div className="registros-field-header">
                             <h2>Tipo de Costo</h2>
                           </div>
@@ -540,7 +628,7 @@ function ProfileEdit() {
                               railStyle={{ backgroundColor: "#d9d9d9" }}
                             />
                           </div>
-                        </div>
+                        </div> */}
                         <hr />
                         <div className="registros-field-foto">
                           <div className="registros-field-foto-input">
@@ -568,7 +656,9 @@ function ProfileEdit() {
                 </div>
                 <Field
                   type="submit"
-                  className="button"
+                  className={
+                    `button ` + (isFormValid && isValid ? "" : "disabled")
+                  }
                   value="Guardar cambios"
                   id="registros-button"
                   ref={signInButtonRef}

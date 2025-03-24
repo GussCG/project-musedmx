@@ -6,6 +6,7 @@ import IndexPage from "./pages/Common/IndexPage";
 import LoginForm from "./pages/Auth/LoginForm";
 import SignInForm from "./pages/Auth/SignInForm";
 import NotFound from "./pages/Common/NotFound";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 import AuthLayout from "./layouts/AuthLayout";
 import VerMuseosLayout from "./layouts/VerMuseosLayout";
@@ -28,6 +29,7 @@ function App() {
   return (
     <AuthProvider>
       <PopUpLogin />
+      <ScrollToTop />
       <Routes>
         {/* INDEX */}
         <Route path="/" element={<IndexPage />} />

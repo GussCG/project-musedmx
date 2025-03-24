@@ -649,22 +649,33 @@
     }
 
     .museos-header-section-right-button {
+      width: fit-content;
+      height: 50px;
       padding-right: 10px;
       border: none;
       background-color: transparent;
       cursor: pointer;
 
-      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      font-family: $font-primary;
+      font-size: 18px;
+      font-weight: $font-w-bold;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      color: $color-a-2;
+
+      transition: opacity 0.3s ease-in-out;
 
       &:hover {
-        transform: scale(1.1);
         opacity: 0.5;
       }
 
       svg {
-        color: black;
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: auto;
       }
     }
   }

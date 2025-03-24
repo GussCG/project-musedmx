@@ -29,6 +29,17 @@
   }
 }
 
+.button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: black;
+    color: white;
+    border: none;
+  }
+}
+
 #nav-button {
   width: 100%;
   font-size: $nav-ul-font-s;

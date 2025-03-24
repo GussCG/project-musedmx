@@ -1,50 +1,144 @@
 import React, { useRef, useEffect, useState } from "react";
+
+import useUsuario from "../../hooks/Usuario/useUsuario";
+import ValidPassword from "../../components/ValidPassword";
+
 import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 import { toast, Bounce } from "react-toastify";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
+import { format } from "date-fns";
+import { es, is } from "react-day-picker/locale";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
+
 import Icons from "../../components/IconProvider";
-const { eyeClosedIcon, eyeOpenIcon, modPlaceholder } = Icons;
+const { eyeClosedIcon, eyeOpenIcon } = Icons;
+
+import modPlaceholder from "../../assets/images/placeholders/mod-placeholder.png";
+import ErrorCampo from "../../components/ErrorCampo";
+
+const validationSchema = Yup.object({
+  signinfrmnombre: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El nombre solo puede contener letras"
+    )
+    .required("Campo requerido"),
+  signinfrmappaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido paterno solo puede contener letras"
+    )
+    .required("Campo requerido"),
+  signinfrmapmaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido materno solo puede contener letras"
+    )
+    .required("Campo requerido"),
+  signinfrmemail: Yup.string()
+    .email("Correo electrónico inválido")
+    .required("Campo requerido"),
+});
 
 function ModForm() {
   // Estados
-  const [tel, setTel] = useState();
+  const [tel, setTel] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
-  const [isValid, setIsValid] = useState(true);
+  const [isValidPass, setIsValidPass] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const signInButtonRef = useRef(null);
   const passwordRef = useRef(null);
   const password2Ref = useRef(null);
 
   // Fecha de nacimiento
+  const [mes, setMes] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDayPickerSelect = (date) => {
+    if (!date) {
+      setSelectedDate(new Date());
+    } else {
+      setSelectedDate(date);
+    }
+  };
+
+  // Fecha actual en UTC -6
   let today = new Date();
-  today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-  today = today.toISOString().split("T")[0];
+  today.setHours(today.getHours() - 6);
 
-  // Expresion regular para validar la contraseña
-  // Al menos 8 caracteres, una letra mayuscula, una letra minuscula y un numero
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  // Para validar la contraseña validaciones individuales
+  // Tiene que tener minimo 8 caracteres, una letra mayúscula, una letra minúscula, un número y un caracter especial
+  const [faltaNumero, setFaltaNumero] = useState(false);
+  const [faltaMayuscula, setFaltaMayuscula] = useState(false);
+  const [faltaMinuscula, setFaltaMinuscula] = useState(false);
+  const [faltaCaracterEspecial, setFaltaCaracterEspecial] = useState(false);
+  const [longitud, setLongitud] = useState(false);
 
-  // Manejar el cambio de la contraseña
-  const handlePasswordChange = (event) => {
-    const newPassword = event.target.value;
-    setPassword(newPassword);
-    setIsValid(passwordRegex.test(newPassword));
-  };
+  // Expresiones regulares para validar la contraseña
+  const numeroRegex = /\d/;
+  const mayusculaRegex = /[A-Z]/;
+  const minusculaRegex = /[a-z]/;
+  const caracterEspecialRegex = /[^A-Za-z0-9]/;
 
-  // Manejar el cambio de la confirmacion de la contraseña
-  const handlePassword2Change = (event) => {
-    const confirmPassword = event.target.value;
-    setPassword2(confirmPassword);
-    setIsPasswordMatch(password === confirmPassword);
-  };
+  useEffect(() => {
+    if (password === "") {
+      setIsValidPass(false);
+      setFaltaNumero(false);
+      setFaltaMayuscula(false);
+      setFaltaMinuscula(false);
+      setFaltaCaracterEspecial(false);
+      setLongitud(false);
+      return;
+    }
 
-  // Desabilitar el boton de registro si algun campo es invalido
-  const isFormValid = isValid && isPasswordMatch && tel;
+    const esNumeroValido = numeroRegex.test(password);
+    const esMayusculaValida = mayusculaRegex.test(password);
+    const esMinusculaValida = minusculaRegex.test(password);
+    const esCaracterEspecialValido = caracterEspecialRegex.test(password);
+    const esLongitudValida = password.length >= 8;
+
+    // Actualizamos los estados
+    setFaltaNumero(esNumeroValido);
+    setFaltaMayuscula(esMayusculaValida);
+    setFaltaMinuscula(esMinusculaValida);
+    setFaltaCaracterEspecial(esCaracterEspecialValido);
+    setLongitud(esLongitudValida);
+
+    setIsValidPass(
+      esNumeroValido &&
+        esMayusculaValida &&
+        esMinusculaValida &&
+        esCaracterEspecialValido &&
+        esLongitudValida
+    );
+  }, [password]);
+
+  // Validar la confirmación de la contraseña
+  useEffect(() => {
+    setIsPasswordMatch(
+      password !== "" && password2 !== "" && password === password2
+    );
+  }, [password, password2]);
+
+  // Desabilitar el boton de registro si algun campo es invalido y todos los campos son requeridos
+  const [isFormValid, setIsFormValid] = useState(false);
+  useEffect(() => {
+    console.log(isFormValid);
+    setIsFormValid(
+      isValidPass &&
+        isPasswordMatch &&
+        isPossiblePhoneNumber(String(tel)) &&
+        selectedDate !== null
+    );
+  }, [isValidPass, isPasswordMatch, tel, selectedDate]);
 
   // Registrar moderador
+  const { registrarModerador } = useUsuario();
   const handleRegister = (values) => {
     try {
       const modData = new FormData();
@@ -74,15 +168,42 @@ function ModForm() {
       modData.append("tipoUsuario", 3);
       modData.append("foto", modPlaceholder);
 
-      // Lógica para enviar los datos al backend
-
-      // Manejo de respuesta del backend
-
-      console.log("Moderador registrado");
-      console.log("Datos del moderador:");
+      // Convertir de FormData a objeto
+      const modObj = {};
       modData.forEach((value, key) => {
-        console.log(key + ": " + value);
+        modObj[key] = value;
       });
+
+      // Lógica para enviar los datos al backend
+      const response = registrarModerador(modObj);
+
+      if (response) {
+        toast.success("Moderador registrado", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+        // Redirigir a VerModeradores
+        // navigate("/moderadores");
+      } else {
+        toast.error("Error al registrar moderador", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -99,49 +220,6 @@ function ModForm() {
     setShown2(!shown2);
   };
 
-  // Logica para validar las contraseñas
-  useEffect(() => {
-    let password = passwordRef.current;
-    let password2 = password2Ref.current;
-    let signInButton = signInButtonRef.current;
-
-    // Validamos las contraseña y la confirmacion de la contraseña
-    // Si son iguales se pinta de verde y se activa el boton de registro
-    if (signInButton) {
-      signInButton.disabled = true;
-    }
-
-    const validatePasswords = () => {
-      if (password2.value == "") {
-        password2.style.borderColor = "black";
-        password2.style.borderWidth = "1px";
-        password2.setCustomValidity("");
-        signInButton.disabled = true;
-        return;
-      }
-
-      if (password.value !== password2.value) {
-        password2.setCustomValidity("Las contraseñas no coinciden");
-        password2.style.borderColor = "red";
-        password2.style.borderWidth = "2px";
-        signInButton.disabled = true;
-      } else {
-        password2.setCustomValidity("");
-        password2.style.borderColor = "green";
-        password2.style.borderWidth = "2px";
-        signInButton.disabled = false;
-      }
-    };
-
-    password?.addEventListener("input", validatePasswords);
-    password2?.addEventListener("input", validatePasswords);
-
-    return () => {
-      password?.removeEventListener("input", validatePasswords);
-      password2?.removeEventListener("input", validatePasswords);
-    };
-  }, []);
-
   return (
     <>
       <main id="registros-main">
@@ -157,14 +235,15 @@ function ModForm() {
               signinfrmpassword: "",
               signinfrmrepassword: "",
             }}
+            validationSchema={validationSchema}
             onSubmit={(values) => {
               // console.log(values);
               handleRegister(values);
             }}
           >
-            {({ setFieldValue, values }) => (
+            {({ errors, touched, isValid }) => (
               <Form id="signin-form">
-                <div className="registros-container">
+                <div className="registros-container admod">
                   <div className="registros-datos">
                     <h1>Datos del moderador</h1>
                     <div className="registros-field">
@@ -178,6 +257,9 @@ function ModForm() {
                       <label htmlFor="signin-frm-nombre" className="frm-label">
                         Nombre
                       </label>
+                      {errors.signinfrmnombre && touched.signinfrmnombre && (
+                        <ErrorCampo mensaje={errors.signinfrmnombre} />
+                      )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -193,6 +275,10 @@ function ModForm() {
                       >
                         Apellido Paterno
                       </label>
+                      {errors.signinfrmappaterno &&
+                        touched.signinfrmappaterno && (
+                          <ErrorCampo mensaje={errors.signinfrmappaterno} />
+                        )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -208,6 +294,10 @@ function ModForm() {
                       >
                         Apellido Materno
                       </label>
+                      {errors.signinfrmapmaterno &&
+                        touched.signinfrmapmaterno && (
+                          <ErrorCampo mensaje={errors.signinfrmapmaterno} />
+                        )}
                     </div>
                     <div className="registros-field">
                       <Field
@@ -220,6 +310,9 @@ function ModForm() {
                       <label htmlFor="signin-frm-email" className="frm-label">
                         Correo Electrónico
                       </label>
+                      {errors.signinfrmemail && touched.signinfrmemail && (
+                        <ErrorCampo mensaje={errors.signinfrmemail} />
+                      )}
                     </div>
                     <div
                       className={`registros-field-telefonos ${
@@ -228,11 +321,13 @@ function ModForm() {
                     >
                       <PhoneInput
                         defaultCountry="MX"
+                        countries={["MX"]}
                         placeholder="Teléfono"
                         name="signinfrmtelefono"
                         id="signin-frm-telefono"
                         value={tel}
                         onChange={setTel}
+                        limitMaxLength={true}
                         required
                       />
                       <label
@@ -242,18 +337,34 @@ function ModForm() {
                         Teléfono
                       </label>
                     </div>
-                    <div className="registros-field">
-                      <Field
-                        type="date"
-                        id="signin-frm-fecnac"
-                        name="signinfrmfecnac"
-                        placeholder="Fecha de Nacimiento"
-                        max={today}
-                        required
+                    <div className="registros-field-calendar">
+                      <label>Fecha de Nacimiento</label>
+                      <DayPicker
+                        hideNavigation
+                        animate
+                        locale={es}
+                        timeZone="UTC"
+                        captionLayout="dropdown"
+                        fixedWeeks
+                        month={mes}
+                        onMonthChange={setMes}
+                        autoFocus
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={handleDayPickerSelect}
+                        footer={
+                          selectedDate
+                            ? `Seleccionaste el ${format(
+                                selectedDate,
+                                "dd-MM-yyyy"
+                              )}`
+                            : "Selecciona una fecha"
+                        }
+                        modifiers={{
+                          disabled: { after: today },
+                        }}
+                        className="registros-calendar"
                       />
-                      <label htmlFor="signin-frm-fecnac" className="frm-label">
-                        Fecha de Nacimiento
-                      </label>
                     </div>
                     <div className="registros-field">
                       <Field
@@ -262,7 +373,7 @@ function ModForm() {
                         name="signinfrmpassword"
                         placeholder="Contraseña"
                         ref={passwordRef}
-                        onChange={handlePasswordChange}
+                        onChange={(e) => setPassword(e.target.value)}
                         value={password}
                         required
                       />
@@ -279,11 +390,14 @@ function ModForm() {
                         id="eye"
                         className="eye"
                       />
-                      {!isValid && (
-                        <span className="password-error">
-                          La contraseña debe tener al menos 8 caracteres, una
-                          letra mayúscula, una letra minúscula y un número
-                        </span>
+                      {password.length > 0 && !isValidPass && (
+                        <ValidPassword
+                          faltaNumero={faltaNumero}
+                          faltaMayuscula={faltaMayuscula}
+                          faltaMinuscula={faltaMinuscula}
+                          faltaCaracterEspecial={faltaCaracterEspecial}
+                          longitud={longitud}
+                        />
                       )}
                     </div>
                     <div className="registros-field">
@@ -293,7 +407,12 @@ function ModForm() {
                         name="signinfrmrepassword"
                         placeholder="Repetir Contraseña"
                         ref={password2Ref}
-                        onChange={handlePassword2Change}
+                        onChange={(e) => setPassword2(e.target.value)}
+                        style={
+                          isPasswordMatch
+                            ? { borderColor: "green", borderWidth: "2px" }
+                            : { borderColor: "red", borderWidth: "2px" }
+                        }
                         value={password2}
                         required
                       />
@@ -315,11 +434,13 @@ function ModForm() {
                 </div>
                 <Field
                   type="submit"
-                  value="Registrarse"
-                  className="button"
+                  value="Registrar Moderador"
+                  className={
+                    `button ` + (isFormValid && isValid ? "" : "disabled")
+                  }
                   id="registros-button"
                   ref={signInButtonRef}
-                  disabled={isFormValid ? false : true}
+                  disabled={isFormValid && isValid ? false : true}
                 />
               </Form>
             )}

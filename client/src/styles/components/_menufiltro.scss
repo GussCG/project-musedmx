@@ -56,7 +56,7 @@
     position: relative;
 
     h1 {
-      font-size: 36px;
+      font-size: 1.8rem;
       font-weight: $font-w-bold;
     }
 
@@ -97,7 +97,7 @@
       align-items: center;
 
       h2 {
-        font-size: 32px;
+        font-size: 1.4rem;
         font-weight: $font-w-bold;
         padding-left: 100px;
       }
@@ -129,8 +129,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 10px;
-      // display: none;
+      gap: 0;
 
       transition: max-height 0.3s ease-out;
 
@@ -143,8 +142,8 @@
         gap: 10px;
 
         label {
-          font-size: 24px;
-          padding-left: 120px;
+          font-size: 1.2rem;
+          padding-left: 110px;
         }
 
         .filtro-chk {
@@ -157,7 +156,7 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          margin-right: 100px;
+          margin-right: 105px;
 
           input {
             display: none;
@@ -174,8 +173,8 @@
           .checkmark {
             position: relative;
             display: inline-block;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             background-color: #d9d9d9;
             border-radius: 10px;
 
@@ -188,11 +187,11 @@
               border-width: 0 3px 3px 0;
               transform: rotate(45deg);
               opacity: 0;
-              width: 10px;
-              height: 20px;
+              width: 5px;
+              height: 10px;
 
-              top: 5px;
-              left: 13px;
+              top: 7px;
+              left: 11px;
 
               transition: opacity 0.3s ease;
             }
@@ -209,7 +208,7 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          margin-right: 100px;
+          margin-right: 105px;
 
           input {
             display: none;
@@ -226,8 +225,8 @@
           .radio-filter-span {
             position: relative;
             display: inline-block;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             background-color: #d9d9d9;
             border-radius: 100%;
 
@@ -240,11 +239,11 @@
               border-width: 0 3px 3px 0;
               transform: rotate(45deg);
               opacity: 0;
-              width: 10px;
-              height: 20px;
+              width: 5px;
+              height: 10px;
 
-              top: 5px;
-              left: 13px;
+              top: 7px;
+              left: 11px;
 
               transition: opacity 0.3s ease;
             }
@@ -269,7 +268,7 @@
 
     label {
       width: auto;
-      font-size: 26px;
+      font-size: 1.2rem;
       font-weight: $font-w-bold;
     }
 
@@ -307,7 +306,7 @@
   }
 
   #nmuseos {
-    font-size: 24px;
+    font-size: 1.2rem;
     font-weight: $font-w-regular;
   }
 
@@ -326,7 +325,7 @@
       border-radius: 20px;
       background-color: #d9d9d9;
       color: black;
-      font-size: 24px;
+      font-size: 1.4rem;
       font-weight: $font-w-bold;
 
       transition: transform 0.3s ease-in-out;
@@ -372,7 +371,7 @@
     margin-right: 50px;
 
     .switch-button__checkbox {
-      opacity: 0; // En lugar de display: none
+      opacity: 0;
       width: 100%;
       height: 100%;
       position: absolute;

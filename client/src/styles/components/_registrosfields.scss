@@ -94,6 +94,16 @@
           }
         }
       }
+
+      .registros-container.admod {
+        @extend .registros-container;
+        width: 65%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
 }
@@ -604,6 +614,8 @@
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.2);
     object-fit: cover;
+
+    aspect-ratio: 1 / 1;
   }
 }
 

@@ -18,6 +18,25 @@ function NavBarMenu() {
   const [showMenu, setShowMenu] = useState(false);
   const menuUserRef = useRef(null);
 
+  const [scrolled, setScrolled] = useState(false);
+  const navbarRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const toggleMenuUser = () => {
     setShowMenu((prev) => !prev);
   };
@@ -51,7 +70,11 @@ function NavBarMenu() {
 
   return (
     <>
-      <nav id="nav-menu-container">
+      <nav
+        id="nav-menu-container"
+        ref={navbarRef}
+        className={scrolled ? "scrolled" : ""}
+      >
         <ul id="nav-menu">
           <li>
             <Link className="navbarmenu-link" to="/">

@@ -1,8 +1,18 @@
 @use "../variables" as *;
 
 #nav-menu-container {
+  position: sticky;
+  background: transparent;
   width: 100%;
   height: 150px;
+  top: 0;
+  left: 0;
+
+  margin-bottom: 30px;
+
+  z-index: 50;
+
+  transition: all 0.3s ease-in-out;
 
   ul {
     display: flex;
@@ -25,7 +35,7 @@
         font-weight: $font-w-light;
         font-size: $nav-ul-font-s;
         text-align: center;
-        transition: font-weight 0.3s ease-in-out;
+        transition: font-weight 0.3s ease-in-out, color 0.3s ease-in-out;
 
         #nav-logo {
           display: none;
@@ -107,6 +117,8 @@
           height: 90%;
           object-fit: cover;
 
+          aspect-ratio: 1/1;
+
           background-color: white;
           z-index: 2;
           border-radius: 50%;
@@ -115,6 +127,23 @@
         &:hover {
           transform: scale(1.1);
         }
+      }
+    }
+  }
+}
+
+#nav-menu-container.scrolled {
+  background: linear-gradient(
+    to bottom,
+    rgb(46, 44, 42) 0%,
+    rgba(46, 44, 42, 0.8) 35%,
+    rgba(46, 44, 42, 0) 100%
+  );
+
+  ul {
+    li {
+      .navbarmenu-link {
+        color: white;
       }
     }
   }
@@ -156,5 +185,9 @@
     #menu-button {
       display: block;
     }
+  }
+
+  #nav-menu-container.scrolled {
+    background: transparent;
   }
 }

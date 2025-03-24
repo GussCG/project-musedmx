@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { AdvancedMarker } from "@vis.gl/react-google-maps";
-import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 
 // Imagen de prueba

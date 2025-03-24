@@ -9,6 +9,7 @@ import MuseoDetail from "../pages/Museo/MuseoDetail";
 import RegistroVisita from "../pages/Museo/RegistroVisita";
 
 import "../styles/pages/VerMuseosLayout.scss";
+import MapIndicaciones from "../components/MapIndicaciones";
 
 const museoEjemplo = {
   id: 1,
