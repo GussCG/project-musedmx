@@ -1,5 +1,7 @@
 import React, { useState, forwardRef } from "react";
 
+import { motion } from "framer-motion";
+
 const MenuSort = forwardRef(({ sortBy, onSortChange }, ref) => {
   const [selectedSort, setSelectedSort] = useState(sortBy);
 
@@ -9,7 +11,14 @@ const MenuSort = forwardRef(({ sortBy, onSortChange }, ref) => {
   };
 
   return (
-    <div className="menu-sort-container" ref={ref}>
+    <motion.div
+      className="menu-sort-container"
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="menu-sort-item">
         <label htmlFor="sort-alf">A-Z</label>
         <label className="filtro-rad">
@@ -54,7 +63,7 @@ const MenuSort = forwardRef(({ sortBy, onSortChange }, ref) => {
           Limpiar
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 });
 

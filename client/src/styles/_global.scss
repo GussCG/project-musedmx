@@ -15,9 +15,9 @@ html {
   font-family: $font-primary;
   background: linear-gradient(
     0deg,
-    $bg-grad-color-1 0%,
-    $bg-grad-color-2 35%,
-    $bg-grad-color-3 100%
+    var(--bg-grad-color-1) 0%,
+    var(--bg-grad-color-2) 35%,
+    var(--bg-grad-color-3) 100%
   );
   overflow-x: hidden;
   background-attachment: fixed;
@@ -27,16 +27,21 @@ html {
 }
 
 .eye {
+  position: absolute;
+  top: -5px;
+  right: 10px;
   width: 25px;
   height: 25px;
-  opacity: 0.5;
   margin-left: -30px;
   margin-top: 10px;
   cursor: pointer;
 
+  svg,
   img {
-    width: 100%;
-    height: 100%;
+    width: 25px;
+    height: 25px;
+    color: var(--font-color-primary);
+    opacity: 0.5;
   }
 }
 
@@ -46,7 +51,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: $bg-grad-color-2;
+  background-color: var(--bg-grad-color-2);
   border-radius: 10px;
 }
 
@@ -113,11 +118,11 @@ main {
   width: 90%;
   height: 100%;
   min-height: $main-height;
-  background-color: $bg-grad-color-3;
+  background-color: var(--bg-main);
   margin: 0 auto;
   border: none;
   border-radius: 25px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
+  box-shadow: var(--box-shadow-2);
 
   position: relative;
   overflow: auto;

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
 
 import Icons from "../components/IconProvider";
-const { corazonIcon, buscarIcon, editarIcon } = Icons;
+const { corazonIcon, IoSearch, editarIcon } = Icons;
 
 import MuseoSlider from "../components/MuseoSlider";
 import { Link } from "react-router";
@@ -127,60 +128,71 @@ function UsuarioPage() {
   };
 
   return (
-    <main id="perfil-main">
-      <section className="perfil-section-museo">
-        <div className="section-header">
-          <h2>Museos Sugeridos</h2>
-        </div>
-        <MuseoSlider listaMuseos={museosFavoritos} />
-      </section>
-      <hr />
-      <section className="perfil-section-museo">
-        <div className="section-header">
-          <h2>
-            Museos Favoritos <img src={corazonIcon} id="corazon-icon" />
-          </h2>
-        </div>
-        <MuseoSlider listaMuseos={museosFavoritos} />
-      </section>
-      <hr />
-      <section className="perfil-section-museo">
-        <div className="section-header">
-          <h2>Museos que quiero visitar</h2>
-          <div className="section-header-controller">
-            {" "}
-            <div className="nav-bar">
-              <form>
-                <button type="submit">
-                  <img src={buscarIcon} alt="Buscar" />
-                </button>
-                <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  placeholder="Buscar museo para agregar"
-                />
-              </form>
-            </div>
-            <button
-              type="button"
-              id="editar-button"
-              onClick={() => setEditMode(!editMode)}
-            >
-              <img src={editarIcon} alt="Editar" />
-            </button>
+    <motion.div
+      initial={{ y: "100%" }}
+      animate={{ y: "0" }}
+      exit={{ y: "100%" }}
+      transition={{ duration: 0.3, type: "spring", bounce: 0.18 }}
+    >
+      <main id="perfil-main">
+        <section className="perfil-section-museo perfil-section-item">
+          <div className="section-header">
+            <h2>Museos Sugeridos</h2>
           </div>
-        </div>
-        <MuseoSlider listaMuseos={museosQuieroVisitar} editMode={editMode} />
-      </section>
-      <hr />
-      <section className="perfil-section-museo">
-        <div className="section-header">
-          <h2>Vistos Recientemente</h2>
-        </div>
-        <MuseoSlider listaMuseos={museosFavoritos} />
-      </section>
-    </main>
+          <MuseoSlider listaMuseos={museosFavoritos} sliderType="Sugeridos" />
+        </section>
+        <hr />
+        <section className="perfil-section-museo perfil-section-item">
+          <div className="section-header">
+            <h2>
+              Museos Favoritos <img src={corazonIcon} id="corazon-icon" />
+            </h2>
+          </div>
+          <MuseoSlider listaMuseos={museosFavoritos} sliderType="Favoritos" />
+        </section>
+        <hr />
+        <section className="perfil-section-museo perfil-section-item">
+          <div className="section-header">
+            <h2>Museos que quiero visitar</h2>
+            <div className="section-header-controller">
+              {" "}
+              <div className="nav-bar">
+                <form>
+                  <button type="submit">
+                    <IoSearch />
+                  </button>
+                  <input
+                    type="text"
+                    name="search"
+                    id="search"
+                    placeholder="Buscar museo para agregar"
+                  />
+                </form>
+              </div>
+              <button
+                type="button"
+                id="editar-button"
+                onClick={() => setEditMode(!editMode)}
+              >
+                <img src={editarIcon} alt="Editar" />
+              </button>
+            </div>
+          </div>
+          <MuseoSlider
+            listaMuseos={museosQuieroVisitar}
+            editMode={editMode}
+            sliderType="Quiero-visitar"
+          />
+        </section>
+        <hr />
+        <section className="perfil-section-museo perfil-section-item">
+          <div className="section-header">
+            <h2>Vistos Recientemente</h2>
+          </div>
+          <MuseoSlider listaMuseos={museosFavoritos} sliderType="Recientes" />
+        </section>
+      </main>
+    </motion.div>
   );
 }
 

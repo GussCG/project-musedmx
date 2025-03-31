@@ -1,5 +1,7 @@
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 
@@ -10,13 +12,18 @@ const { eyeClosedIcon, eyeOpenIcon } = Icons;
 
 import Eye from "../../components/Eye";
 import LoginErrorMessage from "../../components/LoginErrorMessage";
+import { LuEye, LuEyeClosed } from "react-icons/lu";
 
 function LoginForm() {
   // Usar el hook useAuth para obtener las funciones y estados de autenticación
   const { login, isLoading, error } = useAuth();
   const [shown, setShown] = useState(false);
 
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(
+    "Correo o contraseña incorrecta"
+  );
+
+  const clearError = () => setErrorMessage("");
 
   const switchShown = () => {
     setShown(!shown);
@@ -27,7 +34,12 @@ function LoginForm() {
   useEffect(() => {}, []);
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <main id="login-main">
         <div id="login-form">
           <h1>Iniciar Sesión</h1>
@@ -73,16 +85,26 @@ function LoginForm() {
                     required
                   />
                   <label htmlFor="login-frm-password">Contraseña</label>
-                  <img
-                    src={shown ? eyeOpenIcon : eyeClosedIcon}
-                    onClick={switchShown}
-                    alt="Mostrar contraseña"
-                    id="eye"
+                  <motion.div
                     className="eye"
-                  />
-                  {/* <Eye /> */}
+                    onClick={switchShown}
+                    key={shown ? "open" : "closed"}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {shown ? <LuEye /> : <LuEyeClosed />}
+                  </motion.div>
                 </div>
-                <LoginErrorMessage error={errorMessage} />
+                <AnimatePresence>
+                  {errorMessage && (
+                    <LoginErrorMessage
+                      error={errorMessage}
+                      onClose={clearError}
+                    />
+                  )}
+                </AnimatePresence>
                 <input
                   type="submit"
                   value={isLoading ? "Cargando..." : "Iniciar Sesión"}
@@ -93,6 +115,7 @@ function LoginForm() {
               </Form>
             )}
           </Formik>
+
           <Link to="/Auth/Recuperar">¿Olvidaste tu contraseña?</Link>
           <p>
             ¿No tienes una cuenta aún?{" "}
@@ -104,7 +127,7 @@ function LoginForm() {
           <img src={loginImage} alt="Login" />
         </div>
       </main>
-    </>
+    </motion.div>
   );
 }
 

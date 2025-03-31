@@ -9,8 +9,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: $navbar-bg;
-  color: $nav-font-color;
+  background-color: var(--bg-navbar);
+  color: var(--font-color-navbar);
   padding: 10px 15px;
   margin: 0 auto;
 
@@ -19,6 +19,7 @@
     display: flex;
     justify-content: left;
     gap: 22px;
+    background-color: inherit;
   }
 
   button {
@@ -27,15 +28,17 @@
     border: none;
     background-color: transparent;
 
-    img {
+    svg {
       width: 100%;
       height: auto;
+      color: black;
     }
   }
 
   input {
     width: 100%;
     border: none;
+    background-color: inherit;
   }
 
   input:focus {

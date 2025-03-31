@@ -8,6 +8,13 @@
 
   padding-top: 50px;
 
+  background-color: var(--bg-main);
+
+  h1 {
+    color: var(--font-color-primary);
+    margin-bottom: 30px;
+  }
+
   .tabla-header {
     width: 100%;
     position: relative;
@@ -25,6 +32,7 @@
       font-weight: $font-w-semibold;
       text-align: center;
       padding: 30px;
+      color: var(--font-color-primary);
     }
   }
 
@@ -55,7 +63,8 @@
       left: 0;
       width: 100%;
       height: 6px;
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: var(--font-color-primary);
+      opacity: 0.5;
       border-radius: 50px;
     }
 
@@ -70,6 +79,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: var(--font-color-primary);
 
       div {
         display: flex;
@@ -89,7 +99,7 @@
   tbody {
     tr {
       height: auto;
-      border-bottom: 3px dashed rgba(0, 0, 0, 0.2);
+      border-bottom: 3px dashed var(--font-color-primary);
     }
 
     td {
@@ -98,14 +108,17 @@
       text-align: center;
       word-break: keep-all;
       padding: 10px;
+      color: var(--font-color-primary);
 
       &:first-child {
         font-weight: $font-w-semibold;
       }
 
+      svg,
       img {
         width: 35px;
         height: auto;
+        color: var(--font-color-primary);
       }
 
       a,
@@ -115,10 +128,11 @@
         font-family: $font-primary;
         font-size: 16px;
         font-weight: $font-w-semibold;
-        color: $color-a;
+        color: var(--color-a);
         line-height: 23px;
         text-decoration: none;
         transition: opacity 0.3s ease-in-out;
+        color: var(--font-color-primary);
 
         &:hover {
           opacity: 0.5;
@@ -176,7 +190,6 @@
       }
     }
 
-    // 📌 Convertir la tabla en "cards" en móviles
     tbody,
     thead,
     tr,

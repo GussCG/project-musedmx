@@ -7,6 +7,8 @@ import { useAuth } from "../../context/AuthProvider";
 import Icons from "../../components/IconProvider";
 const { LuArrowUpDown, editarModIcon, eliminarIcon } = Icons;
 
+import { motion } from "framer-motion";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -152,7 +154,12 @@ function ModList() {
   });
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <main id="tabla-main">
         <div className="tabla-header">
           <h1>Moderadores</h1>
@@ -201,7 +208,7 @@ function ModList() {
           </table>
         </div>
       </main>
-    </>
+    </motion.div>
   );
 }
 

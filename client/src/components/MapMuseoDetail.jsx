@@ -3,10 +3,19 @@ import CustomAdvancedMarker from "./CustomAdvancedMarker";
 
 import { APIProvider, Map } from "@vis.gl/react-google-maps";
 
+import { useTheme } from "../context/ThemeProvider";
+
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-const MAP_DETAIL = import.meta.env.VITE_MAP_DETAIL_ID;
 
 function MapMuseoDetail({ museo }) {
+  const { isDarkMode, isRetroMode } = useTheme();
+
+  const MAP_DETAIL = isRetroMode
+    ? import.meta.env.VITE_MAP_RETROMODE_DETAIL_ID
+    : isDarkMode
+    ? import.meta.env.VITE_MAP_DARKMODE_DETAIL_ID
+    : import.meta.env.VITE_MAP_DETAIL_ID;
+
   // Obtener la informacion del museo
   const museoInfo = {
     id: museo.id,

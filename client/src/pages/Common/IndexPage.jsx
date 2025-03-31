@@ -7,7 +7,10 @@ import { Link } from "react-router-dom";
 import NavBarMenu from "../../components/NavBarMenu";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
+
 import { useAuth } from "../../context/AuthProvider";
+
+import { motion } from "framer-motion";
 
 function IndexPage() {
   const { user, tipoUsuario } = useAuth();
@@ -23,7 +26,12 @@ function IndexPage() {
   }, []);
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <NavBarMenu />
       <NavBar />
       <main id="index-main">
@@ -42,7 +50,7 @@ function IndexPage() {
         </div>
       </main>
       <Footer />
-    </>
+    </motion.div>
   );
 }
 

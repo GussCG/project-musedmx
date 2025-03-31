@@ -31,7 +31,7 @@
 
       .navbarmenu-link {
         text-decoration: none;
-        color: $nav-font-color;
+        color: var(--nav-font-color);
         font-weight: $font-w-light;
         font-size: $nav-ul-font-s;
         text-align: center;
@@ -41,7 +41,7 @@
           display: none;
           font-family: $font-primary;
           font-weight: $font-w-semibold;
-          color: $nav-font-color;
+          color: var(--nav-font-color);
         }
 
         #nav-logo-img {
@@ -57,14 +57,14 @@
 
         &:hover {
           font-weight: $font-w-semibold;
-          color: $nav-login-bg-color;
+          color: var(--nav-font-hover-color);
         }
       }
 
       #nav-login-button {
         width: 100%;
-        background-color: $nav-login-bg-color;
-        color: $nav-login-font-color;
+        background-color: var(--nav-login-bg-color);
+        color: var(--nav-login-font-color);
         font-weight: $font-w-semibold;
         padding: 15px 30px;
         border-radius: 50px;
@@ -72,8 +72,8 @@
       }
 
       #nav-login-button:hover {
-        color: $nav-login-bg-color;
-        background-color: $nav-login-font-color;
+        color: var(--nav-login-bg-color);
+        background-color: var(--nav-login-font-color);
       }
 
       .nav-user-img-container {

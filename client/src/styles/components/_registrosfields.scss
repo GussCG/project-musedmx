@@ -19,6 +19,7 @@
       margin-bottom: 45px;
       margin-top: 40px;
       text-align: center;
+      color: var(--font-color-primary);
     }
 
     #signin-form {
@@ -51,7 +52,8 @@
         #registros-linea {
           width: 0;
           height: 80%;
-          border: 4px solid rgba(0, 0, 0, 0.2);
+          border: 4px solid var(--font-color-primary);
+          opacity: 0.2;
           border-radius: 100px;
 
           margin: 0 60px;
@@ -73,7 +75,7 @@
             font-family: $font-primary;
             font-size: 16px;
             font-weight: $font-w-semibold;
-            color: black;
+            color: var(--font-color-primary);
             opacity: 0.5;
 
             display: flex;
@@ -84,11 +86,12 @@
 
           h1 {
             font-size: 36px;
+            color: var(--font-color-primary);
           }
 
           hr {
             width: 80%;
-            border: 4px solid black;
+            border: 4px solid var(--font-color-primary);
             opacity: 0.2;
             border-radius: 100px;
           }
@@ -118,6 +121,7 @@
   h1 {
     font-size: 36px;
     margin: 50px 0;
+    color: var(--font-color-primary);
   }
 
   #registros-encuesta-form {
@@ -134,14 +138,16 @@
       font-family: $font-primary;
       font-size: 16px;
       font-weight: $font-w-semibold;
-      color: rgba(0, 0, 0, 0.5);
+      color: var(--font-color-primary);
+      opacity: 0.5;
     }
   }
 
   #registros-linea-encuesta {
     height: 80%;
     width: 0;
-    border: 4px solid rgba(0, 0, 0, 0.2);
+    border: 4px solid var(--font-color-primary);
+    opacity: 0.2;
     border-radius: 100px;
   }
 
@@ -189,11 +195,12 @@
 
   input {
     border: none;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid gray;
     background-color: unset;
     outline: none;
     width: 100%;
     font-family: $font-primary;
+    color: var(--font-color-primary);
     font-size: 16px;
     padding: 10px;
   }
@@ -201,7 +208,7 @@
   textarea {
     background-color: unset;
     border: none;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid gray;
     outline: none;
     width: 100%;
     font-family: $font-primary;
@@ -209,6 +216,7 @@
     padding: 10px;
     height: 100px;
     overflow-y: auto;
+    color: var(--font-color-primary);
 
     resize: none;
   }
@@ -219,6 +227,7 @@
 
     h2 {
       padding-left: 45px;
+      color: var(--font-color-primary);
     }
   }
 
@@ -232,6 +241,7 @@
     transform-origin: 0 0;
     transition: transform 0.3s ease;
     opacity: 0.5;
+    color: var(--font-color-primary);
   }
 
   input:focus + .frm-label,
@@ -260,14 +270,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(0, 0, 0, 0.2);
       border-radius: 5px;
-      background-color: $bg-grad-color-2;
+      background-color: var(--bg-grad-color-2);
     }
 
     .PhoneInputInput {
       border: none;
-      border-bottom: 1px solid black;
+      border-bottom: 1px solid gray;
+      color: var(--font-color-primary);
       background-color: unset;
       outline: none;
       width: 100%;
@@ -301,29 +311,29 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: $bg-grad-color-2;
+  background-color: var(--bg-form-calendar);
   padding: 20px;
   border-radius: 25px;
+  color: var(--font-color-primary);
 
   label {
     width: 100%;
     font-family: $font-primary;
     font-size: 16px;
     font-weight: $font-w-semibold;
-    color: black;
-    opacity: 0.5;
+    color: var(--font-color-primary);
     text-align: left;
   }
 
   .registros-calendar {
     padding: 20px;
     .rdp-today {
-      color: purple;
-      font-weight: $font-w-bold;
+      color: var(--calendar-today);
+      font-weight: $font-w-semibold;
     }
 
     .rdp-selected {
-      background-color: $bg-grad-color-3;
+      background-color: var(--calendar-dropdown);
       border-radius: 50%;
 
       transition: all 0.3s ease-in-out;
@@ -347,7 +357,8 @@
 
     .rdp-dropdowns {
       span {
-        background-color: $bg-grad-color-3;
+        background-color: var(--calendar-dropdown);
+        font-weight: $font-w-semibold;
         padding: 5px 10px;
         border-radius: 5px;
 
@@ -357,15 +368,21 @@
         select {
           font-family: $font-primary;
           font-size: 16px;
-          font-weight: $font-w-semibold;
-          color: black;
+          font-weight: $font-w-regular;
+          color: var(--font-color-primary);
+          background-color: var(--calendar-dropdown);
+          text-align: center;
+        }
+
+        .calendar-chevron {
+          fill: var(--calendar-chevron);
         }
       }
     }
 
     .rdp-footer {
       width: 100%;
-      background-color: $bg-grad-color-3;
+      background-color: var(--calendar-dropdown);
       margin: 30px 0 0 0;
       padding: 10px;
       border-radius: 10px;
@@ -373,8 +390,8 @@
       justify-content: center;
       align-items: center;
 
-      font-weight: $font-w-semibold;
-      color: black;
+      font-weight: $font-w-regular;
+      color: var(--font-color-primary);
       font-size: 18px;
     }
   }
@@ -383,9 +400,14 @@
 .registros-chks {
   width: 80%;
   height: auto;
+  margin-bottom: 50px;
+
+  // background-color: var(--bg-form-calendar);
+  // padding: 30px;
+  // border-radius: 30px;
 
   fieldset {
-    border: 3px solid rgba(0, 0, 0, 0.21);
+    border: 3px solid rgba(0, 0, 0, 0.2);
     border-radius: 25px;
     padding: 20px;
   }
@@ -394,7 +416,7 @@
     font-family: $font-primary;
     font-size: 18px;
     font-weight: $font-w-semibold;
-    color: black;
+    color: var(--font-color-primary);
     opacity: 0.5;
     padding: 10px;
   }
@@ -443,7 +465,7 @@
       }
 
       input:checked + span {
-        background-color: $bg-grad-color-2;
+        background-color: var(--bg-checked-tematica);
         img {
           transform: scale(1.1);
           opacity: 1;
@@ -477,7 +499,7 @@
     font-family: $font-primary;
     font-size: 16px;
     font-weight: $font-w-semibold;
-    color: black;
+    color: var(--font-color-primary);
     opacity: 0.5;
     transition: opacity 0.3s ease, background-color 0.3s ease,
       font-weight 0.3s ease;
@@ -491,7 +513,7 @@
 
   input[type="checkbox"]:checked + label {
     border-radius: 10px;
-    background-color: $bg-grad-color-2;
+    background-color: var(--bg-checked-tematica);
     opacity: 1;
     font-weight: $font-w-bold;
   }
@@ -512,8 +534,8 @@
   font-size: 16px;
   padding: 10px;
   outline: none;
-  font-weight: $font-w-semibold;
-  color: black;
+  font-weight: $font-w-light;
+  color: var(--font-color-primary);
   opacity: 0.5;
 
   option {
@@ -521,7 +543,7 @@
     font-size: 14px;
     font-weight: $font-w-semibold;
     color: black;
-    background-color: $bg-grad-color-3;
+    background-color: var(--select-dropdown);
   }
 }
 
@@ -607,6 +629,33 @@
   justify-content: space-around;
   gap: 20px;
 
+  .registros-field-foto-input {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+
+    h2 {
+      color: var(--font-color-primary);
+    }
+
+    .foto-input {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      gap: 20px;
+
+      span {
+        font-size: 18px;
+        font-weight: $font-w-light;
+        color: var(--font-color-primary);
+      }
+    }
+  }
+
   img {
     width: 8vw;
     max-width: 150px;
@@ -619,32 +668,6 @@
   }
 }
 
-.registros-field-foto-input {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 10px;
-
-  input[type="file"] {
-    font-family: $font-primary;
-    font-size: 16px;
-    font-weight: $font-w-semibold;
-    color: black;
-    opacity: 0.5;
-  }
-
-  input::file-selector-button {
-    font-family: $font-primary;
-    font-size: 16px;
-    font-weight: $font-w-semibold;
-    color: black;
-    border-radius: 5px;
-    padding: 10px;
-    border: 1px solid black;
-  }
-}
-
 .registros-field-calif {
   width: 100%;
   display: flex;
@@ -652,14 +675,13 @@
   align-items: flex-start;
   justify-content: center;
 
-  p {
+  h2 {
     width: 100%;
     font-family: $font-primary;
-    font-size: 16px;
-    font-weight: $font-w-semibold;
-    color: rgba(0, 0, 0, 0.5);
-    text-align: center;
-    margin-top: 40px;
+    font-size: 24px;
+    font-weight: $font-w-bold;
+    color: var(--font-color-primary);
+    text-align: left;
   }
 }
 
@@ -699,7 +721,7 @@
     font-family: $font-primary;
     font-size: 24px;
     font-weight: $font-w-bold;
-    color: black;
+    color: var(--font-color-primary);
     padding: 10px;
     text-align: left;
   }
@@ -707,7 +729,8 @@
   #registros-fotos-container {
     width: 100%;
     height: 120px;
-    border: 2px dashed rgba(0, 0, 0, 0.5);
+    border: 2px dashed var(--font-color-primary);
+    opacity: 0.4;
     border-radius: 25px;
     margin: 10px 0;
 
@@ -717,25 +740,26 @@
     justify-content: center;
     cursor: pointer;
 
-    img {
+    img,
+    svg {
       width: 40px;
       height: auto;
-      opacity: 0.5;
+      color: var(--font-color-primary);
     }
 
     label {
       margin-top: 10px;
-      opacity: 0.5;
       font-family: $font-primary;
       font-size: 16px;
       font-weight: $font-w-regular;
       text-align: center;
+      color: var(--font-color-primary);
     }
   }
 
   section {
     .row {
-      background-color: $bg-grad-color-2;
+      background-color: var(--bg-row-fotos);
       margin-bottom: 10px;
       list-style: none;
       padding: 15px 20px;
@@ -746,8 +770,11 @@
       align-items: center;
       justify-content: space-between;
 
-      img {
+      img,
+      svg {
         width: 30px;
+        height: auto;
+        color: var(--font-color-primary);
       }
     }
 
@@ -756,7 +783,7 @@
         font-family: $font-primary;
         font-size: 16px;
         font-weight: $font-w-semibold;
-        color: black;
+        color: var(--font-color-primary);
         opacity: 0.5;
       }
     }
@@ -787,20 +814,22 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        color: var(--font-color-primary);
       }
     }
 
     .progress-bar-image {
       height: 6px;
       width: 100%;
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: var(--font-color-primary);
+      opacity: 0.3;
       margin-bottom: 4px;
       border-radius: 30px;
 
       .progress-image {
         height: 100%;
-        width: 60%;
-        background-color: $bg-grad-color-1;
+        background-color: $color-green;
+        opacity: 1;
         border-radius: inherit;
       }
     }
@@ -831,11 +860,13 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          color: var(--font-color-primary);
         }
 
         .size {
           font-size: 12px;
-          color: black;
+          color: var(--font-color-primary);
+          font-weight: $font-w-regular;
         }
       }
     }
@@ -865,11 +896,11 @@
   width: 80%;
   height: 100%;
   min-height: $main-height;
-  background-color: $bg-grad-color-3;
+  background-color: var(--bg-main);
   margin: 10px auto;
   border: none;
   border-radius: 25px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
+  box-shadow: var(--box-shadow-2);
 
   display: flex;
   flex-direction: column;
@@ -878,7 +909,8 @@
 
   h1 {
     font-size: 36px;
-    margin: 36px;
+    margin: 50px;
+    color: var(--font-color-primary);
   }
 
   form {
@@ -904,7 +936,7 @@
       width: 100%;
       font-size: 16px;
       font-weight: $font-w-semibold;
-      color: rgba(0, 0, 0, 0.5);
+      color: var(--font-color-primary);
       text-align: center;
     }
 
@@ -925,7 +957,7 @@
     h2 {
       font-size: 16px;
       font-weight: $font-w-semibold;
-      color: rgba(0, 0, 0, 0.5);
+      color: var(--font-color-primary);
 
       padding: 20px;
     }
@@ -965,6 +997,7 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          color: var(--font-color-primary);
         }
       }
     }

@@ -1,10 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import MapMuseo from "../../components/MapMuseo";
 
 import { APIProvider } from "@vis.gl/react-google-maps";
 
 import Icons from "../../components/IconProvider";
-const { buscarimg } = Icons;
+const { buscarimg, FaQuestion, IoSearch } = Icons;
+
+import { motion } from "framer-motion";
+import { RiMapPinUserFill } from "react-icons/ri";
 
 // Para obtener la API de Google Maps
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -12,10 +15,16 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 // Dependiendo del titulo se muestra el radio de busqueda
 // En Ver Todos y en Populares no se muestra el radio
 function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
-  console.log(tipo);
-  // Obtener la API Key de Google Maps desde el backend
+  // Estados
   const [apiKey, setApiKey] = useState(null);
   const [isApiLoaded, setIsApiLoaded] = useState(false);
+  const [rangoRadio, setRangoRadio] = useState(0.1);
+  const radioKM = rangoRadio * 1000;
+  const [ubicacion, setUbicacion] = useState("");
+  const [ubicacionCoords, setUbicacionCoords] = useState(null);
+  const [centerUserLocation, setCenterUserLocation] = useState(() => {});
+  const inputRef = useRef(null);
+
   useEffect(() => {
     const storedAPIKey = localStorage.getItem("GOOGLE_MAPS_API_KEY");
     if (storedAPIKey) {
@@ -34,15 +43,6 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
         );
     }
   }, []);
-
-  // Para el manejo del valor del rango
-  const [rangoRadio, setRangoRadio] = useState(0.1);
-  const radioKM = rangoRadio * 1000;
-
-  // Para el autocomplete
-  const [ubicacion, setUbicacion] = useState("");
-  const [ubicacionCoords, setUbicacionCoords] = useState(null);
-  const inputRef = useRef(null);
 
   // Esperar a que la API cargue correctamente
   useEffect(() => {
@@ -65,20 +65,43 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
     }
   }, [isApiLoaded, window.google]);
 
-  if (!apiKey) return <div>Cargando el mapa...</div>; // Mientras carga la API Key
-
   // Funcion para manejar el cambio del rango en el input range
   const handleRangeChange = (e) => {
     setRangoRadio(e.target.value);
   };
 
+  // Regresar a mi ubicacion (futura)
+  // const handleCenterCallback = useCallback((callback) => {
+  //   setCenterUserLocation(() => callback);
+  // }, []);
+
+  // const mapRef = useRef(null);
+
+  // const handleMapLoad = useCallback((map) => {
+  //   mapRef.current = map;
+  // }, []);
+
+  // const back2Ubi = useCallback(() => {
+  //   centerUserLocation?.();
+  // }, [centerUserLocation]);
+
+  const handleInstrucciones = () => {};
+
+  if (!apiKey) return <div>Cargando el mapa...</div>; // Mientras carga la API Key
+
   return (
-    <div id="museos-map-view">
+    <motion.div
+      id="museos-map-view"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <section className="museos-map-nav">
         <div id="museos-form-nav">
           <div className="museos-nav-section">
             <button type="button" disabled>
-              <img src={buscarimg} alt="Buscar" />
+              <IoSearch />
             </button>
             <input
               ref={inputRef}
@@ -86,8 +109,23 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
               id="museos-txt-ubicacion"
               placeholder="Introduce tu ubicación"
               value={ubicacion}
-              onChange={(e) => setUbicacion(e.target.value)}
+              onChange={(e) => {
+                setUbicacion(e.target.value);
+                setCenterUserLocation(false);
+              }}
             />
+            <div className="btn-map-container">
+              {/* <button type="button" className="btn-map" onClick={back2Ubi}>
+                <RiMapPinUserFill title="Regresar a mi ubicación" />
+              </button> */}
+              <button
+                type="button"
+                className="btn-map"
+                onClick={handleInstrucciones}
+              >
+                <FaQuestion title="Ayuda" />
+              </button>
+            </div>
           </div>
           {tipo === "2" ? (
             <div className="museos-nav-section range-section">
@@ -120,10 +158,11 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
             ubicacionCoords={ubicacionCoords}
             place={ubicacion}
             tipo={tipo}
+            // onCenterUserLocation={handleCenterCallback}
           />
         </APIProvider>
       </section>
-    </div>
+    </motion.div>
   );
 }
 

@@ -31,7 +31,7 @@
   align-items: center;
   gap: 10px;
   margin: 0;
-  background-color: white;
+  background-color: var(--bg-filtro);
   position: fixed;
   z-index: 100;
   top: 0;
@@ -58,6 +58,7 @@
     h1 {
       font-size: 1.8rem;
       font-weight: $font-w-bold;
+      color: var(--font-color-primary);
     }
 
     .filtro-menu-close-button {
@@ -71,8 +72,10 @@
 
       transition: transform 0.3s ease-in-out;
 
-      img {
-        width: 100%;
+      svg {
+        width: 50px;
+        height: 50px;
+        color: var(--font-color-primary);
       }
 
       &:hover {
@@ -100,6 +103,7 @@
         font-size: 1.4rem;
         font-weight: $font-w-bold;
         padding-left: 100px;
+        color: var(--font-color-primary);
       }
 
       button {
@@ -110,8 +114,10 @@
 
         transition: transform 0.3s ease-in-out;
 
-        img {
-          width: 100%;
+        svg {
+          width: 30px;
+          height: auto;
+          color: var(--font-color-primary);
         }
       }
 
@@ -144,6 +150,7 @@
         label {
           font-size: 1.2rem;
           padding-left: 110px;
+          color: var(--font-color-primary);
         }
 
         .filtro-chk {
@@ -270,6 +277,7 @@
       width: auto;
       font-size: 1.2rem;
       font-weight: $font-w-bold;
+      color: var(--font-color-primary);
     }
 
     .slider-precio-container {
@@ -308,6 +316,7 @@
   #nmuseos {
     font-size: 1.2rem;
     font-weight: $font-w-regular;
+    color: var(--font-color-primary);
   }
 
   .filtro-menu-botones {

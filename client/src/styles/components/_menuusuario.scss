@@ -75,7 +75,7 @@
 
       #header-info-link {
         text-decoration: none;
-        color: $color-a;
+        color: var(--color-a);
         font-size: 0.9rem;
         font-weight: $font-w-regular;
         padding-top: 2px;
@@ -142,6 +142,98 @@
     }
   }
 
+  .menu-usuario-darkmode-container {
+    width: 100%;
+    height: auto;
+
+    padding: 10px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+    label {
+      font-weight: $font-w-semibold;
+    }
+
+    .switch-button-dm {
+      display: inline-block;
+      position: relative;
+      width: 4rem;
+      height: 2rem;
+      user-select: none;
+
+      .switch-button__checkbox {
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        cursor: pointer;
+      }
+
+      .switch-button__label {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        border-radius: 2rem;
+        position: absolute;
+        background-color: rgb(198, 198, 198);
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        transition: background-color 0.3s ease-in-out,
+          justify-content 0.3s ease-in-out;
+
+        .switch-button-slider {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 50%;
+          background-color: white;
+          box-shadow: inset 0 0.1rem 0.3rem rgba(0, 0, 0, 0.2);
+          transition: transform 0.3s ease-in-out;
+
+          z-index: 101;
+        }
+      }
+
+      .switch-button-span-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: absolute;
+        z-index: 100;
+        top: 0;
+        left: 0;
+        padding: 0 0.5rem;
+
+        svg {
+          color: black;
+          font-size: 1.2rem;
+        }
+      }
+
+      .switch-button__checkbox:checked + .switch-button__label {
+        justify-content: flex-end;
+
+        .switch-button-slider {
+          transform: translateX(
+            calc(100% - 1.8rem)
+          ); // Ajustado al nuevo tamaño
+        }
+      }
+
+      .switch-button__checkbox:not(:checked) + .switch-button__label {
+        justify-content: flex-start;
+      }
+    }
+  }
+
   .menu-usuario-footer {
     width: 100%;
     height: 40px;
@@ -156,7 +248,7 @@
       border: none;
       background-color: transparent;
       text-decoration: none;
-      color: $color-a;
+      color: var(--color-a);
       font-size: 1rem;
       font-weight: $font-w-bold;
 

@@ -3,12 +3,20 @@ import { useState } from "react";
 import Icons from "./IconProvider";
 const { museoIcon, FaPerson, IoClose } = Icons;
 
+import { AnimatePresence, motion } from "framer-motion";
+
 function MapIndicaciones() {
   const [isPopupOpen, setIsPopupOpen] = useState(true);
   return (
-    <>
+    <AnimatePresence>
       {isPopupOpen && (
-        <div className="bg-opaco-blur">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="bg-opaco-blur"
+        >
           <main id="main-map-indicaciones">
             <button
               id="close-login-popup"
@@ -96,9 +104,9 @@ function MapIndicaciones() {
               Entendido{" "}
             </button>
           </main>
-        </div>
+        </motion.div>
       )}
-    </>
+    </AnimatePresence>
   );
 }
 
