@@ -23,7 +23,7 @@
 
       h1 {
         font-size: 1.5rem;
-        color: black;
+        color: var(--font-color-primary);
       }
 
       button {
@@ -35,7 +35,7 @@
         align-items: center;
         background-color: transparent;
         text-decoration: none;
-        color: $color-a-2;
+        color: var(--color-a-2);
         font-size: 1.4rem;
         font-weight: $font-w-bold;
         transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
@@ -43,7 +43,7 @@
         svg {
           width: 80%;
           height: auto;
-          color: #000;
+          color: var(--font-color-primary);
         }
 
         &:hover {
@@ -73,7 +73,7 @@
       a {
         width: 50px;
         text-decoration: none;
-        color: $color-a-2;
+        color: var(--color-a-2);
         font-size: 18px;
         font-weight: $font-w-bold;
         transition: opacity 0.3s ease-in-out;
@@ -98,7 +98,7 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
-        color: $color-a-2;
+        color: var(--color-a-2);
 
         transition: opacity 0.3s ease-in-out;
 
@@ -124,12 +124,12 @@
     width: 90%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax($mc-width, auto));
+    gap: 30px;
     padding: 20px;
     margin: 0 auto;
 
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     text-align: center;
   }
@@ -178,20 +178,42 @@
             gap: 20px;
             padding: 10px;
             margin: 10px;
-            background-color: $navbar-bg;
-            color: $navbar-font-color;
+            background-color: var(--bg-navbar);
+            color: var(--font-color-navbar);
+
+            position: relative;
 
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
 
             button {
-              width: 30px;
-              height: 30px;
+              width: 60px;
+              height: 60px;
               border: none;
               background-color: transparent;
 
-              img {
-                width: 30px;
-                height: 30px;
+              svg {
+                width: 25px;
+                height: 25px;
+              }
+            }
+
+            .btn-map-container {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 5px;
+              background-color: var(--bg-navbar);
+              border-radius: 50%;
+
+              .btn-map {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+
+                transition: background-color 0.3s ease-in-out;
+                &:hover {
+                  background-color: rgba(0, 0, 0, 0.2);
+                }
               }
             }
 
@@ -214,7 +236,7 @@
             padding: 10px 15px;
             margin: 10px;
 
-            background-color: $navbar-bg;
+            background-color: var(--bg-navbar);
             border-radius: 50px;
 
             font-weight: $font-w-regular;

@@ -4,6 +4,8 @@ import axios from "axios";
 import Icons from "../../components/IconProvider";
 const { LuArrowUpDown, verIcon } = Icons;
 
+import { motion } from "framer-motion";
+
 import { Link, useParams } from "react-router-dom";
 import {
   useReactTable,
@@ -154,50 +156,60 @@ function ModHistory() {
   });
 
   return (
-    <main id="tabla-main">
-      <h1>
-        {museoId
-          ? `Reseñas no aprobadas de ${museoId}`
-          : `Reseñas no aprobadas`}
-      </h1>
-      <div className="tabla-container">
-        <table>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    <div
-                      onClick={header.column.getToggleSortingHandler()}
-                      style={{ cursor: "pointer" }}
-                    >
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <main id="tabla-main">
+        <h1>
+          {museoId
+            ? `Reseñas no aprobadas de ${museoId}`
+            : `Reseñas no aprobadas`}
+        </h1>
+        <div className="tabla-container">
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id}>
+                      <div
+                        onClick={header.column.getToggleSortingHandler()}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {header.column.columnDef.enableSorting ? (
+                          <LuArrowUpDown />
+                        ) : null}
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
                       {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
-                      {header.column.columnDef.enableSorting ? (
-                        <LuArrowUpDown />
-                      ) : null}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </main>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </motion.div>
   );
 }
 

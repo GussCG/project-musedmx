@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 import useUsuario from "../../hooks/Usuario/useUsuario";
 
@@ -17,11 +18,12 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 
 import Icons from "../../components/IconProvider";
-const { eyeClosedIcon, eyeOpenIcon } = Icons;
+const { LuEye, LuEyeClosed } = Icons;
 
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 import ValidPassword from "../../components/ValidPassword";
 import ErrorCampo from "../../components/ErrorCampo";
+import ImageCropper from "../../components/ImageCropper";
 
 const validationSchema = Yup.object({
   signinfrmnombre: Yup.string()
@@ -57,7 +59,7 @@ function SignInForm() {
   // const [costo, setCosto] = useState("");
   // const [valorRango, setValorRango] = useState([0, 100]);
   // const [rangoHabilitado, setRangoHabilitado] = useState(false);
-  const [imagePreview, setImagePreview] = useState(userPlaceholder);
+
   const [selectedTematicas, setSelectedTematicas] = useState([]);
   const signInButtonRef = useRef(null);
   const passwordRef = useRef(null);
@@ -97,13 +99,53 @@ function SignInForm() {
   // };
 
   // Lógica para el cambio de imagen de perfil
-  const handleImageChange = (event, setFieldValue) => {
-    const file = event.target.files[0];
-    setFieldValue("signinfrmfoto", file);
-    setImagePreview(URL.createObjectURL(file));
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(userPlaceholder);
+  const [openCropper, setOpenCropper] = useState(false);
+  const [imageOriginal, setImageOriginal] = useState(null);
+
+  // Sin ImageCropper
+  const handleImageChange = (e, setFieldValue) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setFieldValue("signinfrmfoto", file);
+      setImagePreview(URL.createObjectURL(file));
+      document.getElementById("file-name").textContent = file.name;
+    } else {
+      setImagePreview(userPlaceholder);
+      document.getElementById("file-name").textContent =
+        "Ningún archivo seleccionado";
+    }
   };
 
+  // ImageCropper
+  // const handleImageChange = (event, setFieldValue) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     const objectURL = URL.createObjectURL(file);
+  //     setImage(objectURL);
+  //     setImageOriginal(file);
+  //     setOpenCropper(true);
+  //   }
+  // };
+
+  // const handleCroppedImage = (croppedImage, setFieldValue) => {
+  //   setImagePreview(croppedImage);
+  //   setFieldValue("signinfrmfoto", imageOriginal);
+  //   setOpenCropper(false);
+  // };
+
+  // useEffect(() => {
+  //   return () => {
+  //     if (image) {
+  //       URL.revokeObjectURL(image);
+  //     }
+  //   };
+  // }, [image]);
+
   // Manejo de temáticas
+
   const handleTematicaChange = (event) => {
     const { value, checked } = event.target;
     if (selectedTematicas.length === 3 && checked) {
@@ -330,7 +372,12 @@ function SignInForm() {
   // }, []);
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <main id="registros-main">
         <div id="registros-form">
           <Formik
@@ -476,6 +523,9 @@ function SignInForm() {
                         modifiers={{
                           disabled: { after: today },
                         }}
+                        classNames={{
+                          chevron: "calendar-chevron",
+                        }}
                         className="registros-calendar"
                       />
                     </div>
@@ -496,13 +546,17 @@ function SignInForm() {
                       >
                         Contraseña
                       </label>
-                      <img
-                        src={shown1 ? eyeOpenIcon : eyeClosedIcon}
-                        onClick={switchShown1}
-                        alt="Mostrar contraseña"
-                        id="eye"
+                      <motion.div
                         className="eye"
-                      />
+                        onClick={switchShown1}
+                        key={shown1 ? "open" : "closed"}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        {shown1 ? <LuEye /> : <LuEyeClosed />}
+                      </motion.div>
                       {password.length > 0 && !isValidPass && (
                         <ValidPassword
                           faltaNumero={faltaNumero}
@@ -535,13 +589,17 @@ function SignInForm() {
                       >
                         Repetir Contraseña
                       </label>
-                      <img
-                        src={shown2 ? eyeOpenIcon : eyeClosedIcon}
-                        onClick={switchShown2}
-                        alt="Mostrar contraseña"
-                        id="eye2"
+                      <motion.div
                         className="eye"
-                      />
+                        onClick={switchShown2}
+                        key={shown2 ? "open" : "closed"}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        {shown2 ? <LuEye /> : <LuEyeClosed />}
+                      </motion.div>
                     </div>
                   </div>
                   <div id="registros-linea"></div>
@@ -717,22 +775,46 @@ function SignInForm() {
                     <hr />
                     <div className="registros-field-foto">
                       <div className="registros-field-foto-input">
-                        <h2>Foto de Perfil</h2>
-                        <input
-                          type="file"
-                          id="registros-frm-foto"
-                          name="signinfrmfoto"
-                          accept="image/*"
-                          ref={imageInputRef}
-                          onChange={(e) => handleImageChange(e, setFieldValue)}
-                          required
-                        />
+                        <h2>Foto de perfil</h2>
+                        <div className="foto-input">
+                          <Field
+                            className="file-btn"
+                            type="button"
+                            onClick={() =>
+                              document
+                                .getElementById("registros-frm-foto")
+                                .click()
+                            }
+                            value="Seleccionar Archivo"
+                          />
+                          <span id="file-name">Seleccionar Archivo</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            ref={imageInputRef}
+                            id="registros-frm-foto"
+                            style={{ display: "none" }}
+                            onChange={(e) => {
+                              handleImageChange(e, setFieldValue);
+                            }}
+                          />
+                        </div>
                       </div>
-                      <img
-                        src={imagePreview}
-                        alt="Foto de Perfil"
-                        id="foto-preview"
-                      />
+                      {imagePreview && (
+                        <img
+                          src={imagePreview}
+                          alt="Foto de Perfil"
+                          id="foto-preview"
+                        />
+                      )}
+                      {/* {openCropper && (
+                        <ImageCropper
+                          image={image}
+                          onCropComplete={(croppedImage) =>
+                            handleCroppedImage(croppedImage, setFieldValue)
+                          }
+                        />
+                      )} */}
                     </div>
                   </div>
                 </div>
@@ -751,7 +833,7 @@ function SignInForm() {
           </Formik>
         </div>
       </main>
-    </>
+    </motion.div>
   );
 }
 

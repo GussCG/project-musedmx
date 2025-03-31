@@ -2,28 +2,24 @@ import React, { useState } from "react";
 
 import Icons from "./IconProvider";
 
+import { motion } from "framer-motion";
+
 const { IoClose } = Icons;
 
-function LoginErrorMessage({ error }) {
-  const [isLogginErrorMessage, setIsLogginErrorMessage] = useState(true);
-
-  const handleClose = () => {
-    setIsLogginErrorMessage(false);
-  };
-
+function LoginErrorMessage({ error, onClose }) {
   return (
-    <>
-      <div
-        className={`login-error-message ${
-          isLogginErrorMessage ? "show" : "hide"
-        }`}
-      >
-        <p>{error}El correo o la contraseña no son correctos</p>
-        <button id="close-login-popup" type="button" onClick={handleClose}>
-          <IoClose />
-        </button>
-      </div>
-    </>
+    <motion.div
+      className={`login-error-message`}
+      initial={{ opacity: 0, y: "200%" }}
+      animate={{ opacity: 1, y: "0%" }}
+      exit={{ opacity: 0, y: "200%" }}
+      transition={{ duration: 0.3, type: "spring" }}
+    >
+      <p>{error}</p>
+      <button id="close-login-popup" type="button" onClick={onClose}>
+        <IoClose />
+      </button>
+    </motion.div>
   );
 }
 

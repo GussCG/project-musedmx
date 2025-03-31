@@ -1,0 +1,64 @@
+[data-theme="dark"] {
+  /* ! Colores Darkmode */
+  // Colores del fondo de la página
+  --bg-grad-color-1: #5c5c5c;
+  --bg-grad-color-2: #292929;
+  --bg-grad-color-3: #1e1e1e;
+  // Fondos de Main y Componentes
+  --bg-main: #353535;
+  // Colores de texto
+  --color-1: #b9afa5;
+  // Colores de la parte de la reseña
+  --color-resena-bg: #1d1d1d;
+  --color-resena-button: #2d2d2d;
+  --bg-navbar: #ffffff;
+  --font-color-navbar: #000;
+  // // Formularios
+  --bg-checked-tematica: #888888;
+  --bg-form-calendar: #464646;
+  --calendar-today: #93c6ff;
+  --calendar-dropdown: rgb(51, 51, 51);
+  --calendar-chevron: #fff;
+  --selection-dropdown: #fff;
+
+  //Fonts
+  --nav-font-color: #ffffff;
+  --nav-font-hover-color: #fff;
+  --nav-login-bg-color: #000;
+  --nav-login-font-color: #fff;
+  --color-a: #8c9acc; // Color de los links
+  --color-a-2: #d2d2d2; // Color de los links 2
+  // Colores de las cartas de museo
+  --museo-card-bg: #414141;
+  --museo-card-h1-color: #d7d7d7;
+  --museo-card-text-color: #000000;
+  //Fonts
+  --font-color-primary: #fff;
+  //BoxShadow
+  --box-shadow: 1px 1px 26px -5px rgba(195, 195, 195, 0);
+  --box-shadow-2: 0 5px 25px rgba(0, 0, 0, 0.2);
+
+  // FiltroMenu
+  --bg-filtro: #292929;
+
+  // Popup
+  --bg-popup: rgb(67, 67, 67);
+
+  // ErrorMessage
+  // PopUps Colors (LoginError, Toasts, etc)
+  --pop-up-bg: #fff;
+  --pop-up-text: #000;
+  --pop-up-error-bg: rgba(78, 0, 0, 0.3);
+  --pop-up-error-border: 3px solid #290000;
+  --pop-up-error-text: #ffffff;
+
+  --pop-up-success-bg: rgba(0, 128, 0, 0.3);
+  --pop-up-success-border: 3px solid #047c00;
+  --pop-up-success-text: #047c00;
+
+  // ValidPassword
+  --bg-valid-password: #515151;
+
+  // Fotos
+  --bg-row-fotos: #555555;
+}

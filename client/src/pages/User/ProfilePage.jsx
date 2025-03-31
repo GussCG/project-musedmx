@@ -1,6 +1,8 @@
 import React from "react";
 import { useAuth } from "../../context/AuthProvider";
 
+import { motion } from "framer-motion";
+
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 
 import AdminPage from "../../components/AdminPage";
@@ -34,7 +36,13 @@ function ProfilePage() {
 
   return (
     <>
-      <header className="profile-header">
+      <motion.header
+        className="profile-header"
+        initial={{ y: "-200%" }}
+        animate={{ y: "0" }}
+        exit={{ y: "-200%" }}
+        transition={{ duration: 0.5, type: "spring", bounce: 0.18 }}
+      >
         <div id="header-image">
           <img src={user.foto || userPlaceholder} alt="Header" />
         </div>
@@ -47,7 +55,7 @@ function ProfilePage() {
           ) : null}
         </div>
         <HeaderButtons tipoUsuario={user.tipoUsuario} />
-      </header>
+      </motion.header>
 
       {user.tipoUsuario === 1 && <UsuarioPage />}
 

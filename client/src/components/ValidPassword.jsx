@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 function ValidPassword({
   faltaNumero,
@@ -8,7 +9,13 @@ function ValidPassword({
   longitud,
 }) {
   return (
-    <div className="valid-password-container">
+    <motion.div
+      className="valid-password-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <p>Contraseña no valida</p>
       <ul>
         <li>
@@ -58,7 +65,7 @@ function ValidPassword({
           </label>
         </li>
       </ul>
-    </div>
+    </motion.div>
   );
 }
 

@@ -2,7 +2,14 @@
 @use "variables" as *;
 @use "global" as *;
 
+// Temas
+@use "themes/light" as *;
+@use "themes/dark" as *;
+@use "themes/retro" as *;
+@use "themes/mixins" as *;
+
 // Componentes
+@use "components/buttons" as *;
 @use "components/navbarmenu" as *;
 @use "components/menucontainer" as *;
 @use "components/footer" as *;
@@ -15,9 +22,10 @@
 @use "components/tabla" as *;
 @use "components/menuusuario" as *;
 @use "components/customadvancedmarker" as *;
-@use "components/buttons" as *;
 @use "components/popups" as *;
 @use "components/lottieanimation" as *;
 @use "components/menusort" as *;
 @use "components/validpassword" as *;
 @use "components/errorcampo" as *;
+@use "components/imagecropper" as *;
+@use "components/animations" as *;

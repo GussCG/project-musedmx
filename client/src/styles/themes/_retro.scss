@@ -1,0 +1,67 @@
+[data-theme="retro"] {
+  /* ! Colores Darkmode */
+  // Colores del fondo de la página muchos gradientes xd
+  --bg-grad-color-1: #ff7d7d;
+  --bg-grad-color-2: #a1caff;
+  --bg-grad-color-3: #e9a8ff;
+
+  // Fondos de Main y Componentes
+  --bg-main: rgba(255, 255, 255, 0.2);
+  //   main {
+  //     border: 10px solid white;
+  //   }
+  // Colores de texto
+  --color-1: #ffffff;
+  // Colores de la parte de la reseña
+  --color-resena-bg: rgba(0, 0, 0, 0.2);
+  --color-resena-button: rgba(0, 0, 0, 0.3);
+  --bg-navbar: #ffffff;
+  --font-color-navbar: #000;
+  // // Formularios
+  --bg-checked-tematica: rgba(64, 0, 255, 0.285);
+  --bg-form-calendar: rgba(41, 41, 41, 0.2);
+  --calendar-today: #ffffff;
+  --calendar-dropdown: rgba(79, 79, 79, 0.2);
+  --selection-dropdown: #fff;
+
+  //Fonts
+  --nav-font-color: #000000;
+  --nav-font-hover-color: #000000;
+  --nav-login-bg-color: #000;
+  --nav-login-font-color: #fff;
+  --color-a: #4a4a4a; // Color de los links
+  --color-a-2: #44005d; // Color de los links 2
+  // Colores de las cartas de museo
+  --museo-card-bg: rgba(0, 0, 0, 0.2);
+  --museo-card-h1-color: #000000;
+  --museo-card-text-color: #000000;
+  //Fonts
+  --font-color-primary: #000000;
+  //BoxShadow
+  --box-shadow: 1px 1px 26px -5px rgba(195, 195, 195, 0);
+  --box-shadow-2: 0 5px 25px rgba(79, 79, 79, 0.2);
+
+  // FiltroMenu
+  --bg-filtro: #a7a7a79f;
+
+  // Popup
+  --bg-popup: rgba(255, 255, 255, 0.713);
+
+  // ErrorMessage
+  // PopUps Colors (LoginError, Toasts, etc)
+  --pop-up-bg: #fff;
+  --pop-up-text: #000;
+  --pop-up-error-bg: rgba(78, 0, 0, 0.3);
+  --pop-up-error-border: 3px solid #290000;
+  --pop-up-error-text: #ffffff;
+
+  --pop-up-success-bg: rgba(0, 128, 0, 0.3);
+  --pop-up-success-border: 3px solid #047c00;
+  --pop-up-success-text: #047c00;
+
+  // ValidPassword
+  --bg-valid-password: #515151;
+
+  // Fotos
+  --bg-row-fotos: rgba(79, 79, 79, 0.2);
+}

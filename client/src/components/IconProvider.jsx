@@ -43,9 +43,9 @@ import eyeOpenIcon from "../assets/icons/eye-opened-icon.png";
 import eyeClosedIcon from "../assets/icons/eye-closed-icon.png";
 
 // Usuario Page
-import corazonIcon from "../assets/icons/corazon-rojo-icon.png";
-import buscarIcon from "../assets/icons/buscar-icon.png";
-import editarIcon from "../assets/icons/editar-w-icon.png";
+import corazonIcon from "../assets/icons/corazon-rojo-icon.svg";
+import buscarIcon from "../assets/icons/buscar-icon.svg";
+import editarIcon from "../assets/icons/editar-w-icon.svg";
 
 // Mod History
 import { LuArrowUpDown } from "react-icons/lu";
@@ -55,7 +55,7 @@ import verIcon from "../assets/icons/eye-opened-icon.png";
 import editarModIcon from "../assets/icons/editar-perfil-icon.png";
 
 // Museo Detail
-import tematicaIcon from "../assets/icons/antropologia-icon.png";
+import tematicaIcon from "../assets/icons/antropologia-icon.svg";
 import facebookIcon from "../assets/icons/facebook-sc-icon.png";
 import instagramIcon from "../assets/icons/instagram-sc-icon.png";
 import twitterIcon from "../assets/icons/twitter-sc-icon.png";
@@ -71,17 +71,17 @@ import familiarIcon from "../assets/icons/familiar-icon.png";
 import adultoIcon from "../assets/icons/adulto-icon.png";
 
 // Iconos de Servicios
-import banioIcon from "../assets/icons/bano-icon.png";
+import banioIcon from "../assets/icons/bano-icon.svg";
 import tiendaIcon from "../assets/icons/tienda-icon.png";
 import wifiIcon from "../assets/icons/wifi-icon.png";
 import guardarropaIcon from "../assets/icons/guardarropa-icon.png";
-import bilbiotecaIcon from "../assets/icons/bilbioteca-icon.png";
+import bilbiotecaIcon from "../assets/icons/bilbioteca-icon.svg";
 import estacionamientoIcon from "../assets/icons/estacionamiento-icon.png";
 import visitaGuiadaIcon from "../assets/icons/visita-guiada-icon.png";
 import medicoIcon from "../assets/icons/medico-icon.png";
-import cafeteriaIcon from "../assets/icons/cafeteria-icon.png";
+import cafeteriaIcon from "../assets/icons/cafeteria-icon.svg";
 import elevadorIcon from "../assets/icons/elevador-icon.png";
-import brailleIcon from "../assets/icons/braille-icon.png";
+import brailleIcon from "../assets/icons/braille-icon.svg";
 import lenguajeDeSenasIcon from "../assets/icons/lenguaje-de-senas-icon.png";
 import sillaRuedasIcon from "../assets/icons/silla-ruedas-icon.png";
 
@@ -103,6 +103,21 @@ import { FaMap } from "react-icons/fa";
 import { TbCardsFilled } from "react-icons/tb";
 
 import { LuEyeClosed, LuEye } from "react-icons/lu";
+
+import { IoSearch } from "react-icons/io5";
+
+import { FaMoon } from "react-icons/fa";
+import { IoSunny } from "react-icons/io5";
+import { CgClose } from "react-icons/cg";
+
+import { IoIosArrowDown } from "react-icons/io";
+import { FaTrash } from "react-icons/fa6";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import { LuImageUp } from "react-icons/lu";
+import { FaImage } from "react-icons/fa6";
+
+import { FaQuestion } from "react-icons/fa";
+import { RiMapPinUserFill } from "react-icons/ri";
 
 const Icons = {
   estrellaIcon,
@@ -171,6 +186,17 @@ const Icons = {
   LuEye,
   familiarIcon,
   adultoIcon,
+  IoSearch,
+  FaMoon,
+  IoSunny,
+  CgClose,
+  IoIosArrowDown,
+  FaTrash,
+  IoIosCheckmarkCircle,
+  LuImageUp,
+  FaImage,
+  FaQuestion,
+  RiMapPinUserFill,
 };
 
 export default Icons;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import Icons from "./IconProvider";
-const { CerrarButton, FaStar } = Icons;
+const { CerrarButton, FaStar, CgClose } = Icons;
 
 function MenuFiltroResena({ menuVisible, setMenuVisible }) {
   const [rating, setRating] = useState(null);
@@ -40,11 +40,7 @@ function MenuFiltroResena({ menuVisible, setMenuVisible }) {
       >
         <div className="filtro-menu-header">
           <button className="filtro-menu-close-button" onClick={cerrarMenu}>
-            <img
-              src={CerrarButton}
-              alt="Cerrar"
-              id="filtro-menu-close-button"
-            />
+            <CgClose />
           </button>
           <h1>Filtro</h1>
         </div>

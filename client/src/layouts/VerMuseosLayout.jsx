@@ -1,5 +1,6 @@
 import React from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 
 import NavBarMenu from "../components/NavBarMenu";
 import Footer from "../components/Footer";
@@ -9,7 +10,6 @@ import MuseoDetail from "../pages/Museo/MuseoDetail";
 import RegistroVisita from "../pages/Museo/RegistroVisita";
 
 import "../styles/pages/VerMuseosLayout.scss";
-import MapIndicaciones from "../components/MapIndicaciones";
 
 const museoEjemplo = {
   id: 1,

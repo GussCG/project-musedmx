@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
+import { motion } from "framer-motion";
 // Toastify
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,14 +11,19 @@ import imgPrueba from "../assets/images/others/museo-main-1.jpg";
 import PopUpLogin from "./PopUpLogin";
 
 import Icons from "./IconProvider";
+import { sl } from "react-day-picker/locale";
 const { estrellaIcon, moneyIcon, freeIcon, eliminarIcon } = Icons;
 
-export default function MuseoCard({ museo, editMode }) {
+export default function MuseoCard({ museo, editMode, sliderType }) {
+  // Prefijo unico basado en sliderType
+  const layoutPrefix = sliderType ? `${sliderType}-` : ``;
+
   // Para obtener el usuario autenticado pero aun no se ha implementado el backend
   const { user, setIsLogginPopupOpen } = useAuth();
   // const {user} = useAuth()
-
   const navigate = useNavigate();
+
+  const [isClicked, setIsClicked] = useState(false);
 
   // Estado para los checkbox de favoritos
   const [isFavorite, setIsFavorite] = useState(false);
@@ -158,44 +164,56 @@ export default function MuseoCard({ museo, editMode }) {
   };
 
   return (
-    <>
-      <div className="museo-card">
-        <div className="museo-card-img-container">
-          {editMode ? (
-            <label className="museo-card-fav-button-container">
-              <button
-                type="button"
-                onClick={() => handleQVDelete(museoInfo.id)}
-              >
-                <img src={eliminarIcon} alt="Eliminar" />
-              </button>
-            </label>
-          ) : (
-            <label className="museo-card-fav-button-container">
-              <input
-                type="checkbox"
-                name="museo-fav"
-                className="museo-card-fav-button"
-                checked={isFavorite}
-                onChange={
-                  user
-                    ? handleFavoriteChange
-                    : () => {
-                        localStorage.setItem(
-                          "redirectPath",
-                          window.location.pathname
-                        );
-                        setIsLogginPopupOpen(true);
-                      }
-                }
-              />
-              <span className="museo-card-fav-button-span"></span>
-            </label>
-          )}
-          <img
+    <motion.div
+      className="museo-card"
+      layoutId={`${layoutPrefix}museo-card-${museoInfo.id}`}
+      key={`${layoutPrefix}card-${museoInfo.id}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="museo-card-img-container">
+        {editMode ? (
+          <label className="museo-card-fav-button-container">
+            <button type="button" onClick={() => handleQVDelete(museoInfo.id)}>
+              <img src={eliminarIcon} alt="Eliminar" />
+            </button>
+          </label>
+        ) : (
+          <label className="museo-card-fav-button-container">
+            <input
+              type="checkbox"
+              name="museo-fav"
+              className="museo-card-fav-button"
+              checked={isFavorite}
+              onChange={
+                user
+                  ? handleFavoriteChange
+                  : () => {
+                      localStorage.setItem(
+                        "redirectPath",
+                        window.location.pathname
+                      );
+                      setIsLogginPopupOpen(true);
+                    }
+              }
+            />
+            <span className="museo-card-fav-button-span"></span>
+          </label>
+        )}
+        <Link
+          to={`/Museos/${museoInfo.id}`}
+          onClick={(e) => {
+            e.preventDefault();
+            setTimeout(() => navigate(`/Museos/${museoInfo.id}`), 0);
+          }}
+        >
+          <motion.img
             src={imgPrueba}
             alt={museoInfo.nombre}
             className="museo-card-img"
+            layoutId={`${layoutPrefix}museo-image-${museoInfo.id}`}
+            key={`${layoutPrefix}img-${museoInfo.id}`}
           />
           <div className="museo-card-img-rating">
             <p id="museo-card-rating">{museoInfo.calificacion}</p>
@@ -208,26 +226,32 @@ export default function MuseoCard({ museo, editMode }) {
           <div className="museo-card-img-distance">
             <h2>{museoInfo.distancia} km</h2>
           </div>
+        </Link>
+      </div>
+      <div className="museo-card-info-container">
+        <div className="museo-card-info-header">
+          <Link
+            to={`/Museos/${museoInfo.id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              setTimeout(() => navigate(`/Museos/${museoInfo.id}`), 0);
+            }}
+          >
+            <h2 id="museo-card-nombre">{museoInfo.nombre}</h2>
+          </Link>
+          <p id="museo-card-alcaldia">{museoInfo.alcaldia}</p>
         </div>
-        <div className="museo-card-info-container">
-          <div className="museo-card-info-header">
-            <Link to={`/Museos/${museoInfo.id}`} id="museo-card-nombre">
-              {museoInfo.nombre}
-            </Link>
-            <p id="museo-card-alcaldia">{museoInfo.alcaldia}</p>
-          </div>
-          <div className="museo-card-info-body">
-            <div className="museo-card-info-body-item">
-              <p>
-                <b>Horarios:</b>
-              </p>
-              {horarios.map((horario, index) => (
-                <p key={`${horario}-${index}`}>{horario}</p>
-              ))}
-            </div>
+        <div className="museo-card-info-body">
+          <div className="museo-card-info-body-item">
+            <p>
+              <b>Horarios:</b>
+            </p>
+            {horarios.map((horario, index) => (
+              <p key={`${horario}-${index}`}>{horario}</p>
+            ))}
           </div>
         </div>
       </div>
-    </>
+    </motion.div>
   );
 }

@@ -135,7 +135,7 @@
         #museo-card-nombre {
           width: 200px;
           font-size: 18px;
-          color: $museo-card-h1-color;
+          color: var(--museo-card-h1-color);
           font-weight: $font-w-extrabold;
           text-align: center;
           margin: 0;

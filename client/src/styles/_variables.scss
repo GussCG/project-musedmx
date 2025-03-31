@@ -9,26 +9,6 @@ $font-primary: "Raleway", sans-serif;
 $font-secondary: "Playfair", serif;
 $font-tertiary: "Roboto", sans-serif;
 
-/* ! Colores */
-// Colores del fondo de la página
-$bg-grad-color-1: #777062;
-$bg-grad-color-2: #ddd0b6;
-$bg-grad-color-3: #fff4e0;
-
-// Colores de texto
-$color-1: #b9afa5;
-$color-a: #0033e1; // Color de los links
-$color-a-2: #080058; // Color de los links 2
-
-// Colores de la parte de la reseña
-$color-resena-bg: #decba7;
-$color-resena-button: #ac8863;
-
-// Colores de las cartas de museo
-$museo-card-bg: #d9d9d9;
-$museo-card-h1-color: #6f6f6f;
-$museo-card-text-color: #000;
-
 // Blancos
 $wow: #edefef;
 $rose-w: #fffafa;
@@ -38,23 +18,15 @@ $w-dove: #f0efe7;
 $filter-checkbox-bg: #d9d9d9;
 
 /* NAV */
-$nav-font-color: #000;
-$nav-login-bg-color: #000;
-$nav-login-font-color: #fff;
 $nav-ul-font-s: 24px;
 $nav-login-font-s: 24px;
 
 /* NAVBAR */
-$navbar-bg: #fff;
-$navbar-font-color: #000;
-$navbar-font-w-light: 200;
 $navbar-font-s: 18px;
 
 /* INDEX MAIN */
 $index-main-button-bg: #fff;
 $index-main-button-font-color: #000;
-$index-main-button-font-w-light: 200;
-$index-main-font-w-extrabold: 800;
 $index-main-font-s-title: 3.5rem;
 $index-main-font-s-text: 1.5rem;
 
@@ -90,21 +62,13 @@ $color-green: #047c00;
 $color-red: #800000;
 
 // Box-Shadows
-$box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
 $error-form-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.2);
 
 // Map Markers
 $user-marker-bg: rgb(68, 0, 194);
 $user-marker-border: rgb(26, 0, 74);
 
-// PopUps Colors (LoginError, Toasts, etc)
-$pop-up-bg: #fff;
-$pop-up-text: #000;
-$pop-up-error-bg: rgba(128, 0, 0, 0.3);
-$pop-up-error-border: 3px solid #800000;
-$pop-up-error-text: #800000;
 $pop-up-border-radius: 10px;
 
-$pop-up-success-bg: rgba(0, 128, 0, 0.3);
-$pop-up-success-border: 3px solid #047c00;
-$pop-up-success-text: #047c00;
+// Museo Card
+$mc-width: 25rem;

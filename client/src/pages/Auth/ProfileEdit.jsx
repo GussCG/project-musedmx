@@ -10,6 +10,8 @@ import "react-phone-number-input/style.css";
 import { toast, Bounce } from "react-toastify";
 import "rc-slider/assets/index.css";
 
+import { motion } from "framer-motion";
+
 import { format } from "date-fns";
 import { es, se } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
@@ -283,7 +285,12 @@ function ProfileEdit() {
   }, [tel, selectedDate, selectedTematicas, tipoUsuario]);
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <main id="registros-main">
         <div id="registros-form">
           <Formik
@@ -669,7 +676,7 @@ function ProfileEdit() {
           </Formik>
         </div>
       </main>
-    </>
+    </motion.div>
   );
 }
 

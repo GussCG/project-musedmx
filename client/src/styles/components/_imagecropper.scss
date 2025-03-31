@@ -1,0 +1,100 @@
+@use "../variables" as *;
+
+.image-cropper-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 70%;
+  max-width: 800px;
+  height: auto;
+  max-height: 80vh;
+
+  z-index: 1000;
+
+  background-color: $rose-w;
+  border-radius: 20px;
+
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+
+  overflow: hidden;
+
+  h1 {
+    font-weight: $font-w-bold;
+  }
+
+  .image-cropper {
+    position: relative;
+    width: 90%;
+    height: 500px;
+    min-height: 600px;
+    margin: 0 auto;
+
+    .reactEasyCrop_Container {
+      .reactEasyCrop_Image {
+        object-fit: cover;
+      }
+    }
+  }
+
+  .image-cropper-controls {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 32px;
+    margin-top: 20px;
+
+    .image-cropper-controls-zoom {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      height: 50px;
+
+      label {
+        font-size: 1.2rem;
+        font-weight: $font-w-light;
+      }
+
+      .zoom-slider {
+        -webkit-appearance: none;
+        width: 20%;
+        height: 10px;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+
+        &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          background-color: black;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        &::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          background-color: black;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .image-cropper-controls-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+  }
+}

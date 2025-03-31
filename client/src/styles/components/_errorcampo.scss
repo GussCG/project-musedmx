@@ -4,7 +4,7 @@
   width: 100%;
   height: auto;
 
-  background-color: $pop-up-error-bg;
+  background-color: var(--pop-up-error-bg);
   border-radius: 0 0 10px 10px;
   box-shadow: $error-form-shadow;
 
@@ -15,6 +15,6 @@
     font-size: 1rem;
     font-weight: $font-w-regular;
     text-align: center;
-    color: $pop-up-error-text;
+    color: var(--pop-up-error-text);
   }
 }

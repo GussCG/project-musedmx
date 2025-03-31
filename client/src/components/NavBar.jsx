@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Icons from "./IconProvider";
-const { buscarimg } = Icons;
+const { IoSearch } = Icons;
 
 function NavBar() {
   // Para el input de busqueda
@@ -19,7 +19,7 @@ function NavBar() {
     <div className="nav-bar">
       <form onSubmit={handleSubmit}>
         <button type="submit">
-          <img src={buscarimg} alt="Buscar" />
+          <IoSearch />
         </button>
         <input
           type="text"

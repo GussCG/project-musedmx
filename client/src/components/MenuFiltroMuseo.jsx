@@ -4,9 +4,26 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
 import Icons from "./IconProvider";
-const { CerrarButton, MostrarButton } = Icons;
+const { CgClose, IoIosArrowDown } = Icons;
+
+import { useTheme } from "../context/ThemeProvider";
 
 function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
+  const { isDarkMode } = useTheme();
+
+  const trackStyle = [{ backgroundColor: isDarkMode ? "#fff" : "#000" }];
+
+  const handleStyle = [
+    {
+      backgroundColor: isDarkMode ? "#fff" : "#000",
+      borderColor: isDarkMode ? "#fff" : "#000",
+    },
+    {
+      backgroundColor: isDarkMode ? "#fff" : "#000",
+      borderColor: isDarkMode ? "#fff" : "#000",
+    },
+  ];
+
   const cerrarMenu = () => {
     setMenuVisible(false);
     setOpenDropdown(null);
@@ -103,11 +120,7 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
       >
         <div className="filtro-menu-header">
           <button className="filtro-menu-close-button" onClick={cerrarMenu}>
-            <img
-              src={CerrarButton}
-              alt="Cerrar"
-              id="filtro-menu-close-button"
-            />
+            <CgClose />
           </button>
           <h1>Filtro</h1>
         </div>
@@ -118,10 +131,7 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
               className="filtro-menu-filter-button"
               onClick={() => toggleFilter("tematica")}
             >
-              <img
-                src={MostrarButton}
-                alt="Mostrar/Ocultar"
-                id="tematica-button"
+              <IoIosArrowDown
                 className={openDropdown === "tematica" ? "rotado" : "regresado"}
               />
             </button>
@@ -253,10 +263,7 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
               className="filtro-menu-filter-button"
               onClick={() => toggleFilter("alcaldia")}
             >
-              <img
-                src={MostrarButton}
-                alt="Mostrar/Ocultar"
-                id="alcaldia-button"
+              <IoIosArrowDown
                 className={openDropdown === "alcaldia" ? "rotado" : "regresado"}
               />
             </button>
@@ -320,12 +327,11 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
               step={5}
               value={range}
               onChange={handleRangeChange}
-              handleStyle={[
-                { backgroundColor: "#000", borderColor: "#000" },
-                { backgroundColor: "#000", borderColor: "#000" },
-              ]}
-              trackStyle={[{ backgroundColor: "#000" }]}
-              railStyle={{ backgroundColor: "#d9d9d9" }}
+              handleStyle={handleStyle}
+              trackStyle={trackStyle}
+              railStyle={{
+                backgroundColor: isDarkMode ? "#4B4B4B" : "#d9d9d9",
+              }}
             />
           </div>
           {/* <input

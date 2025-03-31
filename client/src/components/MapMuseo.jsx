@@ -7,16 +7,31 @@ import CustomAdvancedMarker from "./CustomAdvancedMarker";
 import Icons from "./IconProvider";
 const { FaPerson } = Icons;
 
+import { useTheme } from "../context/ThemeProvider";
+
 // Toastify
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const MAP_DETAIL = import.meta.env.VITE_MAP_DETAIL_ID;
+function MapMuseo({
+  radioKM,
+  museosMostrados,
+  ubicacionCoords,
+  tipo,
+  // onCenterUserLocation,
+}) {
+  const { isDarkMode, isRetroMode } = useTheme();
 
-function MapMuseo({ radioKM, museosMostrados, ubicacionCoords, tipo }) {
+  const MAP_DETAIL = isRetroMode
+    ? import.meta.env.VITE_MAP_RETROMODE_DETAIL_ID
+    : isDarkMode
+    ? import.meta.env.VITE_MAP_DARKMODE_DETAIL_ID
+    : import.meta.env.VITE_MAP_DETAIL_ID;
+
   const [mapCenter, setMapCenter] = useState(null);
   const [userInteracted, setUserInteracted] = useState(false);
   const map = useMap();
+
   // Obtener la ubicación del usuario
   const [userLocation, setUserLocation] = useState(null);
   useEffect(() => {
@@ -77,6 +92,19 @@ function MapMuseo({ radioKM, museosMostrados, ubicacionCoords, tipo }) {
       }
     }
   };
+
+  // Regresar ubicacion
+  // useEffect(() => {
+  //   if (onCenterUserLocation && map && userLocation) {
+  //     const centerFunction = () => {
+  //       map.panTo(userLocation);
+  //       map.setZoom(17);
+  //     };
+  //     onCenterUserLocation(centerFunction);
+
+  //     return () => onCenterUserLocation(() => {});
+  //   }
+  // }, [map, userLocation, onCenterUserLocation]);
 
   return (
     <div className="map-container">
