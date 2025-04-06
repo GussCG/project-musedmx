@@ -27,11 +27,7 @@ function CustomAdvancedMarker({ lat, lng, nombre, imagen, idMuseo }) {
     >
       <div className={`custom-marker ${hovered ? "hovered" : ""}`}>
         <div className="marker-container">
-          <img
-            src={hovered && imagen ? museoImagen : museoIcon}
-            alt={nombre}
-            className="custom-marker-image"
-          />
+          <img src={museoIcon} alt={nombre} className="custom-marker-image" />
         </div>
 
         <div className="marker-tail-border" />

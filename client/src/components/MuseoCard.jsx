@@ -61,14 +61,33 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
 
   // Para obtener los museos del backend
   const museoInfo = {
-    id: museo.id,
-    nombre: museo.nombre,
-    horarios: museo.horarios,
-    img: museo.img,
-    calificacion: museo.calificacion,
-    costo: museo.costo,
-    distancia: museo.distancia,
-    alcaldia: museo.alcaldia,
+    id: museo.mus_id,
+    nombre: museo.mus_nombre,
+    alcaldia: museo.mus_alcaldia,
+    calificacion: museo.mus_calificacion || 0,
+    distancia: museo.mus_distancia || 0,
+    horarios: museo.mus_horarios || {
+      Lunes: "9:00 - 17:00",
+      Martes: "9:00 - 17:00",
+      Miercoles: "9:00 - 17:00",
+      Jueves: "9:00 - 17:00",
+      Viernes: "9:00 - 17:00",
+      Sabado: "9:00 - 17:00",
+      Domingo: "9:00 - 17:00",
+    },
+    img: museo.mus_imagen || imgPrueba,
+    tematica: museo.mus_tematica,
+  };
+
+  const TEMATICAS_MAP = {
+    1: "Antropología",
+    2: "Arte",
+    3: "Arte Alternativo",
+    4: "Arqueología",
+    5: "Ciencia y Tecnología",
+    6: "Especializado",
+    7: "Historia",
+    8: "Otro",
   };
 
   // Funcion para agrupar los horarios por dia
@@ -223,8 +242,8 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
               className="museo-card-star"
             />
           </div>
-          <div className="museo-card-img-distance">
-            <h2>{museoInfo.distancia} km</h2>
+          <div className="museo-card-img-tematica">
+            <h2>{TEMATICAS_MAP[museoInfo.tematica]}</h2>
           </div>
         </Link>
       </div>
@@ -243,9 +262,7 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
         </div>
         <div className="museo-card-info-body">
           <div className="museo-card-info-body-item">
-            <p>
-              <b>Horarios:</b>
-            </p>
+            <p className="semibold">Horarios:</p>
             {horarios.map((horario, index) => (
               <p key={`${horario}-${index}`}>{horario}</p>
             ))}

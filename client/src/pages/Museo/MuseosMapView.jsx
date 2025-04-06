@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import MapMuseo from "../../components/MapMuseo";
 
+import MapIndicaciones from "../../components/MapIndicaciones";
+
 import { APIProvider } from "@vis.gl/react-google-maps";
 
 import Icons from "../../components/IconProvider";
@@ -24,6 +26,7 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
   const [ubicacionCoords, setUbicacionCoords] = useState(null);
   const [centerUserLocation, setCenterUserLocation] = useState(() => {});
   const inputRef = useRef(null);
+  const [showIndicaciones, setShowIndicaciones] = useState(false);
 
   useEffect(() => {
     const storedAPIKey = localStorage.getItem("GOOGLE_MAPS_API_KEY");
@@ -85,7 +88,17 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
   //   centerUserLocation?.();
   // }, [centerUserLocation]);
 
-  const handleInstrucciones = () => {};
+  useEffect(() => {
+    const dontShowAgain =
+      localStorage.getItem("dontShowMapIndicaciones") === "true";
+    if (!dontShowAgain) {
+      setShowIndicaciones(true);
+    }
+  }, []);
+
+  const handleInstrucciones = () => {
+    setShowIndicaciones(true);
+  };
 
   if (!apiKey) return <div>Cargando el mapa...</div>; // Mientras carga la API Key
 
@@ -97,6 +110,10 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
+      <MapIndicaciones
+        isOpen={showIndicaciones}
+        onClose={() => setShowIndicaciones(false)}
+      />
       <section className="museos-map-nav">
         <div id="museos-form-nav">
           <div className="museos-nav-section">

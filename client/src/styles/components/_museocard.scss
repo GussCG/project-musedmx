@@ -142,13 +142,15 @@
       }
     }
 
-    .museo-card-img-distance {
+    .museo-card-img-tematica {
       position: absolute;
       left: 0;
       bottom: 0;
 
-      width: 80px;
+      width: fit-content;
       height: 40px;
+
+      padding: 0 12px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -184,19 +186,18 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      gap: 4px;
 
       #museo-card-nombre {
         font-size: 1.2rem;
         color: var(--museo-card-h1-color);
         font-weight: $font-w-extrabold;
-        text-align: left;
+        text-align: center;
         margin: 0;
         padding-left: 0;
         width: 100%;
-
-        white-space: nowrap;
+        height: auto;
         overflow: hidden;
-        text-overflow: ellipsis;
       }
 
       a {
@@ -232,6 +233,11 @@
         align-items: flex-start;
         justify-content: center;
         flex-direction: column;
+
+        .semibold {
+          font-size: 18px;
+          font-weight: $font-w-semibold;
+        }
 
         p {
           font-size: 16px;

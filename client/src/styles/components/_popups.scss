@@ -148,7 +148,7 @@
   width: 95%;
   height: 50%;
   max-width: 600px;
-  min-height: 750px;
+  min-height: 900px;
 
   position: fixed;
   top: 50%;
@@ -272,6 +272,87 @@
           font-weight: $font-w-semibold;
           text-align: center;
         }
+      }
+    }
+  }
+
+  .map-indicaciones-mostrar {
+    width: 90%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+
+    .switch-button-dm {
+      display: inline-block;
+      position: relative;
+      width: 3rem;
+      height: 1.5rem;
+      user-select: none;
+
+      .switch-button__checkbox {
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        cursor: pointer;
+      }
+
+      .switch-button__label {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        border-radius: 1.5rem;
+        position: absolute;
+        background-color: rgb(198, 198, 198);
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        transition: background-color 0.3s ease-in-out,
+          justify-content 0.3s ease-in-out;
+
+        .switch-button-slider {
+          width: 1.5rem;
+          height: 1.5rem;
+          border-radius: 50%;
+          background-color: white;
+          box-shadow: inset 0 0.1rem 0.3rem rgba(0, 0, 0, 0.2);
+          transition: transform 0.3s ease-in-out;
+
+          z-index: 101;
+        }
+      }
+
+      .switch-button-span-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: absolute;
+        z-index: 100;
+        top: 0;
+        left: 0;
+        padding: 0 0.5rem;
+      }
+
+      .switch-button__checkbox:checked + .switch-button__label {
+        justify-content: flex-end;
+        background-color: $link-color;
+
+        .switch-button-slider {
+          transform: translateX(
+            calc((100% - 1.5rem) * 0.5rem)
+          ); // Ajustado al nuevo tamaño
+        }
+      }
+
+      .switch-button__checkbox:not(:checked) + .switch-button__label {
+        justify-content: flex-start;
       }
     }
   }

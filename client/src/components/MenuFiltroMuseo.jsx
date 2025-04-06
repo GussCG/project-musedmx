@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
@@ -7,8 +8,9 @@ import Icons from "./IconProvider";
 const { CgClose, IoIosArrowDown } = Icons;
 
 import { useTheme } from "../context/ThemeProvider";
+import { id } from "react-day-picker/locale";
 
-function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
+function MenuFiltroMuseo({ menuVisible, setMenuVisible, onFilterApply }) {
   const { isDarkMode } = useTheme();
 
   const trackStyle = [{ backgroundColor: isDarkMode ? "#fff" : "#000" }];
@@ -24,10 +26,25 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
     },
   ];
 
+  const TEMATICAS = [
+    {
+      id: 1,
+      tematica: "Antropología",
+    },
+    { id: 2, tematica: "Arte" },
+    { id: 3, tematica: "Arte Alternativo" },
+    { id: 4, tematica: "Arqueología" },
+    { id: 5, tematica: "Ciencia y Tecnología" },
+    { id: 6, tematica: "Especializado" },
+    { id: 7, tematica: "Historia" },
+    { id: 8, tematica: "Otro" },
+  ];
+
+  const ALCALDIAS = ["Benito Juárez", "Cuauhtémoc", "Miguel Hidalgo"];
+
   const cerrarMenu = () => {
     setMenuVisible(false);
     setOpenDropdown(null);
-    handleBorrar();
   };
 
   // Para los dropdowns de tematica y alcaldia
@@ -61,6 +78,7 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
     tematica: {},
     alcaldia: {},
   });
+  const [museosCount, setMuseosCount] = useState(0);
 
   const toggleCheckbox = (category, value) => {
     setSelectedFilters((prev) => ({
@@ -73,39 +91,29 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
   };
 
   // Codigo para filtrar museos
-  const handleFiltrar = () => {
-    let filtros = {
-      tematica: Object.keys(selectedFilters.tematica).filter(
-        (key) => selectedFilters.tematica[key]
-      ),
-      alcaldia: Object.keys(selectedFilters.alcaldia).filter(
-        (key) => selectedFilters.alcaldia[key]
-      ),
-      range,
-    };
+  const handleFiltrar = async () => {
+    try {
+      const filtros = {
+        tipos: Object.keys(selectedFilters.tematica)
+          .filter((key) => selectedFilters.tematica[key])
+          .map((key) => {
+            const found = TEMATICAS.find((t) => t.tematica === key);
+            return found ? found.id : null;
+          })
+          .filter((id) => id !== null),
+        alcaldias: Object.keys(selectedFilters.alcaldia).filter(
+          (key) => selectedFilters.alcaldia[key]
+        ),
+        precioMin: range[0],
+        precioMax: range[1],
+      };
 
-    console.log(filtros);
-
-    let museosEncontrados = 10;
-
-    // Aqui se hace la llamada al backend para filtrar los museos
-    // fetch('api/museos', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(filtros),
-    // })
-    // .then(res => res.json())
-    // .then(data => console.log(data))
-    // .catch(err => console.log(err))
-
-    // Aqui se actualiza el numero de museos encontrados
-    // museosEncontrados = data.length
-
-    document.getElementById(
-      "nmuseos"
-    ).innerHTML = `Mostrando <output><b>${museosEncontrados}</b></output> museos`;
+      onFilterApply(filtros);
+      cerrarMenu();
+    } catch (error) {
+      console.error("Error al aplicar los filtros:", error);
+      setMuseosCount(0);
+    }
   };
 
   return (
@@ -142,118 +150,27 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
             }`}
             id="tematica"
           >
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="tematica-1">Antropología</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="tematica-filter"
-                  id="tematica-1"
-                  checked={selectedFilters.tematica["Antropología"] || false}
-                  onChange={() => toggleCheckbox("tematica", "Antropología")}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="tematica-2">Arte</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="tematica-filter"
-                  id="tematica-2"
-                  checked={selectedFilters.tematica["Arte"] || false}
-                  onChange={() => toggleCheckbox("tematica", "Arte")}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="tematica-3">Arte Alternativo</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="tematica-filter"
-                  id="tematica-3"
-                  checked={
-                    selectedFilters.tematica["Arte Alternativo"] || false
-                  }
-                  onChange={() =>
-                    toggleCheckbox("tematica", "Arte Alternativo")
-                  }
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="tematica-4">Arqueología</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="tematica-filter"
-                  id="tematica-4"
-                  checked={selectedFilters.tematica["Arqueología"] || false}
-                  onChange={() => toggleCheckbox("tematica", "Arqueología")}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="tematica-5">Ciencia y Tecnología</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="tematica-filter"
-                  id="tematica-5"
-                  checked={
-                    selectedFilters.tematica["Ciencia y Tecnología"] || false
-                  }
-                  onChange={() =>
-                    toggleCheckbox("tematica", "Ciencia y Tecnología")
-                  }
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="tematica-6">Especializado</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="tematica-filter"
-                  id="tematica-6"
-                  checked={selectedFilters.tematica["Especializado"] || false}
-                  onChange={() => toggleCheckbox("tematica", "Especializado")}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="tematica-7">Historia</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="tematica-filter"
-                  id="tematica-7"
-                  checked={selectedFilters.tematica["Historia"] || false}
-                  onChange={() => toggleCheckbox("tematica", "Historia")}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="tematica-8">Otro</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="tematica-filter"
-                  id="tematica-8"
-                  checked={selectedFilters.tematica["Otro"] || false}
-                  onChange={() => toggleCheckbox("tematica", "Otro")}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
+            {TEMATICAS.map((tematica) => (
+              <div key={tematica.id} className="filtro-menu-filter-body-item">
+                <label htmlFor={`tematica-${tematica.id}`}>
+                  {tematica.tematica}
+                </label>
+                <label className="filtro-chk">
+                  <input
+                    type="checkbox"
+                    name="tematica-filter"
+                    id={`tematica-${tematica.id}`}
+                    checked={
+                      selectedFilters.tematica[tematica.tematica] || false
+                    }
+                    onChange={() =>
+                      toggleCheckbox("tematica", tematica.tematica)
+                    }
+                  />
+                  <span className="checkmark"></span>
+                </label>
+              </div>
+            ))}
           </div>
         </div>
         <div className="filtro-menu-filter">
@@ -274,48 +191,24 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
             }`}
             id="alcaldia"
           >
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="alcaldia-1">Benito Juárez</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="alcaldia-filter"
-                  id="alcaldia-1"
-                  checked={selectedFilters.alcaldia["Benito Juárez"] || false}
-                  onChange={() => toggleCheckbox("alcaldia", "Benito Juárez")}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="alcaldia-2">Cuauhtémoc</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="alcaldia-filter"
-                  id="alcaldia-2"
-                  checked={selectedFilters.alcaldia["Cuauhtémoc"] || false}
-                  onChange={() => toggleCheckbox("alcaldia", "Cuauhtémoc")}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
-            <div className="filtro-menu-filter-body-item">
-              <label htmlFor="alcaldia-3">Miguel Hidalgo</label>
-              <label className="filtro-chk">
-                <input
-                  type="checkbox"
-                  name="alcaldia-filter"
-                  id="alcaldia-3"
-                  checked={selectedFilters.alcaldia["Miguel Hidalgo"] || false}
-                  onChange={() => toggleCheckbox("alcaldia", "Miguel Hidalgo")}
-                />
-                <span className="checkmark"></span>
-              </label>
-            </div>
+            {ALCALDIAS.map((alcaldia, index) => (
+              <div key={index} className="filtro-menu-filter-body-item">
+                <label htmlFor={`alcaldia-${index + 1}`}>{alcaldia}</label>
+                <label className="filtro-chk">
+                  <input
+                    type="checkbox"
+                    name="alcaldia-filter"
+                    id={`alcaldia-${index + 1}`}
+                    checked={selectedFilters.alcaldia[alcaldia] || false}
+                    onChange={() => toggleCheckbox("alcaldia", alcaldia)}
+                  />
+                  <span className="checkmark"></span>
+                </label>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="filtro-menu-rango-precios">
+        {/* <div className="filtro-menu-rango-precios">
           <label htmlFor="rango-costo">
             Rango de Precios (MX): ${range[0]} - ${range[1]}
           </label>
@@ -334,27 +227,14 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible }) {
               }}
             />
           </div>
-          {/* <input
-            type="range"
-            min="0"
-            max="100"
-            step="5"
-            value={rangoPrecio}
-            onChange={handleRangoPrecioChange}
-            id="rango-costo"
-            name="rango-costo"
-            placeholder="Rango de Costo"
-            list="rango-costo-list"
-            required
-          /> */}
-        </div>
-        <p id="nmuseos">
+        </div> */}
+        {/* <p id="nmuseos">
           Mostrando{" "}
           <output>
-            <b>0</b>
+            <b>{museosCount}</b>
           </output>{" "}
           museos
-        </p>
+        </p> */}
         <div className="filtro-menu-botones">
           <button
             className="filtro-menu-boton gray"

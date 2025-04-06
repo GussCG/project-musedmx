@@ -118,6 +118,8 @@ import { FaImage } from "react-icons/fa6";
 
 import { FaQuestion } from "react-icons/fa";
 import { RiMapPinUserFill } from "react-icons/ri";
+import { SiRetroarch } from "react-icons/si";
+import { FaAngleDoubleUp } from "react-icons/fa";
 
 const Icons = {
   estrellaIcon,
@@ -197,6 +199,8 @@ const Icons = {
   FaImage,
   FaQuestion,
   RiMapPinUserFill,
+  SiRetroarch,
+  FaAngleDoubleUp,
 };
 
 export default Icons;

@@ -1,15 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Icons from "./IconProvider";
 const { museoIcon, FaPerson, IoClose } = Icons;
 
 import { AnimatePresence, motion } from "framer-motion";
 
-function MapIndicaciones() {
-  const [isPopupOpen, setIsPopupOpen] = useState(true);
+function MapIndicaciones({ isOpen, onClose }) {
+  const [dontShowAgain, setDontShowAgain] = useState(
+    localStorage.getItem("dontShowMapIndicaciones") === "true"
+  );
+
+  const handleClose = () => {
+    if (dontShowAgain) {
+      localStorage.setItem("dontShowMapIndicaciones", "true");
+    } else {
+      localStorage.removeItem("dontShowMapIndicaciones");
+    }
+    onClose();
+  };
+
   return (
     <AnimatePresence>
-      {isPopupOpen && (
+      {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -18,12 +30,7 @@ function MapIndicaciones() {
           className="bg-opaco-blur"
         >
           <main id="main-map-indicaciones">
-            <button
-              id="close-login-popup"
-              onClick={() => {
-                setIsPopupOpen(false);
-              }}
-            >
+            <button id="close-login-popup" onClick={handleClose}>
               <IoClose />
             </button>
             <h1>Instrucciones</h1>
@@ -95,10 +102,29 @@ function MapIndicaciones() {
                 </div>
               </div>
             </div>
+            <div className="map-indicaciones-mostrar">
+              <label htmlFor="switch-label-mostrar">No volver a mostrar</label>
+              <div className="switch-button-dm">
+                <input
+                  type="checkbox"
+                  name="switch-label"
+                  checked={dontShowAgain}
+                  onChange={(e) => setDontShowAgain(e.target.checked)}
+                  id="switch-label-mostrar"
+                  className="switch-button__checkbox"
+                />
+                <label
+                  htmlFor="switch-label-mostrar"
+                  className="switch-button__label"
+                >
+                  <span className="switch-button-slider"></span>
+                </label>
+              </div>
+            </div>
             <button
               className="button"
               id="map-indicaciones-close"
-              onClick={() => setIsPopupOpen(false)}
+              onClick={handleClose}
             >
               {" "}
               Entendido{" "}

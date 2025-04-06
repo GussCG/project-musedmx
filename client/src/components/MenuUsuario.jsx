@@ -14,17 +14,24 @@ const {
   verResIcon,
   IoSunny,
   FaMoon,
+  SiRetroarch,
 } = Icons;
 
 import { useAuth } from "../context/AuthProvider";
 
 function MenuUsuario({ className }) {
   const { user, logout, tipoUsuario } = useAuth();
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { isDarkMode, toggleTheme, isRetroMode } = useTheme();
 
   const formatName = (user) => {
     return `${user.nombre} ${user.apPaterno} ${user.apMaterno}`;
   };
+
+  const [modo] = isDarkMode
+    ? ["Modo Oscuro"]
+    : isRetroMode
+    ? ["Modo Retro"]
+    : ["Modo Claro"];
 
   return (
     <motion.div
@@ -91,7 +98,7 @@ function MenuUsuario({ className }) {
       </div>
       <hr />
       <div className="menu-usuario-darkmode-container">
-        <label>Modo Oscuro</label>
+        <label className={isRetroMode ? "retrobg" : ""}>{modo}</label>
         <div className="switch-button-dm">
           <input
             type="checkbox"
@@ -104,10 +111,20 @@ function MenuUsuario({ className }) {
           <label htmlFor="switch-label" className="switch-button__label">
             <span className="switch-button-slider"></span>
           </label>
-          <div className="switch-button-span-container">
-            <FaMoon />
-            <IoSunny />
-          </div>
+          <motion.div
+            className="switch-button-span-container"
+            animate={isDarkMode ? { rotate: 0 } : { rotate: 180 }}
+            transition={{ duration: 0.3, type: "spring", stiffness: 100 }}
+            id="switch-button-span"
+          >
+            {isDarkMode ? (
+              <FaMoon />
+            ) : isRetroMode ? (
+              <SiRetroarch />
+            ) : (
+              <IoSunny />
+            )}
+          </motion.div>
         </div>
       </div>
       <hr />

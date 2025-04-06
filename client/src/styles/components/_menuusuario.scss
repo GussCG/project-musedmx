@@ -75,7 +75,7 @@
 
       #header-info-link {
         text-decoration: none;
-        color: var(--color-a);
+        color: $link-color;
         font-size: 0.9rem;
         font-weight: $font-w-regular;
         padding-top: 2px;
@@ -155,6 +155,20 @@
 
     label {
       font-weight: $font-w-semibold;
+    }
+
+    .retrobg {
+      background: rgb(131, 58, 180);
+      background: linear-gradient(
+        90deg,
+        rgba(131, 58, 180, 1) 0%,
+        rgba(253, 29, 29, 1) 50%,
+        rgba(252, 176, 69, 1) 100%
+      );
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: retrobg 3s ease infinite;
     }
 
     .switch-button-dm {
@@ -248,7 +262,8 @@
       border: none;
       background-color: transparent;
       text-decoration: none;
-      color: var(--color-a);
+      color: $link-color;
+      cursor: pointer;
       font-size: 1rem;
       font-weight: $font-w-bold;
 

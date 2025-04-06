@@ -18,11 +18,15 @@
     width: 100%;
     display: flex;
     justify-content: left;
+    align-items: center;
     gap: 22px;
-    background-color: inherit;
+    background-color: transparent;
+
+    position: relative;
   }
 
   button {
+    display: flex;
     width: 30px;
     height: 30px;
     border: none;
@@ -35,19 +39,107 @@
     }
   }
 
-  input {
+  .search-container {
     width: 100%;
-    border: none;
-    background-color: inherit;
-  }
+    border-radius: 50px;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
 
-  input:focus {
-    outline: none;
-  }
+    input {
+      width: 100%;
+      border: none;
+      background-color: inherit;
+    }
 
-  #search {
-    font-family: $font-primary;
-    font-weight: $font-w-light;
-    font-size: $navbar-font-s;
+    input:focus {
+      outline: none;
+    }
+
+    #search {
+      font-family: $font-primary;
+      font-weight: $font-w-light;
+      font-size: $navbar-font-s;
+    }
+
+    .suggestions-list {
+      position: absolute;
+      width: 100%;
+      max-height: 150px;
+      background-color: white;
+      border-radius: 10px;
+
+      z-index: 10;
+
+      margin: 15px auto;
+      overflow-y: auto;
+
+      top: 100%;
+      left: 0;
+
+      &::-webkit-scrollbar {
+        background-color: none;
+        width: 10px;
+        height: 10px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: $scrollbar-bg-w;
+        border-radius: 10px;
+      }
+
+      li {
+        color: black;
+        list-style: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-family: $font-primary;
+        font-weight: $font-w-light;
+        font-size: $navbar-font-s;
+
+        transition: color 0.3s ease-in-out, font-weight 0.3s ease-in-out,
+          background-color 0.3s ease-in-out;
+
+        &:hover {
+          background-color: #f0f0f0;
+          font-weight: $font-w-semibold;
+
+          .highlighted-text {
+            color: #000;
+          }
+        }
+
+        .highlighted-text {
+          font-weight: $font-w-semibold;
+          color: rgb(47, 0, 255);
+
+          transition: color 0.3s ease-in-out;
+        }
+      }
+    }
+
+    .error {
+      width: fit-content;
+      position: relative;
+
+      white-space: nowrap;
+
+      right: 0;
+
+      // margin: 10px auto;
+
+      text-align: center;
+      font-family: $font-primary;
+      font-weight: $font-w-regular;
+
+      padding: 10px 20px;
+      border-radius: 50px;
+
+      background-color: rgba(128, 0, 0, 0.3);
+      color: #800000;
+    }
   }
 }

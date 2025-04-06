@@ -45,7 +45,7 @@ const MenuSort = forwardRef(({ sortBy, onSortChange }, ref) => {
           <span className="radio-filter-span"></span>
         </label>
       </div>
-      <div className="menu-sort-item">
+      {/* <div className="menu-sort-item">
         <label htmlFor="sort-dist">Distancia</label>
         <label className="filtro-rad">
           <input
@@ -57,7 +57,7 @@ const MenuSort = forwardRef(({ sortBy, onSortChange }, ref) => {
           />
           <span className="radio-filter-span"></span>
         </label>
-      </div>
+      </div> */}
       <div className="menu-sort-item">
         <button className="menu-sort-button" onClick={() => handleSort("")}>
           Limpiar

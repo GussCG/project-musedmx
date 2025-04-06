@@ -48,16 +48,17 @@ html {
 /* El mismo scroll personalizado para todas las paginas */
 ::-webkit-scrollbar {
   width: 10px;
+  background-color: var(--scrollbar-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--bg-grad-color-2);
+  background-color: var(--scrollbar-thumb);
   border-radius: 10px;
 }
 
 // Cuando el scroll no se esta usando se oculta el scroll
 ::-webkit-scrollbar-thumb:window-inactive {
-  background-color: transparent;
+  background-color: var(--scrollbar-bg);
 }
 
 /* Para el rate de estrellas */

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Map, AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import Circle from "./Circle";
 import CustomAdvancedMarker from "./CustomAdvancedMarker";
+import MapMuseoDetailMarker from "./MapMuseoDetailMarker";
 
 import Icons from "./IconProvider";
 const { FaPerson } = Icons;
@@ -21,6 +22,9 @@ function MapMuseo({
   // onCenterUserLocation,
 }) {
   const { isDarkMode, isRetroMode } = useTheme();
+
+  const [hoveredMuseo, setHoveredMuseo] = useState(null);
+  const [activeMuseo, setActiveMuseo] = useState(null);
 
   const MAP_DETAIL = isRetroMode
     ? import.meta.env.VITE_MAP_RETROMODE_DETAIL_ID
@@ -114,16 +118,23 @@ function MapMuseo({
           center={mapCenter}
           mapId={MAP_DETAIL}
           onCenterChanged={handleCenterChanged}
+          gestureHandling={"greedy"}
         >
           {museosMostrados.map((museo) => (
-            <CustomAdvancedMarker
-              key={museo.id}
-              lat={museo.coords.lat}
-              lng={museo.coords.lng}
-              nombre={museo.nombre}
-              imagen={museo.img}
-              idMuseo={museo.id}
+            <MapMuseoDetailMarker
+              key={museo.mus_id}
+              museo={museo}
+              activeMuseo={activeMuseo}
+              setActiveMuseo={setActiveMuseo}
             />
+            // <CustomAdvancedMarker
+            //   key={museo.mus_id}
+            //   lat={museo.mus_g_latitud}
+            //   lng={museo.mus_g_longitud}
+            //   nombre={museo.mus_nombre}
+            //   imagen={museo.mus_foto}
+            //   idMuseo={museo.mus_id}
+            // />
           ))}
           {tipo === "2" ? (
             <Circle
