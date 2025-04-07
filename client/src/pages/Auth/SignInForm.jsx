@@ -31,22 +31,34 @@ const validationSchema = Yup.object({
       /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       "El nombre solo puede contener letras"
     )
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(20, "El nombre no puede tener más de 20 caracteres")
     .required("Campo requerido"),
   signinfrmappaterno: Yup.string()
     .matches(
       /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       "El apellido paterno solo puede contener letras"
     )
+    .min(2, "El apellido paterno debe tener al menos 2 caracteres")
+    .max(30, "El apellido paterno no puede tener más de 30 caracteres")
     .required("Campo requerido"),
   signinfrmapmaterno: Yup.string()
     .matches(
       /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       "El apellido materno solo puede contener letras"
     )
+    .min(2, "El apellido materno debe tener al menos 2 caracteres")
+    .max(30, "El apellido materno no puede tener más de 30 caracteres")
     .required("Campo requerido"),
   signinfrmemail: Yup.string()
     .email("Correo inválido")
-    .required("Campo requerido"),
+    .required("Campo requerido")
+    .min(2, "El correo debe tener al menos 2 caracteres")
+    .max(75, "El correo no puede tener más de 75 caracteres"),
+  signinfrmtelefono: Yup.string()
+    .required("Campo requerido")
+    .matches(/^\+\d{1,3}\d{1,14}$/, "Número de teléfono inválido")
+    .min(10, "El número de teléfono debe tener al menos 10 dígitos"),
 });
 
 function SignInForm() {
@@ -324,53 +336,6 @@ function SignInForm() {
     setShown2(!shown2);
   };
 
-  // const handleRangoChange = (event) => {
-  //   setValorRango(event.target.value);
-  // };
-
-  // // Logica para validar las contraseñas
-  // useEffect(() => {
-  //   let password = passwordRef.current;
-  //   let password2 = password2Ref.current;
-  //   let signInButton = signInButtonRef.current;
-
-  //   // Validamos las contraseña y la confirmacion de la contraseña
-  //   // Si son iguales se pinta de verde y se activa el boton de registro
-  //   if (signInButton) {
-  //     signInButton.disabled = true;
-  //   }
-
-  //   const validatePasswords = () => {
-  //     if (password2.value == "") {
-  //       password2.style.borderColor = "black";
-  //       password2.style.borderWidth = "1px";
-  //       password2.setCustomValidity("");
-  //       signInButton.disabled = true;
-  //       return;
-  //     }
-
-  //     if (password.value !== password2.value) {
-  //       password2.setCustomValidity("Las contraseñas no coinciden");
-  //       password2.style.borderColor = "red";
-  //       password2.style.borderWidth = "2px";
-  //       signInButton.disabled = true;
-  //     } else {
-  //       password2.setCustomValidity("");
-  //       password2.style.borderColor = "green";
-  //       password2.style.borderWidth = "2px";
-  //       signInButton.disabled = false;
-  //     }
-  //   };
-
-  //   password?.addEventListener("input", validatePasswords);
-  //   password2?.addEventListener("input", validatePasswords);
-
-  //   return () => {
-  //     password?.removeEventListener("input", validatePasswords);
-  //     password2?.removeEventListener("input", validatePasswords);
-  //   };
-  // }, []);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -486,7 +451,10 @@ function SignInForm() {
                         name="signinfrmtelefono"
                         id="signin-frm-telefono"
                         value={tel}
-                        onChange={setTel}
+                        onChange={(value) => {
+                          setTel(value);
+                          setFieldValue("signinfrmtelefono", value);
+                        }}
                         limitMaxLength={true}
                         required
                       />
@@ -496,6 +464,10 @@ function SignInForm() {
                       >
                         Teléfono
                       </label>
+                      {errors.signinfrmtelefono &&
+                        touched.signinfrmtelefono && (
+                          <ErrorCampo mensaje={errors.signinfrmtelefono} />
+                        )}
                     </div>
                     <div className="registros-field-calendar">
                       <label>Fecha de Nacimiento</label>

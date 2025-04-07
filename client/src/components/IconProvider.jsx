@@ -121,6 +121,8 @@ import { RiMapPinUserFill } from "react-icons/ri";
 import { SiRetroarch } from "react-icons/si";
 import { FaAngleDoubleUp } from "react-icons/fa";
 
+import { MdMuseum } from "react-icons/md";
+
 const Icons = {
   estrellaIcon,
   moneyIcon,
@@ -201,6 +203,7 @@ const Icons = {
   RiMapPinUserFill,
   SiRetroarch,
   FaAngleDoubleUp,
+  MdMuseum,
 };
 
 export default Icons;

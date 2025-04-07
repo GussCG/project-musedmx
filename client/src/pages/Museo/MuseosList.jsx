@@ -210,8 +210,8 @@ function MuseosList({ titulo, tipo }) {
               {isMapView ? <TbCardsFilled /> : <FaMap />}
             </button>
           </div>
-          {isMapView ? null : (
-            <div className="museos-header-section-right">
+          <div className="museos-header-section-right">
+            {isMapView ? null : (
               <>
                 <button
                   className="museos-header-section-right-button"
@@ -230,19 +230,19 @@ function MuseosList({ titulo, tipo }) {
                   />
                 )}
               </>
-              <button
-                type="button"
-                className="museos-header-section-right-button"
-                onClick={(event) => {
-                  abrirMenu();
-                }}
-                title="Filtrar"
-              >
-                <p>Filtrar</p>
-                <FaFilter />
-              </button>
-            </div>
-          )}
+            )}
+            <button
+              type="button"
+              className="museos-header-section-right-button"
+              onClick={(event) => {
+                abrirMenu();
+              }}
+              title="Filtrar"
+            >
+              <p>Filtrar</p>
+              <FaFilter />
+            </button>
+          </div>
         </section>
 
         {isMapView ? (

@@ -25,6 +25,9 @@ import ModForm from "./pages/Mod/ModForm";
 import PopUpLogin from "./components/PopUpLogin.jsx";
 import RecuperarPass from "./pages/Auth/RecuperarPass";
 import { AnimatePresence } from "framer-motion";
+import MuseoForm from "./pages/Museo/MuseoForm.jsx";
+import MuseoHorariosEdit from "./pages/Museo/MuseoHorariosEdit.jsx";
+import MuseoImgEdit from "./pages/Museo/MuseoImgEdit.jsx";
 
 function App() {
   const location = useLocation();
@@ -68,6 +71,22 @@ function App() {
               <Route path="VerMods" element={<ModList />} />
               <Route path="Agregar" element={<ModForm />} />
               <Route path="VerMods/Editar/:userId" element={<ProfileEdit />} />
+              <Route
+                path="Museo/Registrar"
+                element={<MuseoForm mode="create" />}
+              />
+              <Route
+                path="Museo/Editar/:museoId"
+                element={<MuseoForm mode="edit" />}
+              />
+              <Route
+                path="Museo/EditarHorario/:museoId"
+                element={<MuseoHorariosEdit />}
+              />
+              <Route
+                path="Museo/EditarImagenes/:museoId"
+                element={<MuseoImgEdit />}
+              />
             </Route>
           </Route>
 

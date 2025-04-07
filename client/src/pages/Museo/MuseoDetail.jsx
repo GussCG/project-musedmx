@@ -322,7 +322,7 @@ function MuseoDetail() {
                   </div>
                 </div>
                 {user && (user.tipoUsuario === 2 || user.tipoUsuario === 3) ? (
-                  <HeaderMuseoButtons />
+                  <HeaderMuseoButtons museoId={museoId} />
                 ) : (
                   <div className="museo-section-1-csm">
                     <div className="museo-section-1-csm-calificacion">

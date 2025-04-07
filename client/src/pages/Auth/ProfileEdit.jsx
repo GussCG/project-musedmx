@@ -12,7 +12,7 @@ import "rc-slider/assets/index.css";
 
 import { motion } from "framer-motion";
 
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { es, se } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
@@ -29,25 +29,34 @@ const validationSchema = Yup.object({
       /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       "El nombre solo puede contener letras"
     )
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(20, "El nombre no puede tener más de 20 caracteres")
     .required("Campo requerido"),
   signinfrmappaterno: Yup.string()
     .matches(
       /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       "El apellido paterno solo puede contener letras"
     )
+    .min(2, "El apellido paterno debe tener al menos 2 caracteres")
+    .max(30, "El apellido paterno no puede tener más de 30 caracteres")
     .required("Campo requerido"),
   signinfrmapmaterno: Yup.string()
     .matches(
       /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       "El apellido materno solo puede contener letras"
     )
+    .min(2, "El apellido materno debe tener al menos 2 caracteres")
+    .max(30, "El apellido materno no puede tener más de 30 caracteres")
     .required("Campo requerido"),
   signinfrmemail: Yup.string()
     .email("Correo inválido")
-    .required("Campo requerido"),
+    .required("Campo requerido")
+    .min(5, "El correo debe tener al menos 5 caracteres")
+    .max(75, "El correo no puede tener más de 75 caracteres"),
   signinfrmtelefono: Yup.string()
     .matches(/^\+?[1-9]\d{1,14}$/, "Número de teléfono inválido")
-    .required("Campo requerido"),
+    .required("Campo requerido")
+    .min(10, "Número de teléfono inválido"),
 });
 
 function ProfileEdit() {
@@ -99,6 +108,7 @@ function ProfileEdit() {
   const [selectedTematicas, setSelectedTematicas] = useState([]);
   const signInButtonRef = useRef(null);
   const imageInputRef = useRef(null);
+  const fileNameRef = useRef(null);
 
   // Fecha de nacimiento
   const [mes, setMes] = useState(new Date());
@@ -134,8 +144,21 @@ function ProfileEdit() {
   // Lógica para el cambio de imagen de perfil
   const handleImageChange = (event, setFieldValue) => {
     const file = event.target.files[0];
-    setFieldValue("signinfrmfoto", file);
-    setImagePreview(URL.createObjectURL(file));
+
+    if (file) {
+      setFieldValue("signinfrmfoto", file);
+      setImagePreview(URL.createObjectURL(file));
+      if (fileNameRef.current) {
+        fileNameRef.current.innerHTML = file.name;
+      }
+    } else {
+      setImagePreview(usuario?.foto || userPlaceholder);
+      if (fileNameRef.current) {
+        fileNameRef.current.innerHTML = usuario?.foto
+          ? "Cambiar Archivo"
+          : "Seleccionar Archivo";
+      }
+    }
   };
 
   // Manejo de temáticas
@@ -268,8 +291,15 @@ function ProfileEdit() {
       setTel(usuario.tel || "");
       setSelectedDate(new Date(usuario.fecNac) || new Date());
       setMes(selectedDate || new Date());
+
       // Se establece la imagen de vista previa y el archivo de imagen
       setImagePreview(usuario.foto || userPlaceholder);
+
+      if (fileNameRef.current) {
+        fileNameRef.current.innerHTML = usuario.foto
+          ? "Cambiar Archivo"
+          : "Seleccionar Archivo";
+      }
     }
   }, [user, usuario]);
 
@@ -639,23 +669,50 @@ function ProfileEdit() {
                         <hr />
                         <div className="registros-field-foto">
                           <div className="registros-field-foto-input">
-                            <h2>Foto de Perfil</h2>
-                            <input
-                              type="file"
-                              id="registros-frm-foto"
-                              name="signinfrmfoto"
-                              accept="image/*"
-                              ref={imageInputRef}
-                              onChange={(e) =>
-                                handleImageChange(e, setFieldValue)
-                              }
-                            />
+                            <h2>Foto de perfil</h2>
+                            <div className="foto-input">
+                              <Field
+                                className="file-btn"
+                                type="button"
+                                onClick={() =>
+                                  document
+                                    .getElementById("registros-frm-foto")
+                                    .click()
+                                }
+                                value="Seleccionar Archivo"
+                              />
+                              <span id="file-name" ref={fileNameRef}>
+                                {usuario?.foto
+                                  ? "Cambiar Archivo"
+                                  : "Seleccionar Archivo"}
+                              </span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                ref={imageInputRef}
+                                id="registros-frm-foto"
+                                style={{ display: "none" }}
+                                onChange={(e) => {
+                                  handleImageChange(e, setFieldValue);
+                                }}
+                              />
+                            </div>
                           </div>
-                          <img
-                            src={imagePreview}
-                            alt="Foto de Perfil"
-                            id="foto-preview"
-                          />
+                          {imagePreview && (
+                            <img
+                              src={imagePreview}
+                              alt="Foto de Perfil"
+                              id="foto-preview"
+                            />
+                          )}
+                          {/* {openCropper && (
+                        <ImageCropper
+                          image={image}
+                          onCropComplete={(croppedImage) =>
+                            handleCroppedImage(croppedImage, setFieldValue)
+                          }
+                        />
+                      )} */}
                         </div>
                       </div>
                     </>
