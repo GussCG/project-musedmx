@@ -3,9 +3,12 @@ import express from "express";
 import cors from "cors";
 
 import indexRoutes from "./routes/index.routes.js";
+import museoRoutes from "./routes/museo.routes.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
+
+app.use(express.json()); // Middleware para parsear JSON
 
 // Configuración de CORS
 const corsOptions = {
@@ -16,6 +19,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(indexRoutes);
+app.use(museoRoutes); 
 
 // Endpoint para obtener la API key de Google Maps
 app.get("/api/maps-key", (req, res) => {

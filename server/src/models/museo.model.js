@@ -52,4 +52,29 @@ export default class Museo {
   //   static async create(museoData) {
 
   //   }
+
+  static async findById(id) {
+	const query = `SELECT * FROM museos WHERE mus_id = ?`;
+	const [rows] = await pool.query(query, [id]);
+	if (rows.length === 0) {
+	  throw new Error("Museo no encontrado");
+	}
+	return rows;
+  }
+
+  //* No sé si está bien :c
+  static async update(id, museoData) {
+	const query = `UPDATE museos SET ? WHERE mus_id = ?`;
+	await pool.query(query, [museoData, id]);
+	return { message: "Museo actualizado" };
+  }
+
+  static async delete(id) {
+	const query = `DELETE FROM museos WHERE mus_id = ?`;
+	const [rows] = await pool.query(query, [id]);
+	if (rows.affectedRows === 0) {
+	  throw new Error("Museo no encontrado");
+	}
+	return { message: "Museo eliminado" };
+  }
 }
