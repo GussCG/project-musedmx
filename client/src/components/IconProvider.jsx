@@ -122,6 +122,22 @@ import { SiRetroarch } from "react-icons/si";
 import { FaAngleDoubleUp } from "react-icons/fa";
 
 import { MdMuseum } from "react-icons/md";
+import { IoMenu } from "react-icons/io5";
+import { TbRouteSquare } from "react-icons/tb";
+
+// Travel modes
+import { FaCar } from "react-icons/fa";
+import { FaBicycle } from "react-icons/fa6";
+import { FaPersonWalking } from "react-icons/fa6";
+import { FaBus } from "react-icons/fa6";
+
+import { FaInfo } from "react-icons/fa6";
+
+// Tipos de mapa
+import { FaRoad } from "react-icons/fa6";
+import { FaSatellite } from "react-icons/fa6";
+import { MdTerrain } from "react-icons/md";
+import { IoMapSharp } from "react-icons/io5";
 
 const Icons = {
   estrellaIcon,
@@ -204,6 +220,17 @@ const Icons = {
   SiRetroarch,
   FaAngleDoubleUp,
   MdMuseum,
+  IoMenu,
+  TbRouteSquare,
+  FaCar,
+  FaBicycle,
+  FaPersonWalking,
+  FaBus,
+  FaInfo,
+  FaRoad,
+  FaSatellite,
+  MdTerrain,
+  IoMapSharp,
 };
 
 export default Icons;

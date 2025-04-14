@@ -115,27 +115,26 @@ function MuseosList({ titulo, tipo }) {
   const handleFilterApply = async (filtros) => {
     try {
       console.log("Filtros aplicados:", filtros);
-      if (!filtros.tipos?.length && !filtros.alcaldias?.length) {
+      if (!filtros) {
         setMuseosFiltrados([]);
         setFiltrosAplicados(false);
         return;
       }
 
-      // Construir params
-      const params = {};
+      // Filtramos localmente los museos
+      const museosFiltrados = museos.filter((museo) => {
+        const cumpleTematica =
+          !filtros.tipos?.length ||
+          filtros.tipos.includes(parseInt(museo.mus_tematica));
 
-      if (filtros.tipos?.length) params.tematicas = filtros.tipos;
-      if (filtros.alcaldias?.length) params.alcaldias = filtros.alcaldias;
+        const cumpleAlcaldia =
+          !filtros.alcaldias?.length ||
+          filtros.alcaldias.includes(museo.mus_alcaldia);
 
-      const response = await axios.get(`${BACKEND_URL}/api/museos/filtroPor`, {
-        params: params,
-        paramsSerializer: {
-          indexes: false,
-        },
+        return cumpleTematica && cumpleAlcaldia;
       });
 
-      console.log("response:", response.data);
-      setMuseosFiltrados(response.data.museos);
+      setMuseosFiltrados(museosFiltrados);
       setFiltrosAplicados(true);
     } catch (error) {
       console.error("Error al aplicar filtros:", error);
@@ -205,12 +204,30 @@ function MuseosList({ titulo, tipo }) {
       <main id="vermuseos-main">
         <section className="museos-header-section">
           <div className="museos-header-section-left">
-            <h1>{tituloBusqueda}</h1>
-            <button onClick={() => setIsMapView(!isMapView)}>
-              {isMapView ? <TbCardsFilled /> : <FaMap />}
-            </button>
+            <div className="museos-header-section-left-tittles">
+              <h1>{tituloBusqueda}</h1>
+              <p>Museos mostrados: {museosAMostrar.length}</p>
+            </div>
           </div>
           <div className="museos-header-section-right">
+            <button
+              type="button"
+              className="museos-header-section-right-button"
+              onClick={() => setIsMapView(!isMapView)}
+              title={isMapView ? "Ver lista" : "Ver mapa"}
+            >
+              {isMapView ? (
+                <>
+                  <p>Ver lista</p>
+                  <TbCardsFilled />
+                </>
+              ) : (
+                <>
+                  <p>Ver mapa</p>
+                  <FaMap />
+                </>
+              )}
+            </button>
             {isMapView ? null : (
               <>
                 <button
@@ -231,6 +248,7 @@ function MuseosList({ titulo, tipo }) {
                 )}
               </>
             )}
+
             <button
               type="button"
               className="museos-header-section-right-button"
@@ -251,6 +269,7 @@ function MuseosList({ titulo, tipo }) {
               titulo={titulo}
               MuseosMostrados={museosAMostrar}
               tipo={tipo}
+              isMapView={isMapView}
             />
           </section>
         ) : (

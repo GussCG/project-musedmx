@@ -2,18 +2,57 @@
 
 .menu-container {
   width: 100%;
-  height: 100%;
-
+  height: 100vh;
   position: fixed;
   z-index: 97;
   background-color: black;
-
   display: grid;
   grid-template-rows: auto 1fr auto;
   top: 0;
+  left: 0;
 
-  clip-path: circle(0% at 95.3% 8.5%);
-  transition: clip-path 0.3s ease-in-out;
+  overflow: hidden;
+
+  .boton-cerrar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 99;
+    width: 60px;
+    height: 60px;
+
+    .close-button {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+
+      svg {
+        width: 60px;
+        height: auto;
+        color: white;
+
+        transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+      }
+
+      &:hover {
+        transform: scale(1.1);
+        background-color: white;
+        border-radius: 50%;
+        svg {
+          color: black;
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
 
   .menu-header {
     width: 100%;
@@ -28,7 +67,6 @@
       font-size: 36px;
       font-weight: $font-w-bold;
       color: white;
-
       text-align: center;
     }
 
@@ -40,10 +78,10 @@
         width: 100%;
 
         transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
-      }
 
-      img:hover {
-        transform: scale(1.1);
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
   }
@@ -51,7 +89,6 @@
   .menu-body {
     width: 100%;
     height: 100%;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -60,12 +97,14 @@
     ul {
       width: 100%;
       height: auto;
-
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 50px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
 
       li {
         a {
@@ -73,12 +112,13 @@
           font-weight: $font-w-thin;
           color: white;
           text-decoration: none;
-
           transition: font-weight 0.3s ease-in-out;
-        }
+          padding: 10px 20px;
+          border-radius: 4px;
 
-        a:hover {
-          font-weight: $font-w-semibold;
+          &:hover {
+            font-weight: $font-w-semibold;
+          }
         }
       }
     }
@@ -87,12 +127,12 @@
   .menu-footer {
     width: 100%;
     height: 200px;
-
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: row;
     gap: 20px;
+    padding: 20px;
 
     a,
     button {
@@ -122,10 +162,6 @@
       border: 1px solid white;
     }
   }
-}
-
-.menu-container.show {
-  clip-path: circle(140% at 95.3% 8.5%);
 }
 
 #menu-button {

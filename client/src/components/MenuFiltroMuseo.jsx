@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import axios from "axios";
 
 import Slider from "rc-slider";
@@ -65,14 +65,6 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible, onFilterApply }) {
     setRange(value);
   };
 
-  const handleBorrar = () => {
-    setRange([0, 100]);
-    setSelectedFilters({
-      tematica: {},
-      alcaldia: {},
-    });
-  };
-
   // Para los estados de los checkboxes
   const [selectedFilters, setSelectedFilters] = useState({
     tematica: {},
@@ -96,10 +88,7 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible, onFilterApply }) {
       const filtros = {
         tipos: Object.keys(selectedFilters.tematica)
           .filter((key) => selectedFilters.tematica[key])
-          .map((key) => {
-            const found = TEMATICAS.find((t) => t.tematica === key);
-            return found ? found.id : null;
-          })
+          .map((key) => TEMATICAS.find((t) => t.tematica === key)?.id) // Obtener el id de la tematica
           .filter((id) => id !== null),
         alcaldias: Object.keys(selectedFilters.alcaldia).filter(
           (key) => selectedFilters.alcaldia[key]
@@ -115,6 +104,27 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible, onFilterApply }) {
       setMuseosCount(0);
     }
   };
+
+  const handleBorrar = useCallback(() => {
+    // Resetear todos los filtros
+    const resetFilters = {
+      tipos: [],
+      alcaldias: [],
+      precioMin: 0,
+      precioMax: 100,
+    };
+
+    // Actualizar estados locales
+    setRange([0, 100]);
+    setSelectedFilters({ tematica: {}, alcaldia: {} });
+
+    // Aplicar reset de filtros
+    onFilterApply(resetFilters);
+
+    // Cerrar el menú automáticamente
+    setMenuVisible(false);
+    setOpenDropdown(null);
+  }, [onFilterApply]);
 
   return (
     <>

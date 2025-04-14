@@ -98,9 +98,11 @@ function NavBar() {
   const highlightMatchedText = (text) => {
     if (!input.trim()) return text;
 
+    const escapedInput = input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // Escapar caracteres especiales
+
     const parts = [];
     let lastIndex = 0;
-    const regex = new RegExp(input, "gi");
+    const regex = new RegExp(escapedInput, "gi");
     let match;
 
     while ((match = regex.exec(text)) !== null) {

@@ -81,9 +81,10 @@
       left: 0;
 
       &::-webkit-scrollbar {
-        background-color: none;
-        width: 10px;
+        background-color: var(--bg-navbar);
+        width: 15px;
         height: 10px;
+        border-radius: 10px;
       }
 
       &::-webkit-scrollbar-thumb {

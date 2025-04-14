@@ -271,7 +271,7 @@
         h1 {
           font-size: 32px;
           font-weight: $font-w-bold;
-          color: black;
+          color: var(--font-color-primary);
           margin: 0;
         }
 
@@ -1202,13 +1202,15 @@
   }
 }
 
-/* En 600px se quita la seccion 4 y el header de los comentarios se reduce*/
 @media screen and (max-width: 600px) {
   #museo-section-1 {
+    min-width: 90vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    margin-top: 40px;
 
     .museo-section-1-image {
       max-width: 100%;
@@ -1249,46 +1251,56 @@
     }
   }
 
-  #museo-section-2 {
-    .museo-section-2-descripcion {
-      p {
-        font-size: 16px;
-      }
-    }
-  }
+  // #museo-section-2 {
+  //   min-width: 90vw;
+  //   .museo-section-2-calificaciones,
+  //   .museo-section-2-servicios {
+  //     display: none;
+  //   }
 
-  #museo-section-4 {
+  //   .museo-section-2-descripcion {
+  //     width: 100%;
+  //     p {
+  //       font-size: 16px;
+  //     }
+  //   }
+  // }
+
+  #museo-section-2,
+  #museo-section-3,
+  #museo-section-4,
+  #museo-section-5 {
     display: none;
   }
 
-  #museo-section-5 {
-    .museo-section-5-resenas {
-      .museo-section-5-resena {
-        .resena-comentario-container {
-          .resena-comentario-header {
-            text-align: center;
-            #nombre-user {
-              font-size: 20px;
-            }
+  // #museo-section-5 {
+  //   .museo-section-5-resenas {
+  //     .museo-section-5-resena {
+  //       .resena-comentario-container {
+  //         .resena-comentario-header {
+  //           text-align: center;
+  //           #nombre-user {
+  //             font-size: 20px;
+  //           }
 
-            #fecha-resena {
-              font-size: 16px;
-            }
+  //           #fecha-resena {
+  //             font-size: 16px;
+  //           }
 
-            .resena-calificacion {
-              img {
-                width: 20px;
-              }
-            }
-          }
+  //           .resena-calificacion {
+  //             img {
+  //               width: 20px;
+  //             }
+  //           }
+  //         }
 
-          .resena-comentario-body {
-            p {
-              font-size: 16px;
-            }
-          }
-        }
-      }
-    }
-  }
+  //         .resena-comentario-body {
+  //           p {
+  //             font-size: 16px;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 }
