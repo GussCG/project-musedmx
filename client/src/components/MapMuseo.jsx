@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 
 import {
   Map,
@@ -9,9 +9,12 @@ import {
 import Circle from "./Circle";
 import CustomAdvancedMarker from "./CustomAdvancedMarker";
 import MapMuseoDetailMarker from "./MapMuseoDetailMarker";
+import { Link } from "react-router-dom";
 
 import Icons from "./IconProvider";
-const { FaPerson, CgClose, FaInfo, TbRouteSquare } = Icons;
+const { FaPerson, CgClose, FaInfo, TbRouteSquare, MdMuseum, TbRadar2 } = Icons;
+
+import foto_default from "../assets/images/others/museo-main-1.jpg";
 
 import { useTheme } from "../context/ThemeProvider";
 
@@ -236,33 +239,213 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
   );
 }
 
-// // Este componente muestra en un museo-info -> los museos dentro del radio
-// function CercaDeMi(){
+// Este componente muestra en un museo-info -> los museos dentro del radio
+function CercaDeMi({ userLocation, museosMostrados, radioKM, travelMode }) {
+  const [museosConTiempos, setMuseosConTiempos] = useState([]);
+  const [showInfo, setShowInfo] = useState(false);
+  const [showInfoButton, setShowInfoButton] = useState(true);
 
-// }
+  const timeLabels = {
+    WALKING: "Caminando",
+    BICYCLING: "En Bicicleta",
+    DRIVING: "En Auto",
+    TRANSIT: "En Transporte Público",
+  };
+
+  const calcularTiempoEstimado = useCallback((distancia, travelMode) => {
+    const velocidades = {
+      WALKING: 5, // km/h
+      BICYCLING: 15, // km/h
+      DRIVING: 40, // km/h
+      TRANSIT: 25, // km/h
+    };
+
+    const velocidad = velocidades[travelMode] || 5; // km/h por defecto
+    const horas = distancia / velocidad;
+    const minutos = Math.round(horas * 60);
+
+    return Math.max(1, minutos); // Asegurarse de que el tiempo mínimo sea 1 minuto
+  }, []);
+
+  // Calcular la distancia entre dos puntos geográficos
+  // usando la fórmula del haversine
+  const calcularDistancia = useCallback((lat1, lng1, lat2, lng2) => {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distancia en km
+  }, []);
+
+  const formatearDistancia = useCallback((distancia) => {
+    const metros = distancia * 1000; // Convertir a metros
+    return metros < 1000
+      ? `${metros.toFixed(0)} m`
+      : `${(metros / 1000).toFixed(1)} km`;
+  }, []);
+
+  const museosFiltrados = useMemo(() => {
+    if (!userLocation || !museosMostrados) return [];
+
+    return museosMostrados
+      .map((museo) => {
+        const distancia = calcularDistancia(
+          userLocation.lat,
+          userLocation.lng,
+          museo.mus_g_latitud,
+          museo.mus_g_longitud
+        );
+        return {
+          ...museo,
+          distancia,
+        };
+      })
+      .filter((museo) => museo.distancia <= radioKM / 1000) // Filtrar museos dentro del radio
+      .sort((a, b) => a.distancia - b.distancia); // Ordenar por distancia
+  }, [userLocation, museosMostrados, radioKM]);
+
+  useEffect(() => {
+    const calcularTiempos = () => {
+      const actualizados = museosFiltrados.map((museo) => ({
+        ...museo,
+        tiempoEstimado: calcularTiempoEstimado(museo.distancia, travelMode),
+      }));
+      setMuseosConTiempos(actualizados);
+    };
+    calcularTiempos();
+  }, [museosFiltrados, travelMode, calcularTiempoEstimado]);
+
+  const handleOpenInfo = () => {
+    setShowInfo(true);
+    setShowInfoButton(false); // Ocultar el botón al abrir la información
+  };
+
+  const handleCloseInfo = () => {
+    setShowInfo(false);
+    setShowInfoButton(true); // Mostrar el botón al cerrar la información
+  };
+
+  return (
+    <>
+      <AnimatePresence>
+        {showInfoButton && (
+          <motion.button
+            type="button"
+            className="btn-map"
+            id="btn-map-info"
+            onClick={handleOpenInfo}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.1,
+              ease: "easeInOut",
+            }}
+            key={"map-info-button"}
+            title="Ver museos cercanos"
+          >
+            <TbRadar2 />
+          </motion.button>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showInfo && (
+          <motion.div
+            className="map-info"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 50 }}
+            transition={{
+              duration: 0.1,
+              ease: "easeInOut",
+              type: "spring",
+              stiffness: 50,
+            }}
+            key={"map-info"}
+          >
+            <button className="close-button" onClick={handleCloseInfo}>
+              <CgClose />
+            </button>
+            <h4>{`Museos dentro del radio: ${radioKM} m`}</h4>
+            <p>{`Museos encontrados: ${museosFiltrados.length}`}</p>
+
+            <ul className="museos-list">
+              {museosConTiempos.map((museo) => (
+                <motion.li
+                  key={museo.mus_id}
+                  className="museo-list-item"
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 100 }}
+                  transition={{
+                    duration: 0.2,
+                    ease: "easeInOut",
+                    type: "spring",
+                    stiffness: 50,
+                  }}
+                >
+                  <div className="museo-list-item-img">
+                    <img
+                      src={museo.mus_foto || foto_default}
+                      alt={museo.mus_nombre}
+                    />
+                    <div className="museo-list-item-distance">
+                      <p>{formatearDistancia(museo.distancia)}</p>
+                    </div>
+                  </div>
+                  <div className="museo-list-item-info">
+                    <div className="museo-list-item-name">
+                      <Link to={`/Museos/${museo.mus_id}`}>
+                        <p>{museo.mus_nombre}</p>
+                      </Link>
+                    </div>
+                    <div className="museo-list-item-tiempo">
+                      <p>
+                        {museo.tiempoEstimado} min - {timeLabels[travelMode]}
+                      </p>
+                    </div>
+                  </div>
+                </motion.li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
 
 function MapMuseo({
   radioKM,
   museosMostrados,
-  ubicacionCoords,
   tipo,
   bounds,
   travelMode,
   mapType,
-  // onCenterUserLocation,
 }) {
   const { isDarkMode, isRetroMode } = useTheme();
-
-  const [hoveredMuseo, setHoveredMuseo] = useState(null);
   const [activeMuseo, setActiveMuseo] = useState(null);
   const [zoom, setZoom] = useState(17);
-
-  const [mapCenter, setMapCenter] = useState(null);
   const [userInteracted, setUserInteracted] = useState(false);
   const [mapInitialized, setMapInitialized] = useState(false);
   const map = useMap();
   const [mapKey, setMapKey] = useState(0); // Clave para forzar la recarga del mapa
   const [currentMapId, setCurrentMapId] = useState(""); // ID del mapa actual
+
+  const [location, setLocation] = useState({
+    userLocation: null,
+    mapCenter: null,
+  });
+
+  const handleMuseoActivation = useCallback((museo) => {
+    setActiveMuseo((prev) => (prev?.mus_id === museo?.mus_id ? null : museo));
+  }, []);
 
   const mapId = useMemo(() => {
     return isRetroMode
@@ -280,46 +463,32 @@ function MapMuseo({
   }, [mapId, currentMapId]);
 
   // Obtener la ubicación del usuario
-  const [userLocation, setUserLocation] = useState(null);
   useEffect(() => {
-    if (!ubicacionCoords) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setUserLocation(location);
-          if (!userInteracted) {
-            setMapCenter(location);
-          }
-        },
-        (error) => {
-          const defaultLocation = { lat: 19.4326, lng: -99.1332 };
-          setUserLocation(defaultLocation);
-          if (!userInteracted) {
-            setMapCenter(defaultLocation);
-          }
-        }
-      );
-    } else {
-      // Si se proporcionan coordenadas (nueva búsqueda)
-      const coords = {
-        lat:
-          typeof ubicacionCoords.lat === "string"
-            ? Number(ubicacionCoords.lat)
-            : ubicacionCoords.lat,
-        lng:
-          typeof ubicacionCoords.lng === "string"
-            ? Number(ubicacionCoords.lng)
-            : ubicacionCoords.lng,
-      };
-      setUserLocation(coords);
-      setMapCenter(coords); // Forzar el movimiento del mapa
-      setUserInteracted(false); // Restablecer la interacción del usuario
-    }
-  }, [ubicacionCoords]); // Dependencia: ubicacionCoords
+    const defaultLocation = { lat: 19.4326, lng: -99.1332 }; // Ciudad de México
 
+    const successCallback = (position) => {
+      const newLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+
+      setLocation({
+        userLocation: newLocation,
+        mapCenter: newLocation,
+      });
+    };
+
+    const errorCallback = () => {
+      setLocation({
+        userLocation: defaultLocation,
+        mapCenter: defaultLocation,
+      });
+    };
+
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+  }, [userInteracted]);
+
+  // Inicializar el mapa
   useEffect(() => {
     if (!map || mapInitialized) return;
 
@@ -336,10 +505,10 @@ function MapMuseo({
       }
     };
     initMap();
-  }, [map]);
+  }, [map, mapInitialized]);
 
   useEffect(() => {
-    if (!map || !bounds || !mapInitialized) return;
+    if (!map || !bounds || !mapInitialized || !location.userLocation) return;
 
     const applyBounds = () => {
       try {
@@ -356,81 +525,100 @@ function MapMuseo({
       }
     };
     applyBounds();
-  }, [map, bounds, userLocation, mapInitialized]);
+  }, [map, bounds, mapInitialized, location.userLocation]);
 
-  useEffect(() => {
-    if (userLocation && !userInteracted) {
-      // Centrar al cambiar userLocation, si no hay interacción
-      setMapCenter(userLocation);
-    }
-  }, [userLocation, userInteracted]);
+  // useEffect(() => {
+  //   if (userLocation && !userInteracted) {
+  //     // Centrar al cambiar userLocation, si no hay interacción
+  //     setMapCenter(userLocation);
+  //   }
+  // }, [userLocation, userInteracted]);
 
-  const handleCenterChanged = () => {
+  const handleCenterChanged = useCallback(() => {
     if (map) {
       const newCenter = map.getCenter();
       if (newCenter) {
-        setMapCenter({
-          lat: newCenter.lat(),
-          lng: newCenter.lng(),
-        });
-        setUserInteracted(true);
+        setLocation((prev) => ({
+          ...prev,
+          mapCenter: {
+            lat: newCenter.lat(),
+            lng: newCenter.lng(),
+          },
+        }));
+        setUserInteracted(true); // Marcar que hubo interacción del usuario
       }
     }
+  }, [map]);
+
+  const getSafeKey = (museo, index) => {
+    return museo?.mus_id ? `museo-${museo.mus_id}` : `museo-${index}`;
   };
 
   return (
     <div className="map-container">
-      {userLocation && (
+      {location.userLocation && (
         <Map
           key={`map-${mapKey}`}
           defaultZoom={zoom}
           bounds={bounds}
-          center={mapCenter}
+          center={location.mapCenter}
           mapId={currentMapId}
           mapTypeId={mapType}
           onCenterChanged={handleCenterChanged}
           gestureHandling={"greedy"}
           disableDefaultUI={true}
         >
-          {museosMostrados.map((museo) => (
-            <MapMuseoDetailMarker
-              key={museo.mus_id}
-              museo={museo}
-              activeMuseo={activeMuseo}
-              setActiveMuseo={setActiveMuseo}
-            />
-            // <CustomAdvancedMarker
-            //   key={museo.mus_id}
-            //   lat={museo.mus_g_latitud}
-            //   lng={museo.mus_g_longitud}
-            //   nombre={museo.mus_nombre}
-            //   imagen={museo.mus_foto}
-            //   idMuseo={museo.mus_id}
-            // />
-          ))}
+          {museosMostrados
+            .filter((museo) => museo)
+            .map((museo) => (
+              <MapMuseoDetailMarker
+                key={getSafeKey(museo)}
+                museo={museo}
+                isActive={activeMuseo?.mus_id === museo.mus_id}
+                onActivate={handleMuseoActivation}
+              />
+              // <CustomAdvancedMarker
+              //   key={museo.mus_id}
+              //   lat={museo.mus_g_latitud}
+              //   lng={museo.mus_g_longitud}
+              //   nombre={museo.mus_nombre}
+              //   imagen={museo.mus_foto}
+              //   idMuseo={museo.mus_id}
+              // />
+            ))}
           {tipo === "2" ? (
-            <Circle
-              center={userLocation}
-              radius={radioKM}
-              options={{
-                strokeColor: "#FF0000",
-                strokeOpacity: 0.5,
-                strokeWeight: 3,
-                fillColor: "#FF0000",
-                fillOpacity: 0.1,
-              }}
-            />
+            <>
+              <Circle
+                center={location.userLocation}
+                radius={radioKM}
+                options={{
+                  strokeColor: "#FF0000",
+                  strokeOpacity: 0.5,
+                  strokeWeight: 3,
+                  fillColor: "#FF0000",
+                  fillOpacity: 0.1,
+                }}
+              />
+
+              <CercaDeMi
+                userLocation={location.userLocation}
+                museosMostrados={museosMostrados}
+                radioKM={radioKM}
+                travelMode={travelMode}
+              />
+            </>
           ) : null}
 
           {museosMostrados.length === 1 && (
             <Directions
-              userLocation={userLocation}
+              userLocation={location.userLocation}
               museosMostrados={museosMostrados}
               travelMode={travelMode}
             />
           )}
+
           {/* Marcador del usuario */}
-          <AdvancedMarker position={userLocation}>
+          <AdvancedMarker position={location.userLocation}>
             <div className="user-marker">
               <FaPerson />
             </div>

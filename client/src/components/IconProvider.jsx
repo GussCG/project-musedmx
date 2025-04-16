@@ -139,6 +139,8 @@ import { FaSatellite } from "react-icons/fa6";
 import { MdTerrain } from "react-icons/md";
 import { IoMapSharp } from "react-icons/io5";
 
+import { TbRadar2 } from "react-icons/tb";
+
 const Icons = {
   estrellaIcon,
   moneyIcon,
@@ -231,6 +233,7 @@ const Icons = {
   FaSatellite,
   MdTerrain,
   IoMapSharp,
+  TbRadar2,
 };
 
 export default Icons;

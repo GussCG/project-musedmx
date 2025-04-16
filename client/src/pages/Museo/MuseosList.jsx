@@ -12,7 +12,10 @@ import MuseosMapView from "./MuseosMapView";
 import MenuSort from "../../components/MenuSort";
 import MapIndicaciones from "../../components/MapIndicaciones";
 
+import { useViewMode } from "../../context/ViewModeProvider";
+
 import Icons from "../../components/IconProvider";
+
 const {
   listButton,
   mapaButton,
@@ -100,7 +103,7 @@ function MuseosList({ titulo, tipo }) {
   }, [tituloBusqueda, tipo]);
 
   // Para cambiar la vista entre lista y mapa
-  const [isMapView, setIsMapView] = useState(false);
+  const { isMapView, setIsMapView } = useViewMode();
   // Estado para controlar la visibilidad del menu de filtro
   const [menuVisible, setMenuVisible] = useState(false);
 
