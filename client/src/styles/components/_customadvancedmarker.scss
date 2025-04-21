@@ -14,7 +14,8 @@
   position: relative;
 
   &.hovered {
-    transform: scale(2); /* Hace que el marcador crezca */
+    transform: scale(2);
+    /* Hace que el marcador crezca */
   }
 
   .marker-container {
@@ -78,7 +79,8 @@
   }
 
   &:hover {
-    transform: scale(2); /* Hace que el marcador crezca */
+    transform: scale(2);
+    /* Hace que el marcador crezca */
   }
 
   &::before {
@@ -175,6 +177,7 @@
         padding: 20px;
 
         transition: opacity 0.3s ease-in-out;
+
         &:hover {
           opacity: 0.5;
         }

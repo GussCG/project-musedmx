@@ -141,6 +141,9 @@ import { IoMapSharp } from "react-icons/io5";
 
 import { TbRadar2 } from "react-icons/tb";
 
+import { RiFireFill } from "react-icons/ri";
+import { TbLocationPin } from "react-icons/tb";
+
 const Icons = {
   estrellaIcon,
   moneyIcon,
@@ -234,6 +237,8 @@ const Icons = {
   MdTerrain,
   IoMapSharp,
   TbRadar2,
+  RiFireFill,
+  TbLocationPin,
 };
 
 export default Icons;

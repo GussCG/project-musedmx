@@ -41,7 +41,7 @@ function LoginForm() {
       transition={{ duration: 0.5 }}
     >
       <main id="login-main">
-        <div id="login-form">
+        <motion.div id="login-form" layout>
           <h1>Iniciar Sesión</h1>
 
           <Formik
@@ -97,14 +97,42 @@ function LoginForm() {
                     {shown ? <LuEye /> : <LuEyeClosed />}
                   </motion.div>
                 </div>
-                <AnimatePresence>
+
+                <AnimatePresence mode="popLayout">
                   {errorMessage && (
-                    <LoginErrorMessage
-                      error={errorMessage}
-                      onClose={clearError}
-                    />
+                    <motion.div
+                      layout
+                      className="error-message-container"
+                      key={"error-message"}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{
+                        scale: 1,
+                        opacity: 1,
+                      }}
+                      exit={{
+                        scale: 0,
+                        opacity: 0,
+                      }}
+                      transition={{
+                        duration: 0.3,
+                        ease: "easeInOut",
+                        type: "spring",
+                        bounce: 0.4,
+                        stiffness: 100,
+                        damping: 20,
+                      }}
+                      style={{
+                        overflow: "hidden",
+                      }}
+                    >
+                      <LoginErrorMessage
+                        error={errorMessage}
+                        onClose={clearError}
+                      />
+                    </motion.div>
                   )}
                 </AnimatePresence>
+
                 <input
                   type="submit"
                   value={isLoading ? "Cargando..." : "Iniciar Sesión"}
@@ -121,7 +149,7 @@ function LoginForm() {
             ¿No tienes una cuenta aún?{" "}
             <Link to="/Auth/Registrarse">Regístrate aquí</Link>
           </p>
-        </div>
+        </motion.div>
         <div id="login-linea"></div>
         <div id="login-imagen">
           <img src={loginImage} alt="Login" />
