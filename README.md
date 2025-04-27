@@ -12,6 +12,7 @@ PARA CORRER EL FRONTEND: npm run dev -> en la carpeta raiz del frontend /client
 - dotenv
 - nodemon
 - sql2
+- bcrypt
 
 !!! PARA EL FRONTEND
 - Para obtener las variables de entorno del backend se hace una llamada https al servidor
