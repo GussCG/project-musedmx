@@ -75,60 +75,59 @@ export const getMuseosNombres = async (req, res) => {
   }
 };
 
-// Aqui van mas funciones para los museos
+// Aqui van más funciones para los museos
 export const getMuseoById = async (req, res) => {
-  try {
-	const { id } = req.query;
-	const museo = await Museo.findById(id);
-	if (!museo) {
-	  return res.status(404).json({
-		success: false,
-		message: "Museo no encontrado",
-	  });
+	try {
+		const { id } = req.body;
+		const museo = await Museo.findById(id);
+		if (!museo) {
+			return res.status(404).json({
+				success: false,
+				message: "Museo no encontrado",
+			});
+		}
+		res.json({
+		success: true,
+		museo,
+		});
+	} catch (error) {
+		handleHttpError(res, "ERROR_GET_MUSEO_BY_ID", error);
 	}
-	res.json({
-	  success: true,
-	  museo,
-	});
-  } catch (error) {
-	handleHttpError(res, "ERROR_GET_MUSEO_BY_ID", error);
-  }
 };
 
-//* No sé si está bien :c
 export const updateMuseo = async (req, res) => {
-  try {
-	const { id, fields } = req.query;
-	const museo = await Museo.update(id, req.body);
-	if (!museo) {
-	  return res.status(404).json({
-		success: false,
-		message: "Museo no encontrado",
-	  });
+	try{ 
+		const museo = await Museo.updateMuseo(req.params.id, req.body);
+		if (!museo) {
+			return res.status(404).json({
+				success: false,
+				message: "Museo no encontrado",
+			});
+		}
+		res.json({
+			success: true,
+			museo,
+		});
+	} catch (error) {
+		handleHttpError(res, "ERROR_UPDATE_MUSEO", error);
 	}
-	res.json({
-	  success: true,
-	  museo,
-	});
-  } catch (error) {
-	handleHttpError(res, "ERROR_UPDATE_MUSEO", error);
-  }
 };
+
 export const deleteMuseo = async (req, res) => {
-  try {
-	const { id } = req.query;
-	const museo = await Museo.delete(id);
-	if (!museo) {
-	  return res.status(404).json({
-		success: false,
-		message: "Museo no encontrado",
-	  });
+	try {
+		const museo = await Museo.deleteMuseo(req.body.mus_id);
+		if (!museo) {
+			return res.status(404).json({
+				success: false,
+				message: "Museo no encontrado",
+			});
+		}
+		res.json({
+			success: true,
+			message: "Museo eliminado",
+			museo,
+		});
+	} catch (error) {
+		handleHttpError(res, "ERROR_DELETE_MUSEO", error);
 	}
-	res.json({
-	  success: true,
-	  message: "Museo eliminado",
-	});
-  } catch (error) {
-	handleHttpError(res, "ERROR_DELETE_MUSEO", error);
-  }
 };

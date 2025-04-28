@@ -2,6 +2,8 @@ import { Router } from "express";
 import { pool } from "../db.js";
 
 import museoRoutes from "./museo.routes.js";
+import authRoutes from "./auth.routes.js";
+
 
 const router = Router();
 
@@ -15,7 +17,7 @@ router.get("/", (req, res) => {
       museosBySearch: "/api/museos/search/:search",
       auth: "/api/auth",
       authLogin: "/api/auth/login",
-      authSignIn: "/api/auth/signin",
+      authSignUp: "/api/auth/signup",
       authLogout: "/api/auth/logout",
     },
   });
@@ -23,5 +25,6 @@ router.get("/", (req, res) => {
 
 // Rutas especificas
 router.use("/api/museos", museoRoutes);
+router.use("/api/auth", authRoutes);
 
 export default router;
