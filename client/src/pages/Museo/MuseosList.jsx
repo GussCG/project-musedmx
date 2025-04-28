@@ -6,7 +6,6 @@ import { ThreeDot } from "react-loading-indicators";
 import MenuFiltroMuseo from "../../components/MenuFiltroMuseo";
 import { useSearchParams, useLocation } from "react-router";
 
-import NavBar from "../../components/NavBar";
 import MuseoCard from "../../components/MuseoCard";
 import MuseosMapView from "./MuseosMapView";
 import MenuSort from "../../components/MenuSort";
@@ -15,6 +14,7 @@ import MapIndicaciones from "../../components/MapIndicaciones";
 import { useViewMode } from "../../context/ViewModeProvider";
 
 import Icons from "../../components/IconProvider";
+import MuseumSearch from "../../components/MuseumSearch";
 
 const {
   listButton,
@@ -197,7 +197,7 @@ function MuseosList({ titulo, tipo }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <NavBar />
+      <MuseumSearch swiperRef={null} />
       <MenuFiltroMuseo
         menuVisible={menuVisible}
         setMenuVisible={setMenuVisible}
@@ -252,17 +252,19 @@ function MuseosList({ titulo, tipo }) {
               </>
             )}
 
-            <button
-              type="button"
-              className="museos-header-section-right-button"
-              onClick={(event) => {
-                abrirMenu();
-              }}
-              title="Filtrar"
-            >
-              <p>Filtrar</p>
-              <FaFilter />
-            </button>
+            {tipo !== "3" && (
+              <button
+                type="button"
+                className="museos-header-section-right-button"
+                onClick={(event) => {
+                  abrirMenu();
+                }}
+                title="Filtrar"
+              >
+                <p>Filtrar</p>
+                <FaFilter />
+              </button>
+            )}
           </div>
         </section>
 

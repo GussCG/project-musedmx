@@ -3,25 +3,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useMap } from "@vis.gl/react-google-maps";
 
 import Icons from "./IconProvider";
-const { TbLocationPin, CgClose, IoSearch } = Icons;
+const { TbLocationPin, CgClose, IoSearch, IoIosArrowBack } = Icons;
 
 function MapaCambiarCentro({ onPlaceSelected }) {
-  const [showInfo, setShowInfo] = useState(false);
-  const [showInfoButton, setShowInfoButton] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
   const autocompleteRef = useRef(null);
   const map = useMap();
 
-  const handleOpenInfo = () => {
-    setShowInfo(true);
-    setShowInfoButton(false); // Ocultar el botón al abrir la información
-  };
-
-  const handleCloseInfo = () => {
-    setShowInfo(false);
-    setShowInfoButton(true); // Mostrar el botón al cerrar la información
-    setInputValue(""); // Limpiar el valor del input al cerrar
+  const toggleDropdown = () => {
+    setIsOpen((prev) => !prev);
+    if (!isOpen) {
+      setInputValue("");
+    }
   };
 
   const handlePlaceSelected = (place) => {
@@ -42,7 +37,7 @@ function MapaCambiarCentro({ onPlaceSelected }) {
   };
 
   useEffect(() => {
-    if (!showInfo || !window.google || !inputRef.current) return;
+    if (!isOpen || !window.google || !inputRef.current) return;
 
     async function initAutocomplete() {
       try {
@@ -78,59 +73,62 @@ function MapaCambiarCentro({ onPlaceSelected }) {
         autocompleteRef.current.unbindAllListeners();
       }
     };
-  }, [showInfo, onPlaceSelected]);
+  }, [isOpen, onPlaceSelected]);
 
   return (
-    <>
-      <AnimatePresence>
-        {showInfoButton && (
-          <motion.button
-            type="button"
-            className="btn-map"
-            id="btn-map-change-location"
-            onClick={handleOpenInfo}
-            transition={{
-              duration: 0.1,
-              ease: "easeInOut",
-            }}
-            whileHover={{ scale: 1.1 }}
-            key={"map-info-button"}
-            title="Cambiar ubicación"
-          >
-            <TbLocationPin />
-          </motion.button>
-        )}
-        {showInfo && (
+    <div className="map-change-location-container">
+      <button
+        id="btn-change-location"
+        onClick={toggleDropdown}
+        type="button"
+        title="Cambiar ubicación"
+      >
+        <TbLocationPin />
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3, type: "spring", stiffness: 100 }}
+        >
+          {" "}
+          <IoIosArrowBack />
+        </motion.div>
+      </button>
+      <AnimatePresence mode="popLayout">
+        {isOpen && (
           <motion.div
-            className="map-change-location"
-            initial={{ x: 250, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 250, opacity: 0 }}
-            transition={{ duration: 0.3, type: "spring", stiffness: 50 }}
-            key={"map-info"}
+            layout
+            className="map-change-location-dropdown"
+            key={"map-change-location-dropdown"}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{
+              opacity: 1,
+              x: 0,
+              transition: {
+                type: "tween",
+                ease: "easeOut",
+                duration: 0.2,
+              },
+            }}
+            exit={{
+              opacity: 0,
+              x: 20,
+              transition: {
+                ease: "easeIn",
+                duration: 0.3,
+              },
+            }}
           >
-            <button>
-              <IoSearch />
-            </button>
             <input
-              ref={inputRef}
               type="text"
-              placeholder="Dirección, Ciudad o Código Postal"
+              placeholder="Dirección, Código Postal o Lugar"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-            />
-
-            <button
-              className="close-button"
-              onClick={handleCloseInfo}
-              title="Cerrar"
-            >
-              <CgClose />
-            </button>
+              ref={inputRef}
+            ></input>
+            <IoSearch />
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
 

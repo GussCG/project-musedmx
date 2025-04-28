@@ -144,6 +144,12 @@ import { TbRadar2 } from "react-icons/tb";
 import { RiFireFill } from "react-icons/ri";
 import { TbLocationPin } from "react-icons/tb";
 
+import { IoIosArrowBack } from "react-icons/io";
+import { FaArrowCircleLeft } from "react-icons/fa";
+import { FaArrowCircleRight } from "react-icons/fa";
+
+import { IoSettings } from "react-icons/io5";
+
 const Icons = {
   estrellaIcon,
   moneyIcon,
@@ -239,6 +245,10 @@ const Icons = {
   TbRadar2,
   RiFireFill,
   TbLocationPin,
+  IoIosArrowBack,
+  FaArrowCircleLeft,
+  FaArrowCircleRight,
+  IoSettings,
 };
 
 export default Icons;

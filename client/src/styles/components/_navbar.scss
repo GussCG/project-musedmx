@@ -5,6 +5,7 @@
   min-width: 50vw;
   height: 50px;
   border-radius: 50px;
+  overscroll-behavior: contain;
 
   display: flex;
   justify-content: space-between;
@@ -53,6 +54,9 @@
       width: 100%;
       border: none;
       background-color: inherit;
+      font-family: $font-primary;
+      font-weight: $font-w-light;
+      font-size: $navbar-font-s;
     }
 
     input:focus {
@@ -76,6 +80,7 @@
 
       margin: 15px auto;
       overflow-y: auto;
+      overscroll-behavior: contain;
 
       top: 100%;
       left: 0;

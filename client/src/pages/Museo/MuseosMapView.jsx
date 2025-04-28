@@ -93,10 +93,7 @@ function MuseosMapView({
   const radioKM = rangoRadio * 1000;
   const [ubicacionCoords, setUbicacionCoords] = useState(null);
   const [showIndicaciones, setShowIndicaciones] = useState(false);
-  const [searchMode, setSearchMode] = useState("default");
-  const [mapBounds, setMapBounds] = useState(null);
   const [mapsReady, setMapsReady] = useState(false);
-  const [selectedMuseo, setSelectedMuseo] = useState(null);
   const [selectedTravelMode, setSelectedTravelMode] = useState("WALKING");
   const [isOpenTravelMode, setIsOpenTravelMode] = useState(false);
   const [selectedMapType, setSelectedMapType] = useState("ROADMAP");
@@ -239,9 +236,32 @@ function MuseosMapView({
                       stiffness: 100,
                     }}
                   >
-                    {Object.values(TRAVEL_MODES).map((mode) => (
-                      <button
+                    {Object.values(TRAVEL_MODES).map((mode, index) => (
+                      <motion.button
                         key={mode.value}
+                        initial={{ opacity: 0, x: -10, scale: 0.9 }}
+                        animate={{
+                          opacity: 1,
+                          x: 0,
+                          scale: 1,
+                          transition: {
+                            delay: index * 0.1,
+                            duration: 0.2,
+                            ease: "easeOut",
+                          },
+                        }}
+                        exit={{
+                          opacity: 0,
+                          x: -10,
+                          scale: 0.9,
+                          transition: {
+                            delay:
+                              (Object.values(TRAVEL_MODES).length - index - 1) *
+                              0.03,
+                            duration: 0.15,
+                            ease: "easeIn",
+                          },
+                        }}
                         type="button"
                         className="btn-map"
                         id={`btn-map-${mode.value}`}
@@ -253,7 +273,7 @@ function MuseosMapView({
                       >
                         <div className="btn-map-bg" />
                         {mode.icon}
-                      </button>
+                      </motion.button>
                     ))}
                   </motion.div>
                 )}
@@ -291,9 +311,32 @@ function MuseosMapView({
                       stiffness: 100,
                     }}
                   >
-                    {Object.values(MAP_TYPES).map((type) => (
-                      <button
+                    {Object.values(MAP_TYPES).map((type, index) => (
+                      <motion.button
                         key={type.value}
+                        initial={{ opacity: 0, x: -10, scale: 0.9 }}
+                        animate={{
+                          opacity: 1,
+                          x: 0,
+                          scale: 1,
+                          transition: {
+                            delay: index * 0.1,
+                            duration: 0.2,
+                            ease: "easeOut",
+                          },
+                        }}
+                        exit={{
+                          opacity: 0,
+                          x: -10,
+                          scale: 0.9,
+                          transition: {
+                            delay:
+                              (Object.values(MAP_TYPES).length - index - 1) *
+                              0.03,
+                            duration: 0.15,
+                            ease: "easeIn",
+                          },
+                        }}
                         type="button"
                         className="btn-map"
                         id={`btn-map-${type.value}`}
@@ -306,7 +349,7 @@ function MuseosMapView({
                       >
                         <div className="btn-map-bg" />
                         {type.icon}
-                      </button>
+                      </motion.button>
                     ))}
                   </motion.div>
                 )}
@@ -319,10 +362,8 @@ function MuseosMapView({
             ubicacionCoords={ubicacionCoords}
             place={null}
             tipo={tipo}
-            bounds={mapBounds}
             travelMode={selectedTravelMode}
             mapType={selectedMapTypeNormalized}
-            // onCenterUserLocation={handleCenterCallback}
           />
         </APIProvider>
       </section>

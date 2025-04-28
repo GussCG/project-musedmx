@@ -12,6 +12,8 @@
   border-radius: 20px;
   margin: 0 auto;
 
+  pointer-events: none;
+
   display: grid;
   grid-template-rows: 1fr 1fr;
   /* border: 4px solid rgba(0, 0, 0, 0.21); */
@@ -23,6 +25,8 @@
     width: 100%;
     height: 230px;
     margin: 0 auto;
+
+    pointer-events: all;
 
     .museo-card-fav-button-container {
       -webkit-user-select: none;
@@ -83,6 +87,41 @@
 
         &:hover {
           transform: scale(1.2);
+        }
+      }
+    }
+
+    .museo-card-delete-container {
+      position: absolute;
+      margin: 10px;
+      z-index: 31;
+
+      pointer-events: all;
+
+      button {
+        width: 40px;
+        height: 40px;
+        background: var(--btn-ayuda-bg);
+        border: 2px solid var(--btn-ayuda-border);
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+        z-index: 31;
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+
+        transition: transform 0.3s ease-in-out;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+
+        svg {
+          width: 100%;
+          height: auto;
+          color: var(--font-color-primary);
         }
       }
     }

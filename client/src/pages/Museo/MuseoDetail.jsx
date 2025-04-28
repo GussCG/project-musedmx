@@ -136,6 +136,20 @@ import galeriaFoto3 from "../../assets/images/others/museo-main-3.jpg";
 import galeriaFoto4 from "../../assets/images/others/museo-main-4.jpg";
 import galeriaFoto5 from "../../assets/images/others/museo-main-5.jpg";
 
+// Para pruebas
+const images = [
+  galeriaFoto1,
+  galeriaFoto2,
+  galeriaFoto3,
+  galeriaFoto4,
+  galeriaFoto5,
+  galeriaFoto1,
+  // galeriaFoto2,
+  // galeriaFoto3,
+  // galeriaFoto4,
+  // galeriaFoto5,
+];
+
 // Placeholder usuario
 import placeholderUserImage from "../../assets/images/placeholders/user_placeholder.png";
 
@@ -144,6 +158,7 @@ import LightBox from "../../components/LightBox";
 import MapMuseoDetail from "../../components/MapMuseoDetail";
 import MuseoSlider from "../../components/MuseoSlider";
 import ImagenesSlider from "../../components/ImagenesSlider";
+import MuseoGallery from "../../components/MuseoGallery";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
@@ -160,27 +175,14 @@ function MuseoDetail() {
     setMenuVisible(true);
   };
 
-  // Estado para controlar la visibilidad del lightbox
-  const [lightBoxVisible, setLightBoxVisible] = useState(false);
-
-  // Estado para controlar la imagen actual del lightbox
-  const [currentImage, setCurrentImage] = useState("");
-
-  const openLightBox = (e) => {
-    if (e.target.src) {
-      setCurrentImage(e.target.src);
-      setLightBoxVisible(true);
-    }
-  };
-
   const { museoId } = useParams();
   const museoIdNumber = parseInt(museoId, 10);
 
   const [isExisting, setIsExisting] = useState(false);
 
   const museoPrueba = {
-    id: 1,
-    nombre: "Museo de Prueba",
+    mus_id: 1,
+    mus_nombre: "Museo de Prueba1",
     horarios: {
       Lunes: "9:00 - 18:00",
       Martes: "9:00 - 18:00",
@@ -190,15 +192,86 @@ function MuseoDetail() {
       Sabado: "9:00 - 14:00",
       Domingo: "9:00 - 14:00",
     },
-    img: galeriaFoto1,
-    calificacion: 4,
+    mus_foto:
+      "https://www.shutterstock.com/image-photo/san-francisco-california-usa-1-600nw-2424683443.jpg",
+    mus_calificacion: 4,
     costo: 0,
     coords: {
       lat: 19.426111111111,
       lng: -99.186111111111,
     },
-    distancia: 2.4,
-    alcaldia: "Alcaldía de Prueba",
+    mus_tematica: 5,
+    mus_alcaldia: "Alcaldía de Prueba",
+  };
+
+  const museoPrueba2 = {
+    mus_id: 2,
+    mus_nombre: "Museo de Prueba2",
+    horarios: {
+      Lunes: "9:00 - 18:00",
+      Martes: "9:00 - 18:00",
+      Miercoles: "9:00 - 18:00",
+      Jueves: "9:00 - 18:00",
+      Viernes: "9:00 - 18:00",
+      Sabado: "9:00 - 14:00",
+      Domingo: "9:00 - 14:00",
+    },
+    mus_foto: "https://i.ytimg.com/vi/tYI2eJZDHYQ/maxresdefault.jpg",
+    mus_calificacion: 4,
+    costo: 0,
+    coords: {
+      lat: 19.426111111111,
+      lng: -99.186111111111,
+    },
+    mus_tematica: 2,
+    mus_alcaldia: "Alcaldía de Prueba",
+  };
+
+  const museoPrueba3 = {
+    mus_id: 3,
+    mus_nombre: "Museo de Prueba3",
+    horarios: {
+      Lunes: "9:00 - 18:00",
+      Martes: "9:00 - 18:00",
+      Miercoles: "9:00 - 18:00",
+      Jueves: "9:00 - 18:00",
+      Viernes: "9:00 - 18:00",
+      Sabado: "9:00 - 14:00",
+      Domingo: "9:00 - 14:00",
+    },
+    mus_foto:
+      "https://th.bing.com/th/id/OIP.Dk9hzhtZz6ip3svewvBlGQHaEK?rs=1&pid=ImgDetMain",
+    mus_calificacion: 4,
+    costo: 0,
+    coords: {
+      lat: 19.426111111111,
+      lng: -99.186111111111,
+    },
+    mus_tematica: 2,
+    mus_alcaldia: "Alcaldía de Prueba",
+  };
+
+  const museoPrueba4 = {
+    mus_id: 4,
+    mus_nombre: "Museo de Prueba4",
+    horarios: {
+      Lunes: "9:00 - 18:00",
+      Martes: "9:00 - 18:00",
+      Miercoles: "9:00 - 18:00",
+      Jueves: "9:00 - 18:00",
+      Viernes: "9:00 - 18:00",
+      Sabado: "9:00 - 14:00",
+      Domingo: "9:00 - 14:00",
+    },
+    mus_foto: "https://media.timeout.com/images/103167639/image.jpg",
+    mus_calificacion: 4,
+    costo: 0,
+    coords: {
+      lat: 19.426111111111,
+      lng: -99.186111111111,
+    },
+    mus_tematica: 2,
+    mus_alcaldia: "Alcaldía de Prueba",
   };
 
   // Lista de museos para el slider
@@ -206,6 +279,9 @@ function MuseoDetail() {
   // De momento, se pondran valores de ejemplo
   const museosSimilares = {
     museoPrueba,
+    museoPrueba2,
+    museoPrueba3,
+    museoPrueba4,
   };
 
   // Estado para los checkbox de favoritos
@@ -248,11 +324,6 @@ function MuseoDetail() {
           <MenuFiltroResena
             menuVisible={menuVisible}
             setMenuVisible={setMenuVisible}
-          />
-          <LightBox
-            lightBoxVisible={lightBoxVisible}
-            setLightBoxVisible={setLightBoxVisible}
-            currentImage={currentImage}
           />
           <main id="museo-main">
             <section id="museo-section-1" className="museo-detail-item">
@@ -381,15 +452,7 @@ function MuseoDetail() {
                 )}
               </div>
             </section>
-            <motion.div
-              className="museo-detail-sections"
-              // initial={{ opacity: 0, y: 20 }}
-              // animate={{
-              //   opacity: contentLoaded ? 1 : 0,
-              //   y: contentLoaded ? 0 : 20,
-              // }}
-              // transition={{ delay: 0.3 }}
-            >
+            <motion.div className="museo-detail-sections">
               <section id="museo-section-2">
                 <div className="museo-section-2-calificaciones museo-detail-item">
                   <h1 className="h1-section">Calificaciones</h1>
@@ -481,53 +544,7 @@ function MuseoDetail() {
                   <MapMuseoDetail museo={museoPrueba} />
                 </div>
               </section>
-              <section id="museo-section-3" className="museo-detail-item">
-                <h1 className="h1-section">Galería de Fotos</h1>
-                <div className="museo-section-3-galeria" onClick={openLightBox}>
-                  <div className="museo-galeria-foto" id="foto-1">
-                    <img
-                      src={galeriaFoto1}
-                      alt="Foto 1"
-                      className="gallery_img"
-                    />
-                  </div>
-                  <div className="museo-galeria-foto" id="foto-2">
-                    <img
-                      src={galeriaFoto2}
-                      alt="Foto 2"
-                      className="gallery_img"
-                    />
-                  </div>
-                  <div className="museo-galeria-foto" id="foto-3">
-                    <img
-                      src={galeriaFoto3}
-                      alt="Foto 3"
-                      className="gallery_img"
-                    />
-                  </div>
-                  <div className="museo-galeria-foto" id="foto-4">
-                    <img
-                      src={galeriaFoto4}
-                      alt="Foto 4"
-                      className="gallery_img"
-                    />
-                  </div>
-                  <div className="museo-galeria-foto" id="foto-5">
-                    <img
-                      src={galeriaFoto5}
-                      alt="Foto 5"
-                      className="gallery_img"
-                    />
-                  </div>
-                  <div className="museo-galeria-foto" id="foto-6">
-                    <img
-                      src={galeriaFoto1}
-                      alt="Foto 6"
-                      className="gallery_img"
-                    />
-                  </div>
-                </div>
-              </section>
+              <MuseoGallery images={images} />
               <section id="museo-section-4" className="museo-detail-item">
                 <h1 className="h1-section">
                   A otros usuarios también les gusto

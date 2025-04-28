@@ -1,20 +1,36 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { AnimatePresence, motion } from "framer-motion";
+import { useMemo, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import foto_default from "../assets/images/others/museo-main-1.jpg";
 
 import Icons from "./IconProvider";
-const { RiFireFill, CgClose
-} = Icons;
+const { RiFireFill, CgClose } = Icons;
 
-function MapaPopulares() {
+const TEMATICAS = {
+  1: "Antropología",
+  2: "Arte",
+  3: "Arte Alternativo",
+  4: "Arqueología",
+  5: "Ciencia y Tecnología",
+  6: "Especializado",
+  7: "Historia",
+  8: "Otro",
+};
+
+function MapaPopulares({ museosMostrados }) {
   const [showInfo, setShowInfo] = useState(false);
   const [showInfoButton, setShowInfoButton] = useState(true);
   // Dia de hoy en formato "dd/mm/yyyy" utc-6
-  const [hoy, setHoy] = useState(new Date().toLocaleDateString("es-MX", {
-    timeZone: "America/Mexico_City",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).replace(/\//g, "-"));
+  const [hoy, setHoy] = useState(
+    new Date()
+      .toLocaleDateString("es-MX", {
+        timeZone: "America/Mexico_City",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .replace(/\//g, "-")
+  );
 
   const handleOpenInfo = () => {
     setShowInfo(true);
@@ -62,20 +78,59 @@ function MapaPopulares() {
               type: "spring",
               stiffness: 50,
             }}
-            key={"map-info"}>
+            key={"map-info"}
+          >
             <button className="close-button" onClick={handleCloseInfo}>
               <CgClose />
             </button>
             <h4> Museos Populares</h4>
-            <p> <b>Fecha </b>: {hoy} </p>
+            <p>
+              {" "}
+              <b>Fecha </b>: {hoy}{" "}
+            </p>
             <hr />
+            <ul className="museos-list">
+              {museosMostrados.map((museo, index) => (
+                <motion.li
+                  key={museo.mus_id}
+                  className="museo-list-item"
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 100 }}
+                  transition={{
+                    duration: 0.2,
+                    ease: "easeInOut",
+                    type: "spring",
+                    stiffness: 50,
+                  }}
+                >
+                  <div className="museo-list-item-img">
+                    <img
+                      src={museo.mus_foto || foto_default}
+                      alt={museo.mus_nombre}
+                    />
+                    <div className="museo-list-item-rank">
+                      <p>{index + 1}</p>
+                    </div>
+                  </div>
+                  <div className="museo-list-item-info">
+                    <div className="museo-list-item-name">
+                      <Link to={`/Museos/${museo.mus_id}`}>
+                        <p>{museo.mus_nombre}</p>
+                      </Link>
+                    </div>
+                    <div className="museo-list-item-tematica">
+                      <p>{TEMATICAS[museo.mus_tematica]}</p>
+                    </div>
+                  </div>
+                </motion.li>
+              ))}
+            </ul>
           </motion.div>
         )}
-
       </AnimatePresence>
     </>
-
-  )
+  );
 }
 
-export default MapaPopulares
+export default MapaPopulares;

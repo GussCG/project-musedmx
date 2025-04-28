@@ -86,7 +86,6 @@
       }
 
       @media screen and (max-width: 700px) {
-
         h1,
         p {
           display: none;
@@ -398,7 +397,7 @@
 
             transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
 
-            &:hover>.btn-map-bg {
+            &:hover > .btn-map-bg {
               filter: brightness(0.8);
             }
 
@@ -665,6 +664,16 @@
                       font-weight: $font-w-semibold;
                     }
                   }
+
+                  .museo-list-item-rank {
+                    @extend .museo-list-item-distance;
+                    top: 0;
+                    left: 0;
+                    bottom: auto;
+                    padding: 10px;
+
+                    border-bottom-right-radius: 5px;
+                  }
                 }
 
                 .museo-list-item-info {
@@ -692,7 +701,8 @@
                     }
                   }
 
-                  .museo-list-item-tiempo {
+                  .museo-list-item-tiempo,
+                  .museo-list-item-tematica {
                     p {
                       font-size: 0.8rem;
                       padding-top: 10px;
@@ -703,53 +713,77 @@
             }
           }
 
-          .map-change-location {
-            width: 50%;
-            max-width: 500px;
-            height: 50px;
+          .map-change-location-container {
+            width: auto;
+            height: auto;
             position: absolute;
             bottom: 10px;
             right: 10px;
-
-            border-radius: 10px;
-            background-color: var(--bg-navbar);
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
 
             display: flex;
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 5px;
 
-            z-index: 100;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
 
-            overflow: hidden;
-
-            input {
-              width: 70%;
-              height: 100%;
-              border: none;
-              font-family: $font-primary;
-              font-weight: $font-w-regular;
-              font-size: 1.2rem;
-
-              outline: none;
-
-            }
-
-            button {
-              width: 15%;
-              height: 100%;
-              border: none;
-              background-color: transparent;
-              cursor: pointer;
+            #btn-change-location {
+              width: 75px;
+              height: 50px;
               display: flex;
               justify-content: center;
               align-items: center;
+              gap: 5px;
+              border-radius: 10px;
+              border: 3px solid var(--btn-ayuda-border);
+              cursor: pointer;
+              pointer-events: all;
+              background-color: var(--btn-ayuda-bg);
+
+              transition: transform 0.3s ease-in-out;
 
               svg {
                 width: 25px;
-                height: 25px;
+                height: auto;
+                color: var(--btn-ayuda-color);
+              }
+
+              &:hover {
+                transform: scale(1.1);
+              }
+            }
+
+            .map-change-location-dropdown {
+              width: auto;
+              min-width: 400px;
+              height: 50px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 10px;
+              gap: 10px;
+
+              padding: 0 20px;
+
+              background-color: var(--btn-ayuda-bg);
+              border: 3px solid var(--btn-ayuda-border);
+
+              input {
+                width: 100%;
+                height: 100%;
+                background-color: transparent;
+                border: none;
+                outline: none;
+                font-size: 1rem;
+                font-family: $font-primary;
+                font-weight: $font-w-regular;
+                color: var(--font-color-primary);
+              }
+
+              svg {
+                width: 25px;
+                height: auto;
                 color: var(--btn-ayuda-color);
               }
             }
@@ -775,7 +809,7 @@
 
             transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
 
-            &:hover>.btn-map-bg {
+            &:hover > .btn-map-bg {
               filter: brightness(0.8);
             }
 
@@ -796,34 +830,6 @@
 
             svg {
               z-index: 1002;
-              width: 25px;
-              height: 25px;
-              color: var(--btn-ayuda-color);
-            }
-          }
-
-          #btn-map-change-location {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-
-            z-index: 101;
-
-            background-color: var(--btn-ayuda-bg);
-            border: 3px solid var(--btn-ayuda-border);
-            border-radius: 10px;
-            pointer-events: all;
-
-            transition: transform 0.3s ease-in-out;
-
-            cursor: pointer;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
-
-            svg {
               width: 25px;
               height: 25px;
               color: var(--btn-ayuda-color);
@@ -869,6 +875,32 @@
             bottom: 70px;
             left: 10px;
           }
+        }
+
+        .gm-svpc {
+          position: absolute !important;
+          width: 50px !important;
+          height: 50px !important;
+          background-color: var(--btn-ayuda-bg) !important;
+          border: 3px solid var(--btn-ayuda-border) !important;
+          border-radius: 10px !important;
+          pointer-events: all;
+          margin-bottom: 10px !important;
+
+          cursor: pointer;
+
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+
+          box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21) !important;
+
+          transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out !important;
+        }
+
+        .gm-style-cc,
+        .gmnoprint {
+          display: none !important;
         }
       }
     }

@@ -1,0 +1,213 @@
+@use "../variables" as *;
+
+.index-slider {
+  width: 100%;
+  .index-swiper {
+    width: 100%;
+    height: $main-height;
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+    overscroll-behavior: contain;
+
+    .index-slider {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+
+      .index-slider-bg {
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: -1;
+          filter: brightness(0.5);
+        }
+      }
+
+      .index-slider-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        padding: 0 1rem;
+
+        h1 {
+          width: 100%;
+          font-family: $font-primary;
+          font-size: clamp(1.5rem, 5vw, $index-main-font-s-title);
+          font-weight: $font-w-semibold;
+          color: white;
+          text-align: center;
+          line-height: 1.3;
+
+          .index-slider-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+
+            @media screen and (max-width: 1200px) {
+              flex-direction: column;
+              align-items: center;
+            }
+
+            .fixed-text {
+              white-space: nowrap;
+            }
+
+            a {
+              text-decoration: none;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              .index-slider-label {
+                display: inline-flex;
+                align-items: center;
+                width: auto;
+                height: auto;
+                background-color: rgb(0, 0, 0);
+                color: rgb(255, 255, 255);
+                padding: 0.5rem 1rem;
+                white-space: normal;
+                border-radius: 15px;
+                text-align: center;
+                transition: all 0.3s ease-in-out;
+
+                &:hover {
+                  background-color: rgb(255, 255, 255);
+                  color: rgb(0, 0, 0);
+                  transform: scale(1.05);
+                }
+              }
+            }
+          }
+        }
+
+        .index-slider-search-bar {
+          width: 90%;
+          max-width: 600px;
+          height: auto;
+          min-height: 50px;
+          background-color: rgba(255, 255, 255, 1);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          border-radius: 25px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+          input {
+            width: 100%;
+            height: 90%;
+            border: none;
+            background: none;
+            outline: none;
+            padding: 0.5rem 1rem;
+            font-family: $font-primary;
+            font-weight: $font-w-light;
+          }
+
+          button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            background: none;
+            outline: none;
+
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+
+            svg {
+              width: 70%;
+              height: auto;
+            }
+          }
+        }
+      }
+    }
+
+    .swiper-progressbar {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      width: 50px;
+      height: 50px;
+      color: rgb(255, 255, 255);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      font-weight: $font-w-regular;
+
+      svg {
+        --progress: 0;
+        position: absolute;
+        left: 0;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        stroke-width: 4px;
+        stroke: rgb(255, 255, 255);
+        fill: none;
+        stroke-dashoffset: calc(125.6 * (1 - var(--progress)));
+        stroke-dasharray: 125.6;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  .swiper-pagination {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 10;
+    padding: 12px 8px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 24px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+    .swiper-pagination-bullet {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: rgb(0, 0, 0);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+
+      transition: all 0.3s ease-in-out;
+
+      &-active {
+        scale: 1.5;
+      }
+    }
+
+    @media screen and (max-width: 500px) {
+      flex-direction: row;
+      top: auto;
+      right: auto;
+      bottom: 20px;
+    }
+  }
+}
