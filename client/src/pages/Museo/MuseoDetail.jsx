@@ -144,8 +144,8 @@ const images = [
   galeriaFoto4,
   galeriaFoto5,
   galeriaFoto1,
-  // galeriaFoto2,
-  // galeriaFoto3,
+  galeriaFoto2,
+  galeriaFoto3,
   // galeriaFoto4,
   // galeriaFoto5,
 ];
