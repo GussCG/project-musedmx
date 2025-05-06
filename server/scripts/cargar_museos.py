@@ -32,10 +32,12 @@ with open(csv_path, newline='', encoding='utf-8') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         try:
+            # Registrar el museo en la base de datos
             cursor.execute(
-                "INSERT INTO museos (mus_nombre, mus_calle, mus_num_ext, mus_colonia, mus_cp, mus_alcaldia, mus_descripcion, mus_fec_ap, mus_tematica, mus_g_longitud, mus_g_latitud) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                (row['museo_nombre'], row['museo_calle'], row['museo_num_ext'], row['museo_colonia'], row['museo_cp'], row['nom_mun'], row['museo_descripcion'], row['museo_fecha_fundacion'], row['museo_tematica_n1'], row['gmaps_longitud'], row['gmaps_latitud'])
+                "INSERT INTO museos (mus_id, mus_nombre, mus_calle, mus_num_ext, mus_colonia, mus_cp, mus_alcaldia, mus_descripcion, mus_fec_ap, mus_tematica, mus_g_longitud, mus_g_latitud) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (row['museo_id'], row['museo_nombre'], row['museo_calle'], row['museo_num_ext'], row['museo_colonia'], row['museo_cp'], row['nom_mun'], row['museo_descripcion'], row['museo_fecha_fundacion'], row['museo_tematica_n1'], row['gmaps_longitud'], row['gmaps_latitud'])
             )
+ 
         except mysql.connector.Error as err:
             print(f"Error: {err}")
             continue
@@ -44,4 +46,4 @@ with open(csv_path, newline='', encoding='utf-8') as csvfile:
     cursor.close()
     conn.close()
 
-print("Datos insertados correctamente.")
+print("Museos Creados correctamente.")

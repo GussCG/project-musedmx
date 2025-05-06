@@ -75,4 +75,18 @@ export const getMuseosNombres = async (req, res) => {
   }
 };
 
+export const getMuseoById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const museo = await Museo.findById({ id: id });
+    res.json({
+      success: true,
+      id,
+      museo,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEO_ID", error);
+  }
+};
+
 // Aqui van mas funciones para los museos

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 // Toastify
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import buildImage from "../utils/buildImage";
 
 import imgPrueba from "../assets/images/others/museo-main-1.jpg";
 import PopUpLogin from "./PopUpLogin";
@@ -74,7 +76,7 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
       Sabado: "9:00 - 17:00",
       Domingo: "9:00 - 17:00",
     },
-    img: museo.mus_foto || imgPrueba,
+    img: buildImage(museo) || imgPrueba,
     tematica: museo.mus_tematica,
   };
 
