@@ -128,7 +128,6 @@ const {
 } = Icons;
 
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
-import imgPrueba from "../../assets/images/others/museo-main-1.jpg";
 
 // Galeria de fotos Placeholder
 import galeriaFoto1 from "../../assets/images/others/museo-main-1.jpg";
@@ -155,7 +154,6 @@ const images = [
 import placeholderUserImage from "../../assets/images/placeholders/user_placeholder.png";
 
 import MenuFiltroResena from "../../components/MenuFiltroResena";
-import LightBox from "../../components/LightBox";
 import MapMuseoDetail from "../../components/MapMuseoDetail";
 import MuseoSlider from "../../components/MuseoSlider";
 import ImagenesSlider from "../../components/ImagenesSlider";
@@ -185,22 +183,23 @@ function MuseoDetail() {
   const { museoId } = useParams();
   const museoIdNumber = parseInt(museoId, 10);
 
-  const [museo, setMuseo] = useState({});
-
+  const [museoInfo, setMuseoInfo] = useState({});
   useEffect(() => {
     const fetchMuseo = async (id) => {
       try {
         let endpoint = `${BACKEND_URL}/api/museos/${id}`;
 
         const response = await axios.get(endpoint);
-        setMuseo(response.data.museo);
+        setMuseoInfo(response.data.museo[0]);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchMuseo(museoIdNumber);
-  }, [museoIdNumber]);
+  }, [museoId]);
+
+  console.log(museoInfo);
 
   const [isExisting, setIsExisting] = useState(false);
 
@@ -339,7 +338,7 @@ function MuseoDetail() {
       {!isExisting && (
         <motion.div
           className="museo-detail"
-          key={`museo-detail-${museoIdNumber}`}
+          key={`museo-detail-${museoInfo.mus_id}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -353,7 +352,7 @@ function MuseoDetail() {
             <section id="museo-section-1" className="museo-detail-item">
               <div className="museo-section-1-image">
                 <motion.img
-                  src={buildImage(museoInfo.foto)}
+                  src={buildImage(museoInfo) || museoPlaceholder}
                   alt="Museo"
                   layoutId={`museo-image-${museoIdNumber}`}
                   key={`detail-${museoIdNumber}`}
@@ -374,7 +373,7 @@ function MuseoDetail() {
               >
                 <div className="museo-section-1-info">
                   <label className="museo-section-1-info-title">
-                    <h1>Museo</h1>
+                    <h1>{museoInfo.mus_nombre}</h1>
                     <label className="museo-fav-button-container">
                       <input
                         type="checkbox"
@@ -396,11 +395,11 @@ function MuseoDetail() {
                     </label>
                   </label>
                   <div className="museo-section-1-info-fundacion">
-                    <p>Se fundó 17-09-1964 </p>
+                    <p>Se fundó en {museoInfo.mus_fec_ap} </p>
                   </div>
                   <div className="museo-section-1-info-tematica">
-                    <h1>Temática</h1>
-                    <img
+                    <h1>{museoInfo[0]?.mus_tematica}</h1>
+                    {/* <img
                       src={tematicaIcon}
                       alt="Tematica"
                       style={
@@ -408,7 +407,7 @@ function MuseoDetail() {
                           ? { filter: "invert(1)" }
                           : { filter: "invert(0)" }
                       }
-                    />
+                    /> */}
                   </div>
                   <div className="museo-section-1-info-horarios">
                     <h1>Horarios:</h1>
