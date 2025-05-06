@@ -56,6 +56,8 @@ function ProfileEdit() {
   const { userId } = useParams();
   const { user, tipoUsuario } = useAuth();
 
+  const [nuevaFoto, setNuevaFoto] = useState(false);
+
   // Datos de prueba para el formulario
   const testUser = {
     id: 1,
@@ -133,9 +135,10 @@ function ProfileEdit() {
 
   // Lógica para el cambio de imagen de perfil
   const handleImageChange = (event, setFieldValue) => {
-    const file = event.target.files[0];
-    setFieldValue("signinfrmfoto", file);
-    setImagePreview(URL.createObjectURL(file));
+	const file = event.target.files[0];
+	setFieldValue("signinfrmfoto", file);
+	setImagePreview(URL.createObjectURL(file));
+	setNuevaFoto(true); // ✅ Marca que hay una nueva imagen
   };
 
   // Manejo de temáticas
@@ -187,41 +190,57 @@ function ProfileEdit() {
       }
 
       // Convertir la fecha de nacimiento
-      const parsedDate = selectedDate.toISOString();
+      const parsedDate = selectedDate.toISOString().split("T")[0];
 
       // Agregar los datos personales
-      userData.append("nombre", values.signinfrmnombre);
-      userData.append("apellido_paterno", values.signinfrmappaterno);
-      userData.append("apellido_materno", values.signinfrmapmaterno);
-      userData.append("email", values.signinfrmemail);
-      userData.append("telefono", tel);
-      userData.append("fecha_nacimiento", parsedDate);
-      userData.append("tematicas", JSON.stringify(selectedTematicas));
+      userData.append("usr_nombre", values.signinfrmnombre);
+      userData.append("usr_ap_paterno", values.signinfrmappaterno);
+      userData.append("usr_ap_materno", values.signinfrmapmaterno);
+      userData.append("usr_correo", values.signinfrmemail);
+      userData.append("usr_telefono", tel);
+      userData.append("usr_fecha_nac", parsedDate);
+	  // Comparar las temáticas seleccionadas con las guardadas
+	  // Si no hay cambios no se envían al backend
+	  // if (selectedTematicas.length === 0) {
+	  //   userData.append("usr_tematicas", usuario.tematicas);
+	  // } else {
+	  //   userData.append("usr_tematicas", JSON.stringify(selectedTematicas));
+	  // }
+	  if (selectedTematicas.length === 0) {
+	    userData.append("usr_tematicas", usuario.tematicas);
+	  } else {
+	    userData.append("usr_tematicas", JSON.stringify(selectedTematicas));
+	  }
       // userData.append("tipo_costo", costo);
       // userData.append("rango_costo", valorRango);
 
       // Si el usuario no selecciono una imagen de perfil no se cambia la imagen
-      if (values.signinfrmfoto) {
-        userData.append("foto", values.signinfrmfoto);
-      } else {
-        userData.append("foto", user.foto);
-      }
+	  // Si se seleccionó una imagen de perfil se agrega al FormData
+      if (nuevaFoto && values.signinfrmfoto) {
+		userData.append("usr_foto", values.signinfrmfoto); // ✅ nueva imagen
+	  } else {
+		userData.append("usr_foto", usuario.foto); // 🧠 usa la anterior
+	  }
 
-      // Si se selecciono una imagen de perfil se agrega al FormData
-      // if (imageInputRef.current.files[0]) {
-      //   userData.append("foto", imageInputRef.current.files[0]);
-      // } else {
-      //   userData.append("foto", userPlaceholder);
-      // }
+	//   // Si se seleccionó una imagen de perfil se agrega al FormData
+    //   if (imageInputRef.current.files[0]) {
+    //     userData.append("usr_foto", imageInputRef.current.files[0]);
+    //   } else {
+    //     userData.append("usr_foto", userPlaceholder);
+    //   }
 
       // Convertir el FormData a un objeto
-      const userObject = {};
-      userData.forEach((value, key) => {
-        userObject[key] = value;
-      });
+    //   const userObject = {};
+    //   userData.forEach((value, key) => {
+    //     userObject[key] = value;
+    //   });
 
       // Enviar los datos al backend
-      const response = await editarUsuario(userObject);
+	  console.log("Datos a enviar: ");
+	  for (let pair of userData.entries()) {
+		console.log(pair[0]+ ': ' + pair[1]);
+	  }
+      const response = await editarUsuario(userData);
 
       if (response) {
         toast.success("Usuario editado correctamente", {

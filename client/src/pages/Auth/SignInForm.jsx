@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 import useUsuario from "../../hooks/Usuario/useUsuario";
+import { useAuth } from "../../context/AuthProvider";
 
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -50,6 +52,14 @@ const validationSchema = Yup.object({
 });
 
 function SignInForm() {
+  // Definimos los tipos de usuario
+  const tiposUsuario = {
+  	0: "No registrado",
+  	1: "Usuario",
+  	2: "Admin",
+  	3: "Mod",
+  };
+
   // Estados
   const [tel, setTel] = useState("");
   const [password, setPassword] = useState("");
@@ -59,6 +69,8 @@ function SignInForm() {
   // const [costo, setCosto] = useState("");
   // const [valorRango, setValorRango] = useState([0, 100]);
   // const [rangoHabilitado, setRangoHabilitado] = useState(false);
+
+  const navigate = useNavigate();
 
   const [selectedTematicas, setSelectedTematicas] = useState([]);
   const signInButtonRef = useRef(null);
@@ -234,6 +246,7 @@ function SignInForm() {
   }, [isValidPass, isPasswordMatch, tel, selectedTematicas, selectedDate]);
 
   const { registrarUsuario } = useUsuario();
+  const { login } = useAuth();
   // Función para registrar al usuario
   const handleRegister = async (values) => {
     try {
@@ -254,29 +267,29 @@ function SignInForm() {
         return;
       }
 
-      const parsedDate = selectedDate.toISOString();
+	  //formato de la fecha: YYYY-MM-DD
+      const parsedDate = selectedDate.toISOString().split("T")[0];	
 
-      userData.append("nombre", values.signinfrmnombre);
-      userData.append("apPaterno", values.signinfrmappaterno);
-      userData.append("apMaterno", values.signinfrmapmaterno);
-      userData.append("email", values.signinfrmemail);
-      userData.append("tel", tel);
-      userData.append("fecNac", parsedDate);
-      userData.append("password", password);
-      userData.append("tematicas", JSON.stringify(selectedTematicas));
+      userData.append("usr_nombre", values.signinfrmnombre);
+      userData.append("usr_ap_paterno", values.signinfrmappaterno);
+      userData.append("usr_ap_materno", values.signinfrmapmaterno);
+      userData.append("usr_correo", values.signinfrmemail);
+      userData.append("usr_telefono", tel);
+      userData.append("usr_fecha_nac", parsedDate);
+      userData.append("usr_contrasenia", password);
+      userData.append("usr_tematicas", JSON.stringify(selectedTematicas));
+	  userData.append("usr_tipo", 1); 
       // userData.append("tipo_costo", costo);
       // userData.append("rango_costo", valorRango);
-      if (values.signinfrmfoto) userData.append("foto", values.signinfrmfoto);
-      else userData.append("foto", userPlaceholder);
+      if (values.signinfrmfoto) {
+		userData.append("usr_foto", values.signinfrmfoto);
+	  }
+      else {
+		userData.append("usr_foto", userPlaceholder);
+	  }
 
-      // Convertir a un objeto
-      let userObject = {};
-      userData.forEach((value, key) => {
-        userObject[key] = value;
-      });
-
-      // Lógica para enviar los datos al backend
-      const response = await registrarUsuario(userObject);
+	  // Lógica para enviar los datos al backend
+      const response = await registrarUsuario(userData);
 
       if (response) {
         toast.success("Usuario registrado correctamente", {
@@ -291,7 +304,10 @@ function SignInForm() {
           transition: Bounce,
         });
         // Redirigir al perfil del usuario
-        history.push("/perfil");
+        await login({
+			usr_correo: values.signinfrmemail,
+			usr_contrasenia: password,
+		  });
       } else {
         toast.error("Error al registrar el usuario", {
           position: "top-right",
@@ -305,7 +321,7 @@ function SignInForm() {
           transition: Bounce,
         });
       }
-
+	  
       // Manejo de la respuesta del backend
     } catch (error) {
       console.error(error);

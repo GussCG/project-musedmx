@@ -1,6 +1,9 @@
 import Usuario from "../models/auth.model.js";
 import { handleHttpError } from "../helpers/httpError.js";
 import { hash, compare } from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import fs from "fs";
+import path from "path";
 
 export const logIn = async (req, res) => {
 	try {
@@ -12,11 +15,12 @@ export const logIn = async (req, res) => {
 		if (!usr_correo || !usr_contrasenia) {
 			return res.status(400).json({
 				success: false,
-				message: "Faltan datos obligatorios",
+				message: "Correo y contraseña son requeridos",
 			});
 		}
 
 		const usuario = await Usuario.findById(usr_correo);
+		
 		if (!usuario) {
 			return res.status(404).json({
 				success: false,
@@ -30,11 +34,34 @@ export const logIn = async (req, res) => {
 				message: "Contraseña incorrecta",
 			});
 		}
-		// Aquí se puede generar un token JWT
-		res.json({
-			success: true,
-			message: "Inicio de sesión exitoso",
-			usuario,
+
+		const token = jwt.sign(
+			{ 
+				correo: usuario.usr_correo,
+				tipo: usuario.usr_tipo
+			}, process.env.JWT_SECRET, 
+			{ 
+				expiresIn: process.env.JWT_EXPIRES_IN 
+			});
+
+		// Guardar el token en una cookie
+		res.cookie("token", token, { 
+			httpOnly: true, 
+			secure: false, // Cambiar a true en producción
+			sameSite: 'Lax' // Cambiar a 'None' si se usa HTTPS
+		});			
+
+		res.status(200).json({
+			nombre: usuario.usr_nombre,
+			apPaterno: usuario.usr_ap_paterno,
+			apMaterno: usuario.usr_ap_materno,
+			email: usuario.usr_correo,
+			tipoUsuario: usuario.usr_tipo,
+			fecNac: usuario.usr_fecha_nac,
+			tel: usuario.usr_telefono,
+			//servir las fotos desde el servidor
+			foto: `http://localhost:3000/uploads/${usuario.usr_foto}`,
+			tematicas: usuario.usr_tematicas,
 		});
 	} catch (error) {
 		handleHttpError(res, "ERROR_LOGIN_USER", error);
@@ -43,16 +70,45 @@ export const logIn = async (req, res) => {
 
 export const signUp = async (req, res) => {
 	try {
-		const datos = req.body;
+		let { 
+            usr_correo, 
+            usr_nombre, 
+            usr_ap_paterno, 
+            usr_ap_materno, 
+            usr_contrasenia, 
+            usr_fecha_nac, 
+            usr_telefono, 
+            usr_tipo,
+			usr_tematicas
+        } = req.body;
+		const usr_foto = req.file ? req.file.filename : null;
 		
-		if (!datos.usr_correo || !datos.usr_nombre || !datos.usr_ap_paterno || !datos.usr_contrasenia || !datos.usr_fecha_nac || !datos.usr_tipo) {
+		if (usr_tematicas) {
+			usr_tematicas = JSON.parse(usr_tematicas); // Convertir a objeto JSON
+		} else {
+			usr_tematicas = [];
+		}
+
+		if (!usr_correo || !usr_nombre || !usr_ap_paterno || !usr_contrasenia || !usr_fecha_nac || !usr_tipo) {
 			return res.status(400).json({
 				success: false,
 				message: "Faltan datos obligatorios",
 			});
 		}
-		datos.usr_contrasenia = await hash(datos.usr_contrasenia, 10);
-		const usuario = await Usuario.signUp(datos);
+		
+		usr_contrasenia = await hash(usr_contrasenia, 10);
+		const usuario = await Usuario.signUp({
+			usr_correo,
+			usr_nombre,
+			usr_ap_paterno,
+			usr_ap_materno,
+			usr_contrasenia,
+			usr_fecha_nac,
+			usr_telefono,
+			usr_foto,
+			usr_tipo, 
+		}, usr_tematicas);
+
 		res.status(201).json({
 			success: true,
 			message: "Usuario creado",
@@ -64,29 +120,14 @@ export const signUp = async (req, res) => {
 };
 
 export const logOut = async (req, res) => {
-	// Si usamos JWT, se hace blacklist, si son sesiones, destruirlas
 	try {
-		res.json({
+		res.clearCookie("token"); // Limpiar la cookie del token
+		res.status(200).json({
 			success: true,
-			message: "Logout exitoso",
+			message: "Sesión cerrada",
 		});
 	} catch (error) {
 		handleHttpError(res, "ERROR_LOGOUT_USER", error);
-	}
-};
-
-export const updateUser = async (req, res) => {
-	try {
-		if (req.body.usr_contrasenia) {
-			req.body.usr_contrasenia = await hash(req.body.usr_contrasenia, 10);
-		}
-		const usuario = await Usuario.updateUser(req.body.usr_correo, req.body);
-		res.json({
-			success: true,
-			usuario,
-		});
-	} catch (error) {
-		handleHttpError(res, "ERROR_UPDATE_USER", error);
 	}
 };
 
@@ -107,3 +148,98 @@ export const deleteUser = async (req, res) => {
 		handleHttpError(res, "ERROR_DELETE_USER", error);
 	}
 }
+
+export const verifyUser = async (req, res) => {
+	try {
+		const { correo } = req.usuario; // Viene del token decodificado en el middleware
+	
+		const usuario = await Usuario.findById(correo);
+		if (!usuario) {
+		  return res.status(404).json({ message: "Usuario no encontrado" });
+		}
+	
+		res.status(200).json({
+		  usuario: {
+			nombre: usuario.usr_nombre,
+			apPaterno: usuario.usr_ap_paterno,
+			apMaterno: usuario.usr_ap_materno,
+			email: usuario.usr_correo,
+			tipoUsuario: usuario.usr_tipo,
+			fecNac: usuario.usr_fecha_nac,
+			tel: usuario.usr_telefono,
+			foto: `http://localhost:3000/uploads/${usuario.usr_foto}`,
+			tematicas: usuario.usr_tematicas,
+		  }
+		});
+	  } catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Error del servidor" });
+	  }
+};
+
+export const updateUser = async (req, res) => {
+	try {
+		const correoDelToken = req.usuario.correo; // viene del token decodificado
+
+		// Evita que editen a otro usuario
+		if (correoDelToken !== req.body.usr_correo) {
+			return res.status(403).json({ message: "No autorizado para editar este usuario" });
+		}
+
+		if (req.body.usr_contrasenia) {
+			req.body.usr_contrasenia = await hash(req.body.usr_contrasenia, 10);
+		}
+
+		// Obtener el usuario actual de la BD
+		const usuarioActual = await Usuario.findById(req.body.usr_correo);
+
+		// Validar si se subió una nueva imagen
+		if (req.file && usuarioActual.usr_foto && usuarioActual.usr_foto !== req.file.filename) {
+			const rutaAnterior = path.join("uploads", usuarioActual.usr_foto);
+	  
+			// Verifica que exista antes de borrar
+			if (fs.existsSync(rutaAnterior)) {
+			  fs.unlinkSync(rutaAnterior); // ❌ Borra la imagen anterior
+			  console.log("Imagen anterior eliminada:", usuarioActual.usr_foto);
+			}
+	  
+			req.body.usr_foto = req.file.filename; // ✅ Guardar la nueva en BD
+		} else if (!req.file) {
+			req.body.usr_foto = usuarioActual.usr_foto; // 🧠 Si no hay nueva, conservar la anterior
+		}
+
+		const usuario = await Usuario.updateUser(req.body.usr_correo, req.body);
+
+		res.json({
+			success: true,
+			usuario,
+		});
+	} catch (error) {
+		handleHttpError(res, "ERROR_UPDATE_USER", error);
+	}
+};
+
+/* export const recoverPassword = async (req, res) => {
+	try {
+		const { usr_correo } = req.body;
+		if (!usr_correo) {
+			return res.status(400).json({
+				success: false,
+				message: "Correo es requerido",
+			});
+		}
+
+
+		res.status(200).json({
+			success: true,
+			message: "Instrucciones para recuperar la contraseña enviadas al correo",
+		});
+	} catch (error) {
+		handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
+	}
+};
+
+		res.status(200).json({
+			success: true,
+			message: "Contraseña recuperada con éxito",
+		}); */

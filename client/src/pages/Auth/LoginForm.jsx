@@ -29,7 +29,7 @@ function LoginForm() {
     setShown(!shown);
   };
 
-  const [password, setPassword] = useState("");
+//   const [password, setPassword] = useState("");
 
   useEffect(() => {}, []);
 
@@ -52,8 +52,8 @@ function LoginForm() {
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 await login({
-                  email: values.login_frm_email,
-                  password: values.login_frm_password,
+                  usr_correo: values.login_frm_email,
+                  usr_contrasenia: values.login_frm_password,
                 });
               } catch (error) {
                 setErrorMessage(error.message);
@@ -62,7 +62,7 @@ function LoginForm() {
               }
             }}
           >
-            {({ handleChange, handleSubmit, isSubmitting }) => (
+            {({ values, handleChange, handleSubmit, isSubmitting }) => (
               <Form onSubmit={handleSubmit}>
                 <div className="login-field">
                   <input
@@ -70,6 +70,8 @@ function LoginForm() {
                     id="login-frm-email"
                     name="login_frm_email"
                     placeholder="Correo Electrónico"
+					onChange={handleChange}
+  					value={values.login_frm_email}
                     required
                   />
                   <label htmlFor="login-frm-email">Correo Electrónico</label>
@@ -80,8 +82,10 @@ function LoginForm() {
                     id="login-frm-password"
                     name="login_frm_password"
                     placeholder="Contraseña"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
+                    // onChange={(e) => setPassword(e.target.value)}
+                    // value={password}
+					onChange={handleChange}
+  					value={values.login_frm_password}
                     required
                   />
                   <label htmlFor="login-frm-password">Contraseña</label>
