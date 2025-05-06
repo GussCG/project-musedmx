@@ -49,6 +49,14 @@ export default class Museo {
     return rows;
   }
 
+  static async findById({ id }) {
+    const query = `SELECT * from museos WHERE mus_id = ?`;
+    const queryParams = [];
+    queryParams.push(id);
+    const [rows] = await pool.query(query, queryParams);
+    return rows;
+  }
+
   //   static async create(museoData) {
 
   //   }

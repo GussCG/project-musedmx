@@ -130,4 +130,4 @@ dist
 .pnp.*
 
 # museos-imagenes carpeta
-scripts/museos_imagenes
+scripts/images

@@ -128,6 +128,7 @@ const {
 } = Icons;
 
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
+import imgPrueba from "../../assets/images/others/museo-main-1.jpg";
 
 // Galeria de fotos Placeholder
 import galeriaFoto1 from "../../assets/images/others/museo-main-1.jpg";
@@ -159,6 +160,12 @@ import MapMuseoDetail from "../../components/MapMuseoDetail";
 import MuseoSlider from "../../components/MuseoSlider";
 import ImagenesSlider from "../../components/ImagenesSlider";
 import MuseoGallery from "../../components/MuseoGallery";
+import axios from "axios";
+
+import buildImage from "../../utils/buildImage";
+
+// BACKEND_URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
@@ -177,6 +184,23 @@ function MuseoDetail() {
 
   const { museoId } = useParams();
   const museoIdNumber = parseInt(museoId, 10);
+
+  const [museo, setMuseo] = useState({});
+
+  useEffect(() => {
+    const fetchMuseo = async (id) => {
+      try {
+        let endpoint = `${BACKEND_URL}/api/museos/${id}`;
+
+        const response = await axios.get(endpoint);
+        setMuseo(response.data.museo);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchMuseo(museoIdNumber);
+  }, [museoIdNumber]);
 
   const [isExisting, setIsExisting] = useState(false);
 
@@ -329,7 +353,7 @@ function MuseoDetail() {
             <section id="museo-section-1" className="museo-detail-item">
               <div className="museo-section-1-image">
                 <motion.img
-                  src={museoPlaceholder}
+                  src={buildImage(museoInfo.foto)}
                   alt="Museo"
                   layoutId={`museo-image-${museoIdNumber}`}
                   key={`detail-${museoIdNumber}`}
