@@ -236,10 +236,10 @@ function ProfileEdit() {
     //   });
 
       // Enviar los datos al backend
-	  console.log("Datos a enviar: ");
+	 /*  console.log("Datos a enviar: ");
 	  for (let pair of userData.entries()) {
 		console.log(pair[0]+ ': ' + pair[1]);
-	  }
+	  } */
       const response = await editarUsuario(userData);
 
       if (response) {

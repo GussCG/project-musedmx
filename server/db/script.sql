@@ -499,17 +499,6 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`tematicas` (
   PRIMARY KEY (`tm_nombre`)
   ) ENGINE=InnoDB;
 
-INSERT INTO `musedmx`.`tematicas` 
-VALUES 
-	('Antropología'),
-	('Arte'),
-	('Arte Alternativo'),
-	('Arqueología'),
-	('Ciencia y Tecnología'),
-	('Especializado'),
-	('Historia'),
-	('Otro');
-
 -- -----------------------------------------------------
 -- Table `musedmx`.`usuarios_has_tematicas`
 -- -----------------------------------------------------
@@ -559,7 +548,6 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos_has_servicios` (
 	ON UPDATE CASCADE
 	) ENGINE=InnoDB;
 
-select * from museos;
 select * from museos;
 SELECT * from usuarios;
 select * from administrador;
