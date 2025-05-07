@@ -564,7 +564,7 @@ function MuseoDetail() {
                   </p>
                 </div>
                 <div className="museo-section-2-ubicacion museo-detail-item">
-                  <MapMuseoDetail museo={museoPrueba} />
+                  <MapMuseoDetail museo={museoInfo} />
                 </div>
               </section>
               <MuseoGallery images={images} />
