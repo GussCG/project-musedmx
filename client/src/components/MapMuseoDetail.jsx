@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useMemo } from "react";
 import CustomAdvancedMarker from "./CustomAdvancedMarker";
 
-import { APIProvider, Map } from "@vis.gl/react-google-maps";
+import { APIProvider, Map, useMap } from "@vis.gl/react-google-maps";
 
 import { useTheme } from "../context/ThemeProvider";
-import buildImage from "../utils/buildImage";
+import { buildImage } from "../utils/buildImage";
+import { AnimatePresence, motion } from "framer-motion";
+import LoadingMessage from "./LoadingMessage";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function MapMuseoDetail({ museo }) {
   const { isDarkMode, isRetroMode } = useTheme();
+  const [isLoading, setIsLoading] = useState(true);
 
   const MAP_DETAIL = isRetroMode
     ? import.meta.env.VITE_MAP_RETROMODE_DETAIL_ID
@@ -17,43 +20,7 @@ function MapMuseoDetail({ museo }) {
     ? import.meta.env.VITE_MAP_DARKMODE_DETAIL_ID
     : import.meta.env.VITE_MAP_DETAIL_ID;
 
-  const [museoInfo, setMuseoInfo] = useState(null);
   const [apiKey, setApiKey] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (!museo) {
-      setMuseoInfo(null);
-      setLoading(false);
-      return;
-    } // Si no hay museo, no hacemos nada
-
-    try {
-      const info = {
-        id: museo.mus_id,
-        nombre: museo.mus_nombre,
-        coords: {
-          lat: museo.mus_g_latitud,
-          lng: museo.mus_g_longitud,
-        },
-        img: buildImage(museo),
-      };
-      setLoading(false);
-
-      if (isNaN(info.coords.lat) || isNaN(info.coords.lng)) {
-        setError("Coordenadas no válidas");
-        return;
-      }
-      setMuseoInfo(info);
-      setError(null);
-    } catch (error) {
-      setError("Error al procesar la información del museo: " + error.message);
-      setMuseoInfo(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [museo]);
 
   // Obtener la API Key de Google Maps desde el backend
   useEffect(() => {
@@ -66,29 +33,57 @@ function MapMuseoDetail({ museo }) {
   }, []);
 
   const mapCenter = useMemo(() => {
-    if (!museoInfo?.coords) return null;
-    return museoInfo.coords;
-  }, [museoInfo?.coords]);
+    if (!museo?.g_latitud || !museo?.g_longitud) return null;
+    return {
+      lat: parseFloat(museo.g_latitud),
+      lng: parseFloat(museo.g_longitud),
+    };
+  }, [museo?.g_latitud, museo?.g_longitud]);
 
-  console.log(mapCenter);
+  useEffect(() => {
+    if (museo?.g_latitud && museo.g_longitud && apiKey) {
+      setIsLoading(true);
+      const timeoutId = setTimeout(() => {
+        setIsLoading(false);
+      }, 1000); // Simular un tiempo de carga de 1 segundo
+
+      return () => clearTimeout(timeoutId); // Limpiar el timeout si el componente se desmonta
+    }
+  }, [museo, apiKey]);
 
   if (!apiKey) return <div>Cargando el mapa...</div>; // Mientras carga la API Key
   return (
     <APIProvider apiKey={apiKey}>
       <div className="map-container">
+        <AnimatePresence mode="wait">
+          {isLoading && (
+            <motion.div
+              key={"loading-message"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+            >
+              <LoadingMessage msg="Cargando museo en el mapa" />
+            </motion.div>
+          )}
+        </AnimatePresence>
         <Map
-          defaultZoom={17}
+          defaultZoom={19}
           center={mapCenter}
           mapId={MAP_DETAIL}
-          key={`${museoInfo?.id}-MAP-DETAIL`}
+          key={`${museo?.id}-MAP-DETAIL`}
+          disableDefaultUI={true}
+          streetViewControl={true}
+          zoomControl={true}
         >
           <CustomAdvancedMarker
-            key={museoInfo.id}
+            key={museo.id}
             lat={mapCenter.lat}
             lng={mapCenter.lng}
-            nombre={museoInfo.nombre}
-            imagen={museoInfo.img}
-            idMuseo={museoInfo.id}
+            nombre={museo.nombre}
+            imagen={buildImage(museo)}
+            idMuseo={museo.id}
           />
         </Map>
       </div>

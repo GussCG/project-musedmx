@@ -158,9 +158,12 @@
 
       margin: 10px;
 
-      img {
+      img,
+      svg {
         z-index: 19;
         height: 60px;
+        width: 60px;
+        fill: var(--museo-card-bg-image);
 
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
       }
@@ -193,7 +196,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: rgba(0, 0, 0, 0.9);
+      background-color: var(--museo-card-bg-image);
       border-top-right-radius: 20px;
       border-bottom-left-radius: 20px;
 
@@ -252,7 +255,7 @@
 
       #museo-card-alcaldia {
         font-size: 14px;
-        color: var(--museo-card-h1-color);
+        color: var(--museo-card-text-color);
         font-weight: $font-w-regular;
       }
     }
@@ -276,11 +279,12 @@
         .semibold {
           font-size: 18px;
           font-weight: $font-w-semibold;
+          color: var(--museo-card-h1-color);
         }
 
         p {
           font-size: 16px;
-          color: var(--museo-card-h1-color);
+          color: var(--museo-card-text-color);
           font-weight: $font-w-light;
           text-align: left;
 

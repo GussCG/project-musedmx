@@ -3,62 +3,25 @@ import { handleHttpError } from "../helpers/httpError.js";
 
 export const getMuseos = async (req, res) => {
   try {
-    const museos = await Museo.findAll(req.query);
+    // const { limit = 10, page = 1, search = "" } = req.query;
+    // const pageNumber = parseInt(page, 10);
+    // const offset = (pageNumber - 1) * limit;
+
+    const { search = "" } = req.query;
+    const [museos, total] = await Promise.all([
+      Museo.findAll({ search }),
+      Museo.countAll({ search }),
+    ]);
     res.json({
       success: true,
       count: museos.length,
       museos,
+      total,
+      // currentPage: pageNumber,
+      // totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_MUSEOS", error);
-  }
-};
-
-export const createMuseo = async (req, res) => {
-  try {
-    const museo = await Museo.create(req.body);
-    res.status(201).json(museo);
-  } catch (error) {
-    handleHttpError(res, "ERROR_CREATE_MUSEO", error);
-  }
-};
-
-export const getMuseosFiltrados = async (req, res) => {
-  try {
-    const {
-      tematicas = [],
-      alcaldias = [],
-      precioMin = 0,
-      precioMax = 100,
-    } = req.query;
-
-    const museos = await Museo.findWithFilters({
-      tematicas: Array.isArray(tematicas) ? tematicas : [tematicas],
-      alcaldias: Array.isArray(alcaldias) ? alcaldias : [alcaldias],
-      precioMin: parseFloat(precioMin),
-      precioMax: parseFloat(precioMax),
-    });
-    res.json({
-      success: true,
-      count: museos.length,
-      museos,
-    });
-  } catch (error) {
-    handleHttpError(res, "ERROR_GET_MUSEOS_FILTRADOS", error);
-  }
-};
-
-export const getMuseosBusqueda = async (req, res) => {
-  try {
-    const { search } = req.query;
-    const museos = await Museo.findWithFilters({ search: search });
-    res.json({
-      success: true,
-      count: museos.length,
-      museos,
-    });
-  } catch (error) {
-    handleHttpError(res, "ERROR_GET_MUSEOS_BUSQUEDA", error);
   }
 };
 
@@ -89,4 +52,25 @@ export const getMuseoById = async (req, res) => {
   }
 };
 
-// Aqui van mas funciones para los museos
+export const getGaleriaById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const galeria = await Museo.findGaleriaById({ id: id });
+    res.json({
+      success: true,
+      id,
+      galeria,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_GALERIA_ID", error);
+  }
+};
+
+export const createMuseo = async (req, res) => {
+  try {
+    const museo = await Museo.create(req.body);
+    res.status(201).json(museo);
+  } catch (error) {
+    handleHttpError(res, "ERROR_CREATE_MUSEO", error);
+  }
+};

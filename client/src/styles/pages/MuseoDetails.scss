@@ -34,22 +34,23 @@
 }
 
 #museo-section-1 {
+  position: relative;
   background-color: var(--bg-main);
   color: var(--font-color-primary);
   width: 100%;
   height: auto;
-  margin-top: 10px auto;
+  margin-top: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 20px;
   border-radius: 25px;
-
   box-shadow: var(--box-shadow-2);
-  position: relative;
+  overflow: hidden;
 
   .museo-section-1-image {
+    position: relative;
     width: 100%;
     max-width: 600px;
     height: 300px;
@@ -67,11 +68,57 @@
       object-fit: cover;
       object-position: center;
     }
+
+    .museo-fav-button-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      margin: 10px 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .museo-fav-button-span {
+        display: inline-block;
+        position: relative;
+        width: 45px;
+        height: 45px;
+        background: url("../../assets/icons/corazon-gris-icon.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+        transition: transform 0.3s ease-in-out,
+          background-image 0.3s ease-in-out;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      input {
+        display: none;
+      }
+
+      input:checked ~ span {
+        background-image: url("../../assets/icons/corazon-rojo-icon.png");
+      }
+
+      input ~ span:hover {
+        transform: scale(1.1);
+      }
+    }
   }
 
   .museo-section-1-container {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -87,58 +134,14 @@
       .museo-section-1-info-title {
         width: fit-content;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
-        gap: 20px;
 
         h1 {
-          font-size: 32px;
+          font-size: 1.5rem;
           font-weight: $font-w-bold;
           color: var(--font-color-primary);
           margin: 0;
-        }
-
-        .museo-fav-button-container {
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-          cursor: pointer;
-          margin: 10px 14px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-
-          .museo-fav-button-span {
-            display: inline-block;
-            position: relative;
-            width: 30px;
-            height: 30px;
-            background: url("../../assets/icons/corazon-gris-icon.png");
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-            transition: transform 0.3s ease-in-out,
-              background-image 0.3s ease-in-out;
-
-            img {
-              width: 100%;
-              height: 100%;
-            }
-          }
-
-          input {
-            display: none;
-          }
-
-          input:checked ~ span {
-            background-image: url("../../assets/icons/corazon-rojo-icon.png");
-          }
-
-          input ~ span:hover {
-            transform: scale(1.1);
-          }
         }
       }
 
@@ -157,16 +160,17 @@
         justify-content: flex-start;
         align-items: center;
         gap: 15px;
-        font-size: 20px;
+        font-size: 1rem;
         opacity: 0.5;
+        margin: 20px 0;
 
-        img,
-        svg {
-          width: 45px;
-          margin-right: 10px;
-          opacity: 0.5;
-          color: var(--font-color-primary);
-        }
+        // img,
+        // svg {
+        //   width: 45px;
+        //   margin-right: 10px;
+        //   opacity: 0.5;
+        //   color: var(--font-color-primary);
+        // }
       }
 
       .museo-section-1-info-horarios {
@@ -231,7 +235,7 @@
         }
 
         a:hover {
-          transform: scale(1.1);
+          transform: scale(1.3);
         }
 
         svg,
@@ -324,6 +328,22 @@
           margin: 0;
         }
       }
+    }
+  }
+
+  .museo-section-1-tematica-image {
+    position: absolute;
+    width: auto;
+    height: 150%;
+    top: 0;
+    right: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.1;
     }
   }
 }
@@ -543,6 +563,16 @@
       width: 100%;
       height: 100%;
       border-radius: 25px;
+    }
+
+    .museo-section-2-direccion {
+      width: 100%;
+      height: fit-content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 20px;
     }
   }
 }
@@ -1140,6 +1170,7 @@
 
 @media screen and (max-width: 1150px) {
   #museo-section-1 {
+    width: 110%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1200,6 +1231,10 @@
         flex-direction: row;
         margin: 20px;
       }
+    }
+
+    .museo-section-1-tematica-image {
+      display: none;
     }
   }
 }

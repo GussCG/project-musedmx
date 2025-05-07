@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import { ThreeDot } from "react-loading-indicators";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import MenuFiltroMuseo from "../../components/MenuFiltroMuseo";
 import { useSearchParams, useLocation } from "react-router";
@@ -63,31 +64,38 @@ function MuseosList({ titulo, tipo }) {
   const [museos, setMuseos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  // const [page, setPage] = useState(1);
+  // const [loadingMore, setLoadingMore] = useState(false);
+  // const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
+    // if (!hasMore) return;
+
     const fetchMuseos = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        let endpoint = `${BACKEND_URL}/api/museos`;
-        let params = {};
-
-        if (isBusquedaRoute && tituloBusqueda && tituloBusqueda !== "null") {
-          endpoint = `${BACKEND_URL}/api/museos/busqueda`;
-          params = { search: tituloSearch };
-        }
-
-        console.log("endpoint:", endpoint);
+        let endpoint = `${BACKEND_URL}/api/museos/`;
+        let params = {
+          // page: page,
+          ...(tituloSearch && { search: tituloSearch }),
+        };
 
         const response = await axios.get(endpoint, {
           params,
-          paramsSerializer: {
-            indexes: false,
-          },
         });
 
-        console.log("response:", response.data);
+        // const nuevosMuseos = response.data.museos.filter(
+        //   (nuevoMuseo) => !museos.some((m) => m.mus_id === nuevoMuseo.mus_id)
+        // );
+
+        // if (nuevosMuseos.length === 0) {
+        //   setHasMore(false);
+        // } else {
+        //   setMuseos((prevMuseos) => [...prevMuseos, ...nuevosMuseos]);
+        // }
+
         setMuseos(response.data.museos);
       } catch (error) {
         setError(error.message);
@@ -97,10 +105,28 @@ function MuseosList({ titulo, tipo }) {
       }
     };
 
-    // Debounce para evitar hacer demasiadas peticiones al backend
-    const timerId = setTimeout(fetchMuseos, 1000);
-    return () => clearTimeout(timerId);
+    fetchMuseos();
   }, [tituloBusqueda, tipo]);
+
+  // const handleScroll = () => {
+  //   if (!hasMore || loadingMore) return;
+
+  //   if (
+  //     window.innerHeight + document.documentElement.scrollTop + 100 >=
+  //     document.documentElement.scrollHeight
+  //   ) {
+  //     setLoadingMore(true);
+  //     setPage((prev) => prev + 1);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleScroll);
+
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   // Para cambiar la vista entre lista y mapa
   const { isMapView, setIsMapView } = useViewMode();
@@ -161,7 +187,7 @@ function MuseosList({ titulo, tipo }) {
 
   const sortedMuseos = [...museosAMostrar].sort((a, b) => {
     if (sortBy === "name") {
-      return a.mus_nombre.localeCompare(b.mus_nombre);
+      return b.mus_nombre.localeCompare(a.mus_nombre);
     } else if (sortBy === "rating") {
       return b.mus_calificacion - a.mus_calificacion;
     }
@@ -281,31 +307,43 @@ function MuseosList({ titulo, tipo }) {
           <section className="museos-container-section">
             {isLoading && (
               <div className="loading-indicator">
-                <ThreeDot
-                  color={["#004879", "#0067ac", "#0085df", "#13a0ff"]}
-                />
+                <ThreeDot width={50} height={50} color="#000" count={3} />
               </div>
             )}
-            {sortedMuseos.length === 0 && !isLoading && (
-              <motion.div
-                className="no-results"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                key="no-results"
-                transition={{ duration: 0.5 }}
-              >
-                <p>No se encontraron museos</p>
-                <p>Intenta con otra búsqueda o filtros</p>
-              </motion.div>
+            <div className="museos-container">
+              {sortedMuseos.length === 0 && !isLoading ? (
+                <motion.div
+                  className="no-results"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  key="no-results"
+                  transition={{ duration: 0.5 }}
+                >
+                  <p>No se encontraron museos</p>
+                  <p>Intenta con otra búsqueda o filtros</p>
+                </motion.div>
+              ) : (
+                sortedMuseos.map((museo) => (
+                  <MuseoCard
+                    key={museo.mus_id}
+                    museo={museo}
+                    editMode={false}
+                    sliderType={null}
+                  />
+                ))
+              )}
+            </div>
+
+            {/* {loadingMore && (
+              <div className="loading-more-indicator">
+                <ThreeDot width={50} height={50} color="#000" count={3} />
+              </div>
             )}
-            {sortedMuseos.map((museo) => (
-              <MuseoCard
-                key={museo.mus_id}
-                museo={museo}
-                initial={{ scale: 1, opacity: 0, y: 20 }}
-              />
-            ))}
+
+            {!hasMore && (
+              <p className="nomoremuseos">No hay mas museos para cargar</p>
+            )} */}
           </section>
         )}
       </main>
@@ -328,7 +366,10 @@ function MuseosList({ titulo, tipo }) {
                   top: 0,
                   behavior: "smooth",
                 });
+                // setPage(1);
+                // setLoadingMore(false);
               }}
+              title="Regresar al inicio"
             >
               <FaAngleDoubleUp />
             </button>

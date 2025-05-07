@@ -150,17 +150,43 @@
   }
 
   .museos-container-section {
-    width: 90%;
+    width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax($mc-width, 1fr));
-    gap: 30px;
-    padding: 20px;
     margin: 0 auto;
-
-    justify-content: space-around;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    text-align: center;
+
+    .museos-container {
+      width: 100%;
+      height: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax($mc-width, 1fr));
+      gap: 30px;
+      padding: 20px;
+      margin: 0 auto;
+
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+    }
+
+    .loading-more-indicator {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
+    }
+
+    .nomoremuseos {
+      font-size: 1.2rem;
+      color: var(--font-color-primary);
+      font-weight: $font-w-bold;
+      text-align: center;
+      margin: 20px auto;
+    }
 
     @media screen and (max-width: 600px) {
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

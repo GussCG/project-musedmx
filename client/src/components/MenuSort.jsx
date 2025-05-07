@@ -20,7 +20,7 @@ const MenuSort = forwardRef(({ sortBy, onSortChange }, ref) => {
       transition={{ duration: 0.3 }}
     >
       <div className="menu-sort-item">
-        <label htmlFor="sort-alf">A-Z</label>
+        <label htmlFor="sort-alf">Z-A</label>
         <label className="filtro-rad">
           <input
             type="radio"
