@@ -1,94 +1,127 @@
-import React, { act, useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AdvancedMarker, InfoWindow } from "@vis.gl/react-google-maps";
-
 import { AnimatePresence, motion } from "framer-motion";
-
 import foto_default from "../assets/images/others/museo-main-1.jpg";
-
-import { useNavigate, Link } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 import Icons from "./IconProvider";
-const { museoIcon } = Icons;
 
-const MapMuseoDetailMarker = React.memo(
-  ({ museo, activeMuseo, setActiveMuseo }) => {
-    const [localHovered, setLocalHovered] = useState(false);
-    const [wasClicked, setWasClicked] = useState(false);
+const { museoIcon, CgClose, FaStar } = Icons;
 
-    const handleMouseEnter = useCallback(() => {
-      setIsHovered(true);
-      setActiveMuseo(museo);
-    }, [museo, setActiveMuseo]);
+const MapMuseoDetailMarker = React.memo(({ museo, isActive, onActivate }) => {
+  const [wasClicked, setWasClicked] = useState(false);
 
-    const handleMouseLeave = useCallback(() => {
-      setLocalHovered(false);
-      if (!wasClicked) {
-        setActiveMuseo(null);
+  if (!museo) return null;
+
+  const handleMarkerClick = useCallback(
+    (e) => {
+      if (e && typeof e.stopPropagation === "function") {
+        e.stopPropagation();
       }
-    }, [wasClicked, setActiveMuseo]);
-
-    const handleClick = useCallback(() => {
       setWasClicked(true);
-      setActiveMuseo(museo);
-    }, [museo, setActiveMuseo]);
+      onActivate(museo);
+    },
+    [museo, onActivate]
+  );
 
-    const handleClose = useCallback(() => {
+  const handleMouseEnter = useCallback(() => {
+    if (!wasClicked) {
+      onActivate(museo);
+    }
+  }, [museo, onActivate, wasClicked]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!wasClicked) {
+      onActivate(null);
+    }
+  }, [wasClicked, onActivate]);
+
+  const handleClose = useCallback(
+    (e) => {
+      e?.stopPropagation();
       setWasClicked(false);
-      setActiveMuseo(null);
-    }, [setActiveMuseo]);
+      onActivate(null);
+    },
+    [onActivate]
+  );
 
-    const shouldShowInfoWindow =
-      activeMuseo?.mus_id === museo.mus_id && (localHovered || wasClicked);
+  return (
+    <>
+      <AdvancedMarker
+        position={{
+          lat: museo.mus_g_latitud,
+          lng: museo.mus_g_longitud,
+        }}
+        onClick={handleMarkerClick}
+        onMouseOver={handleMouseEnter}
+        onMouseOut={handleMouseLeave}
+      >
+        <div className="museo-marker-icon">
+          <img src={museoIcon} alt="Museo Icon" className="museo-icon" />
+        </div>
+      </AdvancedMarker>
 
-    return (
-      <>
-        <AdvancedMarker
-          position={{
-            lat: museo.mus_g_latitud,
-            lng: museo.mus_g_longitud,
-          }}
-          onClick={handleClick}
-          onMouseOver={handleMouseEnter}
-          onMouseOut={handleMouseLeave}
-        >
-          <div className="museo-marker-icon">
-            <img src={museoIcon} alt="Museo Icon" className="museo-icon" />
-          </div>
-        </AdvancedMarker>
-
-        {shouldShowInfoWindow && (
-          <AnimatePresence>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.2 }}
-              key={museo.mus_id}
+      <AnimatePresence>
+        {isActive && (
+          <div className="info-window-container">
+            <InfoWindow
+              position={{
+                lat: museo.mus_g_latitud,
+                lng: museo.mus_g_longitud,
+              }}
+              onCloseClick={handleClose}
+              className="info-window"
+              headerDisabled={true}
             >
-              <InfoWindow
-                position={{
-                  lat: museo.mus_g_latitud,
-                  lng: museo.mus_g_longitud,
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: 0.2,
+                  ease: "easeInOut",
                 }}
-                onCloseClick={handleClose}
-                className="info-window"
+                key={museo.mus_id}
               >
+                <button
+                  className="info-window-close-btn"
+                  onClick={handleClose}
+                  aria-label="Cerrar ventana"
+                >
+                  <CgClose />
+                </button>
                 <div className="info-window-content">
-                  <img
-                    src={museo.mus_foto || foto_default}
-                    alt={museo.mus_nombre}
-                    className="info-window-image"
-                    loading="lazy"
-                  />
-                  <Link to={`/Museos/${museo.mus_id}`}>{museo.mus_nombre}</Link>
+                  <div className="info-window-img">
+                    <img
+                      src={museo.mus_foto || foto_default}
+                      alt={museo.mus_nombre}
+                      className="info-window-image"
+                      loading="lazy"
+                    />
+
+                    <div className="info-window-img-overlay">
+                      <div className="info-window-img-rate">
+                        <span className="info-window-img-rate-text">
+                          {museo.mus_calificacion || 3.5}
+                        </span>
+                        <span className="info-window-img-rate-icon">
+                          <FaStar />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="info-window-title">
+                    <Link to={`/Museos/${museo.mus_id}`}>
+                      {museo.mus_nombre}
+                    </Link>
+                  </div>
                 </div>
-              </InfoWindow>
-            </motion.div>
-          </AnimatePresence>
+              </motion.div>
+            </InfoWindow>
+          </div>
         )}
-      </>
-    );
-  }
-);
+      </AnimatePresence>
+    </>
+  );
+});
 
 export default MapMuseoDetailMarker;

@@ -1,130 +1,129 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
 
 import Icons from "../components/IconProvider";
-const { corazonIcon, IoSearch, editarIcon } = Icons;
+const { corazonIcon, IoSearch, IoSettings } = Icons;
 
 import MuseoSlider from "../components/MuseoSlider";
 import { Link } from "react-router";
+import QVSearch from "./QVSearch";
 
 function UsuarioPage() {
   const [editMode, setEditMode] = useState(false);
 
   // Estos se obtendrían de la base de datos
   // De momento, se pondran valores de ejemplo
-  const museoEjemplo = {
-    id: 1,
-    nombre: "Museo de Historia Natural",
+
+  const museoPrueba = {
+    mus_id: 1,
+    mus_nombre: "Museo de Prueba1",
     horarios: {
       Lunes: "9:00 - 18:00",
-      Martes: "10:00 - 18:00",
+      Martes: "9:00 - 18:00",
       Miercoles: "9:00 - 18:00",
-      Jueves: "10:00 - 18:00",
-      Viernes: "10:00 - 18:00",
-      Sabado: "10:00 - 18:00",
-      Domingo: "13:00 - 18:00",
+      Jueves: "9:00 - 18:00",
+      Viernes: "9:00 - 18:00",
+      Sabado: "9:00 - 14:00",
+      Domingo: "9:00 - 14:00",
     },
-    img: "../assets/images/others/museo-main-1.jpg",
-    calificacion: 4,
+    mus_foto:
+      "https://www.shutterstock.com/image-photo/san-francisco-california-usa-1-600nw-2424683443.jpg",
+    mus_calificacion: 4,
     costo: 0,
-    distancia: 4.5,
-    alcaldia: "Cuauhtémoc",
+    coords: {
+      lat: 19.426111111111,
+      lng: -99.186111111111,
+    },
+    mus_tematica: 5,
+    mus_alcaldia: "Alcaldía de Prueba",
   };
 
-  const museoEjemplo2 = {
-    id: 2,
-    nombre: "Museo del Perfume",
+  const museoPrueba2 = {
+    mus_id: 2,
+    mus_nombre: "Museo de Prueba2",
     horarios: {
       Lunes: "9:00 - 18:00",
-      Martes: "10:00 - 18:00",
+      Martes: "9:00 - 18:00",
       Miercoles: "9:00 - 18:00",
-      Jueves: "10:00 - 18:00",
-      Viernes: "10:00 - 18:00",
-      Sabado: "10:00 - 18:00",
-      Domingo: "9:00 - 18:00",
+      Jueves: "9:00 - 18:00",
+      Viernes: "9:00 - 18:00",
+      Sabado: "9:00 - 14:00",
+      Domingo: "9:00 - 14:00",
     },
-    img: "../assets/images/others/museo-main-2.jpg",
-    calificacion: 5,
-    costo: 2,
-    distancia: 3.5,
-    alcaldia: "Cuauhtémoc",
+    mus_foto: "https://i.ytimg.com/vi/tYI2eJZDHYQ/maxresdefault.jpg",
+    mus_calificacion: 4,
+    costo: 0,
+    coords: {
+      lat: 19.426111111111,
+      lng: -99.186111111111,
+    },
+    mus_tematica: 2,
+    mus_alcaldia: "Alcaldía de Prueba",
   };
 
-  const museoEjemplo3 = {
-    id: 3,
-    nombre: "Museo del Castillo de Chapultepec",
+  const museoPrueba3 = {
+    mus_id: 3,
+    mus_nombre: "Museo de Prueba3",
     horarios: {
       Lunes: "9:00 - 18:00",
-      Martes: "10:00 - 18:00",
+      Martes: "9:00 - 18:00",
       Miercoles: "9:00 - 18:00",
-      Jueves: "10:00 - 18:00",
-      Viernes: "10:00 - 18:00",
-      Sabado: "10:00 - 18:00",
-      Domingo: "",
+      Jueves: "9:00 - 18:00",
+      Viernes: "9:00 - 18:00",
+      Sabado: "9:00 - 14:00",
+      Domingo: "9:00 - 14:00",
     },
-    img: "../assets/images/others/museo-main-2.jpg",
-    calificacion: 5,
-    costo: 3,
-    distancia: 2.5,
-    alcaldia: "Cuauhtémoc",
+    mus_foto:
+      "https://th.bing.com/th/id/OIP.Dk9hzhtZz6ip3svewvBlGQHaEK?rs=1&pid=ImgDetMain",
+    mus_calificacion: 4,
+    costo: 0,
+    coords: {
+      lat: 19.426111111111,
+      lng: -99.186111111111,
+    },
+    mus_tematica: 2,
+    mus_alcaldia: "Alcaldía de Prueba",
   };
 
-  const museoEjemplo4 = {
-    id: 4,
-    nombre: "Museo del Castillo de Chapultepec",
+  const museoPrueba4 = {
+    mus_id: 4,
+    mus_nombre: "Museo de Prueba4",
     horarios: {
       Lunes: "9:00 - 18:00",
-      Martes: "10:00 - 18:00",
+      Martes: "9:00 - 18:00",
       Miercoles: "9:00 - 18:00",
-      Jueves: "10:00 - 18:00",
-      Viernes: "10:00 - 18:00",
-      Sabado: "10:00 - 18:00",
-      Domingo: "",
+      Jueves: "9:00 - 18:00",
+      Viernes: "9:00 - 18:00",
+      Sabado: "9:00 - 14:00",
+      Domingo: "9:00 - 14:00",
     },
-    img: "../assets/images/others/museo-main-2.jpg",
-    calificacion: 5,
-    costo: 3,
-    distancia: 1.5,
-    alcaldia: "Cuauhtémoc",
-  };
-
-  const museoEjemplo5 = {
-    id: 5,
-    nombre: "Museo del Castillo de Chapultepec",
-    horarios: {
-      Lunes: "9:00 - 18:00",
-      Martes: "10:00 - 18:00",
-      Miercoles: "9:00 - 18:00",
-      Jueves: "10:00 - 18:00",
-      Viernes: "10:00 - 18:00",
-      Sabado: "10:00 - 18:00",
-      Domingo: "",
+    mus_foto: "https://media.timeout.com/images/103167639/image.jpg",
+    mus_calificacion: 4,
+    costo: 0,
+    coords: {
+      lat: 19.426111111111,
+      lng: -99.186111111111,
     },
-    img: "../assets/images/others/museo-main-2.jpg",
-    calificacion: 5,
-    costo: 3,
-    distancia: 0.5,
-    alcaldia: "Cuauhtémoc",
+    mus_tematica: 2,
+    mus_alcaldia: "Alcaldía de Prueba",
   };
 
   const museosFavoritos = {
-    museoEjemplo,
-    museoEjemplo2,
-    museoEjemplo3,
-    museoEjemplo4,
-    museoEjemplo5,
+    museoPrueba,
+    museoPrueba2,
+    museoPrueba3,
+    museoPrueba4,
   };
 
   // Estos se obtendrían de la base de datos
   // De momento, se pondran valores de ejemplo
   const museosQuieroVisitar = {
-    museoEjemplo,
-    museoEjemplo2,
-    museoEjemplo3,
-    museoEjemplo4,
-    museoEjemplo5,
+    museoPrueba,
+    museoPrueba2,
+    museoPrueba3,
+    museoPrueba4,
   };
 
   return (
@@ -155,26 +154,13 @@ function UsuarioPage() {
           <div className="section-header">
             <h2>Museos que quiero visitar</h2>
             <div className="section-header-controller">
-              {" "}
-              <div className="nav-bar">
-                <form>
-                  <button type="submit">
-                    <IoSearch />
-                  </button>
-                  <input
-                    type="text"
-                    name="search"
-                    id="search"
-                    placeholder="Buscar museo para agregar"
-                  />
-                </form>
-              </div>
+              <QVSearch />
               <button
                 type="button"
                 id="editar-button"
                 onClick={() => setEditMode(!editMode)}
               >
-                <img src={editarIcon} alt="Editar" />
+                <span>{editMode ? "Salir" : "Editar"}</span>
               </button>
             </div>
           </div>

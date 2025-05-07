@@ -6,6 +6,8 @@
   grid-template-rows: 100px 1fr;
   margin: 40px auto;
 
+  overflow: hidden;
+
   .museos-header-section {
     width: 100%;
     height: 100%;
@@ -16,14 +18,31 @@
     padding: 0 40px;
 
     .museos-header-section-left {
-      width: fit-content;
+      width: auto;
       display: flex;
       align-items: center;
+      justify-content: flex-start;
       gap: 14px;
 
-      h1 {
-        font-size: 1.5rem;
-        color: var(--font-color-primary);
+      .museos-header-section-left-tittles {
+        width: fit-content;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+
+        h1 {
+          font-size: 1.5rem;
+          color: var(--font-color-primary);
+          padding: 30px 0 0 0;
+        }
+
+        p {
+          font-size: 1rem;
+          color: var(--font-color-primary);
+          font-weight: $font-w-light;
+        }
       }
 
       button {
@@ -54,7 +73,9 @@
 
       @media screen and (max-width: 1473px) {
         h1 {
-          font-size: 24px;
+          font-size: 1.2rem;
+          max-width: 300px;
+          height: auto;
         }
 
         button {
@@ -63,12 +84,20 @@
           }
         }
       }
+
+      @media screen and (max-width: 700px) {
+        h1,
+        p {
+          display: none;
+        }
+      }
     }
 
     .museos-header-section-right {
       display: flex;
       align-items: center;
       gap: 60px;
+      // margin-top: 50px;
 
       a {
         width: 50px;
@@ -111,7 +140,7 @@
           opacity: 0.7;
         }
 
-        @media (max-width: 720px) {
+        @media (max-width: 1473px) {
           p {
             display: none;
           }
@@ -124,7 +153,7 @@
     width: 90%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax($mc-width, auto));
+    grid-template-columns: repeat(auto-fit, minmax($mc-width, 1fr));
     gap: 30px;
     padding: 20px;
     margin: 0 auto;
@@ -132,6 +161,10 @@
     justify-content: space-around;
     align-items: center;
     text-align: center;
+
+    @media screen and (max-width: 600px) {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
   }
 
   .loading-indicator {
@@ -147,7 +180,7 @@
     width: 90%;
     height: auto;
 
-    background-color: rgb(29, 29, 29);
+    background-color: var(--no-results-bg);
 
     border-radius: 25px;
 
@@ -252,6 +285,7 @@
                 border-radius: 50%;
 
                 transition: background-color 0.3s ease-in-out;
+
                 &:hover {
                   background-color: rgba(0, 0, 0, 0.2);
                 }
@@ -322,7 +356,7 @@
 
       .museos-map-container {
         width: 90%;
-        height: 600px;
+        height: 650px;
         max-height: 100%;
         display: flex;
         justify-content: center;
@@ -330,12 +364,543 @@
         margin: 20px auto 20px auto;
 
         border-radius: 25px;
+        position: relative;
+
+        .btn-map-container {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          z-index: 500;
+          pointer-events: none;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .btn-map {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border: none;
+            background-color: transparent;
+            border: 3px solid var(--btn-ayuda-border);
+            border-radius: 10px;
+            pointer-events: all;
+
+            cursor: pointer;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
+
+            transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+
+            &:hover > .btn-map-bg {
+              filter: brightness(0.8);
+            }
+
+            &:hover {
+              transform: scale(1.1);
+            }
+
+            .btn-map-bg {
+              width: 100%;
+              height: 100%;
+              z-index: 1001;
+              position: absolute;
+              background-color: var(--btn-ayuda-bg);
+              border-radius: 7px;
+
+              transition: filter 0.3s ease-in-out;
+            }
+
+            svg {
+              z-index: 1002;
+              width: 25px;
+              height: 25px;
+              color: var(--btn-ayuda-color);
+            }
+          }
+
+          .btn-dropdown-container {
+            width: auto;
+            height: auto;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            pointer-events: all;
+
+            button {
+              width: auto;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 10px;
+              padding: 10px;
+
+              .arrow-dd {
+                width: 25px;
+                height: 25px;
+                z-index: 1002;
+              }
+            }
+
+            .btn-dropdown-content {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              gap: 5px;
+            }
+          }
+
+          #dd-travel-mode {
+            top: 10px;
+            left: 10px;
+          }
+
+          #dd-map-type {
+            top: 10px;
+            left: 100px;
+          }
+
+          #btn-map-user-location {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+          }
+        }
 
         .map-container {
           width: 100%;
           height: 100%;
           border-radius: 25px;
           overflow: hidden;
+
+          .map-info {
+            width: 60%;
+            max-width: 500px;
+            height: auto;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--bg-map-info);
+            border-radius: 10px;
+            text-align: left;
+            padding: 20px;
+
+            z-index: 101;
+
+            hr {
+              margin: 10px 0;
+
+              border: 1px solid rgba(0, 0, 0, 0.2);
+            }
+
+            h4 {
+              font-size: 1.4rem;
+              color: var(--font-color-primary);
+            }
+
+            p {
+              width: 100%;
+              font-size: 1rem;
+              color: var(--font-color-primary);
+            }
+
+            .close-button {
+              position: absolute;
+              top: 10px;
+              right: 10px;
+
+              width: 30px;
+              height: 30px;
+
+              border: none;
+              background-color: transparent;
+
+              cursor: pointer;
+
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              svg {
+                width: 100%;
+                height: auto;
+                color: var(--font-color-primary);
+
+                transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+                &:hover {
+                  opacity: 0.7;
+                  transform: scale(1.1);
+                }
+              }
+            }
+
+            .routes-alt {
+              width: 100%;
+              height: auto;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: flex-end;
+              margin-top: 10px;
+
+              ul {
+                width: 100%;
+                height: auto;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-end;
+
+                li {
+                  list-style: none;
+
+                  button {
+                    background-color: transparent;
+                    border: none;
+                    color: var(--color-a-2);
+                    font-size: 1rem;
+                    font-weight: $font-w-regular;
+                    font-family: $font-primary;
+                    cursor: pointer;
+                    text-align: right;
+
+                    transition: opacity 0.3s ease-in-out,
+                      font-weight 0.3s ease-in-out;
+
+                    &:hover {
+                      opacity: 0.7;
+                      font-weight: $font-w-bold;
+                    }
+                  }
+                }
+              }
+            }
+
+            .museos-list {
+              list-style: none;
+              width: 100%;
+              max-height: 300px;
+              overflow-y: auto;
+              overflow-x: hidden;
+              padding: 5px;
+
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+
+              box-sizing: border-box;
+
+              margin-top: 10px;
+
+              // Scrollbar
+              &::-webkit-scrollbar {
+                width: 10px;
+                background-color: var(--bg-museo-list-item);
+                border-radius: 10px;
+              }
+
+              &::-webkit-scrollbar-thumb {
+                background-color: var(--museo-list-scrollbar-thumb);
+                border-radius: 10px;
+              }
+
+              .museo-list-item {
+                background-color: var(--bg-museo-list-item);
+                width: 99%;
+                height: auto;
+                min-height: 124px;
+
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 10px;
+                justify-content: center;
+                align-items: start;
+                padding: 10px;
+
+                border-radius: 10px;
+                box-sizing: border-box;
+
+                .museo-list-item-img {
+                  position: relative;
+                  width: 132px;
+                  height: 100%;
+                  border-radius: 10px;
+                  overflow: hidden;
+
+                  img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  }
+
+                  .museo-list-item-distance {
+                    position: absolute;
+                    width: auto;
+                    max-width: 70px;
+                    height: auto;
+
+                    border-top-right-radius: 5px;
+
+                    bottom: 0;
+                    left: 0;
+                    background-color: black;
+
+                    padding: 5px 10px;
+
+                    p {
+                      color: white;
+                      font-size: 1rem;
+                      text-align: center;
+                      font-weight: $font-w-semibold;
+                    }
+                  }
+
+                  .museo-list-item-rank {
+                    @extend .museo-list-item-distance;
+                    top: 0;
+                    left: 0;
+                    bottom: auto;
+                    padding: 10px;
+
+                    border-bottom-right-radius: 5px;
+                  }
+                }
+
+                .museo-list-item-info {
+                  width: 100%;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: flex-start;
+
+                  .museo-list-item-name {
+                    width: 100%;
+                    height: auto;
+                    font-size: 1.2rem;
+                    color: var(--font-color-primary);
+                    font-weight: $font-w-bold;
+
+                    a {
+                      text-decoration: none;
+                    }
+
+                    transition: opacity 0.3s ease-in-out;
+
+                    &:hover {
+                      opacity: 0.5;
+                    }
+                  }
+
+                  .museo-list-item-tiempo,
+                  .museo-list-item-tematica {
+                    p {
+                      font-size: 0.8rem;
+                      padding-top: 10px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .map-change-location-container {
+            width: auto;
+            height: auto;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
+
+            #btn-change-location {
+              width: 75px;
+              height: 50px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 5px;
+              border-radius: 10px;
+              border: 3px solid var(--btn-ayuda-border);
+              cursor: pointer;
+              pointer-events: all;
+              background-color: var(--btn-ayuda-bg);
+
+              transition: transform 0.3s ease-in-out;
+
+              svg {
+                width: 25px;
+                height: auto;
+                color: var(--btn-ayuda-color);
+              }
+
+              &:hover {
+                transform: scale(1.1);
+              }
+            }
+
+            .map-change-location-dropdown {
+              width: auto;
+              min-width: 400px;
+              height: 50px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 10px;
+              gap: 10px;
+
+              padding: 0 20px;
+
+              background-color: var(--btn-ayuda-bg);
+              border: 3px solid var(--btn-ayuda-border);
+
+              input {
+                width: 100%;
+                height: 100%;
+                background-color: transparent;
+                border: none;
+                outline: none;
+                font-size: 1rem;
+                font-family: $font-primary;
+                font-weight: $font-w-regular;
+                color: var(--font-color-primary);
+              }
+
+              svg {
+                width: 25px;
+                height: auto;
+                color: var(--btn-ayuda-color);
+              }
+            }
+          }
+
+          .btn-map {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border: none;
+            background-color: transparent;
+            border: 3px solid var(--btn-ayuda-border);
+            border-radius: 10px;
+            pointer-events: all;
+
+            cursor: pointer;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
+
+            transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+
+            &:hover > .btn-map-bg {
+              filter: brightness(0.8);
+            }
+
+            &:hover {
+              transform: scale(1.1);
+            }
+
+            .btn-map-bg {
+              width: 100%;
+              height: 100%;
+              z-index: 1001;
+              position: absolute;
+              background-color: var(--btn-ayuda-bg);
+              border-radius: 7px;
+
+              transition: filter 0.3s ease-in-out;
+            }
+
+            svg {
+              z-index: 1002;
+              width: 25px;
+              height: 25px;
+              color: var(--btn-ayuda-color);
+            }
+          }
+
+          #btn-map-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--btn-ayuda-bg);
+            border: 3px solid var(--btn-ayuda-border);
+            border-radius: 10px;
+            pointer-events: all;
+
+            cursor: pointer;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
+
+            transition: transform 0.3s ease-in-out;
+
+            z-index: 100;
+
+            svg {
+              width: 25px;
+              height: 25px;
+              color: var(--btn-ayuda-color);
+            }
+
+            &:hover {
+              transform: scale(1.1);
+            }
+          }
+
+          #btn-map-routes {
+            position: absolute;
+            bottom: 70px;
+            left: 10px;
+          }
+        }
+
+        .gm-svpc {
+          position: absolute !important;
+          width: 50px !important;
+          height: 50px !important;
+          background-color: var(--btn-ayuda-bg) !important;
+          border: 3px solid var(--btn-ayuda-border) !important;
+          border-radius: 10px !important;
+          pointer-events: all;
+          margin-bottom: 10px !important;
+
+          cursor: pointer;
+
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+
+          box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21) !important;
+
+          transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out !important;
+        }
+
+        .gm-style-cc,
+        .gmnoprint {
+          display: none !important;
         }
       }
     }
@@ -350,8 +915,9 @@
   height: 50px;
   background-color: var(--bg-navbar);
   border-radius: 50%;
+  z-index: 1000;
 
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
 
   button {
     width: 100%;
@@ -369,11 +935,18 @@
       width: 30px;
       height: auto;
       color: black;
+
+      transition: filter 0.3s ease-in-out;
     }
   }
 
   &:hover {
     transform: scale(1.2);
+    background-color: rgb(0, 0, 71);
+
+    svg {
+      filter: invert(1);
+    }
   }
 }
 
@@ -398,20 +971,24 @@
 
 @media screen and (max-width: 600px) {
   .museo-card {
-    width: 100%;
-    max-width: 300px;
-    height: 100%;
-    max-height: 200px;
+    width: auto;
+    max-width: 200px;
+    height: auto;
+    max-height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin: 0 auto;
 
-    .museo-card-info-header {
-      height: 100%;
-    }
-
     .museo-card-info-container {
+      .museo-card-info-header {
+        width: 100%;
+
+        #museo-card-nombre {
+          font-size: 1rem;
+        }
+      }
+
       .museo-card-info-body {
         display: none;
       }

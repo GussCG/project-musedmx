@@ -15,6 +15,7 @@ const {
   IoSunny,
   FaMoon,
   SiRetroarch,
+  MdMuseum,
 } = Icons;
 
 import { useAuth } from "../context/AuthProvider";
@@ -75,14 +76,25 @@ function MenuUsuario({ className }) {
         )}
 
         {user?.tipoUsuario === 2 && (
-          <div className="menu-usuario-body-item">
-            <div className="menu-usuario-body-item-img-container">
-              <img src={modIcon} alt="Historial de visitas" />
+          <>
+            <div className="menu-usuario-body-item">
+              <div className="menu-usuario-body-item-img-container">
+                <img src={modIcon} alt="Historial de visitas" />
+              </div>
+              <Link id="body-item-link" to={`/${tipoUsuario}/VerMods`}>
+                Moderadores
+              </Link>
             </div>
-            <Link id="body-item-link" to={`/${tipoUsuario}/VerMods`}>
-              Moderadores
-            </Link>
-          </div>
+
+            <div className="menu-usuario-body-item">
+              <div className="menu-usuario-body-item-img-container">
+                <MdMuseum />
+              </div>
+              <Link id="body-item-link" to={`/${tipoUsuario}/Museo/Registrar`}>
+                Registrar Museo
+              </Link>
+            </div>
+          </>
         )}
 
         {user?.tipoUsuario === 3 && (

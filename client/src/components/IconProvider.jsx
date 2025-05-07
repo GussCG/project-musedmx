@@ -121,6 +121,35 @@ import { RiMapPinUserFill } from "react-icons/ri";
 import { SiRetroarch } from "react-icons/si";
 import { FaAngleDoubleUp } from "react-icons/fa";
 
+import { MdMuseum } from "react-icons/md";
+import { IoMenu } from "react-icons/io5";
+import { TbRouteSquare } from "react-icons/tb";
+
+// Travel modes
+import { FaCar } from "react-icons/fa";
+import { FaBicycle } from "react-icons/fa6";
+import { FaPersonWalking } from "react-icons/fa6";
+import { FaBus } from "react-icons/fa6";
+
+import { FaInfo } from "react-icons/fa6";
+
+// Tipos de mapa
+import { FaRoad } from "react-icons/fa6";
+import { FaSatellite } from "react-icons/fa6";
+import { MdTerrain } from "react-icons/md";
+import { IoMapSharp } from "react-icons/io5";
+
+import { TbRadar2 } from "react-icons/tb";
+
+import { RiFireFill } from "react-icons/ri";
+import { TbLocationPin } from "react-icons/tb";
+
+import { IoIosArrowBack } from "react-icons/io";
+import { FaArrowCircleLeft } from "react-icons/fa";
+import { FaArrowCircleRight } from "react-icons/fa";
+
+import { IoSettings } from "react-icons/io5";
+
 const Icons = {
   estrellaIcon,
   moneyIcon,
@@ -201,6 +230,25 @@ const Icons = {
   RiMapPinUserFill,
   SiRetroarch,
   FaAngleDoubleUp,
+  MdMuseum,
+  IoMenu,
+  TbRouteSquare,
+  FaCar,
+  FaBicycle,
+  FaPersonWalking,
+  FaBus,
+  FaInfo,
+  FaRoad,
+  FaSatellite,
+  MdTerrain,
+  IoMapSharp,
+  TbRadar2,
+  RiFireFill,
+  TbLocationPin,
+  IoIosArrowBack,
+  FaArrowCircleLeft,
+  FaArrowCircleRight,
+  IoSettings,
 };
 
 export default Icons;

@@ -75,26 +75,21 @@ export const getMuseosNombres = async (req, res) => {
   }
 };
 
-// Aqui van más funciones para los museos
 export const getMuseoById = async (req, res) => {
-	try {
-		const { id } = req.body;
-		const museo = await Museo.findById(id);
-		if (!museo) {
-			return res.status(404).json({
-				success: false,
-				message: "Museo no encontrado",
-			});
-		}
-		res.json({
-		success: true,
-		museo,
-		});
-	} catch (error) {
-		handleHttpError(res, "ERROR_GET_MUSEO_BY_ID", error);
-	}
+  try {
+    const { id } = req.params;
+    const museo = await Museo.findById({ id: id });
+    res.json({
+      success: true,
+      id,
+      museo,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEO_ID", error);
+  }
 };
 
+// Aqui van más funciones para los museos
 export const updateMuseo = async (req, res) => {
 	try{ 
 		const museo = await Museo.updateMuseo(req.params.id, req.body);

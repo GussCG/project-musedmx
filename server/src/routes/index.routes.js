@@ -12,9 +12,6 @@ router.get("/", (req, res) => {
     message: "Bienvenido a la API de MuseDMX",
     endpoints: {
       museos: "/api/museos",
-      museosById: "/api/museos/:id",
-      museosByTipo: "/api/museos/tipo/:tipo",
-      museosBySearch: "/api/museos/search/:search",
       auth: "/api/auth",
       authLogin: "/api/auth/login",
       authSignUp: "/api/auth/signup",

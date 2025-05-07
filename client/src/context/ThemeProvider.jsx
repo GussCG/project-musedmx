@@ -1,13 +1,17 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./AuthProvider";
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
+  const { user } = useAuth(); // Obtener el usuario desde el contexto de autenticación
+
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-    return savedTheme
-      ? savedTheme === "dark"
-      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (user) {
+      const savedTheme = localStorage.getItem("theme");
+      return savedTheme ? savedTheme === "dark" : false;
+    }
+    return false; // Valor por defecto si no hay usuario
   });
 
   const [toggleCount, setToggleCount] = useState(
@@ -21,11 +25,16 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const theme = isRetroMode ? "retro" : isDarkMode ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-    localStorage.setItem("toggleCount", toggleCount);
-  }, [isDarkMode, isRetroMode, toggleCount]);
+
+    if (user) {
+      localStorage.setItem("theme", theme);
+      localStorage.setItem("toggleCount", toggleCount);
+    }
+  }, [isDarkMode, isRetroMode, toggleCount, user]);
 
   const toggleTheme = () => {
+    if (!user) return; // No hacer nada si no hay usuario autenticado
+
     const newCount = toggleCount + 1;
     setToggleCount(newCount);
 

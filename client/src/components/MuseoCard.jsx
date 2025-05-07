@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
@@ -7,12 +7,13 @@ import { motion } from "framer-motion";
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import buildImage from "../utils/buildImage";
+
 import imgPrueba from "../assets/images/others/museo-main-1.jpg";
 import PopUpLogin from "./PopUpLogin";
 
 import Icons from "./IconProvider";
-import { sl } from "react-day-picker/locale";
-const { estrellaIcon, moneyIcon, freeIcon, eliminarIcon } = Icons;
+const { estrellaIcon, moneyIcon, freeIcon, FaTrash } = Icons;
 
 export default function MuseoCard({ museo, editMode, sliderType }) {
   // Prefijo unico basado en sliderType
@@ -75,7 +76,7 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
       Sabado: "9:00 - 17:00",
       Domingo: "9:00 - 17:00",
     },
-    img: museo.mus_imagen || imgPrueba,
+    img: buildImage(museo) || imgPrueba,
     tematica: museo.mus_tematica,
   };
 
@@ -193,11 +194,11 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
     >
       <div className="museo-card-img-container">
         {editMode ? (
-          <label className="museo-card-fav-button-container">
+          <div className="museo-card-delete-container">
             <button type="button" onClick={() => handleQVDelete(museoInfo.id)}>
-              <img src={eliminarIcon} alt="Eliminar" />
+              <FaTrash />
             </button>
-          </label>
+          </div>
         ) : (
           <label className="museo-card-fav-button-container">
             <input
@@ -228,12 +229,14 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
           }}
         >
           <motion.img
-            src={imgPrueba}
+            src={museoInfo.img}
             alt={museoInfo.nombre}
             className="museo-card-img"
             layoutId={`${layoutPrefix}museo-image-${museoInfo.id}`}
             key={`${layoutPrefix}img-${museoInfo.id}`}
+            title={museoInfo.nombre}
           />
+
           <div className="museo-card-img-rating">
             <p id="museo-card-rating">{museoInfo.calificacion}</p>
             <img

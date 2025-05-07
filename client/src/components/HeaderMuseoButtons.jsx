@@ -1,16 +1,29 @@
 import React from "react";
 import { Link } from "react-router";
 
-function HeaderMuseoButtons() {
+import { useAuth } from "../context/AuthProvider";
+
+function HeaderMuseoButtons({ museoId }) {
+  const { tipoUsuario } = useAuth();
+
   return (
     <div className="header-buttons-container">
-      <Link className="button-link" to="/Museos/EditarInformacion/">
+      <Link
+        className="button-link"
+        to={`/${tipoUsuario}/Museo/Editar/${museoId}`}
+      >
         Editar Información
       </Link>
-      <Link className="button-link" to="">
+      <Link
+        className="button-link"
+        to={`/${tipoUsuario}/Museo/EditarHorario/${museoId}`}
+      >
         Editar Horarios
       </Link>
-      <Link className="button-link" to="">
+      <Link
+        className="button-link"
+        to={`/${tipoUsuario}/Museo/EditarImagenes/${museoId}`}
+      >
         Editar Imágenes
       </Link>
     </div>

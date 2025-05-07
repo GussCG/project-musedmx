@@ -4,12 +4,15 @@
   width: 80%;
 
   display: grid;
-  grid-template-columns: auto 0.05fr auto;
+  grid-template-columns: 0.7fr 0.05fr auto;
   padding: 30px;
+
+  overflow: hidden;
 
   #login-form {
     width: 100%;
     height: 100%;
+    max-height: 700px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,10 +22,13 @@
       font-size: 36px;
       margin-bottom: 62px;
       color: var(--font-color-primary);
+
+      padding: 50px 0 0 0;
     }
 
     form {
       width: 80%;
+      max-width: 400px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -42,6 +48,13 @@
       &:hover {
         opacity: 0.5;
       }
+    }
+
+    .error-message-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .login-field {

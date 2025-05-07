@@ -129,5 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# museos-imagenes carpeta
+scripts/images
 # pruebas de carga de imagenes
 /uploads

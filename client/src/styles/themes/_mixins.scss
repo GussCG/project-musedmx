@@ -1,0 +1,180 @@
+@mixin gallery-layout($count) {
+  @if $count == 1 {
+    grid-template-columns: 1fr;
+    .foto-1 {
+      grid-area: 1 / 1 / 4 / 7;
+    }
+  } @else if $count == 2 {
+    .foto-1 {
+      grid-area: 1 / 1 / 4 / 4;
+    }
+    .foto-2 {
+      grid-area: 1 / 4 / 4 / 7;
+    }
+  } @else if $count == 3 {
+    .foto-1 {
+      grid-area: 1 / 1 / 3 / 3;
+    }
+    .foto-2 {
+      grid-area: 1 / 3 / 2 / 5;
+    }
+    .foto-3 {
+      grid-area: 1 / 5 / 3 / 7;
+    }
+  } @else if $count == 4 {
+    .foto-1 {
+      grid-area: 1 / 1 / 3 / 3;
+    }
+    .foto-2 {
+      grid-area: 1 / 3 / 2 / 5;
+    }
+    .foto-3 {
+      grid-area: 1 / 5 / 2 / 7;
+    }
+    .foto-4 {
+      grid-area: 2 / 3 / 3 / 7;
+    }
+  } @else if $count == 5 {
+    .foto-1 {
+      grid-area: 1 / 1 / 3 / 3;
+    }
+    .foto-2 {
+      grid-area: 1 / 3 / 2 / 5;
+    }
+    .foto-3 {
+      grid-area: 1 / 5 / 3 / 7;
+    }
+    .foto-4 {
+      grid-area: 3 / 1 / 4 / 3;
+    }
+    .foto-5 {
+      grid-area: 2 / 3 / 4 / 5;
+    }
+  } @else if $count == 6 {
+    .foto-1 {
+      grid-area: 1 / 1 / 3 / 3;
+    }
+    .foto-2 {
+      grid-area: 1 / 3 / 2 / 5;
+    }
+    .foto-3 {
+      grid-area: 1 / 5 / 3 / 7;
+    }
+    .foto-4 {
+      grid-area: 3 / 1 / 4 / 3;
+    }
+    .foto-5 {
+      grid-area: 2 / 3 / 4 / 5;
+    }
+    .foto-6 {
+      grid-area: 3 / 5 / 4 / 7;
+    }
+  } @else if $count == 7 {
+    .foto-1 {
+      grid-area: 1 / 1 / 3 / 3;
+    }
+    .foto-2 {
+      grid-area: 1 / 3 / 2 / 5;
+    }
+    .foto-3 {
+      grid-area: 1 / 5 / 3 / 7;
+    }
+    .foto-4 {
+      grid-area: 3 / 1 / 4 / 3;
+    }
+    .foto-5 {
+      grid-area: 2 / 3 / 4 / 5;
+    }
+    .foto-6 {
+      grid-area: 3 / 5 / 4 / 7;
+    }
+    .foto-7 {
+      grid-area: 4 / 1 / 5 / 4;
+    }
+  } @else if $count == 8 {
+    .foto-1 {
+      grid-area: 1 / 1 / 3 / 3;
+    }
+    .foto-2 {
+      grid-area: 1 / 3 / 2 / 5;
+    }
+    .foto-3 {
+      grid-area: 1 / 5 / 3 / 7;
+    }
+    .foto-4 {
+      grid-area: 3 / 1 / 4 / 3;
+    }
+    .foto-5 {
+      grid-area: 2 / 3 / 4 / 5;
+    }
+    .foto-6 {
+      grid-area: 3 / 5 / 4 / 7;
+    }
+    .foto-7 {
+      grid-area: 4 / 1 / 5 / 4;
+    }
+    .foto-8 {
+      grid-area: 4 / 4 / 5 / 7;
+    }
+  } @else if $count == 9 {
+    .foto-1 {
+      grid-area: 1 / 1 / 3 / 3;
+    }
+    .foto-2 {
+      grid-area: 1 / 3 / 2 / 5;
+    }
+    .foto-3 {
+      grid-area: 1 / 5 / 3 / 7;
+    }
+    .foto-4 {
+      grid-area: 3 / 1 / 4 / 3;
+    }
+    .foto-5 {
+      grid-area: 2 / 3 / 4 / 5;
+    }
+    .foto-6 {
+      grid-area: 3 / 5 / 4 / 7;
+    }
+    .foto-7 {
+      grid-area: 4 / 1 / 5 / 3;
+    }
+    .foto-8 {
+      grid-area: 4 / 3 / 5 / 5;
+    }
+    .foto-9 {
+      grid-area: 4 / 5 / 5 / 7;
+    }
+  } @else if $count == 10 {
+    // grid-auto-rows: minmax(200px, 250px);
+    .foto-1 {
+      grid-area: 1 / 1 / 3 / 3;
+    }
+    .foto-2 {
+      grid-area: 1 / 3 / 2 / 5;
+    }
+    .foto-3 {
+      grid-area: 1 / 5 / 3 / 7;
+    }
+    .foto-4 {
+      grid-area: 3 / 1 / 4 / 3;
+    }
+    .foto-5 {
+      grid-area: 2 / 3 / 4 / 5;
+    }
+    .foto-6 {
+      grid-area: 3 / 5 / 4 / 7;
+    }
+    .foto-7 {
+      grid-area: 4 / 1 / 5 / 3;
+    }
+    .foto-8 {
+      grid-area: 4 / 3 / 5 / 5;
+    }
+    .foto-9 {
+      grid-area: 4 / 5 / 5 / 7;
+    }
+    .foto-10 {
+      grid-area: 5 / 1 / 6 / 7;
+    }
+  }
+}

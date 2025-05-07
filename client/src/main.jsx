@@ -7,10 +7,8 @@ import { ThemeProvider } from "./context/ThemeProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeProvider>
-      <BrowserRouter>
-        <AppWrapper />
-      </BrowserRouter>
-    </ThemeProvider>
+    <BrowserRouter>
+      <AppWrapper />
+    </BrowserRouter>
   </StrictMode>
 );

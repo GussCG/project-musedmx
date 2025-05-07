@@ -4,7 +4,7 @@ import { Link, Outlet } from "react-router-dom";
 import userPlaceholder from "../assets/images/placeholders/user_placeholder.png";
 
 import Icons from "./IconProvider";
-const { menuIcon, logo } = Icons;
+const { menuIcon, logo, IoMenu } = Icons;
 
 import MenuContainer from "./MenuContainer";
 import { useAuth } from "../context/AuthProvider";
@@ -20,6 +20,18 @@ function NavBarMenu() {
 
   const [scrolled, setScrolled] = useState(false);
   const navbarRef = useRef(null);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const botonRef = useRef(null);
+  const menuRef = useRef(null);
+
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+    if (botonRef.current && menuRef.current) {
+      botonRef.current.classList.toggle("close");
+      menuRef.current.classList.toggle("show");
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,17 +51,6 @@ function NavBarMenu() {
 
   const toggleMenuUser = () => {
     setShowMenu((prev) => !prev);
-  };
-
-  const botonRef = useRef(null);
-  const menuRef = useRef(null);
-
-  const toggleMenu = () => {
-    // Si el boton y el menu existen se cambia la clase de ambos para mostrar/ocultar el menu
-    if (botonRef.current && menuRef.current) {
-      botonRef.current.classList.toggle("close");
-      menuRef.current.classList.toggle("show");
-    }
   };
 
   useEffect(() => {
@@ -126,14 +127,18 @@ function NavBarMenu() {
           id="menu-button"
           ref={botonRef}
           onClick={toggleMenu}
+          aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={isMenuOpen}
         >
-          <span>
-            <img src={menuIcon} alt="Menu" />
-          </span>
+          <IoMenu />
         </button>
       </nav>
 
-      <MenuContainer ref={menuRef} toggleMenu={toggleMenu} />
+      <MenuContainer
+        ref={menuRef}
+        toggleMenu={toggleMenu}
+        isOpen={isMenuOpen}
+      />
     </>
   );
 }

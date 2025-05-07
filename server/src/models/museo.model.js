@@ -49,15 +49,23 @@ export default class Museo {
 	return rows;
   }
 
-	static async create(museoData) {
-		const query = `INSERT INTO museos (` + Object.keys(museoData).join(", ") + `) VALUES (` + Object.keys(museoData).map(() => "?").join(", ") + `)`;
-		const queryParams = Object.values(museoData);
-		const [result] = await pool.query(query, queryParams);
-		if (result.affectedRows === 0) {
-			throw new Error("Error al crear el museo");
-		}
-		return result;
-	}
+  static async findById({ id }) {
+    const query = `SELECT * from museos WHERE mus_id = ?`;
+    const queryParams = [];
+    queryParams.push(id);
+    const [rows] = await pool.query(query, queryParams);
+    return rows;
+  }
+
+  static async create(museoData) {
+  	const query = `INSERT INTO museos (` + Object.keys(museoData).join(", ") + `) VALUES (` + Object.keys(museoData).map(() => "?").join(", ") + `)`;
+  	const queryParams = Object.values(museoData);
+  	const [result] = await pool.query(query, queryParams);
+  	if (result.affectedRows === 0) {
+  		throw new Error("Error al crear el museo");
+  	}
+  	return result;
+  }
 
   //Las cochinadas de Diego
 	static async findById(id) {

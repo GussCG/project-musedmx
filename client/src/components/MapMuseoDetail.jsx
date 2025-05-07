@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import CustomAdvancedMarker from "./CustomAdvancedMarker";
 
 import { APIProvider, Map } from "@vis.gl/react-google-maps";
 
 import { useTheme } from "../context/ThemeProvider";
+import buildImage from "../utils/buildImage";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -16,33 +17,45 @@ function MapMuseoDetail({ museo }) {
     ? import.meta.env.VITE_MAP_DARKMODE_DETAIL_ID
     : import.meta.env.VITE_MAP_DETAIL_ID;
 
-  // Obtener la informacion del museo
-  const museoInfo = {
-    id: museo.id,
-    nombre: museo.nombre,
-    horarios: {
-      Lunes: museo.horarios.Lunes,
-      Martes: museo.horarios.Martes,
-      Miercoles: museo.horarios.Miercoles,
-      Jueves: museo.horarios.Jueves,
-      Viernes: museo.horarios.Viernes,
-      Sabado: museo.horarios.Sabado,
-      Domingo: museo.horarios.Domingo,
-    },
-    img: museo.img,
-    calificacion: museo.calificacion,
-    costo: museo.costo,
-    coords: {
-      lat: museo.coords.lat,
-      lng: museo.coords.lng,
-    },
-  };
+  const [museoInfo, setMuseoInfo] = useState(null);
+  const [apiKey, setApiKey] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Coordenadas del museo
-  const museoCoords = museoInfo.coords;
+  useEffect(() => {
+    if (!museo) {
+      setMuseoInfo(null);
+      setLoading(false);
+      return;
+    } // Si no hay museo, no hacemos nada
+
+    try {
+      const info = {
+        id: museo.mus_id,
+        nombre: museo.mus_nombre,
+        coords: {
+          lat: museo.mus_g_latitud,
+          lng: museo.mus_g_longitud,
+        },
+        img: buildImage(museo),
+      };
+      setLoading(false);
+
+      if (isNaN(info.coords.lat) || isNaN(info.coords.lng)) {
+        setError("Coordenadas no válidas");
+        return;
+      }
+      setMuseoInfo(info);
+      setError(null);
+    } catch (error) {
+      setError("Error al procesar la información del museo: " + error.message);
+      setMuseoInfo(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [museo]);
 
   // Obtener la API Key de Google Maps desde el backend
-  const [apiKey, setApiKey] = useState(null);
   useEffect(() => {
     fetch(`${BACKEND_URL}/api/maps-key`)
       .then((response) => response.json())
@@ -52,18 +65,30 @@ function MapMuseoDetail({ museo }) {
       .catch((error) => console.error("Error obteniendo la API key: ", error));
   }, []);
 
+  const mapCenter = useMemo(() => {
+    if (!museoInfo?.coords) return null;
+    return museoInfo.coords;
+  }, [museoInfo?.coords]);
+
+  console.log(mapCenter);
+
   if (!apiKey) return <div>Cargando el mapa...</div>; // Mientras carga la API Key
   return (
     <APIProvider apiKey={apiKey}>
       <div className="map-container">
-        <Map defaultZoom={17} center={museoCoords} mapId={MAP_DETAIL}>
+        <Map
+          defaultZoom={17}
+          center={mapCenter}
+          mapId={MAP_DETAIL}
+          key={`${museoInfo?.id}-MAP-DETAIL`}
+        >
           <CustomAdvancedMarker
-            key={museo.id}
-            lat={museo.coords.lat}
-            lng={museo.coords.lng}
-            nombre={museo.nombre}
-            imagen={museo.img}
-            idMuseo={museo.id}
+            key={museoInfo.id}
+            lat={mapCenter.lat}
+            lng={mapCenter.lng}
+            nombre={museoInfo.nombre}
+            imagen={museoInfo.img}
+            idMuseo={museoInfo.id}
           />
         </Map>
       </div>

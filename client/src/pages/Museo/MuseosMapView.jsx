@@ -1,92 +1,145 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, use } from "react";
 import MapMuseo from "../../components/MapMuseo";
-
 import MapIndicaciones from "../../components/MapIndicaciones";
-
 import { APIProvider } from "@vis.gl/react-google-maps";
 
 import Icons from "../../components/IconProvider";
-const { buscarimg, FaQuestion, IoSearch } = Icons;
+const {
+  buscarimg,
+  FaQuestion,
+  IoSearch,
+  TbRouteSquare,
+  FaCar,
+  FaBicycle,
+  FaPersonWalking,
+  FaBus,
+  IoIosArrowDown,
+  FaRoad,
+  FaSatellite,
+  MdTerrain,
+  IoMapSharp,
+} = Icons;
 
-import { motion } from "framer-motion";
-import { RiMapPinUserFill } from "react-icons/ri";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Para obtener la API de Google Maps
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
+// Modos de viaje con label, icono y valor
+const TRAVEL_MODES = {
+  DRIVING: {
+    label: "Auto",
+    icon: <FaCar />,
+    value: "DRIVING",
+  },
+  BICYCLING: {
+    label: "Bicicleta",
+    icon: <FaBicycle />,
+    value: "BICYCLING",
+  },
+  WALKING: {
+    label: "Caminando",
+    icon: <FaPersonWalking />,
+    value: "WALKING",
+  },
+  TRANSIT: {
+    label: "Transporte Público",
+    icon: <FaBus />,
+    value: "TRANSIT",
+  },
+};
+
+// Tipos de Mapa
+const MAP_TYPES = {
+  ROADMAP: {
+    label: "Mapa de Carretera",
+    icon: <FaRoad />,
+    value: "ROADMAP",
+    normalized: "roadmap",
+  },
+  SATELLITE: {
+    label: "Mapa Satelital",
+    icon: <FaSatellite />,
+    value: "SATELLITE",
+    normalized: "satellite",
+  },
+  TERRAIN: {
+    label: "Mapa de Terreno",
+    icon: <MdTerrain />,
+    value: "TERRAIN",
+    normalized: "terrain",
+  },
+  HYBRID: {
+    label: "Mapa Híbrido",
+    icon: <IoMapSharp />,
+    value: "HYBRID",
+    normalized: "hybrid",
+  },
+};
+
 // Dependiendo del titulo se muestra el radio de busqueda
 // En Ver Todos y en Populares no se muestra el radio
-function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
+function MuseosMapView({
+  titulo,
+  MuseosMostrados,
+  tipo,
+  isMapView,
+  tituloSearch,
+}) {
   // Estados
   const [apiKey, setApiKey] = useState(null);
   const [isApiLoaded, setIsApiLoaded] = useState(false);
   const [rangoRadio, setRangoRadio] = useState(0.1);
   const radioKM = rangoRadio * 1000;
-  const [ubicacion, setUbicacion] = useState("");
   const [ubicacionCoords, setUbicacionCoords] = useState(null);
-  const [centerUserLocation, setCenterUserLocation] = useState(() => {});
-  const inputRef = useRef(null);
   const [showIndicaciones, setShowIndicaciones] = useState(false);
+  const [mapsReady, setMapsReady] = useState(false);
+  const [selectedTravelMode, setSelectedTravelMode] = useState("WALKING");
+  const [isOpenTravelMode, setIsOpenTravelMode] = useState(false);
+  const [selectedMapType, setSelectedMapType] = useState("ROADMAP");
+  const [selectedMapTypeNormalized, setSelectedMapTypeNormalized] =
+    useState("roadmap");
+  const [isOpenMapType, setIsOpenMapType] = useState(false);
+
+  const toggleTravelMode = () => {
+    setIsOpenTravelMode((prev) => !prev);
+  };
+
+  const toggleMapType = () => {
+    setIsOpenMapType((prev) => !prev);
+  };
 
   useEffect(() => {
-    const storedAPIKey = localStorage.getItem("GOOGLE_MAPS_API_KEY");
-    if (storedAPIKey) {
-      setApiKey(storedAPIKey);
-      setIsApiLoaded(true);
-    } else {
-      fetch(`${BACKEND_URL}/api/maps-key`)
-        .then((response) => response.json())
-        .then((data) => {
-          localStorage.setItem("GOOGLE_MAPS_API_KEY", data.key);
-          setApiKey(data.key);
-          setIsApiLoaded(true);
-        })
-        .catch((error) =>
-          console.error("Error obteniendo la API key: ", error)
-        );
-    }
+    const loadApiKey = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/maps-key`);
+        const data = await response.json();
+        setApiKey(data.key);
+      } catch (error) {
+        console.error("Error al cargar la API Key:", error);
+      }
+    };
+    loadApiKey();
   }, []);
 
-  // Esperar a que la API cargue correctamente
   useEffect(() => {
-    if (isApiLoaded && window.google.maps.places) {
-      const autocomplete = new window.google.maps.places.Autocomplete(
-        inputRef.current,
-        { types: ["establishment"] }
-      );
+    if (!apiKey) return;
 
-      autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        if (place.geometry) {
-          setUbicacion(place.formatted_address);
-          setUbicacionCoords({
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng(),
-          });
-        }
-      });
-    }
-  }, [isApiLoaded, window.google]);
+    const checkMapsReady = () => {
+      if (window.google && window.google.maps) {
+        setIsApiLoaded(true);
+        setMapsReady(true);
+      } else {
+        setTimeout(checkMapsReady, 100);
+      }
+    };
+    checkMapsReady();
+  }, [apiKey]);
 
   // Funcion para manejar el cambio del rango en el input range
   const handleRangeChange = (e) => {
     setRangoRadio(e.target.value);
   };
-
-  // Regresar a mi ubicacion (futura)
-  // const handleCenterCallback = useCallback((callback) => {
-  //   setCenterUserLocation(() => callback);
-  // }, []);
-
-  // const mapRef = useRef(null);
-
-  // const handleMapLoad = useCallback((map) => {
-  //   mapRef.current = map;
-  // }, []);
-
-  // const back2Ubi = useCallback(() => {
-  //   centerUserLocation?.();
-  // }, [centerUserLocation]);
 
   useEffect(() => {
     const dontShowAgain =
@@ -101,7 +154,6 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
   };
 
   if (!apiKey) return <div>Cargando el mapa...</div>; // Mientras carga la API Key
-
   return (
     <motion.div
       id="museos-map-view"
@@ -116,34 +168,6 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
       />
       <section className="museos-map-nav">
         <div id="museos-form-nav">
-          <div className="museos-nav-section">
-            <button type="button" disabled>
-              <IoSearch />
-            </button>
-            <input
-              ref={inputRef}
-              type="text"
-              id="museos-txt-ubicacion"
-              placeholder="Introduce tu ubicación"
-              value={ubicacion}
-              onChange={(e) => {
-                setUbicacion(e.target.value);
-                setCenterUserLocation(false);
-              }}
-            />
-            <div className="btn-map-container">
-              {/* <button type="button" className="btn-map" onClick={back2Ubi}>
-                <RiMapPinUserFill title="Regresar a mi ubicación" />
-              </button> */}
-              <button
-                type="button"
-                className="btn-map"
-                onClick={handleInstrucciones}
-              >
-                <FaQuestion title="Ayuda" />
-              </button>
-            </div>
-          </div>
           {tipo === "2" ? (
             <div className="museos-nav-section range-section">
               <label htmlFor="museos-range-ubicacion" id="frm-range-ubicacion">
@@ -169,13 +193,177 @@ function MuseosMapView({ titulo, MuseosMostrados, tipo }) {
       </section>
       <section className="museos-map-container">
         <APIProvider apiKey={apiKey} libraries={["places"]}>
+          <div className="btn-map-container">
+            <button
+              type="button"
+              className="btn-map"
+              id="btn-map-user-location"
+              onClick={handleInstrucciones}
+              title="Ayuda"
+            >
+              <div className="btn-map-bg" />
+              <FaQuestion />
+            </button>
+
+            <div className="btn-dropdown-container" id="dd-travel-mode">
+              <button
+                type="button"
+                className="btn-map"
+                id="btn-map-travel-mode"
+                title="Modo de Viaje"
+                onClick={toggleTravelMode}
+              >
+                <div className="btn-map-bg" />
+                {TRAVEL_MODES[selectedTravelMode]?.icon}
+                <motion.div
+                  className="arrow-dd"
+                  animate={{ rotate: isOpenTravelMode ? 180 : 0 }}
+                  transition={{ duration: 0.2, type: "spring", stiffness: 100 }}
+                >
+                  <IoIosArrowDown />
+                </motion.div>
+              </button>
+              <AnimatePresence>
+                {isOpenTravelMode && (
+                  <motion.div
+                    className="btn-dropdown-content"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{
+                      duration: 0.2,
+                      type: "spring",
+                      stiffness: 100,
+                    }}
+                  >
+                    {Object.values(TRAVEL_MODES).map((mode, index) => (
+                      <motion.button
+                        key={mode.value}
+                        initial={{ opacity: 0, x: -10, scale: 0.9 }}
+                        animate={{
+                          opacity: 1,
+                          x: 0,
+                          scale: 1,
+                          transition: {
+                            delay: index * 0.1,
+                            duration: 0.2,
+                            ease: "easeOut",
+                          },
+                        }}
+                        exit={{
+                          opacity: 0,
+                          x: -10,
+                          scale: 0.9,
+                          transition: {
+                            delay:
+                              (Object.values(TRAVEL_MODES).length - index - 1) *
+                              0.03,
+                            duration: 0.15,
+                            ease: "easeIn",
+                          },
+                        }}
+                        type="button"
+                        className="btn-map"
+                        id={`btn-map-${mode.value}`}
+                        title={mode.label}
+                        onClick={() => {
+                          setSelectedTravelMode(mode.value);
+                          setIsOpenTravelMode(false);
+                        }}
+                      >
+                        <div className="btn-map-bg" />
+                        {mode.icon}
+                      </motion.button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="btn-dropdown-container" id="dd-map-type">
+              <button
+                type="button"
+                className="btn-map"
+                id="btn-map-type"
+                title="Tipo de Mapa"
+                onClick={toggleMapType}
+              >
+                <div className="btn-map-bg" />
+                {MAP_TYPES[selectedMapType]?.icon}
+                <motion.div
+                  className="arrow-dd"
+                  animate={{ rotate: isOpenMapType ? 180 : 0 }}
+                  transition={{ duration: 0.2, type: "spring", stiffness: 100 }}
+                >
+                  <IoIosArrowDown />
+                </motion.div>
+              </button>
+              <AnimatePresence>
+                {isOpenMapType && (
+                  <motion.div
+                    className="btn-dropdown-content"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{
+                      duration: 0.2,
+                      type: "spring",
+                      stiffness: 100,
+                    }}
+                  >
+                    {Object.values(MAP_TYPES).map((type, index) => (
+                      <motion.button
+                        key={type.value}
+                        initial={{ opacity: 0, x: -10, scale: 0.9 }}
+                        animate={{
+                          opacity: 1,
+                          x: 0,
+                          scale: 1,
+                          transition: {
+                            delay: index * 0.1,
+                            duration: 0.2,
+                            ease: "easeOut",
+                          },
+                        }}
+                        exit={{
+                          opacity: 0,
+                          x: -10,
+                          scale: 0.9,
+                          transition: {
+                            delay:
+                              (Object.values(MAP_TYPES).length - index - 1) *
+                              0.03,
+                            duration: 0.15,
+                            ease: "easeIn",
+                          },
+                        }}
+                        type="button"
+                        className="btn-map"
+                        id={`btn-map-${type.value}`}
+                        title={type.label}
+                        onClick={() => {
+                          setSelectedMapType(type.value);
+                          setSelectedMapTypeNormalized(type.normalized);
+                          setIsOpenMapType(false);
+                        }}
+                      >
+                        <div className="btn-map-bg" />
+                        {type.icon}
+                      </motion.button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
           <MapMuseo
             radioKM={radioKM}
             museosMostrados={MuseosMostrados}
             ubicacionCoords={ubicacionCoords}
-            place={ubicacion}
+            place={null}
             tipo={tipo}
-            // onCenterUserLocation={handleCenterCallback}
+            travelMode={selectedTravelMode}
+            mapType={selectedMapTypeNormalized}
           />
         </APIProvider>
       </section>

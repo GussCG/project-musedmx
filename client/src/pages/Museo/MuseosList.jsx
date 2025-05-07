@@ -6,13 +6,16 @@ import { ThreeDot } from "react-loading-indicators";
 import MenuFiltroMuseo from "../../components/MenuFiltroMuseo";
 import { useSearchParams, useLocation } from "react-router";
 
-import NavBar from "../../components/NavBar";
 import MuseoCard from "../../components/MuseoCard";
 import MuseosMapView from "./MuseosMapView";
 import MenuSort from "../../components/MenuSort";
 import MapIndicaciones from "../../components/MapIndicaciones";
 
+import { useViewMode } from "../../context/ViewModeProvider";
+
 import Icons from "../../components/IconProvider";
+import MuseumSearch from "../../components/MuseumSearch";
+
 const {
   listButton,
   mapaButton,
@@ -100,7 +103,7 @@ function MuseosList({ titulo, tipo }) {
   }, [tituloBusqueda, tipo]);
 
   // Para cambiar la vista entre lista y mapa
-  const [isMapView, setIsMapView] = useState(false);
+  const { isMapView, setIsMapView } = useViewMode();
   // Estado para controlar la visibilidad del menu de filtro
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -115,27 +118,26 @@ function MuseosList({ titulo, tipo }) {
   const handleFilterApply = async (filtros) => {
     try {
       console.log("Filtros aplicados:", filtros);
-      if (!filtros.tipos?.length && !filtros.alcaldias?.length) {
+      if (!filtros) {
         setMuseosFiltrados([]);
         setFiltrosAplicados(false);
         return;
       }
 
-      // Construir params
-      const params = {};
+      // Filtramos localmente los museos
+      const museosFiltrados = museos.filter((museo) => {
+        const cumpleTematica =
+          !filtros.tipos?.length ||
+          filtros.tipos.includes(parseInt(museo.mus_tematica));
 
-      if (filtros.tipos?.length) params.tematicas = filtros.tipos;
-      if (filtros.alcaldias?.length) params.alcaldias = filtros.alcaldias;
+        const cumpleAlcaldia =
+          !filtros.alcaldias?.length ||
+          filtros.alcaldias.includes(museo.mus_alcaldia);
 
-      const response = await axios.get(`${BACKEND_URL}/api/museos/filtroPor`, {
-        params: params,
-        paramsSerializer: {
-          indexes: false,
-        },
+        return cumpleTematica && cumpleAlcaldia;
       });
 
-      console.log("response:", response.data);
-      setMuseosFiltrados(response.data.museos);
+      setMuseosFiltrados(museosFiltrados);
       setFiltrosAplicados(true);
     } catch (error) {
       console.error("Error al aplicar filtros:", error);
@@ -195,7 +197,7 @@ function MuseosList({ titulo, tipo }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <NavBar />
+      <MuseumSearch swiperRef={null} />
       <MenuFiltroMuseo
         menuVisible={menuVisible}
         setMenuVisible={setMenuVisible}
@@ -205,13 +207,31 @@ function MuseosList({ titulo, tipo }) {
       <main id="vermuseos-main">
         <section className="museos-header-section">
           <div className="museos-header-section-left">
-            <h1>{tituloBusqueda}</h1>
-            <button onClick={() => setIsMapView(!isMapView)}>
-              {isMapView ? <TbCardsFilled /> : <FaMap />}
-            </button>
+            <div className="museos-header-section-left-tittles">
+              <h1>{tituloBusqueda}</h1>
+              <p>Museos mostrados: {museosAMostrar.length}</p>
+            </div>
           </div>
-          {isMapView ? null : (
-            <div className="museos-header-section-right">
+          <div className="museos-header-section-right">
+            <button
+              type="button"
+              className="museos-header-section-right-button"
+              onClick={() => setIsMapView(!isMapView)}
+              title={isMapView ? "Ver lista" : "Ver mapa"}
+            >
+              {isMapView ? (
+                <>
+                  <p>Ver lista</p>
+                  <TbCardsFilled />
+                </>
+              ) : (
+                <>
+                  <p>Ver mapa</p>
+                  <FaMap />
+                </>
+              )}
+            </button>
+            {isMapView ? null : (
               <>
                 <button
                   className="museos-header-section-right-button"
@@ -230,6 +250,9 @@ function MuseosList({ titulo, tipo }) {
                   />
                 )}
               </>
+            )}
+
+            {tipo !== "3" && (
               <button
                 type="button"
                 className="museos-header-section-right-button"
@@ -241,8 +264,8 @@ function MuseosList({ titulo, tipo }) {
                 <p>Filtrar</p>
                 <FaFilter />
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </section>
 
         {isMapView ? (
@@ -251,6 +274,7 @@ function MuseosList({ titulo, tipo }) {
               titulo={titulo}
               MuseosMostrados={museosAMostrar}
               tipo={tipo}
+              isMapView={isMapView}
             />
           </section>
         ) : (
