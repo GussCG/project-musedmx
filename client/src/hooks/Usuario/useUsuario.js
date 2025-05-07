@@ -20,7 +20,7 @@ export const useUsuario = () => {
 
   // Editar Usuario
   const editarUsuario = async (usuario) => {
-    console.log(usuario);
+    // console.log(usuario);
     setError(null);
     try {
       const response = await UsuarioService.editarUsuario(usuario);

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { upload } from '../middleware/upload.js';
 import {
   getMuseos,
   createMuseo,
@@ -16,13 +17,13 @@ import {
 const router = Router();
 
 router.get("/", getMuseos);
-router.post("/", createMuseo);
+router.post("/", upload.single('mus_foto'), createMuseo);
 router.get("/filtroPor", getMuseosFiltrados);
 router.get("/busqueda", getMuseosBusqueda);
 router.get("/nombres", getMuseosNombres);
 
 router.get("/:id", getMuseoById);
-router.put("/:id", updateMuseo);
+router.put("/:id", upload.single('mus_foto'), updateMuseo);
 router.delete("/:id", deleteMuseo);
 
 export default router;

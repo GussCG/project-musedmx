@@ -16,8 +16,43 @@ export const getMuseos = async (req, res) => {
 
 export const createMuseo = async (req, res) => {
   try {
-    const museo = await Museo.create(req.body);
-    res.status(201).json(museo);
+	// Comprobar lo que se recibe en el body
+	console.log(req.body);
+	let {
+		mus_nombre,
+		mus_calle,
+		mus_num_ext,
+		mus_colonia,
+		mus_cp,
+		mus_alcaldia,
+		mus_fec_ap,
+		mus_descripcion,
+		mus_tematica,
+		mus_g_latitud,
+		mus_g_longitud,
+	} = req.body;
+
+	const mus_foto = req.file ? req.file.filename : null;
+	
+    const museo = await Museo.create({
+		mus_nombre,
+		mus_calle,
+		mus_num_ext,
+		mus_colonia,
+		mus_cp,
+		mus_alcaldia,
+		mus_fec_ap,
+		mus_descripcion,
+		mus_tematica,
+		mus_g_latitud,
+		mus_g_longitud,
+		mus_foto,
+	});
+    res.status(201).json({
+	  success: true,
+	  message: "Museo creado",
+	  museo,
+	});
   } catch (error) {
     handleHttpError(res, "ERROR_CREATE_MUSEO", error);
   }

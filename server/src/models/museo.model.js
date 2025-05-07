@@ -54,11 +54,11 @@ export default class Museo {
     const queryParams = [];
     queryParams.push(id);
     const [rows] = await pool.query(query, queryParams);
-    return rows;
+    return rows[0];
   }
 
   static async create(museoData) {
-  	const query = `INSERT INTO museos (` + Object.keys(museoData).join(", ") + `) VALUES (` + Object.keys(museoData).map(() => "?").join(", ") + `)`;
+  	let query = `INSERT INTO museos (` + Object.keys(museoData).join(", ") + `) VALUES (` + Object.keys(museoData).map(() => "?").join(", ") + `)`;
   	const queryParams = Object.values(museoData);
   	const [result] = await pool.query(query, queryParams);
   	if (result.affectedRows === 0) {
@@ -68,15 +68,6 @@ export default class Museo {
   }
 
   //Las cochinadas de Diego
-	static async findById(id) {
-		const query = `SELECT * FROM museos WHERE mus_id = ?`;
-		const [rows] = await pool.query(query, [id]);
-		if (rows.length === 0) {
-			throw new Error("Museo no encontrado");
-		}
-		return rows[0];
-	}
-
 	static async updateMuseo(id, museoData) {
 		const query = `UPDATE museos SET ` + Object.keys(museoData).map(key => `${key} = ?`).join(', ') + ` WHERE mus_id = ?`;
 		const [result] = await pool.query(query, [...Object.values(museoData), id]);

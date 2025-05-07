@@ -13,6 +13,8 @@ import ErrorCampo from "../../components/ErrorCampo";
 
 import { ThreeDot } from "react-loading-indicators";
 
+import useMuseo from "../../hooks/Museo/useMuseo";
+
 // import Slider from "rc-slider";
 // import "rc-slider/assets/index.css";
 
@@ -97,7 +99,7 @@ function MuseoForm({ mode }) {
       // Aquí puedes hacer la lógica para cargar los datos del museo a editar
       // Por ejemplo, hacer una llamada a la API para obtener los datos del museo
       // y luego establecer esos datos en el formulario.
-      setTimeout(() => {
+      /* setTimeout(() => {
         setMuseoEdit({
           mus_nombre: "Museo de Ejemplo",
           mus_foto: museoPlaceholder,
@@ -113,8 +115,18 @@ function MuseoForm({ mode }) {
           mus_descripcion: "Descripción del museo xd",
         });
         setLoading(false);
-      }, 2000); // Simulación de carga
-    }
+      }, 2000); // Simulación de carga */
+	  fetch(`${BACKEND_URL}/api/museos/${museoId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setMuseoEdit(data); // Aquí deberías asignar los datos reales
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error al obtener el museo", error);
+        setLoading(false);
+      });
+  	}
   }, [mode, museoId]);
 
   // Para la imagen inicial
@@ -204,8 +216,87 @@ function MuseoForm({ mode }) {
   let today = new Date();
   today.setHours(today.getHours() - 6);
 
+  const { registrarMuseo, editarMuseo } = useMuseo();
+
   const handleRegistroMuseo = async (values) => {
-    console.log(values);
+    try {
+		const museoData = new FormData();
+
+		museoData.append("mus_nombre", values.museofrmnombre);
+		museoData.append("mus_foto", values.museofrmfoto);
+		museoData.append("mus_calle", values.museofrmcalle);
+		museoData.append("mus_num_ext", values.museofrmnumext);
+		museoData.append("mus_colonia", values.museofrmcolonia);
+		museoData.append("mus_cp", values.museofrmcp);
+		museoData.append("mus_alcaldia", values.museofrmalcaldia);
+		museoData.append("mus_fec_ap", values.museofrmfecapertura);
+		museoData.append("mus_descripcion", values.museofrmdescripcion);
+		museoData.append("mus_g_latitud", values.museofrmglatitud);
+		museoData.append("mus_g_longitud", values.museofrmglongitud);
+		// museoData.append("mus_tematica", values.museofrmtematicamuseo);
+
+
+		//Convertir nombre de temática a id	
+		const tematica = TEMATICAS.find(
+			(tematica) => tematica.tematica === values.museofrmtematicamuseo
+		);
+		museoData.append("mus_tematica", tematica.id);
+
+/* 		// Validar los datos que se envían 
+		console.log("Datos a enviar: ");
+		for (var pair of museoData.entries()) {
+			console.log(pair[0] + ", " + pair[1]);
+		} */
+
+		if (mode === "edit") {
+			const response = await editarMuseo(museoData, museoId); // Realiza una solicitud PUT para editar el museo
+			if (response) {
+				toast.success("Museo actualizado correctamente", {
+				position: "top-right",
+				autoClose: 3000,
+				theme: "colored",
+				transition: Bounce,
+				});
+			} else {
+				toast.error("Error al actualizar el museo", {
+				position: "top-right",
+				autoClose: 3000,
+				theme: "colored",
+				transition: Bounce,
+				});
+			}
+		} else {
+			const response = await registrarMuseo(museoData);
+
+			if (response) {
+				toast.success("Museo registrado correctamente", {
+				position: "top-right",
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: false,
+				pauseOnHover: false,
+				draggable: false,
+				progress: undefined,
+				theme: "colored",
+				transition: Bounce,
+				});
+			} else {
+				toast.error("Error al registrar el museo", {
+					position: "top-right",
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: false,
+					pauseOnHover: false,
+					draggable: false,
+					progress: undefined,
+					theme: "colored",
+					transition: Bounce,
+				});
+			}
+		}
+	} catch (error) {
+	  console.error("Error al procesar los datos del museo:", error);
+	}
   };
 
   return (
@@ -361,7 +452,7 @@ function MuseoForm({ mode }) {
                         </Field>
                       </div>
                       <div className="registros-field-calendar">
-                        <label>Fecha de Nacimiento</label>
+                        <label>Fecha de Apertura</label>
                         <DayPicker
                           hideNavigation
                           animate
