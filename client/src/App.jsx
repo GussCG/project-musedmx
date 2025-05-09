@@ -28,6 +28,7 @@ import { AnimatePresence } from "framer-motion";
 import MuseoForm from "./pages/Museo/MuseoForm.jsx";
 import MuseoHorariosEdit from "./pages/Museo/MuseoHorariosEdit.jsx";
 import MuseoImgEdit from "./pages/Museo/MuseoImgEdit.jsx";
+import ModResenaDetail from "./pages/Mod/ModResenaDetail.jsx";
 import { ViewModeProvider } from "./context/ViewModeProvider.jsx";
 import { ThemeProvider } from "./context/ThemeProvider.jsx";
 
@@ -113,6 +114,7 @@ function App() {
                   <Route path="Editar" element={<ProfileEdit />} />
                   <Route path="VerResenas" element={<ModHistory />} />
                   <Route path="VerResenas/:museoId" element={<ModHistory />} />
+                  <Route path="Resena/:id" element={<ModResenaDetail />} />
                 </Route>
               </Route>
 

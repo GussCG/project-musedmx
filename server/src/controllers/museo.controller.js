@@ -3,22 +3,39 @@ import { handleHttpError } from "../helpers/httpError.js";
 
 export const getMuseos = async (req, res) => {
   try {
-    // const { limit = 10, page = 1, search = "" } = req.query;
-    // const pageNumber = parseInt(page, 10);
-    // const offset = (pageNumber - 1) * limit;
+    const { search, tipo, tipos, alcaldias, sort, limit } = req.query;
+    // Si search es null se asigna un string vacio
+    const searchValue = search || "";
+    const tiposArray = tipos ? tipos.split(",") : [];
+    const alcaldiasArray = alcaldias ? alcaldias.split(",") : [];
 
-    const { search = "" } = req.query;
-    const [museos, total] = await Promise.all([
-      Museo.findAll({ search }),
-      Museo.countAll({ search }),
-    ]);
+    let sortValue = sort;
+    let limitNumber = limit ? parseInt(limit) : null;
+
+    if (tipo === "3") {
+      limitNumber = 10;
+    }
+
+    console.log("Params", {
+      searchValue,
+      tiposArray,
+      alcaldiasArray,
+      sortValue,
+      limitNumber,
+    });
+
+    const museos = await Museo.findAll({
+      search: searchValue,
+      tipos: tiposArray,
+      alcaldias: alcaldiasArray,
+      sort: sortValue,
+      limit: limitNumber,
+    });
+
     res.json({
       success: true,
       count: museos.length,
       museos,
-      total,
-      // currentPage: pageNumber,
-      // totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_MUSEOS", error);

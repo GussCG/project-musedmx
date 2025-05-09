@@ -1,24 +1,26 @@
-import React from "react";
-
 import { AnimatePresence, motion } from "framer-motion";
-
 import Icons from "./IconProvider";
-const { CgClose } = Icons;
+const { CgClose, IoIosArrowForward, IoIosArrowBack } = Icons;
 
-function LightBox({ lightBoxVisible, setLightBoxVisible, currentImage }) {
-  const closeLightBox = () => {
-    setLightBoxVisible(false);
-  };
-
-  if (!lightBoxVisible) {
+function LightBox({
+  images,
+  isOpen,
+  currentIndex,
+  closeLightBox,
+  goToPrev,
+  goToNext,
+}) {
+  if (!isOpen || !images || images.length === 0) {
     return null;
   }
 
+  const currentImage = images[currentIndex];
+
   return (
-    <AnimatePresence mode="popLayout">
+    <AnimatePresence>
       <motion.div
         className="lightbox show"
-        key={`lightbox-${currentImage}`}
+        key={`lightbox-${currentIndex}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -28,21 +30,42 @@ function LightBox({ lightBoxVisible, setLightBoxVisible, currentImage }) {
           className="btn-close"
           onClick={closeLightBox}
           key={"close-btn"}
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-          transition={{ duration: 0.2, ease: "easeInOut" }}
         >
           <CgClose />
         </motion.button>
-        <motion.img
-          src={currentImage}
-          className="show-img"
+
+        <motion.button
+          className="btn-nav prev"
+          onClick={goToPrev}
+          key={"prev-btn"}
+        >
+          <IoIosArrowBack />
+        </motion.button>
+
+        <motion.div
+          className="lightbox-img-container"
+          key={`lightbox-img-${currentImage}`}
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
           transition={{ duration: 0.5, type: "spring" }}
-        />
+        >
+          <img src={currentImage.src} alt={`Imagen ${currentIndex + 1}`} />
+        </motion.div>
+
+        <motion.button
+          className="btn-nav next"
+          onClick={goToNext}
+          key={"next-btn"}
+        >
+          <IoIosArrowForward />
+        </motion.button>
+
+        <motion.div className="image-counter">
+          <p>
+            {currentIndex + 1} / {images.length}
+          </p>
+        </motion.div>
       </motion.div>
     </AnimatePresence>
   );

@@ -6,7 +6,10 @@ const { CgClose, TbRadar2 } = Icons;
 
 import foto_default from "../assets/images/others/museo-main-1.jpg";
 import { motion, AnimatePresence } from "framer-motion";
+import { buildImage } from "../utils/buildImage";
 
+import { TEMATICAS } from "../constants/catalog";
+import FavoritoButton from "./FavoritoButton";
 
 function CercaDeMi({ userLocation, museosMostrados, radioKM, travelMode }) {
   const [museosConTiempos, setMuseosConTiempos] = useState([]);
@@ -44,9 +47,9 @@ function CercaDeMi({ userLocation, museosMostrados, radioKM, travelMode }) {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c; // Distancia en km
   }, []);
@@ -66,8 +69,8 @@ function CercaDeMi({ userLocation, museosMostrados, radioKM, travelMode }) {
         const distancia = calcularDistancia(
           userLocation.lat,
           userLocation.lng,
-          museo.mus_g_latitud,
-          museo.mus_g_longitud
+          museo.g_latitud,
+          museo.g_longitud
         );
         return {
           ...museo,
@@ -141,49 +144,96 @@ function CercaDeMi({ userLocation, museosMostrados, radioKM, travelMode }) {
               <CgClose />
             </button>
             <h4>{`Museos Cerca`}</h4>
-            <p><b>Museos encontrados</b>: {museosFiltrados.length}</p>
-            <p><b>Radio</b>: {radioKM} m</p>
+            <p>
+              <b>Museos encontrados</b>: {museosFiltrados.length}
+            </p>
+            <p>
+              <b>Radio</b>: {radioKM} m
+            </p>
 
             <hr />
 
             <ul className="museos-list">
-              {museosConTiempos.map((museo) => (
-                <motion.li
-                  key={museo.mus_id}
-                  className="museo-list-item"
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 100 }}
-                  transition={{
-                    duration: 0.2,
-                    ease: "easeInOut",
-                    type: "spring",
-                    stiffness: 50,
-                  }}
-                >
-                  <div className="museo-list-item-img">
-                    <img
-                      src={museo.mus_foto || foto_default}
-                      alt={museo.mus_nombre}
-                    />
-                    <div className="museo-list-item-distance">
-                      <p>{formatearDistancia(museo.distancia)}</p>
-                    </div>
-                  </div>
-                  <div className="museo-list-item-info">
-                    <div className="museo-list-item-name">
-                      <Link to={`/Museos/${museo.mus_id}`}>
-                        <p>{museo.mus_nombre}</p>
-                      </Link>
-                    </div>
-                    <div className="museo-list-item-tiempo">
-                      <p>
-                        {museo.tiempoEstimado} min - {timeLabels[travelMode]}
-                      </p>
-                    </div>
-                  </div>
-                </motion.li>
-              ))}
+              {museosConTiempos.map(
+                (museo) =>
+                  museo.tematica && (
+                    <motion.li
+                      key={museo.id}
+                      className="museo-list-item"
+                      initial={{ opacity: 0, x: 100 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 100 }}
+                      transition={{
+                        duration: 0.2,
+                        ease: "easeInOut",
+                        type: "spring",
+                        stiffness: 50,
+                      }}
+                      style={{
+                        backgroundColor: `${
+                          TEMATICAS[museo.tematica].museoCardColors.background
+                        }`,
+                      }}
+                    >
+                      <div className="museo-list-item-img">
+                        <img
+                          src={buildImage(museo) || foto_default}
+                          alt={museo.nombre}
+                        />
+                        <div
+                          className="museo-list-item-distance"
+                          style={{
+                            backgroundColor: `${
+                              TEMATICAS[museo.tematica].museoCardColors
+                                .backgroundImage
+                            }`,
+                          }}
+                        >
+                          <p>{formatearDistancia(museo.distancia)}</p>
+                        </div>
+                        <FavoritoButton />
+                      </div>
+                      <div className="museo-list-item-info">
+                        <div className="museo-list-item-name">
+                          <Link to={`/Museos/${museo.id}`}>
+                            <p
+                              style={{
+                                color: `${
+                                  TEMATICAS[museo.tematica].museoCardColors
+                                    .header
+                                }`,
+                              }}
+                            >
+                              {museo.nombre}
+                            </p>
+                          </Link>
+                        </div>
+                        <div className="museo-list-item-tiempo">
+                          <p
+                            style={{
+                              color: `${
+                                TEMATICAS[museo.tematica].museoCardColors.text
+                              }`,
+                            }}
+                          >
+                            {museo.tiempoEstimado} min -{" "}
+                            {timeLabels[travelMode]}
+                          </p>
+                        </div>
+                        {museo.tematica && (
+                          <>
+                            <div className="museo-list-tematica-icon">
+                              <img
+                                src={TEMATICAS[museo.tematica].icon}
+                                alt=""
+                              />
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </motion.li>
+                  )
+              )}
             </ul>
           </motion.div>
         )}

@@ -134,7 +134,7 @@ function ModHistory() {
         id: "acciones",
         header: "Ver Detalles",
         cell: ({ row }) => (
-          <Link to={`/Perfil/Mod/Resena/${row.original.id}`}>
+          <Link to={`/Mod/Resena/${row.original.id}`}>
             <img src={verIcon} alt="Ver" />
           </Link>
         ),

@@ -69,49 +69,13 @@
       object-position: center;
     }
 
-    .museo-fav-button-container {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      cursor: pointer;
-      margin: 10px 14px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .fav-button-container {
+      top: 20px;
+      left: 20px;
 
-      .museo-fav-button-span {
-        display: inline-block;
-        position: relative;
-        width: 45px;
-        height: 45px;
-        background: url("../../assets/icons/corazon-gris-icon.png");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-        transition: transform 0.3s ease-in-out,
-          background-image 0.3s ease-in-out;
-
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      input {
-        display: none;
-      }
-
-      input:checked ~ span {
-        background-image: url("../../assets/icons/corazon-rojo-icon.png");
-      }
-
-      input ~ span:hover {
-        transform: scale(1.1);
+      .fav-button-span {
+        width: 40px;
+        height: 40px;
       }
     }
   }
@@ -163,14 +127,6 @@
         font-size: 1rem;
         opacity: 0.5;
         margin: 20px 0;
-
-        // img,
-        // svg {
-        //   width: 45px;
-        //   margin-right: 10px;
-        //   opacity: 0.5;
-        //   color: var(--font-color-primary);
-        // }
       }
 
       .museo-section-1-info-horarios {
@@ -302,12 +258,6 @@
         gap: 15px;
         font-size: 20px;
         opacity: 0.5;
-
-        img {
-          width: 45px;
-          margin-right: 10px;
-          opacity: 0.5;
-        }
       }
 
       .museo-section-1-info-horarios {
@@ -337,6 +287,8 @@
     height: 150%;
     top: 0;
     right: 0;
+    pointer-events: none;
+    z-index: 1;
 
     img {
       width: 100%;
@@ -1033,68 +985,6 @@
       }
     }
   }
-}
-
-.lightbox {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  place-content: center;
-
-  opacity: 0;
-  transition: opacity 0.3s ease-in;
-
-  z-index: 100;
-
-  img {
-    width: 80%;
-    height: 80%;
-    border-radius: 25px;
-    object-fit: cover;
-  }
-
-  .btn-close {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 100px;
-    background: black;
-    border: 2px solid white;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    transition: all 0.3s ease-in-out;
-
-    svg {
-      width: 30px;
-      height: auto;
-      color: white;
-    }
-
-    &:hover {
-      background-color: white;
-      border: 2px solid black;
-
-      svg {
-        color: black;
-      }
-    }
-  }
-}
-
-.show {
-  opacity: 1;
 }
 
 /* Responsive */

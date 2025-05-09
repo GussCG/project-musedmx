@@ -205,14 +205,14 @@
         position: absolute;
 
         .info-window-img-rate {
-          width: 40px;
-          height: 40px;
+          width: 50px;
+          height: 50px;
           display: flex;
           justify-content: center;
           align-items: center;
           position: absolute;
-          top: 5px;
-          left: 5px;
+          bottom: 5px;
+          right: 5px;
 
           .info-window-img-rate-text {
             position: absolute;
@@ -220,7 +220,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: $font-primary;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: white;
             font-weight: $font-w-semibold;
             text-align: center;
@@ -240,6 +240,17 @@
               height: 100%;
               transform: translate(-50%, -50%);
             }
+          }
+        }
+
+        .fav-button-container {
+          position: absolute;
+          top: 5px;
+          left: 5px;
+
+          .fav-button-span {
+            width: 30px;
+            height: 30px;
           }
         }
       }

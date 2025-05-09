@@ -159,6 +159,7 @@ import { FaArrowCircleLeft } from "react-icons/fa";
 import { FaArrowCircleRight } from "react-icons/fa";
 
 import { IoSettings } from "react-icons/io5";
+import { IoIosArrowForward } from "react-icons/io";
 
 const Icons = {
   estrellaIcon,
@@ -232,6 +233,7 @@ const Icons = {
   IoSunny,
   CgClose,
   IoIosArrowDown,
+  IoIosArrowForward,
   FaTrash,
   IoIosCheckmarkCircle,
   LuImageUp,

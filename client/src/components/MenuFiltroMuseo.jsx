@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 
 import Slider from "rc-slider";
@@ -10,7 +10,14 @@ const { CgClose, IoIosArrowDown } = Icons;
 import { useTheme } from "../context/ThemeProvider";
 import { id } from "react-day-picker/locale";
 
-function MenuFiltroMuseo({ menuVisible, setMenuVisible, onFilterApply }) {
+import { TEMATICAS, ALCALDIAS } from "../constants/catalog";
+
+function MenuFiltroMuseo({
+  menuVisible,
+  setMenuVisible,
+  onFilterApply,
+  currentFilters = { tipos: [], alcaldias: [] },
+}) {
   const { isDarkMode } = useTheme();
 
   const trackStyle = [{ backgroundColor: isDarkMode ? "#fff" : "#000" }];
@@ -25,22 +32,6 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible, onFilterApply }) {
       borderColor: isDarkMode ? "#fff" : "#000",
     },
   ];
-
-  const TEMATICAS = [
-    {
-      id: 1,
-      tematica: "Antropología",
-    },
-    { id: 2, tematica: "Arte" },
-    { id: 3, tematica: "Arte Alternativo" },
-    { id: 4, tematica: "Arqueología" },
-    { id: 5, tematica: "Ciencia y Tecnología" },
-    { id: 6, tematica: "Especializado" },
-    { id: 7, tematica: "Historia" },
-    { id: 8, tematica: "Otro" },
-  ];
-
-  const ALCALDIAS = ["Benito Juárez", "Cuauhtémoc", "Miguel Hidalgo"];
 
   const cerrarMenu = () => {
     setMenuVisible(false);
@@ -72,7 +63,36 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible, onFilterApply }) {
   });
   const [museosCount, setMuseosCount] = useState(0);
 
+  useEffect(() => {
+    if (currentFilters) {
+      console.log("[useEffect] currentFilters:", currentFilters);
+
+      const newSelectedFilters = {
+        tematica: {},
+        alcaldia: {},
+      };
+
+      // Manejar tipos (que vienen como IDs numéricos)
+      Object.values(TEMATICAS).forEach((tematica) => {
+        newSelectedFilters.tematica[tematica.nombre] =
+          currentFilters.tipos.some((tipoId) => {
+            // Comparar directamente con el ID de la temática
+            return tipoId === tematica.id;
+          });
+      });
+
+      ALCALDIAS.forEach((alcaldia) => {
+        newSelectedFilters.alcaldia[alcaldia] =
+          currentFilters.alcaldias.includes(alcaldia);
+      });
+
+      console.log("[useEffect] newSelectedFilters:", newSelectedFilters);
+      setSelectedFilters(newSelectedFilters);
+    }
+  }, [currentFilters]);
+
   const toggleCheckbox = (category, value) => {
+    console.log(`[toggleCheckbox] ${category} - ${value}`);
     setSelectedFilters((prev) => ({
       ...prev,
       [category]: {
@@ -87,42 +107,39 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible, onFilterApply }) {
     try {
       const filtros = {
         tipos: Object.keys(selectedFilters.tematica)
-          .filter((key) => selectedFilters.tematica[key])
-          .map((key) => TEMATICAS.find((t) => t.tematica === key)?.id) // Obtener el id de la tematica
+          .filter((nombreTematica) => selectedFilters.tematica[nombreTematica])
+          .map((nombreTematica) => {
+            // Encontrar la temática por nombre y devolver solo el ID
+            const tematica = Object.values(TEMATICAS).find(
+              (t) => t.nombre === nombreTematica
+            );
+            return tematica ? tematica.id : null; // Devuelve el ID, no el objeto
+          })
           .filter((id) => id !== null),
         alcaldias: Object.keys(selectedFilters.alcaldia).filter(
           (key) => selectedFilters.alcaldia[key]
         ),
-        precioMin: range[0],
-        precioMax: range[1],
       };
 
+      console.log("[handleFiltrar] Filtros a aplicar:", filtros);
       onFilterApply(filtros);
       cerrarMenu();
     } catch (error) {
       console.error("Error al aplicar los filtros:", error);
-      setMuseosCount(0);
     }
   };
 
   const handleBorrar = useCallback(() => {
-    // Resetear todos los filtros
+    console.log("[handleBorrar] Reseteando filtros...");
     const resetFilters = {
       tipos: [],
       alcaldias: [],
-      precioMin: 0,
-      precioMax: 100,
     };
 
-    // Actualizar estados locales
     setRange([0, 100]);
     setSelectedFilters({ tematica: {}, alcaldia: {} });
 
-    // Aplicar reset de filtros
     onFilterApply(resetFilters);
-
-    // Cerrar el menú automáticamente
-    setMenuVisible(false);
     setOpenDropdown(null);
   }, [onFilterApply]);
 
@@ -160,22 +177,18 @@ function MenuFiltroMuseo({ menuVisible, setMenuVisible, onFilterApply }) {
             }`}
             id="tematica"
           >
-            {TEMATICAS.map((tematica) => (
+            {Object.values(TEMATICAS).map((tematica) => (
               <div key={tematica.id} className="filtro-menu-filter-body-item">
                 <label htmlFor={`tematica-${tematica.id}`}>
-                  {tematica.tematica}
+                  {tematica.nombre}
                 </label>
                 <label className="filtro-chk">
                   <input
                     type="checkbox"
                     name="tematica-filter"
                     id={`tematica-${tematica.id}`}
-                    checked={
-                      selectedFilters.tematica[tematica.tematica] || false
-                    }
-                    onChange={() =>
-                      toggleCheckbox("tematica", tematica.tematica)
-                    }
+                    checked={selectedFilters.tematica[tematica.nombre] || false}
+                    onChange={() => toggleCheckbox("tematica", tematica.nombre)}
                   />
                   <span className="checkmark"></span>
                 </label>

@@ -7,12 +7,11 @@ import { motion } from "framer-motion";
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { buildImage } from "../utils/buildImage";
-import imgPrueba from "../assets/images/others/museo-main-1.jpg";
 import Icons from "./IconProvider";
-const { estrellaIcon, moneyIcon, freeIcon, FaTrash, FaStar } = Icons;
+const { moneyIcon, freeIcon, FaTrash, FaStar } = Icons;
 import { TEMATICAS } from "../constants/catalog";
-import Museo from "../models/Museo/Museo";
 import { agruparHorarios } from "../utils/agruparHorarios";
+import FavoritoButton from "./FavoritoButton";
 
 export default function MuseoCard({ museo, editMode, sliderType }) {
   // Prefijo unico basado en sliderType
@@ -22,15 +21,12 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
   const navigate = useNavigate();
 
   const [isClicked, setIsClicked] = useState(false);
-  // Estado para los checkbox de favoritos
-  const [isFavorite, setIsFavorite] = useState(false);
-
   // Eliminar un museo de Quiero Visitar
   const handleQVDelete = (id) => {
     // Lógica para eliminar el museo de Quiero Visitar en el backend
     try {
       // Eliminar el museo de la lista
-      toast.success(`${museoInfo.nombre} eliminado de la lista`, {
+      toast.success(`${museo.nombre} eliminado de la lista`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -45,19 +41,6 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
       console.error("Error al eliminar el museo de Quiero Visitar", error);
     }
   };
-
-  const handleFavoriteChange = () => {
-    // if (!user) {
-    //     navigate('/Auth/Iniciar')
-    //     return
-    // }
-
-    // Lógica para agregar o quitar de favoritos en el backend
-    setIsFavorite(!isFavorite);
-  };
-
-  // Para obtener los museos del backend
-  const museoInfo = new Museo(museo);
 
   // De prueba
   const horarios = {
@@ -74,132 +57,131 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
 
   // Funcion para devolver la imagen de costo dependiendo del numero
   const costoImagen = () => {
-    if (museoInfo.costo === 0) {
+    if (museo.costo === 0) {
       return <img src={freeIcon} alt="Costo" key="gratis" />;
     } else {
-      return Array.from({ length: museoInfo.costo }, (_, index) => (
+      return Array.from({ length: museo.costo }, (_, index) => (
         <img src={moneyIcon} alt="Costo" key={index} />
       ));
     }
   };
 
-  const tema = TEMATICAS[museoInfo.tematica];
-
   return (
-    <motion.div
-      className="museo-card"
-      layoutId={`${layoutPrefix}museo-card-${museoInfo.id}`}
-      key={`${layoutPrefix}card-${museoInfo.id}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      style={{
-        backgroundColor: tema.museoCardColors.background,
-      }}
-    >
-      <div className="museo-card-img-container">
-        {editMode ? (
-          <div className="museo-card-delete-container">
-            <button type="button" onClick={() => handleQVDelete(museoInfo.id)}>
-              <FaTrash />
-            </button>
-          </div>
-        ) : (
-          <label className="museo-card-fav-button-container">
-            <input
-              type="checkbox"
-              name="museo-fav"
-              className="museo-card-fav-button"
-              checked={isFavorite}
-              onChange={
-                user
-                  ? handleFavoriteChange
-                  : () => {
-                      localStorage.setItem(
-                        "redirectPath",
-                        window.location.pathname
-                      );
-                      setIsLogginPopupOpen(true);
-                    }
-              }
-            />
-            <span className="museo-card-fav-button-span"></span>
-          </label>
-        )}
-        <Link
-          to={`/Museos/${museoInfo.id}`}
-          onClick={(e) => {
-            e.preventDefault();
-            setTimeout(() => navigate(`/Museos/${museoInfo.id}`), 0);
+    <>
+      {museo.tematica && (
+        <motion.div
+          className="museo-card"
+          layoutId={`${layoutPrefix}museo-card-${museo.id}`}
+          key={`${layoutPrefix}card-${museo.id}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          style={{
+            backgroundColor:
+              TEMATICAS[museo.tematica].museoCardColors.background,
           }}
         >
-          <motion.img
-            src={buildImage(museoInfo)}
-            alt={museoInfo.nombre}
-            className="museo-card-img"
-            layoutId={`${layoutPrefix}museo-image-${museoInfo.id}`}
-            key={`${layoutPrefix}img-${museoInfo.id}`}
-            title={museoInfo.nombre}
-          />
-
-          <div className="museo-card-img-rating">
-            <p id="museo-card-rating">{museoInfo.calificacion}</p>
-            <FaStar
-              style={{
-                fill: tema.museoCardColors.backgroundImage,
+          <div className="museo-card-img-container">
+            {editMode ? (
+              <div className="museo-card-delete-container">
+                <button type="button" onClick={() => handleQVDelete(museo.id)}>
+                  <FaTrash />
+                </button>
+              </div>
+            ) : (
+              <FavoritoButton />
+            )}
+            <Link
+              to={`/Museos/${museo.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                setTimeout(() => navigate(`/Museos/${museo.id}`), 0);
               }}
-            />
-          </div>
-          <div
-            className="museo-card-img-tematica"
-            style={{ backgroundColor: tema.museoCardColors.header }}
-          >
-            <h2>{TEMATICAS[museoInfo.tematica].nombre}</h2>
-          </div>
-        </Link>
-      </div>
-      <div className="museo-card-info-container">
-        <div className="museo-card-info-header">
-          <Link
-            to={`/Museos/${museoInfo.id}`}
-            onClick={(e) => {
-              e.preventDefault();
-              setTimeout(() => navigate(`/Museos/${museoInfo.id}`), 0);
-            }}
-          >
-            <h2
-              id="museo-card-nombre"
-              style={{ color: tema.museoCardColors.header }}
             >
-              {museoInfo.nombre}
-            </h2>
-          </Link>
-          <p
-            id="museo-card-alcaldia"
-            style={{ color: tema.museoCardColors.text }}
-          >
-            {museoInfo.alcaldia}
-          </p>
-        </div>
-        <div className="museo-card-info-body">
-          <div className="museo-card-info-body-item">
-            <p
-              className="semibold"
-              style={{ color: tema.museoCardColors.header }}
-            >
-              Horarios:
-            </p>
-            {horariosAgrupados.map((horario, index) => (
-              <p
-                key={`${horario}-${index}`}
-                style={{ color: tema.museoCardColors.text }}
+              <motion.img
+                src={buildImage(museo)}
+                alt={museo.nombre}
+                className="museo-card-img"
+                layoutId={`${layoutPrefix}museo-image-${museo.id}`}
+                key={`${layoutPrefix}img-${museo.id}`}
+                title={museo.nombre}
+              />
+
+              <div className="museo-card-img-rating">
+                <p id="museo-card-rating">{museo.calificacion || 4}</p>
+                <FaStar
+                  style={{
+                    fill: TEMATICAS[museo.tematica].museoCardColors
+                      .backgroundImage,
+                  }}
+                />
+              </div>
+              <div
+                className="museo-card-img-tematica"
+                style={{
+                  backgroundColor:
+                    TEMATICAS[museo.tematica].museoCardColors.header,
+                }}
               >
-                {horario}
-              </p>
-            ))}
+                {museo.tematica && <h2>{TEMATICAS[museo.tematica].nombre}</h2>}
+              </div>
+            </Link>
           </div>
-        </div>
-      </div>
-    </motion.div>
+          <div className="museo-card-info-container">
+            <div className="museo-card-info-header">
+              <Link
+                to={`/Museos/${museo.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setTimeout(() => navigate(`/Museos/${museo.id}`), 0);
+                }}
+              >
+                <h2
+                  id="museo-card-nombre"
+                  style={{
+                    color: TEMATICAS[museo.tematica].museoCardColors.header,
+                  }}
+                >
+                  {museo.nombre}
+                </h2>
+              </Link>
+              <p
+                id="museo-card-alcaldia"
+                style={{
+                  color: TEMATICAS[museo.tematica].museoCardColors.text,
+                }}
+              >
+                {museo.alcaldia}
+              </p>
+            </div>
+            <div className="museo-card-info-body">
+              <div className="museo-card-info-body-item">
+                <p
+                  className="semibold"
+                  style={{
+                    color: TEMATICAS[museo.tematica].museoCardColors.header,
+                  }}
+                >
+                  Horarios:
+                </p>
+                {horariosAgrupados.map((horario, index) => (
+                  <p
+                    key={`${horario}-${index}`}
+                    style={{
+                      color: TEMATICAS[museo.tematica].museoCardColors.text,
+                    }}
+                  >
+                    {horario}
+                  </p>
+                ))}
+              </div>
+              <div className="museo-card-info-body-tematica">
+                <img src={TEMATICAS[museo.tematica].icon} alt="Tematica" />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </>
   );
 }
