@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-
 import { useAuth } from "../../context/AuthProvider";
 import { useTheme } from "../../context/ThemeProvider";
-
 import { AnimatePresence, motion } from "framer-motion";
-
 import HeaderMuseoButtons from "../../components/HeaderMuseoButtons";
-
 import "../../styles/pages/MuseoDetails.scss";
-
 import Icons from "../../components/IconProvider";
 
 const iconosServicios = {
@@ -44,123 +39,31 @@ const titulosServicios = {
   LenguajedeSenas: "Lenguaje de Señas",
 };
 
-const calificacionesConfig = {
-  Edad: {
-    promedio: 2.0,
-    rubricas: [
-      { valor: 3, titulo: "Para Adultos", icono: Icons.adultoIcon },
-      { valor: 2, titulo: "Para toda la familia", icono: Icons.familiarIcon },
-      { valor: 1, titulo: "Para Niños", icono: Icons.ninoIcon },
-    ],
-    width: 0,
-  },
-  Interesante: {
-    promedio: 4.5,
-    rubricas: [
-      { valor: 5, titulo: "Muy Interesante", icono: Icons.dormirIcon },
-      { valor: 4, titulo: "Interesante", icono: Icons.dormirIcon },
-      { valor: 3, titulo: "Poco Interesante", icono: Icons.dormirIcon },
-      { valor: 2, titulo: "Aburrido", icono: Icons.dormirIcon },
-    ],
-    width: 0,
-  },
-  Limpio: {
-    promedio: 0.5,
-    rubricas: [
-      { valor: 1, titulo: "Limpio", icono: Icons.limpioIcon },
-      { valor: 0.5, titulo: "Sucio", icono: Icons.limpioIcon },
-    ],
-    width: 0,
-  },
-  Entendible: {
-    promedio: 0.75,
-    rubricas: [
-      { valor: 1, titulo: "Entendible", icono: Icons.entendibleIcon },
-      { valor: 0.5, titulo: "Difícil", icono: Icons.entendibleIcon },
-    ],
-    witdh: 0,
-  },
-  Costo: {
-    promedio: 2.5,
-    rubricas: [
-      { valor: 4, titulo: "Muy Caro", icono: Icons.moneyIcon },
-      { valor: 3, titulo: "Caro", icono: Icons.moneyIcon },
-      { valor: 2, titulo: "Barato", icono: Icons.moneyIcon },
-      { valor: 1, titulo: "Gratis", icono: Icons.moneyIcon },
-    ],
-    width: 0,
-  },
-};
-
-const getCalificaciones = (config) => {
-  let data = { icono: null, titulo: "" };
-  for (const rubrica of config.rubricas) {
-    if (config.promedio >= rubrica.valor) {
-      data.icono = rubrica.icono;
-      data.titulo = rubrica.titulo;
-      break;
-    }
-  }
-  return data;
-};
-
-Object.keys(calificacionesConfig).forEach((calificacion) => {
-  const data = getCalificaciones(calificacionesConfig[calificacion]);
-  calificacionesConfig[calificacion].icono = data.icono;
-  calificacionesConfig[calificacion].titulo = data.titulo;
-  // Calcular el width de la barra de progreso
-  calificacionesConfig[calificacion].width = (
-    (calificacionesConfig[calificacion].promedio /
-      calificacionesConfig[calificacion].rubricas[0].valor) *
-    100
-  ).toFixed(0);
-  console.log(calificacionesConfig[calificacion]);
-});
-
 const {
   FaSquareFacebook,
   FaSquareXTwitter,
   FaSquareInstagram,
   FaFilter,
   webIcon,
-  tematicaIcon,
   estrellaIcon,
 } = Icons;
 
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
 
-// Galeria de fotos Placeholder
-import galeriaFoto1 from "../../assets/images/others/museo-main-1.jpg";
-import galeriaFoto2 from "../../assets/images/others/museo-main-2.jpg";
-import galeriaFoto3 from "../../assets/images/others/museo-main-3.jpg";
-import galeriaFoto4 from "../../assets/images/others/museo-main-4.jpg";
-import galeriaFoto5 from "../../assets/images/others/museo-main-5.jpg";
-
-// Para pruebas
-const images = [
-  galeriaFoto1,
-  galeriaFoto2,
-  galeriaFoto3,
-  galeriaFoto4,
-  galeriaFoto5,
-  galeriaFoto1,
-  galeriaFoto2,
-  galeriaFoto3,
-  // galeriaFoto4,
-  // galeriaFoto5,
-];
-
 // Placeholder usuario
 import placeholderUserImage from "../../assets/images/placeholders/user_placeholder.png";
-
 import MenuFiltroResena from "../../components/MenuFiltroResena";
 import MapMuseoDetail from "../../components/MapMuseoDetail";
 import MuseoSlider from "../../components/MuseoSlider";
 import ImagenesSlider from "../../components/ImagenesSlider";
 import MuseoGallery from "../../components/MuseoGallery";
 import axios from "axios";
-
-import buildImage from "../../utils/buildImage";
+import { buildImage } from "../../utils/buildImage";
+import Museo from "../../models/Museo/Museo";
+import { TEMATICAS } from "../../constants/catalog";
+import { procesarCalificaciones } from "../../utils/calificacionesEncuesta";
+import { formatearFechaTitulo } from "../../utils/formatearFechas";
+import { formatearDireccion } from "../../utils/formatearDireccionVista";
 
 // BACKEND_URL
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -187,10 +90,11 @@ function MuseoDetail() {
   useEffect(() => {
     const fetchMuseo = async (id) => {
       try {
-        let endpoint = `${BACKEND_URL}/api/museos/${id}`;
-
+        const endpoint = `${BACKEND_URL}/api/museos/${id}`;
         const response = await axios.get(endpoint);
-        setMuseoInfo(response.data.museo[0]);
+
+        const museoData = new Museo(response.data.museo[0]);
+        setMuseoInfo(museoData);
       } catch (error) {
         console.log(error);
       }
@@ -199,7 +103,13 @@ function MuseoDetail() {
     fetchMuseo(museoIdNumber);
   }, [museoId]);
 
-  console.log(museoInfo);
+  const calificaciones = procesarCalificaciones({
+    edad: museoInfo.mus_edad || 3,
+    interesante: museoInfo.mus_interesante || 2,
+    limpio: museoInfo.mus_limpio || 1,
+    entendible: museoInfo.mus_entendible || 1,
+    costo: museoInfo.mus_costo || 1,
+  });
 
   const [isExisting, setIsExisting] = useState(false);
 
@@ -320,6 +230,22 @@ function MuseoDetail() {
     setIsFavorite(!isFavorite);
   };
 
+  // Para obtener la galeria de imagenees del museo
+  const [imagenes, setImagenes] = useState([]);
+  useEffect(() => {
+    const fetchGaleria = async (id) => {
+      try {
+        const endpoint = `${BACKEND_URL}/api/museos/galeria/${id}`;
+        const response = await axios.get(endpoint);
+        setImagenes(response.data.galeria);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchGaleria(museoIdNumber);
+  }, [museoIdNumber]);
+
   useEffect(() => {
     const handleBackNavigation = () => {
       setIsExisting(true);
@@ -332,6 +258,8 @@ function MuseoDetail() {
       window.removeEventListener("popstate", handleBackNavigation);
     };
   }, [navigate]);
+
+  const tema = TEMATICAS[museoInfo.tematica];
 
   return (
     <AnimatePresence>
@@ -352,7 +280,7 @@ function MuseoDetail() {
             <section id="museo-section-1" className="museo-detail-item">
               <div className="museo-section-1-image">
                 <motion.img
-                  src={buildImage(museoInfo) || museoPlaceholder}
+                  src={buildImage(museoInfo) || museoPlaceholder || null}
                   alt="Museo"
                   layoutId={`museo-image-${museoIdNumber}`}
                   key={`detail-${museoIdNumber}`}
@@ -363,6 +291,25 @@ function MuseoDetail() {
                     duration: 0.5,
                   }}
                 />
+                <label className="museo-fav-button-container">
+                  <input
+                    type="checkbox"
+                    name="museo-fav"
+                    checked={isFavorite}
+                    onChange={
+                      user
+                        ? handleFavoriteChange
+                        : () => {
+                            localStorage.setItem(
+                              "redirectPath",
+                              window.location.pathname
+                            );
+                            setIsLogginPopupOpen(true);
+                          }
+                    }
+                  />
+                  <span className="museo-fav-button-span"></span>
+                </label>
               </div>
               <div
                 className={
@@ -373,46 +320,20 @@ function MuseoDetail() {
               >
                 <div className="museo-section-1-info">
                   <label className="museo-section-1-info-title">
-                    <h1>{museoInfo.mus_nombre}</h1>
-                    <label className="museo-fav-button-container">
-                      <input
-                        type="checkbox"
-                        name="museo-fav"
-                        checked={isFavorite}
-                        onChange={
-                          user
-                            ? handleFavoriteChange
-                            : () => {
-                                localStorage.setItem(
-                                  "redirectPath",
-                                  window.location.pathname
-                                );
-                                setIsLogginPopupOpen(true);
-                              }
-                        }
-                      />
-                      <span className="museo-fav-button-span"></span>
-                    </label>
+                    <h1>{museoInfo.nombre}</h1>
                   </label>
                   <div className="museo-section-1-info-fundacion">
-                    <p>Se fundó en {museoInfo.mus_fec_ap} </p>
+                    <p>
+                      <b>Fecha de Apertura:</b>{" "}
+                      {formatearFechaTitulo(museoInfo.fecha_apertura)}{" "}
+                    </p>
                   </div>
                   <div className="museo-section-1-info-tematica">
-                    <h1>{museoInfo[0]?.mus_tematica}</h1>
-                    {/* <img
-                      src={tematicaIcon}
-                      alt="Tematica"
-                      style={
-                        isDarkMode
-                          ? { filter: "invert(1)" }
-                          : { filter: "invert(0)" }
-                      }
-                    /> */}
-                  </div>
-                  <div className="museo-section-1-info-horarios">
-                    <h1>Horarios:</h1>
-                    <p>Lunes-Viernes: 9:00 - 18:00</p>
-                    <p>Sábado-Domingo: 9:00 - 14:00</p>
+                    {tema && (
+                      <>
+                        <h1>{tema.nombre}</h1>
+                      </>
+                    )}
                   </div>
                 </div>
                 {user && (user.tipoUsuario === 2 || user.tipoUsuario === 3) ? (
@@ -474,13 +395,27 @@ function MuseoDetail() {
                   </div>
                 )}
               </div>
+              <div className="museo-section-1-tematica-image">
+                {tema && (
+                  <img
+                    src={tema.icon}
+                    alt={tema.nombre}
+                    className="museo-section-1-info-tematica-icon"
+                    style={
+                      isDarkMode
+                        ? { filter: "invert(1)" }
+                        : { filter: "invert(0)" }
+                    }
+                  />
+                )}
+              </div>
             </section>
             <motion.div className="museo-detail-sections">
               <section id="museo-section-2">
                 <div className="museo-section-2-calificaciones museo-detail-item">
                   <h1 className="h1-section">Calificaciones</h1>
                   <div className="museo-section-2-calificaciones-container">
-                    {Object.keys(calificacionesConfig).map((calificacion) => (
+                    {Object.keys(calificaciones).map((calificacion) => (
                       <div
                         className="calificacion-container"
                         key={calificacion}
@@ -489,28 +424,30 @@ function MuseoDetail() {
                           <h2>{calificacion}</h2>
                         </div>
                         <div className="calificacion-icon">
-                          <img
-                            src={calificacionesConfig[calificacion].icono}
-                            alt={calificacion}
-                            style={
-                              isDarkMode
-                                ? { filter: "invert(1)" }
-                                : { filter: "invert(0)" }
-                            }
-                          />
+                          {calificaciones[calificacion].icono && (
+                            <img
+                              src={calificaciones[calificacion].icono}
+                              alt={calificacion}
+                              style={
+                                isDarkMode
+                                  ? { filter: "invert(1)" }
+                                  : { filter: "invert(0)" }
+                              }
+                            />
+                          )}
                         </div>
                         <div
                           className="calificacion-graph-bar"
-                          title={`${calificacionesConfig[calificacion].width}%`}
+                          title={`${calificaciones[calificacion].width}%`}
                         >
                           <div
                             className="calificacion-graph-bar-fill"
                             style={{
-                              width: `${calificacionesConfig[calificacion].width}%`,
+                              width: `${calificaciones[calificacion].width}%`,
                             }}
                           ></div>
                         </div>
-                        <p>{calificacionesConfig[calificacion].titulo}</p>
+                        <p>{calificaciones[calificacion].titulo}</p>
                       </div>
                     ))}
                   </div>
@@ -536,38 +473,17 @@ function MuseoDetail() {
                 </div>
                 <div className="museo-section-2-descripcion">
                   <h1>Descripción</h1>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Aenean varius sagittis mi, id scelerisque urna ultrices sed.
-                    Maecenas in lobortis ligula. Cras eleifend, felis nec
-                    porttitor vulputate, dui leo ornare erat, eget maximus enim
-                    dui nec leo. Cras tempus vestibulum magna non suscipit.
-                    Praesent posuere rhoncus neque sit amet scelerisque. Nunc id
-                    justo suscipit, pellentesque augue nec, molestie sapien. Sed
-                    id turpis eget turpis fermentum euismod a id enim. Lorem
-                    ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-                    varius sagittis mi, id scelerisque urna ultrices sed.
-                    Maecenas in lobortis ligula. Cras eleifend, felis nec
-                    porttitor vulputate, dui leo ornare erat, eget maximus enim
-                    dui nec leo. Cras tempus vestibulum magna non suscipit.
-                    Praesent posuere rhoncus neque sit amet scelerisque. Nunc id
-                    justo suscipit, pellentesque augue nec, molestie sapien. Sed
-                    id turpis eget turpis fermentum euismod a id enim. Lorem
-                    ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-                    varius sagittis mi, id scelerisque urna ultrices sed.
-                    Maecenas in lobortis ligula. Cras eleifend, felis nec
-                    porttitor vulputate, dui leo ornare erat, eget maximus enim
-                    dui nec leo. Cras tempus vestibulum magna non suscipit.
-                    Praesent posuere rhoncus neque sit amet scelerisque. Nunc id
-                    justo suscipit, pellentesque augue nec, molestie sapien. Sed
-                    id turpis eget turpis fermentum euismod a id enim.
-                  </p>
+                  <p>{museoInfo.mus_descripcion}</p>
                 </div>
                 <div className="museo-section-2-ubicacion museo-detail-item">
+                  <div className="museo-section-2-direccion">
+                    <h1>Dirección:</h1>
+                    <p>{formatearDireccion(museoInfo)}</p>
+                  </div>
                   <MapMuseoDetail museo={museoInfo} />
                 </div>
               </section>
-              <MuseoGallery images={images} />
+              <MuseoGallery images={imagenes} />
               <section id="museo-section-4" className="museo-detail-item">
                 <h1 className="h1-section">
                   A otros usuarios también les gusto

@@ -6,26 +6,22 @@ import { motion } from "framer-motion";
 // Toastify
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import buildImage from "../utils/buildImage";
-
+import { buildImage } from "../utils/buildImage";
 import imgPrueba from "../assets/images/others/museo-main-1.jpg";
-import PopUpLogin from "./PopUpLogin";
-
 import Icons from "./IconProvider";
-const { estrellaIcon, moneyIcon, freeIcon, FaTrash } = Icons;
+const { estrellaIcon, moneyIcon, freeIcon, FaTrash, FaStar } = Icons;
+import { TEMATICAS } from "../constants/catalog";
+import Museo from "../models/Museo/Museo";
+import { agruparHorarios } from "../utils/agruparHorarios";
 
 export default function MuseoCard({ museo, editMode, sliderType }) {
   // Prefijo unico basado en sliderType
   const layoutPrefix = sliderType ? `${sliderType}-` : ``;
-
   // Para obtener el usuario autenticado pero aun no se ha implementado el backend
   const { user, setIsLogginPopupOpen } = useAuth();
-  // const {user} = useAuth()
   const navigate = useNavigate();
 
   const [isClicked, setIsClicked] = useState(false);
-
   // Estado para los checkbox de favoritos
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -61,116 +57,20 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
   };
 
   // Para obtener los museos del backend
-  const museoInfo = {
-    id: museo.mus_id,
-    nombre: museo.mus_nombre,
-    alcaldia: museo.mus_alcaldia,
-    calificacion: museo.mus_calificacion || 0,
-    distancia: museo.mus_distancia || 0,
-    horarios: museo.mus_horarios || {
-      Lunes: "9:00 - 17:00",
-      Martes: "9:00 - 17:00",
-      Miercoles: "9:00 - 17:00",
-      Jueves: "9:00 - 17:00",
-      Viernes: "9:00 - 17:00",
-      Sabado: "9:00 - 17:00",
-      Domingo: "9:00 - 17:00",
-    },
-    img: buildImage(museo) || imgPrueba,
-    tematica: museo.mus_tematica,
+  const museoInfo = new Museo(museo);
+
+  // De prueba
+  const horarios = {
+    Lunes: "10:00 - 18:00",
+    Martes: "10:00 - 18:00",
+    Miercoles: "10:00 - 18:00",
+    Jueves: "10:00 - 18:00",
+    Viernes: "10:00 - 18:00",
+    Sabado: "10:00 - 18:00",
+    Domingo: "",
   };
 
-  const TEMATICAS_MAP = {
-    1: "Antropología",
-    2: "Arte",
-    3: "Arte Alternativo",
-    4: "Arqueología",
-    5: "Ciencia y Tecnología",
-    6: "Especializado",
-    7: "Historia",
-    8: "Otro",
-  };
-
-  // Funcion para agrupar los horarios por dia
-  const agruparHorarios = () => {
-    let horariosAgrupados = {};
-    let diasSemana = [
-      "Lunes",
-      "Martes",
-      "Miercoles",
-      "Jueves",
-      "Viernes",
-      "Sabado",
-      "Domingo",
-    ];
-
-    // Se obtienen los horarios del museo de forma {Dia:Horario}
-    let horariosArray = Object.entries(museoInfo.horarios);
-
-    // Agrupamos los dias que tienen el mismo horario
-    horariosArray.forEach(([dia, horario]) => {
-      if (horariosAgrupados[horario]) {
-        horariosAgrupados[horario].push(dia);
-      } else {
-        horariosAgrupados[horario] = [dia];
-      }
-    });
-
-    // Ordenar los dias en el orden correcto de la semana
-    Object.keys(horariosAgrupados).forEach((horario) => {
-      horariosAgrupados[horario].sort(
-        (a, b) => diasSemana.indexOf(a) - diasSemana.indexOf(b)
-      );
-    });
-
-    // Formatear el resultado
-    let resultado = Object.entries(horariosAgrupados)
-      .map(([horario, dias]) => {
-        // Si no tiene horario, no se muestra
-        if (horario === "") {
-          return "";
-        }
-
-        if (dias.length === 1) {
-          return `${dias[0]}: ${horario}`;
-        } else {
-          let agrupados = [];
-          let tempGroup = [dias[0]];
-
-          // Agrupar los dias consecutivos
-          for (let i = 1; i < dias.length; i++) {
-            let diaActual = dias[i];
-            let diaAnterior = dias[i - 1];
-
-            if (
-              diasSemana.indexOf(diaActual) ===
-              diasSemana.indexOf(diaAnterior) + 1
-            ) {
-              tempGroup.push(diaActual);
-            } else {
-              agrupados.push(tempGroup);
-              tempGroup = [diaActual];
-            }
-          }
-          agrupados.push(tempGroup);
-
-          // Formatear la salida correctamente
-          return (
-            agrupados
-              .map((grupo) => {
-                return grupo.length === 1
-                  ? `${grupo[0]}`
-                  : `${grupo[0]} - ${grupo[grupo.length - 1]}`;
-              })
-              .join(", ") + `: ${horario}`
-          );
-        }
-      })
-      .join("\n");
-
-    return resultado.split("\n");
-  };
-  const horarios = agruparHorarios();
+  const horariosAgrupados = agruparHorarios(horarios);
 
   // Funcion para devolver la imagen de costo dependiendo del numero
   const costoImagen = () => {
@@ -183,6 +83,8 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
     }
   };
 
+  const tema = TEMATICAS[museoInfo.tematica];
+
   return (
     <motion.div
       className="museo-card"
@@ -191,6 +93,9 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
+      style={{
+        backgroundColor: tema.museoCardColors.background,
+      }}
     >
       <div className="museo-card-img-container">
         {editMode ? (
@@ -229,7 +134,7 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
           }}
         >
           <motion.img
-            src={museoInfo.img}
+            src={buildImage(museoInfo)}
             alt={museoInfo.nombre}
             className="museo-card-img"
             layoutId={`${layoutPrefix}museo-image-${museoInfo.id}`}
@@ -239,14 +144,17 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
 
           <div className="museo-card-img-rating">
             <p id="museo-card-rating">{museoInfo.calificacion}</p>
-            <img
-              src={estrellaIcon}
-              alt="Estrella"
-              className="museo-card-star"
+            <FaStar
+              style={{
+                fill: tema.museoCardColors.backgroundImage,
+              }}
             />
           </div>
-          <div className="museo-card-img-tematica">
-            <h2>{TEMATICAS_MAP[museoInfo.tematica]}</h2>
+          <div
+            className="museo-card-img-tematica"
+            style={{ backgroundColor: tema.museoCardColors.header }}
+          >
+            <h2>{TEMATICAS[museoInfo.tematica].nombre}</h2>
           </div>
         </Link>
       </div>
@@ -259,15 +167,35 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
               setTimeout(() => navigate(`/Museos/${museoInfo.id}`), 0);
             }}
           >
-            <h2 id="museo-card-nombre">{museoInfo.nombre}</h2>
+            <h2
+              id="museo-card-nombre"
+              style={{ color: tema.museoCardColors.header }}
+            >
+              {museoInfo.nombre}
+            </h2>
           </Link>
-          <p id="museo-card-alcaldia">{museoInfo.alcaldia}</p>
+          <p
+            id="museo-card-alcaldia"
+            style={{ color: tema.museoCardColors.text }}
+          >
+            {museoInfo.alcaldia}
+          </p>
         </div>
         <div className="museo-card-info-body">
           <div className="museo-card-info-body-item">
-            <p className="semibold">Horarios:</p>
-            {horarios.map((horario, index) => (
-              <p key={`${horario}-${index}`}>{horario}</p>
+            <p
+              className="semibold"
+              style={{ color: tema.museoCardColors.header }}
+            >
+              Horarios:
+            </p>
+            {horariosAgrupados.map((horario, index) => (
+              <p
+                key={`${horario}-${index}`}
+                style={{ color: tema.museoCardColors.text }}
+              >
+                {horario}
+              </p>
             ))}
           </div>
         </div>

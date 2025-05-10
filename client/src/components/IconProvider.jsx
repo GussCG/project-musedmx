@@ -55,12 +55,22 @@ import verIcon from "../assets/icons/eye-opened-icon.png";
 import editarModIcon from "../assets/icons/editar-perfil-icon.png";
 
 // Museo Detail
-import tematicaIcon from "../assets/icons/antropologia-icon.svg";
+import tematicaIcon from "../assets/icons/antropologia-icon.png";
 import facebookIcon from "../assets/icons/facebook-sc-icon.png";
 import instagramIcon from "../assets/icons/instagram-sc-icon.png";
 import twitterIcon from "../assets/icons/twitter-sc-icon.png";
 import webIcon from "../assets/icons/pagina-web-icon.png";
 import filterIcon from "../assets/icons/filtrar-icon.png";
+
+// Iconos de Tematicas
+import antropologiaIcon from "../assets/icons/antropologia-icon.png";
+import arteIcon from "../assets/icons/arte-icon.png";
+import arteAlternativoIcon from "../assets/icons/arte-alternativo-icon.png";
+import arqueologiaIcon from "../assets/icons/arqueologia-icon.png";
+import cienciayTecnologiaIcon from "../assets/icons/ciencia-y-tecnologia-icon.png";
+import especializadoIcon from "../assets/icons/especializado-icon.png";
+import historiaIcon from "../assets/icons/historia-icon.png";
+import otroIcon from "../assets/icons/otro-icon.png";
 
 // Iconos de Calificaciones
 import dormirIcon from "../assets/icons/dormir-icon.png";
@@ -249,6 +259,14 @@ const Icons = {
   FaArrowCircleLeft,
   FaArrowCircleRight,
   IoSettings,
+  antropologiaIcon,
+  arteIcon,
+  arteAlternativoIcon,
+  arqueologiaIcon,
+  cienciayTecnologiaIcon,
+  especializadoIcon,
+  historiaIcon,
+  otroIcon,
 };
 
 export default Icons;

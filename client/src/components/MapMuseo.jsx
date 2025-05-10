@@ -31,7 +31,7 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
     mapCenter: { lat: 19.4326, lng: -99.1332 },
   });
 
-  // Lista filtrada de museos a mostrar
+  // Lista filtrada de museos a mostrar en Populares
   const museosAMostrar = useMemo(() => {
     return tipo === "3" ? museosMostrados.slice(0, 10) : museosMostrados;
   }, [tipo, museosMostrados]);

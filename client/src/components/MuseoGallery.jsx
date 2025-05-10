@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import LightBox from "./LightBox"; // Asegúrate de que la ruta sea correcta
+import { buildImageGaleria } from "../utils/buildImage";
 
 function MuseoGallery({ images }) {
   // Función para determinar el span aleatorio de las imágenes
@@ -40,7 +41,7 @@ function MuseoGallery({ images }) {
               onClick={openLightBox}
             >
               <img
-                src={image}
+                src={buildImageGaleria(image)}
                 alt={`Foto ${index + 1}`}
                 className="gallery_img"
                 loading="lazy"

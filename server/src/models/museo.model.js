@@ -1,56 +1,39 @@
 import { pool } from "../db.js";
 
 export default class Museo {
-  // Función para obtener todos los museos con filtros opcionales
-  // search: nombre o descripcion del museo
-  // tipo: tematica del museo
-  static async findAll() {
-	let query = "SELECT * FROM museos";
+  static async findAll({ search }) {
+    let query = `
+      SELECT * FROM museos 
+      WHERE 1=1
+    `;
+    const queryParams = [];
 
-	// Si es por tipo (Todos, Cerca o Populares)
-	// Se hace luego
+    if (search) {
+      query += ` AND (mus_nombre LIKE ? OR mus_descripcion LIKE ?) `;
+      queryParams.push(`%${search}%`, `%${search}%`);
+    }
 
-	const [rows] = await pool.query(query, []);
-	return rows;
-  }
-
-  static async findWithFilters({
-	search = null,
-	tematicas = [],
-	alcaldias = [],
-	precioMin = 0,
-	precioMax = 100,
-  }) {
-	let query = `SELECT * FROM museos WHERE 1=1`;
-	const queryParams = [];
-
-	if (search) {
-	  query += ` AND (mus_nombre LIKE ? OR mus_descripcion LIKE ?) `;
-	  queryParams.push(`%${search}%`, `%${search}%`);
-	}
-
-	if (tematicas.length > 0) {
-	  query += ` AND mus_tematica IN (${tematicas.map(() => "?").join(", ")})`;
-	  queryParams.push(...tematicas);
-	}
-
-	if (alcaldias.length > 0) {
-	  query += ` AND mus_alcaldia IN (${alcaldias.map(() => "?").join(", ")})`;
-	  queryParams.push(...alcaldias);
-	}
-
-	const [rows] = await pool.query(query, queryParams);
-	return rows;
+    const [[result]] = await pool.query(query, queryParams);
+    return result.total;
   }
 
   static async findAllNames() {
-	const query = `SELECT mus_id, mus_nombre FROM museos`;
-	const [rows] = await pool.query(query, []);
-	return rows;
+    const query = `
+      SELECT 
+        mus_id, mus_nombre 
+      FROM museos
+      ORDER BY RAND()
+      `;
+    const [rows] = await pool.query(query, []);
+    return rows;
   }
 
   static async findById({ id }) {
-    const query = `SELECT * from museos WHERE mus_id = ?`;
+    const query = `
+      SELECT * from museos 
+      WHERE mus_id = ?
+      LIMIT 1
+      `;
     const queryParams = [];
     queryParams.push(id);
     const [rows] = await pool.query(query, queryParams);
@@ -66,6 +49,33 @@ export default class Museo {
   	}
   	return result;
   }
+
+  static async findGaleriaById({ id }) {
+    const query = `
+      SELECT * FROM galeria
+      WHERE gal_mus_id = ?
+      ORDER BY RAND()
+      LIMIT 10
+      `;
+    const queryParams = [];
+    queryParams.push(id);
+    const [rows] = await pool.query(query, queryParams);
+    return rows;
+  }
+
+  static async findGaleriaById({ id }) {
+    const query = `
+      SELECT * FROM galeria
+      WHERE gal_mus_id = ?
+      ORDER BY RAND()
+      LIMIT 10
+      `;
+    const queryParams = [];
+    queryParams.push(id);
+    const [rows] = await pool.query(query, queryParams);
+    return rows;
+  }
+
 
   //Las cochinadas de Diego
 	static async updateMuseo(id, museoData) {
