@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos` (
   `mus_calle` VARCHAR(100) NOT NULL,
   `mus_num_ext` VARCHAR(10) NOT NULL,
   `mus_colonia` VARCHAR(100) NOT NULL,
-  `mus_cp` INT(5) NOT NULL,
+  `mus_cp` VARCHAR(5) NOT NULL,
   `mus_alcaldia` VARCHAR(100) NOT NULL,
   `mus_descripcion` TEXT NOT NULL,
   `mus_fec_ap` DATE NOT NULL,
@@ -415,4 +415,6 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`servicios` (
   PRIMARY KEY (`ser_id`)
   );
 
-select * from museos;
+select * from museos where mus_nombre = "Herbario Medicinal del IMSS";
+
+show VARIABLES LIKE 'max_allowed_packet';
