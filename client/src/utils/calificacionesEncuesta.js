@@ -45,8 +45,6 @@ export const getCalificaciones = (config) => {
 export const procesarCalificaciones = (promediosMuseo) => {
   const config = {};
 
-  console.log("promediosMuseo", promediosMuseo);
-
   Object.keys(rubrosBase).forEach((clave) => {
     const promedio = promediosMuseo[clave.toLowerCase()] || 0;
     const rubricas = rubrosBase[clave];

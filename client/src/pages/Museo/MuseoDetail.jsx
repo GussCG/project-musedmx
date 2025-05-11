@@ -65,9 +65,10 @@ import { procesarCalificaciones } from "../../utils/calificacionesEncuesta";
 import { formatearFechaTitulo } from "../../utils/formatearFechas";
 import { formatearDireccion } from "../../utils/formatearDireccionVista";
 import FavoritoButton from "../../components/FavoritoButton";
+import { useMuseo } from "../../hooks/Museo/useMuseo";
 
 // BACKEND_URL
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import { BACKEND_URL } from "../../constants/api";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
@@ -79,6 +80,9 @@ function MuseoDetail() {
 
   // Estado para controlar la visibilidad del menu de filtro
   const [menuVisible, setMenuVisible] = useState(false);
+  const [isExisting, setIsExisting] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [imagenes, setImagenes] = useState([]);
 
   const abrirMenu = () => {
     setMenuVisible(true);
@@ -86,33 +90,19 @@ function MuseoDetail() {
 
   const { museoId } = useParams();
   const museoIdNumber = parseInt(museoId, 10);
-
-  const [museoInfo, setMuseoInfo] = useState({});
-  useEffect(() => {
-    const fetchMuseo = async (id) => {
-      try {
-        const endpoint = `${BACKEND_URL}/api/museos/${id}`;
-        const response = await axios.get(endpoint);
-
-        const museoData = new Museo(response.data.museo[0]);
-        setMuseoInfo(museoData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchMuseo(museoIdNumber);
-  }, [museoId]);
+  const {
+    museo: museoInfo,
+    loading: isLoading,
+    error,
+  } = useMuseo(museoIdNumber);
 
   const calificaciones = procesarCalificaciones({
-    edad: museoInfo.mus_edad || 3,
-    interesante: museoInfo.mus_interesante || 2,
-    limpio: museoInfo.mus_limpio || 1,
-    entendible: museoInfo.mus_entendible || 1,
-    costo: museoInfo.mus_costo || 1,
+    edad: 3,
+    interesante: 2,
+    limpio: 1,
+    entendible: 1,
+    costo: 1,
   });
-
-  const [isExisting, setIsExisting] = useState(false);
 
   const museoPrueba = {
     mus_id: 1,
@@ -219,7 +209,6 @@ function MuseoDetail() {
   };
 
   // Estado para los checkbox de favoritos
-  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleFavoriteChange = () => {
     // if (!user) {
@@ -232,7 +221,6 @@ function MuseoDetail() {
   };
 
   // Para obtener la galeria de imagenees del museo
-  const [imagenes, setImagenes] = useState([]);
   useEffect(() => {
     const fetchGaleria = async (id) => {
       try {
@@ -286,17 +274,17 @@ function MuseoDetail() {
 
   return (
     <>
-      {museoInfo.tematica && (
-        <AnimatePresence>
-          {!isExisting && (
-            <motion.div
-              className="museo-detail"
-              key={`museo-detail-${museoInfo.mus_id}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+      <AnimatePresence mode="wait">
+        {!isExisting && (
+          <motion.div
+            className="museo-detail"
+            key={`museo-detail-${museoInfo.mus_id}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut", type: "tween" }}
+          >
+            <>
               <MenuFiltroResena
                 menuVisible={menuVisible}
                 setMenuVisible={setMenuVisible}
@@ -696,10 +684,10 @@ function MuseoDetail() {
                   </section>
                 </motion.div>
               </main>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      )}
+            </>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

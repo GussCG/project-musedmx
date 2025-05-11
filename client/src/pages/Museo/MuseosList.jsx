@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import { ThreeDot } from "react-loading-indicators";
@@ -18,6 +18,9 @@ import Icons from "../../components/IconProvider";
 import MuseumSearch from "../../components/MuseumSearch";
 import { TEMATICAS } from "../../constants/catalog";
 
+import ReactPaginate from "react-paginate";
+import { is } from "react-day-picker/locale";
+
 const {
   listButton,
   mapaButton,
@@ -27,6 +30,8 @@ const {
   TbCardsFilled,
   FaAngleDoubleUp,
   CgClose,
+  IoIosArrowForward,
+  IoIosArrowBack,
 } = Icons;
 
 // BACKEND_URL
@@ -63,6 +68,13 @@ function MuseosList({ titulo, tipo }) {
   // Para obtener los museos del backend
   const [museos, setMuseos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [pagination, setPagination] = useState({
+    totalItems: 0,
+    totalPages: 0,
+    currentPage: 0,
+    itemsPerPage: 12,
+  });
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     tipos: [],
@@ -70,43 +82,87 @@ function MuseosList({ titulo, tipo }) {
   });
   const [sortBy, setSortBy] = useState(null);
 
-  const fetchMuseos = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      let params = {
-        ...(isBusquedaRoute &&
-          tituloSearch &&
-          tituloSearch !== "null" && { search: tituloSearch }),
-        ...(!isBusquedaRoute && tipo && { tipo: tipo }),
-        ...(filters?.tipos?.length && { tipos: filters.tipos.join(",") }),
-        ...(filters?.alcaldias?.length && {
-          alcaldias: filters.alcaldias.join(","),
-        }),
-        ...(sortBy && { sort: sortBy }),
-      };
-
-      const response = await axios.get(`${BACKEND_URL}/api/museos`, {
-        params,
-      });
-      setMuseos(response.data.museos.map((museo) => new Museo(museo)));
-    } catch (error) {
-      setError(error.message);
-      setMuseos([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [tituloSearch, filters, sortBy, isBusquedaRoute, tipo]);
-
-  useEffect(() => {
-    fetchMuseos();
-  }, [fetchMuseos]);
-
   // Para cambiar la vista entre lista y mapa
   const { isMapView, setIsMapView } = useViewMode();
+  const [isMapLoading, setIsMapLoading] = useState(false);
   // Estado para controlar la visibilidad del menu de filtro
   const [menuVisible, setMenuVisible] = useState(false);
+
+  const fetchMuseos = useCallback(
+    async (page = 1) => {
+      try {
+        isMapView ? setIsMapLoading(true) : setIsLoading(true);
+
+        // Preparar parámetros
+        const params = new URLSearchParams();
+
+        if (tituloSearch && tituloSearch !== "null")
+          params.append("search", tituloSearch);
+        if (!isBusquedaRoute && tipo) params.append("tipo", tipo);
+        if (filters.tipos.length)
+          params.append("tipos", filters.tipos.join(","));
+        if (filters.alcaldias.length)
+          params.append("alcaldias", filters.alcaldias.join(","));
+        if (sortBy) params.append("sort", sortBy);
+
+        // Manejo especial para tipo "3" (populares)
+        if (tipo === "3") {
+          params.append("limit", "10");
+          params.append("sort", "best-rating");
+
+          // Solo agregar página si no es MapView
+          if (!isMapView) {
+            params.append("page", page.toString());
+          }
+        } else {
+          // Comportamiento normal para otros tipos
+          if (!isMapView) {
+            params.append("limit", "12");
+            params.append("page", page.toString());
+          }
+        }
+
+        params.append("isMapView", isMapView.toString());
+
+        const response = await axios.get(
+          `${BACKEND_URL}/api/museos?${params.toString()}`
+        );
+
+        setMuseos(response.data.data.items.map((museo) => new Museo(museo)));
+        setPagination({
+          totalItems: response.data.data.totalItems,
+          totalPages: response.data.data.pagination.totalPages,
+          currentPage: response.data.data.pagination.currentPage - 1,
+          itemsPerPage: response.data.data.pagination.itemsPerPage,
+        });
+      } catch (error) {
+        console.error("Error fetching museos:", error);
+        setError(error.message);
+        setMuseos([]);
+        setPagination({
+          totalItems: 0,
+          totalPages: 0,
+          currentPage: 0,
+          itemsPerPage: 12,
+        });
+      } finally {
+        setIsLoading(false);
+        setIsMapLoading(false);
+        setInitialLoad(false);
+      }
+    },
+    [tituloSearch, filters, sortBy, isBusquedaRoute, tipo, isMapView]
+  );
+
+  useEffect(() => {
+    // Recargar datos cuando cambia el modo de vista
+    fetchMuseos(1);
+  }, [isMapView, fetchMuseos]);
+
+  const handlePageClick = (event) => {
+    const newPage = event.selected + 1;
+    fetchMuseos(newPage);
+  };
 
   const abrirMenu = (event) => {
     event?.stopPropagation();
@@ -179,6 +235,8 @@ function MuseosList({ titulo, tipo }) {
     }
   }, [tipo, setIsMapView]);
 
+  const MemoizedMuseoCard = memo(MuseoCard);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -200,7 +258,7 @@ function MuseosList({ titulo, tipo }) {
           <div className="museos-header-section-left">
             <div className="museos-header-section-left-tittles">
               <h1>{tituloBusqueda}</h1>
-              <p>Museos mostrados: {museos.length}</p>
+              <p>Museos mostrados: {pagination.totalItems}</p>
             </div>
           </div>
 
@@ -318,44 +376,78 @@ function MuseosList({ titulo, tipo }) {
 
         {isMapView ? (
           <section className="museos-container-map-section">
-            <MuseosMapView
-              titulo={titulo}
-              MuseosMostrados={museos}
-              tipo={tipo}
-              isMapView={isMapView}
-            />
+            {isMapLoading ? (
+              <div className="loading-indicator">
+                <ThreeDot width={50} height={50} color="#000" count={3} />
+              </div>
+            ) : (
+              <MuseosMapView
+                titulo={titulo}
+                MuseosMostrados={museos}
+                tipo={tipo}
+                isMapView={isMapView}
+              />
+            )}
           </section>
         ) : (
           <section className="museos-container-section">
-            {isLoading && (
+            {(initialLoad || isLoading) && (
               <div className="loading-indicator">
                 <ThreeDot width={50} height={50} color="#000" count={3} />
               </div>
             )}
-            <div className="museos-container">
-              {museos.length === 0 && !isLoading ? (
-                <motion.div
-                  className="no-results"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  key="no-results"
-                  transition={{ duration: 0.5 }}
-                >
-                  <p>No se encontraron museos</p>
-                  <p>Intenta con otra búsqueda o filtros</p>
-                </motion.div>
-              ) : (
-                museos.map((museo) => (
-                  <MuseoCard
-                    key={museo.id}
-                    museo={museo}
-                    editMode={false}
-                    sliderType={null}
-                  />
-                ))
-              )}
-            </div>
+            {!isLoading && !initialLoad && (
+              <>
+                <div className="museos-container">
+                  {museos.length === 0 ? (
+                    <motion.div
+                      className="no-results"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      key="no-results"
+                      transition={{ duration: 0.5 }}
+                    >
+                      <p>No se encontraron museos</p>
+                      <p>Intenta con otra búsqueda o filtros</p>
+                    </motion.div>
+                  ) : (
+                    museos.map((museo) => (
+                      <MuseoCard
+                        key={museo.id}
+                        museo={museo}
+                        editMode={false}
+                        sliderType={null}
+                      />
+                    ))
+                  )}
+                </div>
+              </>
+            )}
+
+            {pagination.totalPages > 1 && tipo !== "3" && (
+              <ReactPaginate
+                breakLabel="..."
+                breakClassName="break"
+                nextLabel={<IoIosArrowForward />}
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={1}
+                marginPagesDisplayed={1}
+                pageCount={pagination.totalPages}
+                previousLabel={<IoIosArrowBack />}
+                renderOnZeroPageCount={null}
+                containerClassName="pagination"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="previous"
+                previousLinkClassName="previous"
+                nextClassName="next"
+                nextLinkClassName="next"
+                breakLinkClassName="page-link"
+                activeClassName="active"
+                forcePage={pagination.currentPage}
+              />
+            )}
           </section>
         )}
       </main>

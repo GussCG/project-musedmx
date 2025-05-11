@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
   getMuseos,
-  createMuseo,
   getMuseosNombres,
   getMuseoById,
   getGaleriaById,
@@ -10,7 +9,6 @@ import {
 const router = Router();
 
 router.get("/", getMuseos);
-router.post("/", createMuseo);
 router.get("/nombres", getMuseosNombres);
 router.get("/:id", getMuseoById);
 router.get("/galeria/:id", getGaleriaById);

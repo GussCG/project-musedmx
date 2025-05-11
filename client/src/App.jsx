@@ -115,6 +115,18 @@ function App() {
                   <Route path="VerResenas" element={<ModHistory />} />
                   <Route path="VerResenas/:museoId" element={<ModHistory />} />
                   <Route path="Resena/:id" element={<ModResenaDetail />} />
+                  <Route
+                    path="Museo/Editar/:museoId"
+                    element={<MuseoForm mode="edit" />}
+                  />
+                  <Route
+                    path="Museo/EditarHorario/:museoId"
+                    element={<MuseoHorariosEdit />}
+                  />
+                  <Route
+                    path="Museo/EditarImagenes/:museoId"
+                    element={<MuseoImgEdit />}
+                  />
                 </Route>
               </Route>
 

@@ -1,7 +1,18 @@
 import { pool } from "../db.js";
 
 export default class Museo {
-  static async findAll({ search, tipos, alcaldias, sort, limit }) {
+  static async findAll({
+    search,
+    tipos,
+    alcaldias,
+    sort,
+    limit,
+    page,
+    isMapView = false,
+  }) {
+    const itemsPerPage = limit ? parseInt(limit) : isMapView ? null : 12;
+    const currentPage = page ? Math.max(1, parseInt(page)) : 1;
+
     let query = `
       SELECT m.*,
       (
@@ -53,12 +64,32 @@ export default class Museo {
       }
     }
 
+    // Contar total
+    const countQuery = `SELECT COUNT(*) as total FROM (${query}) as count_table`;
+    const [countResult] = await pool.query(countQuery, queryParams);
+    const totalItems = countResult[0].total;
+
+    // Aplicar límite y paginación según corresponda
     if (limit) {
       query += ` LIMIT ?`;
-      queryParams.push(limit);
+      queryParams.push(parseInt(limit));
+
+      if (!isMapView && page) {
+        const offset = (currentPage - 1) * parseInt(limit);
+        query += ` OFFSET ?`;
+        queryParams.push(offset);
+      }
     }
+
     const [rows] = await pool.query(query, queryParams);
-    return rows;
+
+    return {
+      items: rows,
+      totalItems: limit ? Math.min(parseInt(limit), totalItems) : totalItems,
+      totalPages: limit ? Math.ceil(totalItems / parseInt(limit)) : 1,
+      currentPage: currentPage,
+      itemsPerPage: limit ? parseInt(limit) : totalItems,
+    };
   }
 
   static async findAllNames() {

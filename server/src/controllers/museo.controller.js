@@ -3,40 +3,48 @@ import { handleHttpError } from "../helpers/httpError.js";
 
 export const getMuseos = async (req, res) => {
   try {
-    const { search, tipo, tipos, alcaldias, sort, limit } = req.query;
-    // Si search es null se asigna un string vacio
-    const searchValue = search || "";
-    const tiposArray = tipos ? tipos.split(",") : [];
-    const alcaldiasArray = alcaldias ? alcaldias.split(",") : [];
+    const { search, tipo, tipos, alcaldias, sort, limit, page, isMapView } =
+      req.query;
 
-    let sortValue = sort;
-    let limitNumber = limit ? parseInt(limit) : null;
+    // Limpieza de parámetros
+    const cleanParams = {
+      search: search && search !== "null" ? search : null,
+      tipos: tipos ? tipos.split(",") : [],
+      alcaldias: alcaldias ? alcaldias.split(",") : [],
+      sort: sort || null,
+      limit: isMapView === "true" ? null : limit ? parseInt(limit) : 12,
+      page: isMapView === "true" ? null : page ? parseInt(page) : 1,
+      isMapView: isMapView === "true",
+    };
 
+    // Si el tipo es "3" (populares), se establece un límite de 10 y se elimina la paginación por el momento que no hay logica para obtener museos populares
     if (tipo === "3") {
-      limitNumber = 10;
+      cleanParams.limit = 10;
+      cleanParams.page = 1;
+
+      if (cleanParams.isMapView) {
+        cleanParams.limit = 10;
+        cleanParams.page = null;
+      }
     }
 
-    console.log("Params", {
-      searchValue,
-      tiposArray,
-      alcaldiasArray,
-      sortValue,
-      limitNumber,
-    });
+    const result = await Museo.findAll(cleanParams);
 
-    const museos = await Museo.findAll({
-      search: searchValue,
-      tipos: tiposArray,
-      alcaldias: alcaldiasArray,
-      sort: sortValue,
-      limit: limitNumber,
-    });
-
-    res.json({
+    // Estructura de respuesta consistente
+    const response = {
       success: true,
-      count: museos.length,
-      museos,
-    });
+      data: {
+        items: result.items,
+        totalItems: result.totalItems,
+        pagination: {
+          totalPages: result.totalPages,
+          currentPage: result.currentPage,
+          itemsPerPage: result.itemsPerPage,
+        },
+      },
+    };
+
+    res.json(response);
   } catch (error) {
     handleHttpError(res, "ERROR_GET_MUSEOS", error);
   }
@@ -80,14 +88,5 @@ export const getGaleriaById = async (req, res) => {
     });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_GALERIA_ID", error);
-  }
-};
-
-export const createMuseo = async (req, res) => {
-  try {
-    const museo = await Museo.create(req.body);
-    res.status(201).json(museo);
-  } catch (error) {
-    handleHttpError(res, "ERROR_CREATE_MUSEO", error);
   }
 };

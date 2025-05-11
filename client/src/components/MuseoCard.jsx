@@ -73,9 +73,10 @@ export default function MuseoCard({ museo, editMode, sliderType }) {
           className="museo-card"
           layoutId={`${layoutPrefix}museo-card-${museo.id}`}
           key={`${layoutPrefix}card-${museo.id}`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut", type: "tween" }}
           style={{
             backgroundColor:
               TEMATICAS[museo.tematica].museoCardColors.background,
