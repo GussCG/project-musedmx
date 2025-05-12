@@ -127,4 +127,28 @@ export default class Museo {
     const [rows] = await pool.query(query, queryParams);
     return rows;
   }
+
+  static async findHorariosById({ id }) {
+    const query = `
+      SELECT * FROM horarios_precios_museo
+      WHERE mh_mus_id = ?
+      ORDER BY mh_dia
+      `;
+    const queryParams = [];
+    queryParams.push(id);
+    const [rows] = await pool.query(query, queryParams);
+    return rows;
+  }
+
+  static async findRedesById({ id }) {
+    const query = `
+      SELECT * FROM museos_have_red_soc
+      WHERE mhrs_mus_id = ?
+      ORDER BY mhrs_cve_rs
+      `;
+    const queryParams = [];
+    queryParams.push(id);
+    const [rows] = await pool.query(query, queryParams);
+    return rows;
+  }
 }

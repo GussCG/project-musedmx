@@ -102,20 +102,29 @@
         align-items: center;
 
         h1 {
-          font-size: 1.5rem;
+          font-size: $museo-detail-h1-size;
           font-weight: $font-w-bold;
           color: var(--font-color-primary);
           margin: 0;
         }
       }
 
-      .museo-section-1-info-fundacion {
+      .museo-section-1-info-fundacion,
+      .museo-section-1-info-correo {
         display: flex;
-        justify-content: center;
+        flex-direction: row;
+        justify-content: flex-start;
         align-items: center;
         gap: 10px;
         font-size: 16px;
         font-weight: $font-w-medium;
+
+        svg {
+          width: 100%;
+          max-width: 40px;
+          height: auto;
+          color: var(--font-color-primary);
+        }
       }
 
       .museo-section-1-info-tematica {
@@ -199,9 +208,7 @@
           width: 30px;
           height: 30px;
           margin-right: 10px;
-          // color: var(--font-color-primary);
-          color: black;
-          filter: invert(1);
+          color: var(--font-color-primary);
         }
       }
     }
@@ -230,20 +237,29 @@
         align-items: center;
 
         h1 {
-          font-size: 1.5rem;
+          font-size: $museo-detail-h1-size;
           font-weight: $font-w-bold;
           color: var(--font-color-primary);
           margin: 0;
         }
       }
 
-      .museo-section-1-info-fundacion {
+      .museo-section-1-info-fundacion,
+      .museo-section-1-info-correo {
         display: flex;
-        justify-content: center;
+        flex-direction: row;
+        justify-content: flex-start;
         align-items: center;
         gap: 10px;
         font-size: 16px;
         font-weight: $font-w-medium;
+
+        svg {
+          width: 100%;
+          max-width: 40px;
+          height: auto;
+          color: var(--font-color-primary);
+        }
       }
 
       .museo-section-1-info-tematica {
@@ -334,7 +350,7 @@
     grid-area: 1 / 1 / 2 / 3;
 
     h1 {
-      font-size: 32px;
+      font-size: $museo-detail-h1-size;
       font-weight: $font-w-bold;
       margin: 20px 0 0 0;
     }
@@ -427,7 +443,7 @@
     grid-area: 1 / 3 / 2 / 4;
 
     h1 {
-      font-size: 32px;
+      font-size: $museo-detail-h1-size;
       font-weight: $font-w-bold;
       margin: 25px 0;
     }
@@ -484,7 +500,7 @@
     padding: 20px;
 
     h1 {
-      font-size: 32px;
+      font-size: $museo-detail-h1-size;
       font-weight: $font-w-bold;
       margin: 0 0 10px 20px;
     }
@@ -552,7 +568,7 @@
   padding: 20px;
 
   h1 {
-    font-size: 32px;
+    font-size: $museo-detail-h1-size;
     font-weight: $font-w-bold;
     margin: 0 0 10px 20px;
   }
@@ -678,7 +694,7 @@
   padding: 20px;
 
   h1 {
-    font-size: 32px;
+    font-size: $museo-detail-h1-size;
     font-weight: $font-w-bold;
     margin: 0 0 0 20px;
   }
@@ -707,7 +723,7 @@
     margin-bottom: 10px;
 
     h1 {
-      font-size: 32px;
+      font-size: $museo-detail-h1-size;
       font-weight: $font-w-bold;
       margin: 0 0 10px 20px;
     }
@@ -1104,7 +1120,8 @@
         }
 
         .museo-section-1-info-tematica,
-        .museo-section-1-info-horarios {
+        .museo-section-1-info-horarios,
+        .museo-section-1-info-correo {
           align-items: center;
           justify-content: center;
         }
@@ -1133,6 +1150,10 @@
     .museo-section-1-tematica-image {
       display: none;
     }
+  }
+
+  #museo-section-horario {
+    width: 110%;
   }
 }
 
@@ -1199,16 +1220,12 @@
         justify-content: center;
         align-items: center;
 
-        .museo-section-1-info-title {
-          #museo-card-fav-button-container {
-            display: none;
-          }
-        }
-
         .museo-section-1-info-tematica,
-        .museo-section-1-info-horarios {
+        .museo-section-1-info-horarios,
+        .museo-section-1-info-correo {
           align-items: center;
           justify-content: center;
+          text-align: center;
         }
       }
 
@@ -1240,6 +1257,7 @@
   //   }
   // }
 
+  #museo-section-horario,
   #museo-section-2,
   #museo-section-3,
   #museo-section-4,

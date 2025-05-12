@@ -6,14 +6,7 @@
   justify-content: flex-start;
   align-items: center;
 
-  padding-top: 50px;
-
   background-color: var(--bg-main);
-
-  h1 {
-    color: var(--font-color-primary);
-    margin-bottom: 30px;
-  }
 
   .tabla-header {
     width: 100%;
@@ -28,8 +21,8 @@
 
     h1 {
       width: 100%;
-      font-size: 2.5rem;
-      font-weight: $font-w-semibold;
+      font-size: 1.8rem;
+      font-weight: $font-w-bold;
       text-align: center;
       padding: 30px;
       color: var(--font-color-primary);
@@ -37,13 +30,16 @@
   }
 
   .tabla-container {
+    flex: 1;
     width: 90%;
-    overflow: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
   }
 
   table {
-    width: 90%;
-    max-width: 100%;
+    width: 100%;
     min-height: 400px;
     margin: 0 auto;
     border-collapse: collapse;
@@ -59,7 +55,7 @@
       content: "";
       display: block;
       position: absolute;
-      bottom: -10px;
+      bottom: 0;
       left: 0;
       width: 100%;
       height: 6px;
@@ -70,7 +66,7 @@
 
     th {
       width: fit-content;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: $font-w-semibold;
       text-align: center;
       padding: 20px;
@@ -99,12 +95,12 @@
   tbody {
     tr {
       height: auto;
-      border-bottom: 3px dashed var(--font-color-primary);
+      border-bottom: 2px dashed var(--font-color-primary);
     }
 
     td {
       width: fit-content;
-      font-size: 1.2rem;
+      font-size: 1rem;
       text-align: center;
       word-break: keep-all;
       padding: 10px;

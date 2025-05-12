@@ -39,6 +39,7 @@
     "react-router-dom": "^7.1.5",
     "react-toastify": "^11.0.3",
     "react-transition-group": "^4.4.5",
+    "reactjs-flip-card": "^2.0.3",
     "sass": "^1.85.1",
     "swiper": "^11.2.2",
     "use-places-autocomplete": "^4.0.1",

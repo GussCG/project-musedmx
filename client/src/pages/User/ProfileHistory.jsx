@@ -166,7 +166,9 @@ function ProfileHistory() {
       transition={{ duration: 0.5 }}
     >
       <main id="tabla-main">
-        <h1>Historial de Visitas</h1>
+        <div className="tabla-header">
+          <h1>Mis Reseñas</h1>
+        </div>
         <div className="tabla-container">
           <table>
             <thead>

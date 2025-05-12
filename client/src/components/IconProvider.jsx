@@ -61,6 +61,7 @@ import instagramIcon from "../assets/icons/instagram-sc-icon.png";
 import twitterIcon from "../assets/icons/twitter-sc-icon.png";
 import webIcon from "../assets/icons/pagina-web-icon.png";
 import filterIcon from "../assets/icons/filtrar-icon.png";
+import { IoMail } from "react-icons/io5";
 
 // Iconos de Tematicas
 import antropologiaIcon from "../assets/icons/antropologia-icon.png";
@@ -160,6 +161,8 @@ import { FaArrowCircleRight } from "react-icons/fa";
 
 import { IoSettings } from "react-icons/io5";
 import { IoIosArrowForward } from "react-icons/io";
+
+import { AiOutlineGlobal } from "react-icons/ai";
 
 const Icons = {
   estrellaIcon,
@@ -269,6 +272,8 @@ const Icons = {
   especializadoIcon,
   historiaIcon,
   otroIcon,
+  IoMail,
+  AiOutlineGlobal,
 };
 
 export default Icons;

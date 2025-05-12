@@ -90,3 +90,33 @@ export const getGaleriaById = async (req, res) => {
     handleHttpError(res, "ERROR_GET_GALERIA_ID", error);
   }
 };
+
+export const getHorariosById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const horarios = await Museo.findHorariosById({ id: id });
+
+    res.json({
+      success: true,
+      id,
+      horarios,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_HORARIOS_ID", error);
+  }
+};
+
+export const getRedesById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const redes = await Museo.findRedesById({ id: id });
+
+    res.json({
+      success: true,
+      id,
+      redes,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_REDES_ID", error);
+  }
+};

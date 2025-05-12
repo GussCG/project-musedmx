@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, createElement } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import { useTheme } from "../../context/ThemeProvider";
@@ -60,7 +60,7 @@ import MuseoGallery from "../../components/MuseoGallery";
 import axios from "axios";
 import { buildImage } from "../../utils/buildImage";
 import Museo from "../../models/Museo/Museo";
-import { TEMATICAS } from "../../constants/catalog";
+import { TEMATICAS, REDES_SOCIALES } from "../../constants/catalog";
 import { procesarCalificaciones } from "../../utils/calificacionesEncuesta";
 import { formatearFechaTitulo } from "../../utils/formatearFechas";
 import { formatearDireccion } from "../../utils/formatearDireccionVista";
@@ -69,11 +69,20 @@ import { useMuseo } from "../../hooks/Museo/useMuseo";
 
 // BACKEND_URL
 import { BACKEND_URL } from "../../constants/api";
+import useMuseoGaleria from "../../hooks/Museo/useMuseoGaleria";
+import useMuseoHorarios from "../../hooks/Museo/useMuseoHorarios";
+import useMuseoRedesSociales from "../../hooks/Museo/useMuseoRedesSociales";
+import HorarioSlider from "../../components/HorarioSlider";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
   const { user, tipoUsuario, setIsLogginPopupOpen } = useAuth();
   const { isDarkMode } = useTheme();
+
+  // Obtenemos el dia de la semana de hoy para el horario
+  const diaSemana = new Date().toLocaleString("es-MX", {
+    weekday: "long",
+  });
 
   const navigate = useNavigate();
   const [contentLoaded, setContentLoaded] = useState(false);
@@ -88,6 +97,7 @@ function MuseoDetail() {
     setMenuVisible(true);
   };
 
+  // FETCH DE MUSEO
   const { museoId } = useParams();
   const museoIdNumber = parseInt(museoId, 10);
   const {
@@ -95,6 +105,23 @@ function MuseoDetail() {
     loading: isLoading,
     error,
   } = useMuseo(museoIdNumber);
+  // Para obtener la galeria de imagenees del museo
+  const {
+    galeria: galeria,
+    loading: galeriaLoading,
+    error: galeriaError,
+  } = useMuseoGaleria(museoIdNumber);
+  const {
+    horarios: horarios,
+    loading: horariosLoading,
+    error: horariosError,
+  } = useMuseoHorarios(museoIdNumber);
+  const {
+    redesSociales: redesSociales,
+    loading: redesSocialesLoading,
+    error: redesSocialesError,
+  } = useMuseoRedesSociales(museoIdNumber);
+  console.log("redesSociales", redesSociales);
 
   const calificaciones = procesarCalificaciones({
     edad: 3,
@@ -220,21 +247,6 @@ function MuseoDetail() {
     setIsFavorite(!isFavorite);
   };
 
-  // Para obtener la galeria de imagenees del museo
-  useEffect(() => {
-    const fetchGaleria = async (id) => {
-      try {
-        const endpoint = `${BACKEND_URL}/api/museos/galeria/${id}`;
-        const response = await axios.get(endpoint);
-        setImagenes(response.data.galeria);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchGaleria(museoIdNumber);
-  }, [museoIdNumber]);
-
   useEffect(() => {
     const handleBackNavigation = () => {
       setIsExisting(true);
@@ -271,6 +283,10 @@ function MuseoDetail() {
       htmlElement.style.removeProperty("--bg-grad-color-2");
     };
   }, [tema, isDarkMode]);
+
+  const redCorreo = redesSociales.find(
+    (redSocial) => redSocial.mhrs_cve_rs === 4
+  );
 
   return (
     <>
@@ -323,6 +339,14 @@ function MuseoDetail() {
                           {formatearFechaTitulo(museoInfo.fecha_apertura)}{" "}
                         </p>
                       </div>
+                      {redCorreo && (
+                        <div className="museo-section-1-info-correo">
+                          {createElement(
+                            REDES_SOCIALES[redCorreo.mhrs_cve_rs]?.icon
+                          )}
+                          <p>{redCorreo.mhrs_link}</p>
+                        </div>
+                      )}
                       <div className="museo-section-1-info-tematica">
                         {tema && (
                           <>
@@ -349,44 +373,27 @@ function MuseoDetail() {
                           />
                         </div>
                         <div className="museo-section-1-csm-social-media">
-                          <a href="#" title="Facebook">
-                            <FaSquareFacebook
-                              style={
-                                isDarkMode
-                                  ? { filter: "invert(1)" }
-                                  : { filter: "invert(0)" }
-                              }
-                            />
-                          </a>
-                          <a href="#" title="Twitter">
-                            <FaSquareXTwitter
-                              style={
-                                isDarkMode
-                                  ? { filter: "invert(1)" }
-                                  : { filter: "invert(0)" }
-                              }
-                            />
-                          </a>
-                          <a href="#" title="Instagram">
-                            <FaSquareInstagram
-                              style={
-                                isDarkMode
-                                  ? { filter: "invert(1)" }
-                                  : { filter: "invert(0)" }
-                              }
-                            />
-                          </a>
-                          <a href="#" title="Página Web">
-                            <img
-                              src={webIcon}
-                              alt="Página Web"
-                              style={
-                                isDarkMode
-                                  ? { filter: "invert(1)" }
-                                  : { filter: "invert(0)" }
-                              }
-                            />
-                          </a>
+                          {!redesSocialesLoading &&
+                            redesSociales.map((redSocial) => {
+                              if (redSocial.mhrs_cve_rs === 4) return null; // No mostrar si es email
+                              return (
+                                <a
+                                  key={redSocial.mhrs_id}
+                                  href={redSocial.mhrs_link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="museo-section-1-csm-icon"
+                                  title={
+                                    REDES_SOCIALES[redSocial.mhrs_cve_rs]
+                                      ?.nombre
+                                  }
+                                >
+                                  {createElement(
+                                    REDES_SOCIALES[redSocial.mhrs_cve_rs]?.icon
+                                  )}
+                                </a>
+                              );
+                            })}
                         </div>
                       </div>
                     )}
@@ -406,6 +413,11 @@ function MuseoDetail() {
                     )}
                   </div>
                 </section>
+                <HorarioSlider
+                  horarios={horarios}
+                  loading={horariosLoading}
+                  error={horariosError}
+                />
                 <motion.div className="museo-detail-sections">
                   <section id="museo-section-2">
                     <div className="museo-section-2-calificaciones museo-detail-item">
@@ -479,7 +491,7 @@ function MuseoDetail() {
                       <MapMuseoDetail museo={museoInfo} />
                     </div>
                   </section>
-                  <MuseoGallery images={imagenes} />
+                  <MuseoGallery images={galeria} />
                   <section id="museo-section-4" className="museo-detail-item">
                     <h1 className="h1-section">
                       A otros usuarios también les gusto

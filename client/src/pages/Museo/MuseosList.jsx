@@ -19,7 +19,6 @@ import MuseumSearch from "../../components/MuseumSearch";
 import { TEMATICAS } from "../../constants/catalog";
 
 import ReactPaginate from "react-paginate";
-import { is } from "react-day-picker/locale";
 
 const {
   listButton,
@@ -234,8 +233,6 @@ function MuseosList({ titulo, tipo }) {
       setIsMapView(true);
     }
   }, [tipo, setIsMapView]);
-
-  const MemoizedMuseoCard = memo(MuseoCard);
 
   return (
     <motion.div

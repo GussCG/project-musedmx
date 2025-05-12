@@ -284,7 +284,7 @@
             position: absolute;
             bottom: -5px;
             left: 0;
-            border-bottom: 2px solid black;
+            border-bottom: 2px solid var(--font-color-primary);
             width: 100%;
             background-color: currentColor;
             transform: scaleX(0);
@@ -295,7 +295,7 @@
         }
 
         &.active {
-          background-color: var(--bg-navbar);
+          background-color: var(--pagination-active-bg);
           border-radius: 50%;
           color: var(--font-color-primary);
           font-weight: $font-w-bold;
@@ -323,6 +323,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        color: var(--font-color-primary);
+        font-size: 1.5rem;
 
         svg {
           width: 35px;

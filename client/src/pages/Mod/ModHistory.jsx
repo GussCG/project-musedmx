@@ -163,11 +163,14 @@ function ModHistory() {
       transition={{ duration: 0.5 }}
     >
       <main id="tabla-main">
-        <h1>
-          {museoId
-            ? `Reseñas no aprobadas de ${museoId}`
-            : `Reseñas no aprobadas`}
-        </h1>
+        <div className="tabla-header">
+          <h1>
+            {museoId
+              ? `Reseñas no aprobadas de ${museoId}`
+              : `Reseñas no aprobadas`}
+          </h1>
+        </div>
+
         <div className="tabla-container">
           <table>
             <thead>
