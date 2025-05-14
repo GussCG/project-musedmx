@@ -16,6 +16,7 @@ PARA CORRER EL FRONTEND: npm run dev -> en la carpeta raiz del frontend /client
 - multer
 - jsonwebtoken
 - cookie-parser
+- nodemailer
 
 !!! PARA EL FRONTEND
 - Para obtener las variables de entorno del backend se hace una llamada https al servidor
