@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 
-import { AnimatePresence, m, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { toast, Bounce } from "react-toastify";
-import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
@@ -13,161 +12,63 @@ import ErrorCampo from "../../components/ErrorCampo";
 
 import { ThreeDot } from "react-loading-indicators";
 
-import useMuseo from "../../hooks/Museo/useMuseo";
-
-// import Slider from "rc-slider";
-// import "rc-slider/assets/index.css";
-
-import { format, set } from "date-fns";
-import { es, se } from "react-day-picker/locale";
-import { DayPicker } from "react-day-picker";
+import { format } from "date-fns";
+import { es } from "react-day-picker/locale";
+import { DayPicker, Nav } from "react-day-picker";
 import "react-day-picker/style.css";
 
-const validationSchema = Yup.object({
-  museofrmnombre: Yup.string()
-    .matches(
-      /^[a-zA-Z0-9\s]+$/,
-      "El nombre solo puede contener letras y números"
-    )
-    .min(3, "El nombre debe tener al menos 3 caracteres")
-    .max(100, "El nombre no puede exceder los 100 caracteres")
-    .required("Campo requerido"),
-  museofrmcalle: Yup.string()
-    .matches(
-      /^[a-zA-Z0-9\s]+$/,
-      "La calle solo puede contener letras y números"
-    )
-    .min(3, "La calle debe tener al menos 3 caracteres")
-    .max(100, "La calle no puede exceder los 100 caracteres")
-    .required("Campo requerido"),
-  museofrmnumext: Yup.string()
-    .matches(/^[0-9]+$/, "El número exterior solo puede contener números")
-    .required("Campo requerido"),
-  museofrmcolonia: Yup.string()
-    .matches(
-      /^[a-zA-Z0-9\s]+$/,
-      "La colonia solo puede contener letras y números"
-    )
-    .min(3, "La colonia debe tener al menos 3 caracteres")
-    .max(100, "La colonia no puede exceder los 100 caracteres")
-    .required("Campo requerido"),
-  museofrmcp: Yup.string()
-    .matches(
-      /^[0-9]{5}$/,
-      "El código postal debe tener 5 dígitos y solo números"
-    )
-    .max(5, "El código postal debe tener 5 dígitos")
-    .required("Campo requerido"),
-  museofrmalcaldia: Yup.string().required("Campo requerido"),
-  museofrmtematicamuseo: Yup.string().required("Campo requerido"),
-  museofrmdescripcion: Yup.string()
-    .required("Campo requerido")
-    .max(500, "La descripción no puede exceder los 500 caracteres")
-    .min(3, "La descripción debe tener al menos 3 caracteres"),
-  museofrmglatitud: Yup.number()
-    .required("Campo requerido")
-    .typeError("La latitud debe ser un número"),
-  museofrmglongitud: Yup.number()
-    .required("Campo requerido")
-    .typeError("La longitud debe ser un número"),
-  museofrmfoto: Yup.mixed()
-    .test("fileSize", "El archivo es muy grande", (value) => {
-      if (value && value.size) {
-        return value.size <= 2000000;
-      }
-      return true;
-    })
-    .test("fileType", "Tipo de archivo no soportado", (value) => {
-      if (value && value.type) {
-        const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-        return allowedTypes.includes(value.type);
-      }
-      return true;
-    }),
-});
+import { ALCALDIAS, TEMATICAS } from "../../constants/catalog";
+import { useMuseo } from "../../hooks/Museo/useMuseo";
+import { buildImage } from "../../utils/buildImage";
+
+import { museoSchema } from "../../constants/validationSchemas";
+import axios from "axios";
+import { BACKEND_URL } from "../../constants/api";
 
 function MuseoForm({ mode }) {
   const { museoId } = useParams();
-  const [museoEdit, setMuseoEdit] = useState(null);
-  const [loading, setLoading] = useState(false);
   const fileNameRef = useRef(null);
 
-  // Logica para editar museo
-  useEffect(() => {
-    if (mode === "edit") {
-      setLoading(true);
-      // Aquí puedes hacer la lógica para cargar los datos del museo a editar
-      // Por ejemplo, hacer una llamada a la API para obtener los datos del museo
-      // y luego establecer esos datos en el formulario.
-      /* setTimeout(() => {
-        setMuseoEdit({
-          mus_nombre: "Museo de Ejemplo",
-          mus_foto: museoPlaceholder,
-          mus_fec_ap: "2023-01-01",
-          mus_tematica: "Arte",
-          mus_g_latitud: 19.4326,
-          mus_g_longitud: -99.1332,
-          mus_calle: "Calle Ejemplo",
-          mus_num_ext: "123",
-          mus_colonia: "Colonia Ejemplo",
-          mus_cp: "12345",
-          mus_alcaldia: "Cuauhtémoc",
-          mus_descripcion: "Descripción del museo xd",
-        });
-        setLoading(false);
-      }, 2000); // Simulación de carga */
-	  fetch(`${BACKEND_URL}/api/museos/${museoId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setMuseoEdit(data); // Aquí deberías asignar los datos reales
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error al obtener el museo", error);
-        setLoading(false);
-      });
-  	}
-  }, [mode, museoId]);
+  const {
+    museo: museoEdit,
+    loading,
+    error,
+  } = useMuseo(mode === "edit" ? museoId : null);
 
   // Para la imagen inicial
   useEffect(() => {
-    if (mode === "edit" && museoEdit?.mus_foto) {
-      setImagePreview(museoEdit.mus_foto);
+    if (mode === "edit" && museoEdit?.img) {
+      const image = buildImage(museoEdit);
+      setImagePreview(image);
       if (fileNameRef.current) {
-        fileNameRef.current.textContent = museoEdit.mus_foto.split("/").pop();
+        fileNameRef.current.textContent = museoEdit.img.name;
       }
     } else {
       setImagePreview(museoPlaceholder);
       if (fileNameRef.current) {
         fileNameRef.current.textContent = "Seleccionar Archivo";
       }
+
+      // Convertir el placeholder a archivo y guardarlo
+      fetch(museoPlaceholder)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const placeholderFile = new File([blob], "placeholder.jpg", {
+            type: blob.type,
+          });
+          setImage(placeholderFile); // puedes usar esto o actualizar Formik directamente en setFieldValue
+        });
     }
   }, [mode, museoEdit]);
 
   // Para fecha de apertura
   useEffect(() => {
-    if (museoEdit?.mus_fec_ap) {
-      const fecha = new Date(museoEdit.mus_fec_ap);
+    if (museoEdit?.fecha_apertura) {
+      const fecha = new Date(museoEdit.fecha_apertura);
       setMes(fecha);
       setSelectedDate(fecha);
     }
   }, [museoEdit]);
-
-  const TEMATICAS = [
-    {
-      id: 1,
-      tematica: "Antropología",
-    },
-    { id: 2, tematica: "Arte" },
-    { id: 3, tematica: "Arte Alternativo" },
-    { id: 4, tematica: "Arqueología" },
-    { id: 5, tematica: "Ciencia y Tecnología" },
-    { id: 6, tematica: "Especializado" },
-    { id: 7, tematica: "Historia" },
-    { id: 8, tematica: "Otro" },
-  ];
-
-  const ALCALDIAS = ["Cuauhtémoc", "Benito Juárez", "Miguel Hidalgo"];
 
   // TextArea
   const [comment, setComment] = useState("");
@@ -190,10 +91,9 @@ function MuseoForm({ mode }) {
         fileNameRef.current.textContent = file.name;
       }
     } else {
+      setFieldValue("museofrmfoto", null);
       setImagePreview(
-        mode === "edit" && museoEdit?.mus_foto
-          ? museoEdit.mus_foto
-          : museoPlaceholder
+        mode === "edit" && museoEdit?.img ? museoEdit.img : museoPlaceholder
       );
       if (fileNameRef.current) {
         fileNameRef.current.textContent =
@@ -219,84 +119,115 @@ function MuseoForm({ mode }) {
   const { registrarMuseo, editarMuseo } = useMuseo();
 
   const handleRegistroMuseo = async (values) => {
-    try {
-		const museoData = new FormData();
+    const formData = new FormData();
 
-		museoData.append("mus_nombre", values.museofrmnombre);
-		museoData.append("mus_foto", values.museofrmfoto);
-		museoData.append("mus_calle", values.museofrmcalle);
-		museoData.append("mus_num_ext", values.museofrmnumext);
-		museoData.append("mus_colonia", values.museofrmcolonia);
-		museoData.append("mus_cp", values.museofrmcp);
-		museoData.append("mus_alcaldia", values.museofrmalcaldia);
-		museoData.append("mus_fec_ap", values.museofrmfecapertura);
-		museoData.append("mus_descripcion", values.museofrmdescripcion);
-		museoData.append("mus_g_latitud", values.museofrmglatitud);
-		museoData.append("mus_g_longitud", values.museofrmglongitud);
-		// museoData.append("mus_tematica", values.museofrmtematicamuseo);
+    if (mode === "edit") {
+      if (values.museofrmnombre !== museoEdit?.nombre) {
+        formData.append("nombre", values.museofrmnombre);
+      }
+      if (values.museofrmcalle !== museoEdit?.calle) {
+        formData.append("calle", values.museofrmcalle);
+      }
+      if (values.museofrmnumext !== museoEdit?.num_ext) {
+        formData.append("num_ext", values.museofrmnumext);
+      }
+      if (values.museofrmcolonia !== museoEdit?.colonia) {
+        formData.append("colonia", values.museofrmcolonia);
+      }
+      if (values.museofrmcp !== museoEdit?.cp) {
+        formData.append("cp", values.museofrmcp);
+      }
+      if (values.museofrmalcaldia !== museoEdit?.alcaldia) {
+        formData.append("alcaldia", values.museofrmalcaldia);
+      }
+      if (values.museofrmfecapertura !== museoEdit?.fecha_apertura) {
+        formData.append("fecha_apertura", values.museofrmfecapertura);
+      }
+      if (values.museofrmdescripcion !== museoEdit?.descripcion) {
+        formData.append("descripcion", values.museofrmdescripcion);
+      }
+      if (values.museofrmtematicamuseo !== museoEdit?.tematica) {
+        formData.append("tematica", values.museofrmtematicamuseo);
+      }
+      if (values.museofrmglatitud !== museoEdit?.g_latitud) {
+        formData.append("g_latitud", values.museofrmglatitud);
+      }
+      if (values.museofrmglongitud !== museoEdit?.g_longitud) {
+        formData.append("g_longitud", values.museofrmglongitud);
+      }
+      // Verifica si la imagen es un archivo File y no un Blob
+      if (values.museofrmfoto && values.museofrmfoto instanceof File) {
+        formData.append("img", values.museofrmfoto);
+      }
 
+      // Enviar al backend
+      const endpoint = `${BACKEND_URL}/api/museos/${museoId}`;
+      const response = await axios.put(
+        `${BACKEND_URL}/api/museos/${museoId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-		//Convertir nombre de temática a id	
-		const tematica = TEMATICAS.find(
-			(tematica) => tematica.tematica === values.museofrmtematicamuseo
-		);
-		museoData.append("mus_tematica", tematica.id);
+      if (response.status === 200) {
+        // Actualizar la página
+        window.location.reload();
+      } else {
+        toast.error("Error al actualizar el museo", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } else if (mode === "create") {
+      formData.append("nombre", values.museofrmnombre);
+      formData.append("calle", values.museofrmcalle);
+      formData.append("num_ext", values.museofrmnumext);
+      formData.append("colonia", values.museofrmcolonia);
+      formData.append("cp", values.museofrmcp);
+      formData.append("alcaldia", values.museofrmalcaldia);
+      formData.append("fecha_apertura", values.museofrmfecapertura);
+      formData.append("descripcion", values.museofrmdescripcion);
+      formData.append("tematica", values.museofrmtematicamuseo);
+      formData.append("g_latitud", values.museofrmglatitud);
+      formData.append("g_longitud", values.museofrmglongitud);
+      // Asegúrate de que la imagen se añade si es nueva en el caso de creación
+      if (!values.museofrmfoto && image instanceof File) {
+        formData.append("img", image); // 'image' contiene el placeholder convertido
+      } else if (values.museofrmfoto) {
+        formData.append("img", values.museofrmfoto);
+      }
 
-/* 		// Validar los datos que se envían 
-		console.log("Datos a enviar: ");
-		for (var pair of museoData.entries()) {
-			console.log(pair[0] + ", " + pair[1]);
-		} */
+      // Enviar al backend
+      const endpoint = `${BACKEND_URL}/api/museos`;
+      const response = await axios.post(endpoint, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-		if (mode === "edit") {
-			const response = await editarMuseo(museoData, museoId); // Realiza una solicitud PUT para editar el museo
-			if (response) {
-				toast.success("Museo actualizado correctamente", {
-				position: "top-right",
-				autoClose: 3000,
-				theme: "colored",
-				transition: Bounce,
-				});
-			} else {
-				toast.error("Error al actualizar el museo", {
-				position: "top-right",
-				autoClose: 3000,
-				theme: "colored",
-				transition: Bounce,
-				});
-			}
-		} else {
-			const response = await registrarMuseo(museoData);
-
-			if (response) {
-				toast.success("Museo registrado correctamente", {
-				position: "top-right",
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: false,
-				pauseOnHover: false,
-				draggable: false,
-				progress: undefined,
-				theme: "colored",
-				transition: Bounce,
-				});
-			} else {
-				toast.error("Error al registrar el museo", {
-					position: "top-right",
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: false,
-					pauseOnHover: false,
-					draggable: false,
-					progress: undefined,
-					theme: "colored",
-					transition: Bounce,
-				});
-			}
-		}
-	} catch (error) {
-	  console.error("Error al procesar los datos del museo:", error);
-	}
+      if (response.status === 200) {
+        // Mandar a la pagina del museo creado
+        Navigate(`/museo/${response.data.museoId}`);
+      } else {
+        toast.error("Error al registrar el museo", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    }
   };
 
   return (
@@ -320,20 +251,20 @@ function MuseoForm({ mode }) {
             <Formik
               enableReinitialize={true}
               initialValues={{
-                museofrmnombre: museoEdit?.mus_nombre || "",
-                museofrmcalle: museoEdit?.mus_calle || "",
-                museofrmnumext: museoEdit?.mus_num_ext || "",
-                museofrmcolonia: museoEdit?.mus_colonia || "",
-                museofrmcp: museoEdit?.mus_cp || "",
-                museofrmalcaldia: museoEdit?.mus_alcaldia || "",
-                museofrmfecapertura: museoEdit?.mus_fec_ap || "",
-                museofrmdescripcion: museoEdit?.mus_descripcion || "",
-                museofrmtematicamuseo: museoEdit?.mus_tematica || "",
-                museofrmglatitud: museoEdit?.mus_g_latitud || "",
-                museofrmglongitud: museoEdit?.mus_g_longitud || "",
-                museofrmfoto: museoEdit?.mus_foto || null,
+                museofrmnombre: museoEdit?.nombre || "",
+                museofrmcalle: museoEdit?.calle || "",
+                museofrmnumext: museoEdit?.num_ext || "",
+                museofrmcolonia: museoEdit?.colonia || "",
+                museofrmcp: museoEdit?.cp || "",
+                museofrmalcaldia: museoEdit?.alcaldia || "",
+                museofrmfecapertura: museoEdit?.fecha_apertura || "",
+                museofrmdescripcion: museoEdit?.descripcion || "",
+                museofrmtematicamuseo: museoEdit?.tematica || "",
+                museofrmglatitud: museoEdit?.g_latitud || "",
+                museofrmglongitud: museoEdit?.g_longitud || "",
+                museofrmfoto: museoPlaceholder || null,
               }}
-              validationSchema={validationSchema}
+              validationSchema={museoSchema}
               validateOnMount={true}
               onSubmit={(values) => {
                 // Aquí puedes manejar el envío del formulario
@@ -384,6 +315,8 @@ function MuseoForm({ mode }) {
                           id="museo-frm-num-ext"
                           name="museofrmnumext"
                           placeholder="Número Exterior"
+                          maxLength="10"
+                          minLength="1"
                           required
                         />
                         <label
@@ -523,12 +456,9 @@ function MuseoForm({ mode }) {
                             <option value="" disabled>
                               Selecciona la temática del museo
                             </option>
-                            {TEMATICAS.map((tematica) => (
-                              <option
-                                key={tematica.id}
-                                value={tematica.tematica}
-                              >
-                                {tematica.tematica}
+                            {Object.values(TEMATICAS).map((tematica) => (
+                              <option key={tematica.id} value={tematica.id}>
+                                {tematica.nombre}
                               </option>
                             ))}
                           </Field>
@@ -577,7 +507,7 @@ function MuseoForm({ mode }) {
                         <div className="registros-field-foto-input">
                           <h2>Foto principal del Museo</h2>
                           <div className="foto-input">
-                            <Field
+                            <button
                               className="file-btn"
                               type="button"
                               onClick={() =>
@@ -585,8 +515,11 @@ function MuseoForm({ mode }) {
                                   .getElementById("museo-frm-foto")
                                   .click()
                               }
-                              value="Seleccionar Archivo"
-                            />
+                              name="museofrmfoto"
+                              id="museo-frm-foto-btn"
+                            >
+                              Seleccionar Archivo
+                            </button>
                             <span id="file-name" ref={fileNameRef}>
                               {mode === "edit"
                                 ? "Cambiar Archivo"
@@ -617,27 +550,17 @@ function MuseoForm({ mode }) {
                             )}
                           </div>
                         )}
-
-                        {/* {openCropper && (
-                                                  <ImageCropper
-                                                    image={image}
-                                                    onCropComplete={(croppedImage) =>
-                                                      handleCroppedImage(croppedImage, setFieldValue)
-                                                    }
-                                                  />
-                                                )} */}
                       </div>
                     </div>
                   </div>
-                  <Field
+                  <button
                     type="submit"
-                    value={
-                      mode === "edit" ? "Actualizar Museo" : "Registrar Museo"
-                    }
-                    className={`button ${isValid && dirty ? "" : "disabled"}`}
+                    className={`button ${isValid ? "" : "disabled"}`}
                     id="registros-button"
-                    disabled={isValid && dirty ? false : true}
-                  />
+                    disabled={!isValid}
+                  >
+                    {mode === "edit" ? "Actualizar Museo" : "Registrar Museo"}
+                  </button>
                 </Form>
               )}
             </Formik>

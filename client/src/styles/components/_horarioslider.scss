@@ -1,0 +1,219 @@
+@use "../variables" as *;
+
+#museo-section-horario {
+  position: relative;
+  background-color: var(--bg-main);
+  color: var(--font-color-primary);
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 25px;
+  box-shadow: var(--box-shadow-2);
+  padding: 20px 0;
+  overflow: visible;
+
+  h1 {
+    font-size: $museo-detail-h1-size;
+    font-weight: $font-w-bold;
+    color: var(--font-color-primary);
+    margin: 0;
+  }
+
+  .message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .horario-swiper {
+    width: 100%;
+    height: auto !important;
+    min-height: 250px;
+    overflow: hidden;
+
+    .swiper-wrapper {
+      width: auto !important;
+      height: auto !important;
+      min-height: 250px;
+    }
+
+    .swiper-slide {
+      width: auto !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+      overflow: visible;
+
+      .horario-card {
+        flex: 1;
+        position: relative;
+        width: 300px;
+        height: 100%;
+        min-height: 200px;
+        border-radius: 20px;
+        background-color: var(--horario-card-bg);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+
+        .horario-container-item-horario {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+
+          p {
+            color: var(--font-color-primary);
+            font-size: 1rem;
+            font-weight: $font-w-regular;
+            text-align: center;
+            padding: 0 16px;
+            word-wrap: break-word;
+          }
+        }
+
+        .horario-container-item-precios {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+
+          padding: 20px;
+
+          .horario-container-item-precio {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 1.1rem;
+            font-weight: $font-w-regular;
+            text-align: center;
+          }
+        }
+
+        .horario-container-today {
+          position: absolute;
+          top: 0;
+          right: 0;
+
+          background-color: black;
+          width: fit-content;
+          height: 35px;
+          border-radius: 0 20px 0 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          p {
+            color: white;
+            font-size: 1rem;
+            font-weight: $font-w-bold;
+            text-align: center;
+            line-height: 1.2rem;
+            padding: 0 16px;
+          }
+        }
+
+        .horario-container-precio {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+
+          background-color: black;
+          width: fit-content;
+          //   max-width: 100px;
+          height: 35px;
+          border-radius: 0 20px 0 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          p {
+            color: white;
+            font-size: 1rem;
+            font-weight: $font-w-bold;
+            text-align: center;
+            padding: 10px;
+          }
+        }
+
+        .cerrado {
+          font-size: 1rem;
+          font-weight: $font-w-light;
+        }
+      }
+
+      .precio {
+        background-color: var(--horario-precio-bg);
+      }
+
+      .gratis {
+        background-color: var(--horario-gratis-bg);
+      }
+
+      .hoy {
+        background-color: var(--horario-hoy-bg);
+      }
+
+      .cerrado {
+        background-color: var(--cerrado-bg);
+      }
+    }
+  }
+
+  .swiper-controllers {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+
+    .swiper-button-prev,
+    .swiper-button-next {
+      width: 40px !important;
+      height: 40px !important;
+      background-color: white;
+      border-radius: 50%;
+
+      &::after {
+        display: none;
+      }
+
+      svg {
+        width: 100%;
+        height: 100%;
+        fill: var(--text-color);
+
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, use } from "react";
 import { Map, AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import Circle from "./Circle";
 import MapMuseoDetailMarker from "./MapMuseoDetailMarker";
@@ -31,15 +31,10 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
     mapCenter: { lat: 19.4326, lng: -99.1332 },
   });
 
-  // Lista filtrada de museos a mostrar en Populares
-  const museosAMostrar = useMemo(() => {
-    return tipo === "3" ? museosMostrados.slice(0, 10) : museosMostrados;
-  }, [tipo, museosMostrados]);
-
-  const isLoadingMuseos = museosAMostrar.length === 0;
+  const isLoadingMuseos = museosMostrados.length === 0;
 
   const handleMuseoActivation = useCallback((museo) => {
-    setActiveMuseo((prev) => (prev?.mus_id === museo?.mus_id ? null : museo));
+    setActiveMuseo((prev) => (prev?.id === museo?.id ? null : museo));
   }, []);
 
   const mapId = useMemo(() => {
@@ -142,38 +137,42 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
 
     const initMap = () => {
       try {
+        const center = location.userLocation || location.mapCenter;
+
+        if (isNaN(center.lat) || isNaN(center.lng)) {
+          console.error("Coordenadas inválidas:", center);
+          return;
+        }
+
         map.setOptions({
           gestureHandling: "greedy",
           disableDefaultUI: true,
           keyboardShortcuts: false,
-          center: location.userLocation || location.mapCenter,
+          center: new window.google.maps.LatLng(center.lat, center.lng),
           zoom: zoom,
         });
         setMapInitialized(true);
       } catch (error) {
         console.error("Error al inicializar el mapa:", error);
-        setTimeout(initMap, 100);
+        setTimeout(initMap, 1000); // Reintentar después de 1 segundo
       }
     };
     initMap();
-  }, [map, mapInitialized]);
+  }, [map, mapInitialized, location.userLocation, location.mapCenter, zoom]);
 
   // Ajustar el zoom del mapa al tamaño de la pantalla
   useEffect(() => {
-    if (tipo === "2" || !map || !mapInitialized || !museosAMostrar?.length)
+    if (tipo === "2" || !map || !mapInitialized || !museosMostrados?.length)
       return;
 
     const newBounds = new window.google.maps.LatLngBounds();
 
-    const museosParaCalculo = museosAMostrar.slice(0, 35);
+    const museosParaCalculo = museosMostrados.slice(0, 35);
 
     museosParaCalculo.forEach((museo) => {
-      if (museo?.mus_g_latitud && museo?.mus_g_longitud) {
+      if (museo?.g_latitud && museo?.g_longitud) {
         newBounds.extend(
-          new window.google.maps.LatLng(
-            museo.mus_g_latitud,
-            museo.mus_g_longitud
-          )
+          new window.google.maps.LatLng(museo.g_latitud, museo.g_longitud)
         );
       }
     });
@@ -198,7 +197,7 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
         setMapBounds(null); // No se puede calcular el bounds
       }
     }
-  }, [map, mapInitialized, museosAMostrar, tipo, location.userLocation]);
+  }, [map, mapInitialized, museosMostrados, tipo, location.userLocation]);
 
   // Aplicamos los bounds cuando cambian
   useEffect(() => {
@@ -240,7 +239,7 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
   }, [map]);
 
   const getSafeKey = (museo, index) => {
-    return museo?.mus_id ? `museo-${museo.mus_id}` : `museo-${index}`;
+    return museo?.id ? `museo-${museo.id}` : `museo-${index}`;
   };
 
   const handlePlaceSelected = useCallback((place) => {
@@ -290,13 +289,13 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
           </AnimatePresence>
 
           {!isLoadingMuseos &&
-            museosAMostrar
+            museosMostrados
               .filter((museo) => museo)
               .map((museo) => (
                 <MapMuseoDetailMarker
                   key={getSafeKey(museo)}
                   museo={museo}
-                  isActive={activeMuseo?.mus_id === museo.mus_id}
+                  isActive={activeMuseo?.id === museo.id}
                   onActivate={handleMuseoActivation}
                 />
               ))}
@@ -316,19 +315,19 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
 
               <MapaCercaDeMi
                 userLocation={location.userLocation}
-                museosMostrados={museosAMostrar}
+                museosMostrados={museosMostrados}
                 radioKM={radioKM}
                 travelMode={travelMode}
               />
             </>
           )}
 
-          {tipo === "3" && <MapaPopulares museosMostrados={museosAMostrar} />}
+          {tipo === "3" && <MapaPopulares museosMostrados={museosMostrados} />}
 
           {museosMostrados.length === 1 && (
             <MapaDirections
               userLocation={location.userLocation}
-              museosMostrados={museosAMostrar}
+              museosMostrados={museosMostrados}
               travelMode={travelMode}
             />
           )}
@@ -336,11 +335,20 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
           <MapaCambiarCentro onPlaceSelected={handlePlaceSelected} />
 
           {/* Marcador del usuario */}
-          <AdvancedMarker position={location.userLocation}>
-            <div className="user-marker">
-              <FaPerson />
-            </div>
-          </AdvancedMarker>
+          {location.userLocation && (
+            <AdvancedMarker
+              key={`user-marker-${location.userLocation.lat}-${location.userLocation.lng}`}
+              position={{
+                lat: Number(location.userLocation.lat),
+                lng: Number(location.userLocation.lng),
+              }}
+            >
+              {/* Icono del usuario */}
+              <div className="user-marker">
+                <FaPerson />
+              </div>
+            </AdvancedMarker>
+          )}
         </Map>
       )}
     </motion.div>

@@ -6,16 +6,9 @@ import foto_default from "../assets/images/others/museo-main-1.jpg";
 import Icons from "./IconProvider";
 const { RiFireFill, CgClose } = Icons;
 
-const TEMATICAS = {
-  1: "Antropología",
-  2: "Arte",
-  3: "Arte Alternativo",
-  4: "Arqueología",
-  5: "Ciencia y Tecnología",
-  6: "Especializado",
-  7: "Historia",
-  8: "Otro",
-};
+import { TEMATICAS } from "../constants/catalog";
+import { buildImage } from "../utils/buildImage";
+import FavoritoButton from "./FavoritoButton";
 
 function MapaPopulares({ museosMostrados }) {
   const [showInfo, setShowInfo] = useState(false);
@@ -92,7 +85,7 @@ function MapaPopulares({ museosMostrados }) {
             <ul className="museos-list">
               {museosMostrados.map((museo, index) => (
                 <motion.li
-                  key={museo.mus_id}
+                  key={museo.id}
                   className="museo-list-item"
                   initial={{ opacity: 0, x: 100 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -103,25 +96,63 @@ function MapaPopulares({ museosMostrados }) {
                     type: "spring",
                     stiffness: 50,
                   }}
+                  style={{
+                    backgroundColor: `${
+                      TEMATICAS[museo.tematica].museoCardColors.background
+                    }`,
+                  }}
                 >
                   <div className="museo-list-item-img">
                     <img
-                      src={museo.mus_foto || foto_default}
-                      alt={museo.mus_nombre}
+                      src={buildImage(museo) || foto_default}
+                      alt={museo.nombre}
                     />
-                    <div className="museo-list-item-rank">
+                    <div
+                      className="museo-list-item-rank"
+                      style={{
+                        backgroundColor: `${
+                          TEMATICAS[museo.tematica].museoCardColors
+                            .backgroundImage
+                        }`,
+                      }}
+                    >
                       <p>{index + 1}</p>
                     </div>
+                    <FavoritoButton />
                   </div>
                   <div className="museo-list-item-info">
                     <div className="museo-list-item-name">
-                      <Link to={`/Museos/${museo.mus_id}`}>
-                        <p>{museo.mus_nombre}</p>
+                      <Link to={`/Museos/${museo.id}`}>
+                        <p
+                          style={{
+                            color: `${
+                              TEMATICAS[museo.tematica].museoCardColors.header
+                            }`,
+                          }}
+                        >
+                          {museo.nombre}
+                        </p>
                       </Link>
                     </div>
-                    <div className="museo-list-item-tematica">
-                      <p>{TEMATICAS[museo.mus_tematica]}</p>
-                    </div>
+                    {museo.tematica && (
+                      <>
+                        <div className="museo-list-item-tematica">
+                          <p
+                            style={{
+                              color: `${
+                                TEMATICAS[museo.tematica].museoCardColors.text
+                              }`,
+                            }}
+                          >
+                            {TEMATICAS[museo.tematica].nombre}
+                          </p>
+                        </div>
+
+                        <div className="museo-list-tematica-icon">
+                          <img src={TEMATICAS[museo.tematica].icon} alt="" />
+                        </div>
+                      </>
+                    )}
                   </div>
                 </motion.li>
               ))}

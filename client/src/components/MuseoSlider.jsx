@@ -68,18 +68,18 @@ function MuseoSlider({ listaMuseos, editMode, sliderType }) {
     );
   }
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (swiperRef.current) {
-        swiperRef.current.update(); // Actualiza el Swiper al cambiar el tamaño de la ventana
-      }
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (swiperRef.current) {
+  //       swiperRef.current.update(); // Actualiza el Swiper al cambiar el tamaño de la ventana
+  //     }
+  //   };
 
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize); // Limpia el evento al desmontar el componente
-    };
-  }, []);
+  //   window.addEventListener("resize", handleResize);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize); // Limpia el evento al desmontar el componente
+  //   };
+  // }, []);
 
   return (
     <motion.div

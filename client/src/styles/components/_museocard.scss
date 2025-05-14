@@ -2,7 +2,7 @@
 
 .museo-card {
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 
   width: 100%;
   max-width: $mc-width;
@@ -28,7 +28,7 @@
 
     pointer-events: all;
 
-    .museo-card-fav-button-container {
+    .fav-button-container {
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -42,12 +42,12 @@
 
       z-index: 31;
 
-      .museo-card-fav-button-span {
+      .fav-button-span {
         /* position: absolute; */
         display: inline-block;
         position: relative;
-        width: 30px;
-        height: 30px;
+        width: 45px;
+        height: 45px;
         background: url("../assets/icons/corazon-gris-icon.png");
         background-size: cover;
         background-repeat: no-repeat;
@@ -161,8 +161,8 @@
       img,
       svg {
         z-index: 19;
-        height: 60px;
-        width: 60px;
+        height: 45px;
+        width: 45px;
         fill: var(--museo-card-bg-image);
 
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
@@ -171,16 +171,10 @@
       #museo-card-rating {
         position: absolute;
         z-index: 20;
-        font-size: 1.5rem;
+        font-size: 1rem;
         color: white;
         font-weight: $font-w-bold;
         text-align: center;
-        margin: 0;
-        padding: 0;
-        left: 0;
-        right: 0;
-        top: 1;
-        bottom: 1;
       }
     }
 
@@ -291,6 +285,20 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+      }
+
+      .museo-card-info-body-tematica {
+        position: absolute;
+        bottom: -10%;
+        right: 0%;
+        width: 40%;
+        height: auto;
+
+        img {
+          width: 100%;
+          height: 100%;
+          opacity: 0.1;
         }
       }
     }

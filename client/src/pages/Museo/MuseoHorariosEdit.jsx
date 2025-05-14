@@ -3,40 +3,30 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import useMuseoHorario from "../../hooks/Museo/useMuseoHorarios";
 
 import { motion } from "framer-motion";
 
 function MuseoHorariosEdit() {
-  const horarioPrueba = [
-    {
-      dia: "Lunes",
-      horaAper: "10:00",
-      horaCierre: "18:00",
-      costo: "50",
-      edit: false,
-    },
-    {
-      dia: "Martes",
-      horaAper: "10:00",
-      horaCierre: "18:00",
-      costo: "50",
-      edit: false,
-    },
-    {
-      dia: "Miércoles",
-      horaAper: "10:00",
-      horaCierre: "18:00",
-      costo: "50",
-      edit: false,
-    },
-  ];
+  const { museoId } = useParams();
+  const {
+    horarios,
+    loading: loadingHorarios,
+    error: errorHorarios,
+    fetchHorarios,
+    setHorarios,
+  } = useMuseoHorario(museoId);
+  const [originalHorarios, setOriginalHorarios] = useState(horarios);
 
-  const [horarios, setHorarios] = useState(horarioPrueba);
   const [editingRow, setEditingRow] = useState(null);
+  const [focusedField, setFocusedField] = useState(null);
 
   const handleEdit = (rowIndex) => {
+    setOriginalHorarios([...horarios]);
     setEditingRow(rowIndex);
+    setFocusedField(null);
   };
 
   const handleSave = (rowIndex) => {
@@ -46,6 +36,7 @@ function MuseoHorariosEdit() {
   };
 
   const handleCancel = () => {
+    setHorarios(originalHorarios);
     setEditingRow(null);
   };
 
@@ -60,61 +51,87 @@ function MuseoHorariosEdit() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "dia",
+        accessorKey: "mh_dia",
         header: "Día",
         cell: (info) => info.getValue(),
         enableSorting: false,
       },
       {
-        accessorKey: "horaAper",
-        header: "Hora de Apertura",
-        cell: (info) =>
-          editingRow === info.row.index ? (
-            <input
-              type="time"
-              value={info.row.original.horaAper}
-              onChange={(e) =>
-                handleChange(info.row.index, "horaAper", e.target.value)
-              }
-            />
-          ) : (
-            info.getValue()
-          ),
-        enableSorting: false,
-      },
-      {
-        accessorKey: "horaCierre",
+        accessorKey: "mh_hora_fin",
         header: "Hora de Cierre",
-        cell: (info) =>
-          editingRow === info.row.index ? (
+        cell: (info) => {
+          const rowIndex = info.row.index;
+          return editingRow === rowIndex ? (
             <input
               type="time"
-              value={info.row.original.horaCierre}
-              onChange={(e) =>
-                handleChange(info.row.index, "horaCierre", e.target.value)
-              }
+              value={horarios[rowIndex].mh_hora_fin}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setHorarios((prev) =>
+                  prev.map((row, idx) =>
+                    idx === rowIndex ? { ...row, mh_hora_fin: newValue } : row
+                  )
+                );
+              }}
+              onFocus={() => setFocusedField(`${rowIndex}-hora_fin`)}
+              autoFocus={focusedField === `${rowIndex}-hora_fin`}
             />
           ) : (
             info.getValue()
-          ),
+          );
+        },
         enableSorting: false,
       },
       {
-        accessorKey: "costo",
+        accessorKey: "mh_hora_fin",
+        header: "Hora de Cierre",
+        cell: (info) => {
+          const rowIndex = info.row.index;
+          return editingRow === rowIndex ? (
+            <input
+              type="time"
+              value={horarios[rowIndex].mh_hora_fin}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setHorarios((prev) =>
+                  prev.map((row, idx) =>
+                    idx === rowIndex ? { ...row, mh_hora_fin: newValue } : row
+                  )
+                );
+              }}
+              onFocus={(e) => e.target.select()}
+            />
+          ) : (
+            info.getValue()
+          );
+        },
+        enableSorting: false,
+      },
+      {
+        accessorKey: "mh_precio_dia",
         header: "Costo de Entrada (MXN)",
-        cell: (info) =>
-          editingRow === info.row.index ? (
+        cell: (info) => {
+          const rowIndex = info.row.index;
+          return editingRow === rowIndex ? (
             <input
               type="number"
-              value={info.row.original.costo}
-              onChange={(e) =>
-                handleChange(info.row.index, "costo", e.target.value)
-              }
+              value={horarios[rowIndex].mh_precio_dia}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setHorarios((prev) =>
+                  prev.map((row, idx) =>
+                    idx === rowIndex ? { ...row, mh_precio_dia: newValue } : row
+                  )
+                );
+              }}
+              onFocus={() => setFocusedField(`${rowIndex}-precio`)}
+              autoFocus={focusedField === `${rowIndex}-precio`}
               min={0}
             />
           ) : (
             `$ ${info.getValue()}`
-          ),
+          );
+        },
         enableSorting: false,
       },
       {
@@ -136,7 +153,7 @@ function MuseoHorariosEdit() {
         enableSorting: false,
       },
     ],
-    [editingRow]
+    [editingRow, focusedField, horarios]
   );
 
   const table = useReactTable({

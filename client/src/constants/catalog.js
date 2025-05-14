@@ -2,6 +2,7 @@ import Icons from "../components/IconProvider";
 
 export const TEMATICAS = {
   1: {
+    id: 1,
     nombre: "Antropología",
     icon: Icons.antropologiaIcon,
     museoCardColors: {
@@ -12,6 +13,7 @@ export const TEMATICAS = {
     },
   },
   2: {
+    id: 2,
     nombre: "Arte",
     icon: Icons.arteIcon,
     museoCardColors: {
@@ -22,6 +24,7 @@ export const TEMATICAS = {
     },
   },
   3: {
+    id: 3,
     nombre: "Arte Alternativo",
     icon: Icons.arteAlternativoIcon,
     museoCardColors: {
@@ -32,6 +35,7 @@ export const TEMATICAS = {
     },
   },
   4: {
+    id: 4,
     nombre: "Arqueología",
     icon: Icons.arqueologiaIcon,
     museoCardColors: {
@@ -42,6 +46,7 @@ export const TEMATICAS = {
     },
   },
   5: {
+    id: 5,
     nombre: "Ciencia y Tecnología",
     icon: Icons.cienciayTecnologiaIcon,
     museoCardColors: {
@@ -52,6 +57,7 @@ export const TEMATICAS = {
     },
   },
   6: {
+    id: 6,
     nombre: "Especializado",
     icon: Icons.especializadoIcon,
     museoCardColors: {
@@ -62,6 +68,7 @@ export const TEMATICAS = {
     },
   },
   7: {
+    id: 7,
     nombre: "Historia",
     icon: Icons.historiaIcon,
     museoCardColors: {
@@ -72,6 +79,7 @@ export const TEMATICAS = {
     },
   },
   8: {
+    id: 8,
     nombre: "Otro",
     icon: Icons.otroIcon,
     museoCardColors: {
@@ -80,5 +88,45 @@ export const TEMATICAS = {
       text: "#434343",
       backgroundImage: "#2f2f2f",
     },
+  },
+};
+
+export const ALCALDIAS = ["Benito Juárez", "Cuauhtémoc", "Miguel Hidalgo"];
+
+export const REDES_SOCIALES = {
+  1: {
+    id: 1,
+    nombre: "Página Web",
+    icon: Icons.AiOutlineGlobal,
+  },
+  2: {
+    id: 2,
+    nombre: "Página Web 2",
+    icon: Icons.AiOutlineGlobal,
+  },
+  3: {
+    id: 3,
+    nombre: "Página Web 3",
+    icon: Icons.AiOutlineGlobal,
+  },
+  4: {
+    id: 4,
+    nombre: "Email",
+    icon: Icons.IoMail,
+  },
+  5: {
+    id: 5,
+    nombre: "Facebook",
+    icon: Icons.FaSquareFacebook,
+  },
+  6: {
+    id: 6,
+    nombre: "Twitter",
+    icon: Icons.FaSquareXTwitter,
+  },
+  7: {
+    id: 7,
+    nombre: "Instagram",
+    icon: Icons.FaSquareInstagram,
   },
 };

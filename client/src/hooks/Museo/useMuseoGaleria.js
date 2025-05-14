@@ -1,27 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Museo from "../../models/Museo/Museo";
 
 import { BACKEND_URL } from "../../constants/api";
 
-export function useMuseo(museoId) {
-  const [museo, setMuseo] = useState({});
+export default function useMuseoGaleria(museoId) {
+  const [galeria, setGaleria] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchMuseo = async (id) => {
+  const fetchGaleria = async (id) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/museos/${id}`;
+      const endpoint = `${BACKEND_URL}/api/museos/galeria/${id}`;
       const response = await axios.get(endpoint);
 
-      const museoData = new Museo(response.data.museo[0]);
-      setMuseo(museoData);
+      setGaleria(response.data.galeria);
       setLoading(false);
-    } catch (err) {
-      console.error("Error fetching museo:", err);
-      setError(err);
-      throw err;
+    } catch (error) {
+      console.error("Error fetching galeria:", error);
+      setError(error);
     } finally {
       setLoading(false);
     }
@@ -29,18 +26,17 @@ export function useMuseo(museoId) {
 
   useEffect(() => {
     if (museoId) {
-      fetchMuseo(museoId);
+      fetchGaleria(museoId);
     } else {
-      setMuseo(new Museo({}));
+      setGaleria([]);
       setLoading(false);
     }
   }, [museoId]);
 
   return {
-    museo,
+    galeria,
     loading,
     error,
-    fetchMuseo,
-    setMuseo,
+    fetchGaleria,
   };
 }

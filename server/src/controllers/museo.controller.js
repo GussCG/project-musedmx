@@ -3,23 +3,48 @@ import { handleHttpError } from "../helpers/httpError.js";
 
 export const getMuseos = async (req, res) => {
   try {
-    // const { limit = 10, page = 1, search = "" } = req.query;
-    // const pageNumber = parseInt(page, 10);
-    // const offset = (pageNumber - 1) * limit;
+    const { search, tipo, tipos, alcaldias, sort, limit, page, isMapView } =
+      req.query;
 
-    const { search = "" } = req.query;
-    const [museos, total] = await Promise.all([
-      Museo.findAll({ search }),
-      Museo.countAll({ search }),
-    ]);
-    res.json({
+    // Limpieza de parámetros
+    const cleanParams = {
+      search: search && search !== "null" ? search : null,
+      tipos: tipos ? tipos.split(",") : [],
+      alcaldias: alcaldias ? alcaldias.split(",") : [],
+      sort: sort || null,
+      limit: isMapView === "true" ? null : limit ? parseInt(limit) : 12,
+      page: isMapView === "true" ? null : page ? parseInt(page) : 1,
+      isMapView: isMapView === "true",
+    };
+
+    // Si el tipo es "3" (populares), se establece un límite de 10 y se elimina la paginación por el momento que no hay logica para obtener museos populares
+    if (tipo === "3") {
+      cleanParams.limit = 10;
+      cleanParams.page = 1;
+
+      if (cleanParams.isMapView) {
+        cleanParams.limit = 10;
+        cleanParams.page = null;
+      }
+    }
+
+    const result = await Museo.findAll(cleanParams);
+
+    // Estructura de respuesta consistente
+    const response = {
       success: true,
-      count: museos.length,
-      museos,
-      total,
-      // currentPage: pageNumber,
-      // totalPages: Math.ceil(total / limit),
-    });
+      data: {
+        items: result.items,
+        totalItems: result.totalItems,
+        pagination: {
+          totalPages: result.totalPages,
+          currentPage: result.currentPage,
+          itemsPerPage: result.itemsPerPage,
+        },
+      },
+    };
+
+    res.json(response);
   } catch (error) {
     handleHttpError(res, "ERROR_GET_MUSEOS", error);
   }
@@ -66,6 +91,37 @@ export const getGaleriaById = async (req, res) => {
   }
 };
 
+export const getHorariosById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const horarios = await Museo.findHorariosById({ id: id });
+
+    res.json({
+      success: true,
+      id,
+      horarios,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_HORARIOS_ID", error);
+  }
+};
+
+export const getRedesById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const redes = await Museo.findRedesById({ id: id });
+
+    res.json({
+      success: true,
+      id,
+      redes,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_REDES_ID", error);
+  }
+};
+
+// Aqui van más funciones para los museos
 export const createMuseo = async (req, res) => {
   try {
 	// Comprobar lo que se recibe en el body
@@ -110,7 +166,6 @@ export const createMuseo = async (req, res) => {
   }
 };
 
-// Aqui van más funciones para los museos
 export const updateMuseo = async (req, res) => {
 	try{ 
 		const museo = await Museo.updateMuseo(req.params.id, req.body);

@@ -30,3 +30,20 @@ export const formatearFechaTitulo = (fecha) => {
   const fechaFormateada = new Date(fecha).toLocaleString("es-MX", opciones);
   return fechaFormateada;
 };
+
+export const formatearHora = (hora) => {
+  // Asegurarse de que la hora tenga segundos (por si acaso)
+  const horaCompleta = hora.length === 5 ? `${hora}:00` : hora;
+
+  // Crear fecha ficticia (es solo un día placeholder)
+  const fecha = new Date(`2004-04-30T${horaCompleta}`);
+
+  // Opciones de formato
+  const opciones = {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
+
+  return new Intl.DateTimeFormat("es-ES", opciones).format(fecha);
+};

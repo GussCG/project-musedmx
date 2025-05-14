@@ -1,27 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Museo from "../../models/Museo/Museo";
 
 import { BACKEND_URL } from "../../constants/api";
 
-export function useMuseo(museoId) {
-  const [museo, setMuseo] = useState({});
+export default function useMuseoHorarios(museoId) {
+  const [horarios, setHorarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchMuseo = async (id) => {
+  const fetchHorarios = async (id) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/museos/${id}`;
+      const endpoint = `${BACKEND_URL}/api/museos/horarios/${id}`;
       const response = await axios.get(endpoint);
-
-      const museoData = new Museo(response.data.museo[0]);
-      setMuseo(museoData);
+      // console.log("Horarios response:", response.data);
+      setHorarios(response.data.horarios);
       setLoading(false);
-    } catch (err) {
-      console.error("Error fetching museo:", err);
-      setError(err);
-      throw err;
+    } catch (error) {
+      console.error("Error fetching horarios:", error);
+      setError(error);
     } finally {
       setLoading(false);
     }
@@ -29,18 +26,18 @@ export function useMuseo(museoId) {
 
   useEffect(() => {
     if (museoId) {
-      fetchMuseo(museoId);
+      fetchHorarios(museoId);
     } else {
-      setMuseo(new Museo({}));
+      setHorarios([]);
       setLoading(false);
     }
   }, [museoId]);
 
   return {
-    museo,
+    horarios,
     loading,
     error,
-    fetchMuseo,
-    setMuseo,
+    fetchHorarios,
+    setHorarios,
   };
 }

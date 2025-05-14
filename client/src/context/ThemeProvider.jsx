@@ -11,7 +11,8 @@ export const ThemeProvider = ({ children }) => {
       const savedTheme = localStorage.getItem("theme");
       return savedTheme ? savedTheme === "dark" : false;
     }
-    return false; // Valor por defecto si no hay usuario
+    // Modo claro por defecto si no hay usuario autenticado
+    return false;
   });
 
   const [toggleCount, setToggleCount] = useState(
@@ -51,6 +52,16 @@ export const ThemeProvider = ({ children }) => {
       setIsDarkMode(!isDarkMode);
     }
   };
+
+  useEffect(() => {
+    if (!user) {
+      setIsRetroMode(false);
+      setIsDarkMode(false);
+      setToggleCount(0);
+      localStorage.removeItem("theme");
+      localStorage.removeItem("toggleCount");
+    }
+  }, [user]);
 
   return (
     <ThemeContext.Provider

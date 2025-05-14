@@ -2,15 +2,19 @@
 
 #vermuseos-main,
 #vermuseos-vm-main {
-  display: grid;
-  grid-template-rows: 100px 1fr;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   margin: 40px auto;
 
   overflow: hidden;
+  z-index: 1;
 
   .museos-header-section {
     width: 100%;
-    height: 100%;
+    min-height: 100px;
+    height: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -149,10 +153,78 @@
     }
   }
 
+  .filtros-aplicados {
+    width: auto;
+    height: auto;
+    max-height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    margin: 10px 40px;
+
+    h3 {
+      font-size: 1rem;
+      color: var(--font-color-primary);
+      font-weight: $font-w-bold;
+    }
+
+    .filtros-aplicados-list {
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+
+      .filtro-aplicado {
+        width: auto;
+        background-color: var(--bg-navbar);
+        height: 30px;
+        border-radius: 20px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+
+        p {
+          font-size: 0.9rem;
+          color: var(--font-color-primary);
+          font-weight: $font-w-semibold;
+        }
+
+        button {
+          width: 0.9rem;
+          height: 0.9rem;
+          border: none;
+          background-color: transparent;
+          cursor: pointer;
+
+          transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+          svg {
+            width: 100%;
+            height: auto;
+            color: var(--font-color-primary);
+          }
+
+          &:hover {
+            opacity: 0.7;
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+
   .museos-container-section {
     width: 100%;
     height: 100%;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -170,6 +242,106 @@
       justify-content: space-around;
       align-items: center;
       text-align: center;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+      padding: 20px 0;
+      margin: 0 auto;
+      gap: 10px;
+
+      .page-item {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .page-link {
+          text-decoration: none;
+          font-size: 1.2rem;
+          color: var(--font-color-primary);
+          transition: font-weight 0.3s ease-in-out;
+          position: relative;
+          padding: 0 5px;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+            font-weight: $font-w-bold;
+
+            &::after {
+              transform: scaleX(1);
+              opacity: 1;
+            }
+          }
+
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            border-bottom: 2px solid var(--font-color-primary);
+            width: 100%;
+            background-color: currentColor;
+            transform: scaleX(0);
+            transform-origin: bottom left;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            opacity: 0;
+          }
+        }
+
+        &.active {
+          background-color: var(--pagination-active-bg);
+          border-radius: 50%;
+          color: var(--font-color-primary);
+          font-weight: $font-w-bold;
+
+          .page-link::after {
+            display: none;
+          }
+        }
+
+        &.disabled {
+          pointer-events: none;
+          opacity: 0.2;
+
+          .page-link::after {
+            display: none;
+          }
+        }
+      }
+
+      .break,
+      .previous,
+      .next {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--font-color-primary);
+        font-size: 1.5rem;
+
+        svg {
+          width: 35px;
+          height: 35px;
+          color: var(--font-color-primary);
+
+          transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+          &:hover {
+            opacity: 0.5;
+            transform: scale(1.1);
+          }
+        }
+
+        .page-link::after {
+          display: none !important;
+        }
+      }
     }
 
     .loading-more-indicator {
@@ -235,6 +407,7 @@
   }
 
   .museos-container-map-section {
+    flex: 1;
     width: 100%;
     height: 100%;
     margin: 0 auto;
@@ -282,8 +455,6 @@
             color: var(--font-color-navbar);
 
             position: relative;
-
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
 
             button {
               width: 60px;
@@ -343,8 +514,6 @@
             font-weight: $font-w-regular;
             font-size: 16px;
             color: rgba(0, 0, 0, 0.6);
-
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.21);
 
             #frm-range-ubicacion {
               width: 100%;
@@ -693,21 +862,30 @@
 
                   .museo-list-item-rank {
                     @extend .museo-list-item-distance;
-                    top: 0;
+                    bottom: 0;
                     left: 0;
-                    bottom: auto;
-                    padding: 10px;
+                    // bottom: auto;
+                    padding: 5px 10px;
 
                     border-bottom-right-radius: 5px;
+                  }
+
+                  .fav-button-container {
+                    position: absolute;
+                    top: 5px;
+                    left: 5px;
                   }
                 }
 
                 .museo-list-item-info {
+                  position: relative;
                   width: 100%;
+                  height: 100%;
                   display: flex;
                   flex-direction: column;
                   justify-content: center;
                   align-items: flex-start;
+                  overflow: hidden;
 
                   .museo-list-item-name {
                     width: 100%;
@@ -724,6 +902,21 @@
 
                     &:hover {
                       opacity: 0.5;
+                    }
+                  }
+
+                  .museo-list-tematica-icon {
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    width: 50%;
+                    height: auto;
+
+                    img {
+                      width: 100%;
+                      height: auto;
+                      object-fit: cover;
+                      opacity: 0.1;
                     }
                   }
 

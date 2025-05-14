@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import LightBox from "./LightBox"; // Asegúrate de que la ruta sea correcta
 import { buildImageGaleria } from "../utils/buildImage";
+import LightBox from "./LightBox";
+import useLightBox from "../hooks/useLightBox";
 
 function MuseoGallery({ images }) {
   // Función para determinar el span aleatorio de las imágenes
@@ -9,24 +10,23 @@ function MuseoGallery({ images }) {
     return random > 0.8 ? 2 : 1; // 20% de probabilidad de que la imagen sea más grande
   };
 
-  // Estado para controlar la visibilidad del lightbox
-  const [lightBoxVisible, setLightBoxVisible] = useState(false);
-  // Estado para controlar la imagen actual del lightbox
-  const [currentImage, setCurrentImage] = useState("");
+  const lightbox = useLightBox(images);
 
-  const openLightBox = (e) => {
-    if (e.target.src) {
-      setCurrentImage(e.target.src);
-      setLightBoxVisible(true);
-    }
-  };
+  const galeria = images.map((image) => {
+    return {
+      src: buildImageGaleria(image),
+    };
+  });
 
   return (
     <>
       <LightBox
-        lightBoxVisible={lightBoxVisible}
-        setLightBoxVisible={setLightBoxVisible}
-        currentImage={currentImage}
+        images={galeria}
+        isOpen={lightbox.isOpen}
+        currentIndex={lightbox.currentIndex}
+        closeLightBox={lightbox.closeLightBox}
+        goToPrev={lightbox.goToPrev}
+        goToNext={lightbox.goToNext}
       />
       <section id="museo-section-3" className="museo-detail-item">
         <h1 className="h1-section">Galería de Fotos</h1>
@@ -38,7 +38,7 @@ function MuseoGallery({ images }) {
             <div
               key={index}
               className={`museo-galeria-foto foto-${index + 1}`}
-              onClick={openLightBox}
+              onClick={() => lightbox.openLightBox(index)}
             >
               <img
                 src={buildImageGaleria(image)}

@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos` (
   `mus_calle` VARCHAR(100) NOT NULL,
   `mus_num_ext` VARCHAR(10) NOT NULL,
   `mus_colonia` VARCHAR(100) NOT NULL,
-  `mus_cp` INT(5) NOT NULL,
+  `mus_cp` VARCHAR(5) NOT NULL,
   `mus_alcaldia` VARCHAR(100) NOT NULL,
   `mus_descripcion` TEXT NOT NULL,
   `mus_fec_ap` DATE NOT NULL,
@@ -246,7 +246,10 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`horarios_precios_museo` (
   `mh_dia` SET('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo') NOT NULL,
   `mh_hora_inicio` TIME NOT NULL,
   `mh_hora_fin` TIME NOT NULL,
-  `mh_precio_dia` DOUBLE NOT NULL,
+  `mh_precio_ad` VARCHAR(4) NOT NULL,
+  `mh_precio_ni` VARCHAR(4) NOT NULL,
+  `mh_precio_ter` VARCHAR(4) NOT NULL,
+  `mh_precio_est` VARCHAR(4) NOT NULL,
   PRIMARY KEY (`mh_id`, `mh_mus_id`),
   CONSTRAINT `fk_horarios_precios_museo_museos1`
     FOREIGN KEY (`mh_mus_id`)
@@ -255,6 +258,9 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`horarios_precios_museo` (
 	ON UPDATE CASCADE
 --  INDEX `id_Museo` (`mh_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
+
+-- DROP TABLE horarios_precios_museo;
+select * from horarios_precios_museo where mh_mus_id = 2311;
   
 -- -----------------------------------------------------
 -- Table `musedmx`.`red_soc`
@@ -269,10 +275,11 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`red_soc` (
 -- Table `musedmx`.`museos_have_red_soc`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `musedmx`.`museos_have_red_soc` (
+  `mhrs_id` INT NOT NULL AUTO_INCREMENT,
   `mhrs_cve_rs` INT(2) NOT NULL,
   `mhrs_mus_id` INT(11) NOT NULL,
   `mhrs_link` VARCHAR(256) NOT NULL,
-  PRIMARY KEY (`mhrs_cve_rs`, `mhrs_mus_id`),
+  PRIMARY KEY (`mhrs_id`),
   CONSTRAINT `fk_red_soc_has_museos_museos1`
 	FOREIGN KEY (`mhrs_mus_id`)
 	REFERENCES `musedmx`.`museos` (`mus_id`)
@@ -286,6 +293,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos_have_red_soc` (
 --  INDEX `fk_red_soc_has_museos_museos1_idx` (`mhrs_mus_id` ASC) VISIBLE,
 --  INDEX `fk_red_soc_has_museos_red_soc1_idx` (`mhrs_cve_rs` ASC) VISIBLE
 ) ENGINE=InnoDB;
+
+select * from red_soc;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`favoritos`
@@ -548,7 +557,9 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos_has_servicios` (
 	ON UPDATE CASCADE
 	) ENGINE=InnoDB;
 
-select * from museos;
+select * from museos where mus_nombre = "Herbario Medicinal del IMSS";
+
+show VARIABLES LIKE 'max_allowed_packet';
 SELECT * from usuarios;
 select * from administrador;
 select * from moderador;

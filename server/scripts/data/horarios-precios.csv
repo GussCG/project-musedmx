@@ -1,0 +1,869 @@
+mh_mus_id,mh_nombre,mh_dia,mh_abre,mh_cierra,mh_precio_ad,mh_precio_ni,mh_precio_ter,mh_precio_est
+1653,Museo de Arte en Azúcar México,lunes,00:00,00:00,-1,-1,-1,-1
+1653,Museo de Arte en Azúcar México,martes,00:00,00:00,-1,-1,-1,-1
+1653,Museo de Arte en Azúcar México,miercoles,00:00,00:00,-1,-1,-1,-1
+1653,Museo de Arte en Azúcar México,jueves,00:00,00:00,-1,-1,-1,-1
+1653,Museo de Arte en Azúcar México,viernes,00:00,00:00,-1,-1,-1,-1
+1653,Museo de Arte en Azúcar México,sabado,00:00,00:00,-1,-1,-1,-1
+1653,Museo de Arte en Azúcar México,domingo,00:00,00:00,-1,-1,-1,-1
+1335,Casa Museo Benita Galeana,lunes,09:00,15:00,0,0,0,0
+1335,Casa Museo Benita Galeana,martes,09:00,15:00,0,0,0,0
+1335,Casa Museo Benita Galeana,miercoles,09:00,15:00,0,0,0,0
+1335,Casa Museo Benita Galeana,jueves,09:00,15:00,0,0,0,0
+1335,Casa Museo Benita Galeana,viernes,09:00,15:00,0,0,0,0
+1335,Casa Museo Benita Galeana,sabado,00:00,00:00,0,0,0,0
+1335,Casa Museo Benita Galeana,domingo,00:00,00:00,0,0,0,0
+2156,Museo de Sitio de la Zona Arqueológica de Mixcoac,lunes,00:00,00:00,-1,-1,-1,-1
+2156,Museo de Sitio de la Zona Arqueológica de Mixcoac,martes,09:00,17:00,0,0,0,0
+2156,Museo de Sitio de la Zona Arqueológica de Mixcoac,miercoles,09:00,17:00,0,0,0,0
+2156,Museo de Sitio de la Zona Arqueológica de Mixcoac,jueves,09:00,17:00,0,0,0,0
+2156,Museo de Sitio de la Zona Arqueológica de Mixcoac,viernes,09:00,17:00,0,0,0,0
+2156,Museo de Sitio de la Zona Arqueológica de Mixcoac,sabado,09:00,17:00,0,0,0,0
+2156,Museo de Sitio de la Zona Arqueológica de Mixcoac,domingo,09:00,17:00,0,0,0,0
+532,Museo Polyforum Siqueiros (Cerrado por remodelación),lunes,09:00,17:00,15,15,15,15
+532,Museo Polyforum Siqueiros (Cerrado por remodelación),martes,09:00,17:00,15,15,15,15
+532,Museo Polyforum Siqueiros (Cerrado por remodelación),miercoles,09:00,17:00,15,15,15,15
+532,Museo Polyforum Siqueiros (Cerrado por remodelación),jueves,09:00,17:00,15,15,15,15
+532,Museo Polyforum Siqueiros (Cerrado por remodelación),viernes,09:00,17:00,15,15,15,15
+532,Museo Polyforum Siqueiros (Cerrado por remodelación),sabado,09:00,17:00,15,15,15,15
+532,Museo Polyforum Siqueiros (Cerrado por remodelación),domingo,00:00,00:00,-1,-1,-1,-1
+1905,Museo del Metro,lunes,00:00,00:00,-1,-1,-1,-1
+1905,Museo del Metro,martes,10:00,18:00,0,0,0,0
+1905,Museo del Metro,miercoles,10:00,18:00,0,0,0,0
+1905,Museo del Metro,jueves,10:00,18:00,0,0,0,0
+1905,Museo del Metro,viernes,10:00,18:00,0,0,0,0
+1905,Museo del Metro,sabado,11:00,14:00,0,0,0,0
+1905,Museo del Metro,domingo,11:00,14:00,0,0,0,0
+2161,Museo Estelar,lunes,00:00,00:00,-1,-1,-1,-1
+2161,Museo Estelar,martes,00:00,00:00,-1,-1,-1,-1
+2161,Museo Estelar,miercoles,10:00,18:00,0,0,0,0
+2161,Museo Estelar,jueves,10:00,18:00,0,0,0,0
+2161,Museo Estelar,viernes,10:00,18:00,0,0,0,0
+2161,Museo Estelar,sabado,10:00,18:00,0,0,0,0
+2161,Museo Estelar,domingo,12:00,17:00,0,0,0,0
+1776,Planetario Joaquín Gallo,lunes,00:00,00:00,-1,-1,-1,-1
+1776,Planetario Joaquín Gallo,martes,00:00,00:00,-1,-1,-1,-1
+1776,Planetario Joaquín Gallo,miercoles,00:00,00:00,-1,-1,-1,-1
+1776,Planetario Joaquín Gallo,jueves,00:00,00:00,-1,-1,-1,-1
+1776,Planetario Joaquín Gallo,viernes,00:00,00:00,-1,-1,-1,-1
+1776,Planetario Joaquín Gallo,sabado,13:00,16:00,0,0,0,0
+1776,Planetario Joaquín Gallo,domingo,13:00,16:00,0,0,0,0
+1245,Fundación María y Héctor García,lunes,10:30,15:30,0,0,0,0
+1245,Fundación María y Héctor García,martes,10:30,15:30,0,0,0,0
+1245,Fundación María y Héctor García,miercoles,10:30,15:30,0,0,0,0
+1245,Fundación María y Héctor García,jueves,10:30,15:30,0,0,0,0
+1245,Fundación María y Héctor García,viernes,10:30,15:30,0,0,0,0
+1245,Fundación María y Héctor García,sabado,00:00,00:00,-1,-1,-1,-1
+1245,Fundación María y Héctor García,domingo,00:00,00:00,-1,-1,-1,-1
+15,Museo de lo Increíble Ripley,lunes,11:00,19:00,180,150,150,150
+15,Museo de lo Increíble Ripley,martes,11:00,19:00,180,150,150,150
+15,Museo de lo Increíble Ripley,miercoles,11:00,19:00,180,150,150,150
+15,Museo de lo Increíble Ripley,jueves,11:00,19:00,180,150,150,150
+15,Museo de lo Increíble Ripley,viernes,11:00,19:00,180,150,150,150
+15,Museo de lo Increíble Ripley,sabado,11:00,19:00,180,150,150,150
+15,Museo de lo Increíble Ripley,domingo,11:00,19:00,180,150,150,150
+476,Museo del Templo Mayor,lunes,00:00,00:00,-1,-1,-1,-1
+476,Museo del Templo Mayor,martes,09:00,17:00,100,0,0,0
+476,Museo del Templo Mayor,miercoles,09:00,17:00,100,0,0,0
+476,Museo del Templo Mayor,jueves,09:00,17:00,100,0,0,0
+476,Museo del Templo Mayor,viernes,09:00,17:00,100,0,0,0
+476,Museo del Templo Mayor,sabado,09:00,17:00,100,0,0,0
+476,Museo del Templo Mayor,domingo,09:00,17:00,0,0,0,0
+2417,Museo Casa de las Mil Muñecas,lunes,00:00,00:00,-1,-1,-1,
+2417,Museo Casa de las Mil Muñecas,martes,10:00,17:00,150,120,120,120
+2417,Museo Casa de las Mil Muñecas,miercoles,10:00,17:00,150,120,120,120
+2417,Museo Casa de las Mil Muñecas,jueves,10:00,17:00,150,120,120,120
+2417,Museo Casa de las Mil Muñecas,viernes,10:00,17:00,150,120,120,120
+2417,Museo Casa de las Mil Muñecas,sabado,10:00,17:00,150,120,120,120
+2417,Museo Casa de las Mil Muñecas,domingo,10:00,17:00,150,120,120,120
+1518,Centro de Interpretación Xaltilolli,lunes,00:00,00:00,-1,-1,-1,-1
+1518,Centro de Interpretación Xaltilolli,martes,00:00,00:00,-1,-1,-1,-1
+1518,Centro de Interpretación Xaltilolli,miercoles,11:00,17:00,40,20,20,20
+1518,Centro de Interpretación Xaltilolli,jueves,11:00,17:00,40,20,20,20
+1518,Centro de Interpretación Xaltilolli,viernes,11:00,18:00,40,20,20,20
+1518,Centro de Interpretación Xaltilolli,sabado,11:00,18:00,40,20,20,20
+1518,Centro de Interpretación Xaltilolli,domingo,11:00,18:00,0,0,0,0
+2428,Galería José María Velasco,lunes,00:00,00:00,-1,-1,-1,-1
+2428,Galería José María Velasco,martes,10:00,18:00,0,0,0,0
+2428,Galería José María Velasco,miercoles,10:00,18:00,0,0,0,0
+2428,Galería José María Velasco,jueves,10:00,18:00,0,0,0,0
+2428,Galería José María Velasco,viernes,10:00,18:00,0,0,0,0
+2428,Galería José María Velasco,sabado,10:00,18:00,0,0,0,0
+2428,Galería José María Velasco,domingo,10:00,18:00,0,0,0,0
+1109,Museo Archivo de la Fotografía (MAF),lunes,00:00,00:00,-1,-1,-1,-1
+1109,Museo Archivo de la Fotografía (MAF),martes,10:00,18:00,0,0,0,0
+1109,Museo Archivo de la Fotografía (MAF),miercoles,10:00,18:00,0,0,0,0
+1109,Museo Archivo de la Fotografía (MAF),jueves,10:00,18:00,0,0,0,0
+1109,Museo Archivo de la Fotografía (MAF),viernes,10:00,18:00,0,0,0,0
+1109,Museo Archivo de la Fotografía (MAF),sabado,10:00,18:00,0,0,0,0
+1109,Museo Archivo de la Fotografía (MAF),domingo,10:00,18:00,0,0,0,0
+1867,Museo del Padre Pro,lunes,00:00,00:00,-1,-1,-1,-1
+1867,Museo del Padre Pro,martes,10:00,13:00,0,0,0,0
+1867,Museo del Padre Pro,miercoles,10:00,13:00,0,0,0,0
+1867,Museo del Padre Pro,jueves,10:00,13:00,0,0,0,0
+1867,Museo del Padre Pro,viernes,10:00,13:00,0,0,0,0
+1867,Museo del Padre Pro,sabado,00:00,00:00,40,40,40,40
+1867,Museo del Padre Pro,domingo,00:00,00:00,40,40,40,40
+1313,Museo Memoria y Tolerancia,lunes,00:00,00:00,-1,-1,-1,-1
+1313,Museo Memoria y Tolerancia,martes,09:00,17:00,140,140,105,105
+1313,Museo Memoria y Tolerancia,miercoles,09:00,17:00,140,140,105,105
+1313,Museo Memoria y Tolerancia,jueves,09:00,17:00,140,140,105,105
+1313,Museo Memoria y Tolerancia,viernes,09:00,17:00,140,140,105,105
+1313,Museo Memoria y Tolerancia,sabado,10:00,18:00,140,140,105,105
+1313,Museo Memoria y Tolerancia,domingo,10:00,18:00,140,140,105,105
+1464,Galerías de la Antigua Academia de San Carlos,lunes,10:00,18:00,0,0,0,0
+1464,Galerías de la Antigua Academia de San Carlos,martes,10:00,18:00,0,0,0,0
+1464,Galerías de la Antigua Academia de San Carlos,miercoles,10:00,18:00,0,0,0,0
+1464,Galerías de la Antigua Academia de San Carlos,jueves,10:00,18:00,0,0,0,0
+1464,Galerías de la Antigua Academia de San Carlos,viernes,10:00,18:00,0,0,0,0
+1464,Galerías de la Antigua Academia de San Carlos,sabado,00:00,00:00,-1,-1,-1,-1
+1464,Galerías de la Antigua Academia de San Carlos,domingo,00:00,00:00,-1,-1,-1,-1
+854,Palacio de Cultura Banamex (Palacio de Iturbide),lunes,10:00,19:00,0,0,0,0
+854,Palacio de Cultura Banamex (Palacio de Iturbide),martes,10:00,19:00,0,0,0,0
+854,Palacio de Cultura Banamex (Palacio de Iturbide),miercoles,10:00,19:00,0,0,0,0
+854,Palacio de Cultura Banamex (Palacio de Iturbide),jueves,10:00,19:00,0,0,0,0
+854,Palacio de Cultura Banamex (Palacio de Iturbide),viernes,10:00,19:00,0,0,0,0
+854,Palacio de Cultura Banamex (Palacio de Iturbide),sabado,10:00,19:00,0,0,0,0
+854,Palacio de Cultura Banamex (Palacio de Iturbide),domingo,10:00,19:00,0,0,0,0
+2239,Museo de la Inquisición,lunes,10:00,18:00,90,90,65,65
+2239,Museo de la Inquisición,martes,10:00,18:00,90,90,65,65
+2239,Museo de la Inquisición,miercoles,10:00,18:00,90,90,65,65
+2239,Museo de la Inquisición,jueves,10:00,18:00,90,90,65,65
+2239,Museo de la Inquisición,viernes,10:00,18:00,90,90,65,65
+2239,Museo de la Inquisición,sabado,10:00,18:00,90,90,65,65
+2239,Museo de la Inquisición,domingo,10:00,18:00,90,90,65,65
+2173,Museo Vivo del Muralismo,lunes,10:00,18:00,0,0,0,0
+2173,Museo Vivo del Muralismo,martes,00:00,00:00,-1,-1,-1,-1
+2173,Museo Vivo del Muralismo,miercoles,10:00,18:00,0,0,0,0
+2173,Museo Vivo del Muralismo,jueves,10:00,18:00,0,0,0,0
+2173,Museo Vivo del Muralismo,viernes,10:00,18:00,0,0,0,0
+2173,Museo Vivo del Muralismo,sabado,10:00,18:00,0,0,0,0
+2173,Museo Vivo del Muralismo,domingo,10:00,18:00,0,0,0,0
+1092,Museo de Arte Popular,lunes,00:00,00:00,-1,-1,-1,-1
+1092,Museo de Arte Popular,martes,10:00,18:00,60,0,0,0
+1092,Museo de Arte Popular,miercoles,10:00,18:00,60,0,0,0
+1092,Museo de Arte Popular,jueves,10:00,18:00,60,0,0,0
+1092,Museo de Arte Popular,viernes,10:00,18:00,60,0,0,0
+1092,Museo de Arte Popular,sabado,10:00,18:00,60,0,0,0
+1092,Museo de Arte Popular,domingo,10:00,18:00,0,0,0,0
+771,Ex Teresa Arte Actual,lunes,00:00,00:00,-1,-1,-1,-1
+771,Ex Teresa Arte Actual,martes,10:00,18:00,0,0,0,0
+771,Ex Teresa Arte Actual,miercoles,10:00,18:00,0,0,0,0
+771,Ex Teresa Arte Actual,jueves,10:00,18:00,0,0,0,0
+771,Ex Teresa Arte Actual,viernes,10:00,18:00,0,0,0,0
+771,Ex Teresa Arte Actual,sabado,10:00,18:00,0,0,0,0
+771,Ex Teresa Arte Actual,domingo,10:00,18:00,0,0,0,0
+344,Museo Experimental El Eco,lunes,00:00,00:00,-1,-1,-1,-1
+344,Museo Experimental El Eco,martes,11:00,18:00,0,0,0,0
+344,Museo Experimental El Eco,miercoles,11:00,18:00,0,0,0,0
+344,Museo Experimental El Eco,jueves,11:00,18:00,0,0,0,0
+344,Museo Experimental El Eco,viernes,11:00,18:00,0,0,0,0
+344,Museo Experimental El Eco,sabado,11:00,18:00,0,0,0,0
+344,Museo Experimental El Eco,domingo,11:00,18:00,0,0,0,0
+2069,Casa Museo Guillermo Tovar de Teresa,lunes,10:30,18:30,0,0,0,0
+2069,Casa Museo Guillermo Tovar de Teresa,martes,10:30,18:30,0,0,0,0
+2069,Casa Museo Guillermo Tovar de Teresa,miercoles,10:30,18:30,0,0,0,0
+2069,Casa Museo Guillermo Tovar de Teresa,jueves,10:30,18:30,0,0,0,0
+2069,Casa Museo Guillermo Tovar de Teresa,viernes,10:30,18:30,0,0,0,0
+2069,Casa Museo Guillermo Tovar de Teresa,sabado,10:30,18:30,0,0,0,0
+2069,Casa Museo Guillermo Tovar de Teresa,domingo,10:30,18:30,0,0,0,0
+1516,Museo de las Constituciones,lunes,00:00,00:00,-1,-1,-1,-1
+1516,Museo de las Constituciones,martes,00:00,00:00,-1,-1,-1,-1
+1516,Museo de las Constituciones,miercoles,10:00,17:00,0,0,0,0
+1516,Museo de las Constituciones,jueves,10:00,17:00,0,0,0,0
+1516,Museo de las Constituciones,viernes,10:00,17:00,0,0,0,0
+1516,Museo de las Constituciones,sabado,10:00,17:00,0,0,0,0
+1516,Museo de las Constituciones,domingo,10:00,17:00,0,0,0,0
+1532,Mundo Chocolate Museo (MUCHO),lunes,11:00,17:00,80,55,55,55
+1532,Mundo Chocolate Museo (MUCHO),martes,11:00,17:00,80,55,55,55
+1532,Mundo Chocolate Museo (MUCHO),miercoles,11:00,17:00,80,55,55,55
+1532,Mundo Chocolate Museo (MUCHO),jueves,11:00,17:00,80,55,55,55
+1532,Mundo Chocolate Museo (MUCHO),viernes,11:00,17:00,80,55,55,55
+1532,Mundo Chocolate Museo (MUCHO),sabado,11:00,17:00,80,55,55,55
+1532,Mundo Chocolate Museo (MUCHO),domingo,11:00,17:00,80,55,55,55
+689,Museo Postal y Filatélico,lunes,00:00,00:00,-1,-1,-1,-1
+689,Museo Postal y Filatélico,martes,11:00,14:00,0,0,0,0
+689,Museo Postal y Filatélico,miercoles,11:00,14:00,0,0,0,0
+689,Museo Postal y Filatélico,jueves,11:00,14:00,0,0,0,0
+689,Museo Postal y Filatélico,viernes,11:00,14:00,0,0,0,0
+689,Museo Postal y Filatélico,sabado,11:00,13:00,0,0,0,0
+689,Museo Postal y Filatélico,domingo,12:00,12:00,0,0,0,0
+1491,Museo de Sitio de Tlatelolco Caja de Agua,lunes,09:00,13:30,0,0,0,0
+1491,Museo de Sitio de Tlatelolco Caja de Agua,martes,09:00,13:30,0,0,0,0
+1491,Museo de Sitio de Tlatelolco Caja de Agua,miercoles,09:00,13:30,0,0,0,0
+1491,Museo de Sitio de Tlatelolco Caja de Agua,jueves,09:00,13:30,0,0,0,0
+1491,Museo de Sitio de Tlatelolco Caja de Agua,viernes,09:00,13:30,0,0,0,0
+1491,Museo de Sitio de Tlatelolco Caja de Agua,sabado,00:00,00:00,-1,-1,-1,-1
+1491,Museo de Sitio de Tlatelolco Caja de Agua,domingo,00:00,00:00,-1,-1,-1,-1
+1473,Museo del Tequila y el Mezcal (MUTEM),lunes,11:00,22:00,90,90,45,45
+1473,Museo del Tequila y el Mezcal (MUTEM),martes,11:00,22:00,90,90,45,45
+1473,Museo del Tequila y el Mezcal (MUTEM),miercoles,11:00,22:00,90,90,45,45
+1473,Museo del Tequila y el Mezcal (MUTEM),jueves,11:00,00:00,90,90,45,45
+1473,Museo del Tequila y el Mezcal (MUTEM),viernes,11:00,00:00,90,90,45,45
+1473,Museo del Tequila y el Mezcal (MUTEM),sabado,11:00,00:00,90,90,45,45
+1473,Museo del Tequila y el Mezcal (MUTEM),domingo,11:00,22:00,90,90,45,45
+716,Museo Nacional de Arquitectura,lunes,00:00,00:00,-1,-1,-1,-1
+716,Museo Nacional de Arquitectura,martes,10:00,18:00,70,70,0,0
+716,Museo Nacional de Arquitectura,miercoles,10:00,18:00,70,70,0,0
+716,Museo Nacional de Arquitectura,jueves,10:00,18:00,70,70,0,0
+716,Museo Nacional de Arquitectura,viernes,10:00,18:00,70,70,0,0
+716,Museo Nacional de Arquitectura,sabado,10:00,18:00,70,70,0,0
+716,Museo Nacional de Arquitectura,domingo,10:00,18:00,0,0,0,0
+2168,Museo Foro Valparaíso,lunes,00:00,00:00,-1,-1,-1,-1
+2168,Museo Foro Valparaíso,martes,00:00,00:00,-1,-1,-1,-1
+2168,Museo Foro Valparaíso,miercoles,10:00,18:00,0,0,0,0
+2168,Museo Foro Valparaíso,jueves,10:00,18:00,0,0,0,0
+2168,Museo Foro Valparaíso,viernes,10:00,18:00,0,0,0,0
+2168,Museo Foro Valparaíso,sabado,10:00,18:00,0,0,0,0
+2168,Museo Foro Valparaíso,domingo,10:00,18:00,0,0,0,0
+1105,Museo del Estanquillo,lunes,10:00,18:00,0,0,0,0
+1105,Museo del Estanquillo,martes,00:00,00:00,-1,-1,-1,-1
+1105,Museo del Estanquillo,miercoles,10:00,18:00,0,0,0,0
+1105,Museo del Estanquillo,jueves,10:00,18:00,0,0,0,0
+1105,Museo del Estanquillo,viernes,10:00,18:00,0,0,0,0
+1105,Museo del Estanquillo,sabado,10:00,18:00,0,0,0,0
+1105,Museo del Estanquillo,domingo,10:00,18:00,0,0,0,0
+43,Museo de Cera de la Ciudad de México,lunes,11:00,19:00,195,160,160,195
+43,Museo de Cera de la Ciudad de México,martes,11:00,19:00,195,160,160,195
+43,Museo de Cera de la Ciudad de México,miercoles,11:00,19:00,195,160,160,195
+43,Museo de Cera de la Ciudad de México,jueves,11:00,19:00,195,160,160,195
+43,Museo de Cera de la Ciudad de México,viernes,11:00,19:00,195,160,160,195
+43,Museo de Cera de la Ciudad de México,sabado,11:00,19:00,195,160,160,195
+43,Museo de Cera de la Ciudad de México,domingo,11:00,19:00,195,160,160,195
+1106,Museo del Juguete Antiguo México (MUJAM),lunes,,,,,,
+1106,Museo del Juguete Antiguo México (MUJAM),martes,,,,,,
+1106,Museo del Juguete Antiguo México (MUJAM),miercoles,,,,,,
+1106,Museo del Juguete Antiguo México (MUJAM),jueves,,,,,,
+1106,Museo del Juguete Antiguo México (MUJAM),viernes,,,,,,
+1106,Museo del Juguete Antiguo México (MUJAM),sabado,,,,,,
+1106,Museo del Juguete Antiguo México (MUJAM),domingo,,,,,,
+1523,Museo de Sitio CCEMX-INAH,lunes,09:00,17:00,50,50,50,50
+1523,Museo de Sitio CCEMX-INAH,martes,09:00,17:00,50,50,50,50
+1523,Museo de Sitio CCEMX-INAH,miercoles,09:00,17:00,50,50,50,50
+1523,Museo de Sitio CCEMX-INAH,jueves,09:00,17:00,50,50,50,50
+1523,Museo de Sitio CCEMX-INAH,viernes,09:00,17:00,50,50,50,50
+1523,Museo de Sitio CCEMX-INAH,sabado,09:00,16:00,50,50,50,50
+1523,Museo de Sitio CCEMX-INAH,domingo,10:00,16:00,50,50,50,50
+883,Museo de la Charrería,lunes,10:30,17:30,0,0,0,0
+883,Museo de la Charrería,martes,10:30,17:30,0,0,0,0
+883,Museo de la Charrería,miercoles,10:30,17:30,0,0,0,0
+883,Museo de la Charrería,jueves,10:30,17:30,0,0,0,0
+883,Museo de la Charrería,viernes,10:30,17:30,0,0,0,0
+883,Museo de la Charrería,sabado,00:00,00:00,-1,-1,-1,-1
+883,Museo de la Charrería,domingo,00:00,00:00,-1,-1,-1,-1
+685,Museo Universitario de Ciencias y Artes (MUCA) Roma,lunes,00:00,00:00,-1,-1,-1,-1
+685,Museo Universitario de Ciencias y Artes (MUCA) Roma,martes,10:00,18:00,0,0,0,0
+685,Museo Universitario de Ciencias y Artes (MUCA) Roma,miercoles,10:00,18:00,0,0,0,0
+685,Museo Universitario de Ciencias y Artes (MUCA) Roma,jueves,10:00,18:00,0,0,0,0
+685,Museo Universitario de Ciencias y Artes (MUCA) Roma,viernes,10:00,18:00,0,0,0,0
+685,Museo Universitario de Ciencias y Artes (MUCA) Roma,sabado,10:00,18:00,0,0,0,0
+685,Museo Universitario de Ciencias y Artes (MUCA) Roma,domingo,00:00,00:00,-1,-1,-1,-1
+2391,Museo de Sitio San Sebastián Atzacoalco,lunes,00:00,00:00,-1,-1,-1,-1
+2391,Museo de Sitio San Sebastián Atzacoalco,martes,10:00,17:00,50,50,50,50
+2391,Museo de Sitio San Sebastián Atzacoalco,miercoles,10:00,17:00,50,50,50,50
+2391,Museo de Sitio San Sebastián Atzacoalco,jueves,10:00,17:00,50,50,50,50
+2391,Museo de Sitio San Sebastián Atzacoalco,viernes,10:00,17:00,50,50,50,50
+2391,Museo de Sitio San Sebastián Atzacoalco,sabado,10:00,17:00,50,50,50,50
+2391,Museo de Sitio San Sebastián Atzacoalco,domingo,10:00,17:00,50,50,50,50
+733,Museo Recinto Homenaje a Cuauhtémoc,lunes,09:00,17:00,0,0,0,0
+733,Museo Recinto Homenaje a Cuauhtémoc,martes,09:00,17:00,0,0,0,0
+733,Museo Recinto Homenaje a Cuauhtémoc,miercoles,09:00,17:00,0,0,0,0
+733,Museo Recinto Homenaje a Cuauhtémoc,jueves,09:00,17:00,0,0,0,0
+733,Museo Recinto Homenaje a Cuauhtémoc,viernes,09:00,17:00,0,0,0,0
+733,Museo Recinto Homenaje a Cuauhtémoc,sabado,09:00,17:00,0,0,0,0
+733,Museo Recinto Homenaje a Cuauhtémoc,domingo,09:00,17:00,0,0,0,0
+969,Museo del Calzado El Borceguí,lunes,10:00,18:00,0,0,0,0
+969,Museo del Calzado El Borceguí,martes,10:00,18:00,0,0,0,0,
+969,Museo del Calzado El Borceguí,miercoles,10:00,18:00,0,0,0,0
+969,Museo del Calzado El Borceguí,jueves,10:00,18:00,0,0,0,0,
+969,Museo del Calzado El Borceguí,viernes,10:00,18:00,0,0,0,0
+969,Museo del Calzado El Borceguí,sabado,10:00,18:00,0,0,0,0
+969,Museo del Calzado El Borceguí,domingo,00:00,00:00,-1,-1,-1,-1
+707,Museo de Sitio del Centro Cultural Casa Talavera,lunes,09:00,19:00,0,0,0,0
+707,Museo de Sitio del Centro Cultural Casa Talavera,martes,09:00,19:00,0,0,0,0
+707,Museo de Sitio del Centro Cultural Casa Talavera,miercoles,09:00,19:00,0,0,0,0
+707,Museo de Sitio del Centro Cultural Casa Talavera,jueves,09:00,19:00,0,0,0,0
+707,Museo de Sitio del Centro Cultural Casa Talavera,viernes,09:00,19:00,0,0,0,0
+707,Museo de Sitio del Centro Cultural Casa Talavera,sabado,00:00,00:00,-1,-1,-1,-1
+707,Museo de Sitio del Centro Cultural Casa Talavera,domingo,00:00,00:00,-1,-1,-1,-1
+2217,Galería de Arte de la SHCP,lunes,08:00,20:00,0,0,0,0
+2217,Galería de Arte de la SHCP,martes,08:00,20:00,0,0,0,0
+2217,Galería de Arte de la SHCP,miercoles,08:00,20:00,0,0,0,0
+2217,Galería de Arte de la SHCP,jueves,08:00,20:00,0,0,0,0
+2217,Galería de Arte de la SHCP,viernes,08:00,20:00,0,0,0,0
+2217,Galería de Arte de la SHCP,sabado,00:00,00:00,-1,-1,-1,-1
+2217,Galería de Arte de la SHCP,domingo,00:00,00:00,-1,-1,-1,-1
+804,Museo Nacional de San Carlos,lunes,00:00,00:00,-1,-1,-1,-1
+804,Museo Nacional de San Carlos,martes,10:00,18:00,70,0,0,0
+804,Museo Nacional de San Carlos,miercoles,10:00,18:00,70,0,0,0
+804,Museo Nacional de San Carlos,jueves,10:00,18:00,70,0,0,0
+804,Museo Nacional de San Carlos,viernes,10:00,18:00,70,0,0,0
+804,Museo Nacional de San Carlos,sabado,10:00,18:00,70,0,0,0
+804,Museo Nacional de San Carlos,domingo,10:00,18:00,0,0,0,0
+462,Museo Franz Mayer,lunes,00:00,00:00,-1,-1,-1,-1
+462,Museo Franz Mayer,martes,00:00,00:00,-1,-1,-1,-1
+462,Museo Franz Mayer,miercoles,10:00,17:00,120,0,60,60
+462,Museo Franz Mayer,jueves,10:00,17:00,120,0,60,60
+462,Museo Franz Mayer,viernes,10:00,17:00,120,0,60,60
+462,Museo Franz Mayer,sabado,10:00,17:00,120,0,60,60
+462,Museo Franz Mayer,domingo,10:00,17:00,120,0,60,60
+974,Recinto de Homenaje a Don Benito Juárez,lunes,00:00,00:00,-1,-1,-1,-1
+974,Recinto de Homenaje a Don Benito Juárez,martes,10:00,17:00,0,0,0,0
+974,Recinto de Homenaje a Don Benito Juárez,miercoles,10:00,17:00,0,0,0,0
+974,Recinto de Homenaje a Don Benito Juárez,jueves,10:00,17:00,0,0,0,0
+974,Recinto de Homenaje a Don Benito Juárez,viernes,10:00,17:00,0,0,0,0
+974,Recinto de Homenaje a Don Benito Juárez,sabado,10:00,17:00,0,0,0,0
+974,Recinto de Homenaje a Don Benito Juárez,domingo,10:00,17:00,0,0,0,0
+1337,Museo Numismático Nacional,lunes,00:00,00:00,-1,-1,-1,-1
+1337,Museo Numismático Nacional,martes,09:00,15:00,0,0,0,0
+1337,Museo Numismático Nacional,miercoles,09:00,15:00,0,0,0,0
+1337,Museo Numismático Nacional,jueves,09:00,15:00,0,0,0,0
+1337,Museo Numismático Nacional,viernes,09:00,15:00,0,0,0,0
+1337,Museo Numismático Nacional,sabado,09:00,15:00,0,0,0,0
+1337,Museo Numismático Nacional,domingo,09:00,15:00,0,0,0,0
+2238,Museo de Patología Hospital General de México Eduardo Liceaga,lunes,09:00,14:00,0,0,0,0
+2238,Museo de Patología Hospital General de México Eduardo Liceaga,martes,09:00,14:00,0,0,0,0
+2238,Museo de Patología Hospital General de México Eduardo Liceaga,miercoles,09:00,14:00,0,0,0,0
+2238,Museo de Patología Hospital General de México Eduardo Liceaga,jueves,09:00,14:00,0,0,0,0
+2238,Museo de Patología Hospital General de México Eduardo Liceaga,viernes,09:00,14:00,0,0,0,0
+2238,Museo de Patología Hospital General de México Eduardo Liceaga,sabado,09:00,14:00,0,0,0,0
+2238,Museo de Patología Hospital General de México Eduardo Liceaga,domingo,09:00,14:00,0,0,0,0
+759,Museo de la Policía de la Ciudad de México,lunes,09:00,15:30,0,0,0,0
+759,Museo de la Policía de la Ciudad de México,martes,09:00,15:30,0,0,0,0
+759,Museo de la Policía de la Ciudad de México,miercoles,09:00,15:30,0,0,0,0
+759,Museo de la Policía de la Ciudad de México,jueves,09:00,15:30,0,0,0,0
+759,Museo de la Policía de la Ciudad de México,viernes,09:00,15:30,0,0,0,0
+759,Museo de la Policía de la Ciudad de México,sabado,09:00,15:30,0,0,0,0
+759,Museo de la Policía de la Ciudad de México,domingo,09:00,15:30,0,0,0,0
+2216,Casa Rivas Mercado,lunes,00:00,00:00,-1,-1,-1,-1
+2216,Casa Rivas Mercado,martes,00:00,00:00,-1,-1,-1,-1
+2216,Casa Rivas Mercado,miercoles,00:00,00:00,-1,-1,-1,-1
+2216,Casa Rivas Mercado,jueves,00:00,00:00,-1,-1,-1,-1
+2216,Casa Rivas Mercado,viernes,00:00,00:00,-1,-1,-1,-1
+2216,Casa Rivas Mercado,sabado,10:00,12:00,150,0,75,100
+2216,Casa Rivas Mercado,domingo,10:00,12:00,150,0,75,100
+2000,Museo del Juguete Arte-Objeto Frida,lunes,10:00,18:00,0,0,0,0
+2000,Museo del Juguete Arte-Objeto Frida,martes,10:00,18:00,0,0,0,0
+2000,Museo del Juguete Arte-Objeto Frida,miercoles,10:00,18:00,0,0,0,0
+2000,Museo del Juguete Arte-Objeto Frida,jueves,10:00,18:00,0,0,0,0
+2000,Museo del Juguete Arte-Objeto Frida,viernes,10:00,18:00,0,0,0,0
+2000,Museo del Juguete Arte-Objeto Frida,sabado,00:00,00:00,-1,-1,-1,-1
+2000,Museo del Juguete Arte-Objeto Frida,domingo,00:00,00:00,-1,-1,-1,-1
+2236,Museo Art Toys,lunes,11:00,19:00,80,50,50,80
+2236,Museo Art Toys,martes,11:00,19:00,80,50,50,80
+2236,Museo Art Toys,miercoles,11:00,19:00,80,50,50,80
+2236,Museo Art Toys,jueves,11:00,19:00,80,50,50,80
+2236,Museo Art Toys,viernes,11:00,19:00,80,50,50,80
+2236,Museo Art Toys,sabado,11:00,19:00,80,50,50,80
+2236,Museo Art Toys,domingo,11:00,19:00,80,50,50,80
+796,Museo de la Caricatura,lunes,11:00,19:00,-1,-1,-1,-1
+796,Museo de la Caricatura,martes,11:00,19:00,-1,-1,-1,-1
+796,Museo de la Caricatura,miercoles,11:00,19:00,-1,-1,-1,-1
+796,Museo de la Caricatura,jueves,11:00,19:00,-1,-1,-1,-1
+796,Museo de la Caricatura,viernes,11:00,19:00,-1,-1,-1,-1
+796,Museo de la Caricatura,sabado,11:00,19:00,-1,-1,-1,-1
+796,Museo de la Caricatura,domingo,11:00,19:00,-1,-1,-1,-1
+1096,Museo Interactivo de Economía (MIDE),lunes,00:00,00:00,-1,-1,-1,-1
+1096,Museo Interactivo de Economía (MIDE),martes,10:00,18:00,120,120,100,100
+1096,Museo Interactivo de Economía (MIDE),miercoles,10:00,18:00,120,120,100,100
+1096,Museo Interactivo de Economía (MIDE),jueves,10:00,18:00,120,120,100,100
+1096,Museo Interactivo de Economía (MIDE),viernes,10:00,18:00,120,120,100,100
+1096,Museo Interactivo de Economía (MIDE),sabado,10:00,18:00,120,120,100,100
+1096,Museo Interactivo de Economía (MIDE),domingo,10:00,18:00,120,120,100,100
+1176,Museo Panteón de San Fernando,lunes,00:00,00:00,-1,-1,-1,-1
+1176,Museo Panteón de San Fernando,martes,11:00,17:00,0,0,0,0
+1176,Museo Panteón de San Fernando,miercoles,11:00,17:00,0,0,0,0
+1176,Museo Panteón de San Fernando,jueves,11:00,17:00,0,0,0,0
+1176,Museo Panteón de San Fernando,viernes,11:00,17:00,0,0,0,0
+1176,Museo Panteón de San Fernando,sabado,11:00,17:00,0,0,0,0
+1176,Museo Panteón de San Fernando,domingo,11:00,17:00,0,0,0,0
+2067,Museo Salón de Cabildos del Antiguo Palacio del Ayuntamiento,lunes,10:00,17:00,0,0,0,0
+2067,Museo Salón de Cabildos del Antiguo Palacio del Ayuntamiento,martes,10:00,17:00,0,0,0,0
+2067,Museo Salón de Cabildos del Antiguo Palacio del Ayuntamiento,miercoles,10:00,17:00,0,0,0,0
+2067,Museo Salón de Cabildos del Antiguo Palacio del Ayuntamiento,jueves,10:00,17:00,0,0,0,0
+2067,Museo Salón de Cabildos del Antiguo Palacio del Ayuntamiento,viernes,10:00,17:00,0,0,0,0
+2067,Museo Salón de Cabildos del Antiguo Palacio del Ayuntamiento,sabado,10:00,19:00,0,0,0,0
+2067,Museo Salón de Cabildos del Antiguo Palacio del Ayuntamiento,domingo,10:00,19:00,0,0,0,0
+1600,"M68, Memorial de 1968 y Movimientos sociales",lunes,00:00,00:00,-1,-1,-1,-1
+1600,"M68, Memorial de 1968 y Movimientos sociales",martes,00:00,00:00,-1,-1,-1,-1
+1600,"M68, Memorial de 1968 y Movimientos sociales",miercoles,11:00,17:00,40,40,20,20
+1600,"M68, Memorial de 1968 y Movimientos sociales",jueves,11:00,17:00,40,40,20,20
+1600,"M68, Memorial de 1968 y Movimientos sociales",viernes,11:00,18:00,40,40,20,20,
+1600,"M68, Memorial de 1968 y Movimientos sociales",sabado,11:00,18:00,40,40,20,20,
+1600,"M68, Memorial de 1968 y Movimientos sociales",domingo,11:00,18:00,0,0,0,0,
+1079,Recinto Parlamentario,lunes,10:00,16:00,0,0,0,0
+1079,Recinto Parlamentario,martes,10:00,16:00,0,0,0,0
+1079,Recinto Parlamentario,miercoles,10:00,16:00,0,0,0,0
+1079,Recinto Parlamentario,jueves,10:00,16:00,0,0,0,0
+1079,Recinto Parlamentario,viernes,10:00,16:00,0,0,0,0
+1079,Recinto Parlamentario,sabado,10:00,16:00,0,0,0,0
+1079,Recinto Parlamentario,domingo,10:00,16:00,0,0,0,0
+661,Museo Mural Diego Rivera,lunes,00:00,00:00,-1,-1,-1,-1
+661,Museo Mural Diego Rivera,martes,10:00,18:00,35,35,0,0
+661,Museo Mural Diego Rivera,miercoles,10:00,18:00,35,35,0,0
+661,Museo Mural Diego Rivera,jueves,10:00,18:00,35,35,0,0
+661,Museo Mural Diego Rivera,viernes,10:00,18:00,35,35,0,0
+661,Museo Mural Diego Rivera,sabado,10:00,18:00,35,35,0,0
+661,Museo Mural Diego Rivera,domingo,10:00,18:00,0,0,0,0
+797,Museo de la Ciudad de México,lunes,00:00,00:00,-1,-1,-1,-1
+797,Museo de la Ciudad de México,martes,10:00,17:30,41,41,21,21
+797,Museo de la Ciudad de México,miercoles,10:00,17:30,41,41,21,21
+797,Museo de la Ciudad de México,jueves,10:00,17:30,41,41,21,21
+797,Museo de la Ciudad de México,viernes,10:00,17:30,41,41,21,21
+797,Museo de la Ciudad de México,sabado,10:00,17:30,41,41,21,21
+797,Museo de la Ciudad de México,domingo,10:00,17:30,0,0,0,0
+708,Museo del Instituto Cultural México Israel,lunes,10:00,17:00,0,0,0,0
+708,Museo del Instituto Cultural México Israel,martes,10:00,17:00,0,0,0,0
+708,Museo del Instituto Cultural México Israel,miercoles,10:00,17:00,0,0,0,0
+708,Museo del Instituto Cultural México Israel,jueves,10:00,17:00,0,0,0,0
+708,Museo del Instituto Cultural México Israel,viernes,10:00,17:00,0,0,0,0
+708,Museo del Instituto Cultural México Israel,sabado,00:00,00:00,-1,-1,-1,-1
+708,Museo del Instituto Cultural México Israel,domingo,00:00,00:00,-1,-1,-1,-1
+2360,Palacio Nacional,lunes,00:00,00:00,-1,-1,-1,-1
+2360,Palacio Nacional,martes,10:00,16:00,0,0,0,0
+2360,Palacio Nacional,miercoles,10:00,16:00,0,0,0,0
+2360,Palacio Nacional,jueves,10:00,16:00,0,0,0,0
+2360,Palacio Nacional,viernes,10:00,16:00,0,0,0,0
+2360,Palacio Nacional,sabado,10:00,16:00,0,0,0,0
+2360,Palacio Nacional,domingo,10:00,16:00,0,0,0,0
+2352,Salón de la Plástica Mexicana,lunes,00:00,00:00,-1,-1,-1,-1
+2352,Salón de la Plástica Mexicana,martes,10:00,18:00,0,0,0,0
+2352,Salón de la Plástica Mexicana,miercoles,10:00,18:00,0,0,0,0
+2352,Salón de la Plástica Mexicana,jueves,10:00,18:00,0,0,0,0
+2352,Salón de la Plástica Mexicana,viernes,10:00,18:00,0,0,0,0
+2352,Salón de la Plástica Mexicana,sabado,10:00,18:00,0,0,0,0
+2352,Salón de la Plástica Mexicana,domingo,10:00,18:00,0,0,0,0
+711,Sala de la Odontología Mexicana Dr. Samuel Fastlicht,lunes,09:00,17:00,0,0,0,0
+711,Sala de la Odontología Mexicana Dr. Samuel Fastlicht,martes,09:00,17:00,0,0,0,0
+711,Sala de la Odontología Mexicana Dr. Samuel Fastlicht,miercoles,09:00,17:00,0,0,0,0
+711,Sala de la Odontología Mexicana Dr. Samuel Fastlicht,jueves,09:00,17:00,0,0,0,0
+711,Sala de la Odontología Mexicana Dr. Samuel Fastlicht,viernes,09:00,17:00,0,0,0,0
+711,Sala de la Odontología Mexicana Dr. Samuel Fastlicht,sabado,09:00,17:00,0,0,0,0
+711,Sala de la Odontología Mexicana Dr. Samuel Fastlicht,domingo,09:00,17:00,0,0,0,0
+1893,Museo UNAM Hoy,lunes,00:00,00:00,-1,-1,-1,-1
+1893,Museo UNAM Hoy,martes,10:00,18:00,20,20,10,10
+1893,Museo UNAM Hoy,miercoles,10:00,18:00,20,20,10,10
+1893,Museo UNAM Hoy,jueves,10:00,18:00,20,20,10,10
+1893,Museo UNAM Hoy,viernes,10:00,18:00,20,20,10,10
+1893,Museo UNAM Hoy,sabado,10:00,18:00,20,20,10,10
+1893,Museo UNAM Hoy,domingo,10:00,18:00,20,20,10,10
+1114,Museo Ferrocarrilero Víctor Flores Morales,lunes,10:00,15:00,0,0,0,0
+1114,Museo Ferrocarrilero Víctor Flores Morales,martes,10:00,15:00,0,0,0,0
+1114,Museo Ferrocarrilero Víctor Flores Morales,miercoles,10:00,15:00,0,0,0,0
+1114,Museo Ferrocarrilero Víctor Flores Morales,jueves,10:00,15:00,0,0,0,0
+1114,Museo Ferrocarrilero Víctor Flores Morales,viernes,10:00,15:00,0,0,0,0
+1114,Museo Ferrocarrilero Víctor Flores Morales,sabado,00:00,00:00,-1,-1,-1,-1
+1114,Museo Ferrocarrilero Víctor Flores Morales,domingo,00:00,00:00,-1,-1,-1,-1
+2066,Museo Kaluz,lunes,10:00,17:00,60,0,30,0
+2066,Museo Kaluz,martes,00:00,00:00,-1,-1,-1,-1
+2066,Museo Kaluz,miercoles,10:00,17:00,0,0,0,0
+2066,Museo Kaluz,jueves,10:00,17:00,60,0,30,0
+2066,Museo Kaluz,viernes,10:00,17:00,60,0,30,0
+2066,Museo Kaluz,sabado,10:00,17:00,60,0,30,0
+2066,Museo Kaluz,domingo,10:00,17:00,60,0,30,0
+2110,Museo del Pulque y las pulquerías,lunes,11:00,18:00,20,20,15,15
+2110,Museo del Pulque y las pulquerías,martes,00:00,00:00,-1,-1,-1,-1
+2110,Museo del Pulque y las pulquerías,miercoles,11:00,18:00,20,20,15,15
+2110,Museo del Pulque y las pulquerías,jueves,11:00,18:00,20,20,15,15
+2110,Museo del Pulque y las pulquerías,viernes,11:00,18:00,20,20,15,15
+2110,Museo del Pulque y las pulquerías,sabado,11:00,18:00,20,20,15,15
+2110,Museo del Pulque y las pulquerías,domingo,11:00,18:00,20,20,15,15
+1907,Museo de Sitio del Antiguo Hospital Concepción Béistegui,lunes,00:00,00:00,-1,-1,-1,-1
+1907,Museo de Sitio del Antiguo Hospital Concepción Béistegui,martes,00:00,00:00,-1,-1,-1,-1
+1907,Museo de Sitio del Antiguo Hospital Concepción Béistegui,miercoles,00:00,00:00,-1,-1,-1,-1
+1907,Museo de Sitio del Antiguo Hospital Concepción Béistegui,jueves,00:00,00:00,-1,-1,-1,-1
+1907,Museo de Sitio del Antiguo Hospital Concepción Béistegui,viernes,00:00,00:00,-1,-1,-1,-1
+1907,Museo de Sitio del Antiguo Hospital Concepción Béistegui,sabado,10:00,17:00,20,10,0,10
+1907,Museo de Sitio del Antiguo Hospital Concepción Béistegui,domingo,10:00,17:00,20,10,0,10
+692,Museo de Geología,lunes,00:00,00:00,-1,-1,-1,-1
+692,Museo de Geología,martes,10:00,17:00,30,30,25,25
+692,Museo de Geología,miercoles,10:00,17:00,30,30,25,25
+692,Museo de Geología,jueves,10:00,17:00,30,30,25,25
+692,Museo de Geología,viernes,10:00,17:00,30,30,25,25
+692,Museo de Geología,sabado,10:00,17:00,30,30,25,25
+692,Museo de Geología,domingo,10:00,17:00,30,30,25,25
+757,Pinacoteca del Templo La Profesa (cerrada hasta nuevo aviso),lunes,08:00,18:00,0,0,0,0
+757,Pinacoteca del Templo La Profesa (cerrada hasta nuevo aviso),martes,08:00,18:00,0,0,0,0
+757,Pinacoteca del Templo La Profesa (cerrada hasta nuevo aviso),miercoles,08:00,18:00,0,0,0,0
+757,Pinacoteca del Templo La Profesa (cerrada hasta nuevo aviso),jueves,08:00,18:00,0,0,0,0
+757,Pinacoteca del Templo La Profesa (cerrada hasta nuevo aviso),viernes,08:00,18:00,0,0,0,0
+757,Pinacoteca del Templo La Profesa (cerrada hasta nuevo aviso),sabado,08:00,18:00,0,0,0,0
+757,Pinacoteca del Templo La Profesa (cerrada hasta nuevo aviso),domingo,08:00,18:00,0,0,0,0
+691,Palacio de la Escuela de Medicina,lunes,09:00,18:00,0,0,0,0
+691,Palacio de la Escuela de Medicina,martes,09:00,18:00,0,0,0,0
+691,Palacio de la Escuela de Medicina,miercoles,09:00,18:00,0,0,0,0
+691,Palacio de la Escuela de Medicina,jueves,09:00,18:00,0,0,0,0
+691,Palacio de la Escuela de Medicina,viernes,09:00,18:00,0,0,0,0
+691,Palacio de la Escuela de Medicina,sabado,09:00,18:00,0,0,0,0
+691,Palacio de la Escuela de Medicina,domingo,09:00,18:00,0,0,0,0
+907,Museo del Telégrafo,lunes,00:00,00:00,-1,-1,-1,-1
+907,Museo del Telégrafo,martes,10:00,17:30,0,0,0,0
+907,Museo del Telégrafo,miercoles,10:00,17:30,0,0,0,0
+907,Museo del Telégrafo,jueves,10:00,17:30,0,0,0,0
+907,Museo del Telégrafo,viernes,10:00,17:30,0,0,0,0
+907,Museo del Telégrafo,sabado,10:00,17:30,0,0,0,0
+907,Museo del Telégrafo,domingo,10:00,17:30,0,0,0,0
+2202,Museo Banco de México,lunes,00:00,00:00,-1,-1,-1,-1
+2202,Museo Banco de México,martes,11:00,17:00,0,0,0,0
+2202,Museo Banco de México,miercoles,11:00,17:00,0,0,0,0
+2202,Museo Banco de México,jueves,11:00,17:00,0,0,0,0
+2202,Museo Banco de México,viernes,11:00,17:00,0,0,0,0
+2202,Museo Banco de México,sabado,11:00,17:00,0,0,0,0
+2202,Museo Banco de México,domingo,11:00,17:00,0,0,0,0
+1212,Museo Mexicano del Diseño (MUMEDI),lunes,10:00,20:00,60,60,60,60
+1212,Museo Mexicano del Diseño (MUMEDI),martes,10:00,20:00,60,60,60,60
+1212,Museo Mexicano del Diseño (MUMEDI),miercoles,10:00,20:00,60,60,60,60
+1212,Museo Mexicano del Diseño (MUMEDI),jueves,10:00,20:00,60,60,60,60
+1212,Museo Mexicano del Diseño (MUMEDI),viernes,10:00,20:00,60,60,60,60
+1212,Museo Mexicano del Diseño (MUMEDI),sabado,09:00,21:00,60,60,60,60
+1212,Museo Mexicano del Diseño (MUMEDI),domingo,09:00,21:00,60,60,60,60
+1617,Museo Galería Nuestra Cocina Duque de Herdez,lunes,00:00,00:00,-1,-1,-1,-1
+1617,Museo Galería Nuestra Cocina Duque de Herdez,martes,09:00,17:00,15,15,15,10
+1617,Museo Galería Nuestra Cocina Duque de Herdez,miercoles,09:00,17:00,15,15,15,10
+1617,Museo Galería Nuestra Cocina Duque de Herdez,jueves,09:00,17:00,15,15,15,10
+1617,Museo Galería Nuestra Cocina Duque de Herdez,viernes,09:00,17:00,15,15,15,10
+1617,Museo Galería Nuestra Cocina Duque de Herdez,sabado,09:00,17:00,15,15,15,10
+1617,Museo Galería Nuestra Cocina Duque de Herdez,domingo,09:00,17:00,15,15,15,10
+811,Museo Manuel Tolsá,lunes,00:00,00:00,-1,-1,-1,-1
+811,Museo Manuel Tolsá,martes,00:00,00:00,-1,-1,-1,-1
+811,Museo Manuel Tolsá,miercoles,10:00,18:00,20,20,10,10
+811,Museo Manuel Tolsá,jueves,10:00,18:00,20,20,10,10
+811,Museo Manuel Tolsá,viernes,10:00,18:00,20,20,10,10
+811,Museo Manuel Tolsá,sabado,10:00,18:00,20,20,10,10
+811,Museo Manuel Tolsá,domingo,10:00,18:00,20,20,10,10
+382,Museo Universitario del Chopo,lunes,00:00,00:00,-1,-1,-1,-1
+382,Museo Universitario del Chopo,martes,00:00,00:00,-1,-1,-1,-1
+382,Museo Universitario del Chopo,miercoles,11:30,19:00,30,30,15,15
+382,Museo Universitario del Chopo,jueves,11:30,19:00,30,30,15,15
+382,Museo Universitario del Chopo,viernes,11:30,19:00,30,30,15,15
+382,Museo Universitario del Chopo,sabado,11:30,19:00,30,30,15,15
+382,Museo Universitario del Chopo,domingo,11:30,19:00,30,30,15,15
+1560,"Museo Indígena, Antigua Aduana de Peralvillo",lunes,11:00,17:00,0,0,0,0
+1560,"Museo Indígena, Antigua Aduana de Peralvillo",martes,11:00,17:00,0,0,0,0
+1560,"Museo Indígena, Antigua Aduana de Peralvillo",miercoles,11:00,17:00,0,0,0,0
+1560,"Museo Indígena, Antigua Aduana de Peralvillo",jueves,11:00,17:00,0,0,0,0
+1560,"Museo Indígena, Antigua Aduana de Peralvillo",viernes,11:00,17:00,0,0,0,0
+1560,"Museo Indígena, Antigua Aduana de Peralvillo",sabado,11:00,17:00,0,0,0,0
+1560,"Museo Indígena, Antigua Aduana de Peralvillo",domingo,11:00,17:00,0,0,0,0
+1780,Museo del Bicentenario,lunes,09:00,22:00,20,10,20,20
+1780,Museo del Bicentenario,martes,09:00,22:00,20,10,20,20
+1780,Museo del Bicentenario,miercoles,09:00,22:00,20,10,20,20
+1780,Museo del Bicentenario,jueves,09:00,22:00,20,10,20,20
+1780,Museo del Bicentenario,viernes,09:00,22:00,20,10,20,20
+1780,Museo del Bicentenario,sabado,09:00,22:00,20,10,20,20
+1780,Museo del Bicentenario,domingo,09:00,22:00,20,10,20,20
+1519,Museo de la Cancillería,lunes,10:00,17:00,0,0,0,0
+1519,Museo de la Cancillería,martes,10:00,17:00,0,0,0,0
+1519,Museo de la Cancillería,miercoles,10:00,17:00,0,0,0,0
+1519,Museo de la Cancillería,jueves,10:00,17:00,0,0,0,0
+1519,Museo de la Cancillería,viernes,10:00,17:00,0,0,0,0
+1519,Museo de la Cancillería,sabado,00:00,00:00,-1,-1,-1,-1
+1519,Museo de la Cancillería,domingo,00:00,00:00,-1,-1,-1,-1
+710,Museo Ramón López Velarde,lunes,00:00,00:00,-1,-1,-1,-1
+710,Museo Ramón López Velarde,martes,10:00,18:00,5,5,5,4
+710,Museo Ramón López Velarde,miercoles,10:00,18:00,5,5,5,4
+710,Museo Ramón López Velarde,jueves,10:00,18:00,5,5,5,4
+710,Museo Ramón López Velarde,viernes,10:00,18:00,5,5,5,4
+710,Museo Ramón López Velarde,sabado,10:00,15:00,5,5,5,4
+710,Museo Ramón López Velarde,domingo,00:00,00:00,-1,-1,-1,-1
+705,Museo Nacional de la Revolución,lunes,00:00,00:00,-1,-1,-1,-1
+705,Museo Nacional de la Revolución,martes,09:00,17:00,34,34,17,17
+705,Museo Nacional de la Revolución,miercoles,09:00,17:00,34,34,17,17
+705,Museo Nacional de la Revolución,jueves,09:00,17:00,34,34,17,17
+705,Museo Nacional de la Revolución,viernes,09:00,17:00,34,34,17,17
+705,Museo Nacional de la Revolución,sabado,09:00,19:00,34,34,17,17
+705,Museo Nacional de la Revolución,domingo,09:00,19:00,0,0,0,0
+403,Museo de la Luz,lunes,00:00,00:00,-1,-1,-1,-1
+403,Museo de la Luz,martes,09:00,17:00,35,35,25,25
+403,Museo de la Luz,miercoles,09:00,17:00,35,35,25,25
+403,Museo de la Luz,jueves,09:00,17:00,35,35,25,25
+403,Museo de la Luz,viernes,09:00,17:00,35,35,25,25
+403,Museo de la Luz,sabado,10:00,17:00,35,35,25,25
+403,Museo de la Luz,domingo,10:00,17:00,35,35,25,25
+1538,Museo Casa de la Memoria Indómita,lunes,00:00,00:00,-1,-1,-1,-1
+1538,Museo Casa de la Memoria Indómita,martes,10:00,17:30,25,25,25,25
+1538,Museo Casa de la Memoria Indómita,miercoles,10:00,17:30,25,25,25,25
+1538,Museo Casa de la Memoria Indómita,jueves,10:00,17:30,25,25,25,25
+1538,Museo Casa de la Memoria Indómita,viernes,10:00,17:30,25,25,25,25
+1538,Museo Casa de la Memoria Indómita,sabado,10:00,17:30,25,25,25,25
+1538,Museo Casa de la Memoria Indómita,domingo,10:00,17:30,25,25,25,25
+1080,Museo del Palacio de Bellas Artes,lunes,00:00,00:00,-1,-1,-1,-1
+1080,Museo del Palacio de Bellas Artes,martes,10:00,18:00,90,90,0,0
+1080,Museo del Palacio de Bellas Artes,miercoles,10:00,18:00,90,90,0,0
+1080,Museo del Palacio de Bellas Artes,jueves,10:00,18:00,90,90,0,0
+1080,Museo del Palacio de Bellas Artes,viernes,10:00,18:00,90,90,0,0
+1080,Museo del Palacio de Bellas Artes,sabado,10:00,18:00,90,90,0,0
+1080,Museo del Palacio de Bellas Artes,domingo,10:00,18:00,0,0,0,0
+459,Museo José Luis Cuevas,lunes,00:00,00:00,-1,-1,-1,-1
+459,Museo José Luis Cuevas,martes,09:30,17:30,30,30,0,15
+459,Museo José Luis Cuevas,miercoles,09:30,17:30,30,30,0,15
+459,Museo José Luis Cuevas,jueves,09:30,17:30,30,30,0,15
+459,Museo José Luis Cuevas,viernes,09:30,17:30,30,30,0,15
+459,Museo José Luis Cuevas,sabado,09:30,17:30,30,30,0,15
+459,Museo José Luis Cuevas,domingo,09:30,17:30,0,0,0,0
+2029,Museo Interactivo de la Bolsa Mexicana de Valores,lunes,00:00,00:00,-1,-1,-1,-1
+2029,Museo Interactivo de la Bolsa Mexicana de Valores,martes,09:00,18:00,0,0,0,0
+2029,Museo Interactivo de la Bolsa Mexicana de Valores,miercoles,09:00,18:00,0,0,0,0
+2029,Museo Interactivo de la Bolsa Mexicana de Valores,jueves,09:00,18:00,0,0,0,0
+2029,Museo Interactivo de la Bolsa Mexicana de Valores,viernes,09:00,18:00,0,0,0,0
+2029,Museo Interactivo de la Bolsa Mexicana de Valores,sabado,09:00,18:00,0,0,0,0
+2029,Museo Interactivo de la Bolsa Mexicana de Valores,domingo,09:00,18:00,0,0,0,0
+1550,Museo del Tecpan,lunes,09:00,17:00,0,0,0,0
+1550,Museo del Tecpan,martes,09:00,17:00,0,0,0,0
+1550,Museo del Tecpan,miercoles,09:00,17:00,0,0,0,0
+1550,Museo del Tecpan,jueves,09:00,17:00,0,0,0,0
+1550,Museo del Tecpan,viernes,09:00,17:00,0,0,0,0
+1550,Museo del Tecpan,sabado,09:00,17:00,0,0,0,0
+1550,Museo del Tecpan,domingo,09:00,17:00,0,0,0,0
+2188,Casa-Estudio Leonora Carrington (Cerrada Temporalmente),lunes,00:00,00:00,-1,-1,-1,-1
+2188,Casa-Estudio Leonora Carrington (Cerrada Temporalmente),martes,00:00,00:00,-1,-1,-1,-1
+2188,Casa-Estudio Leonora Carrington (Cerrada Temporalmente),miercoles,00:00,00:00,-1,-1,-1,-1
+2188,Casa-Estudio Leonora Carrington (Cerrada Temporalmente),jueves,00:00,00:00,-1,-1,-1,-1
+2188,Casa-Estudio Leonora Carrington (Cerrada Temporalmente),viernes,00:00,00:00,-1,-1,-1,-1
+2188,Casa-Estudio Leonora Carrington (Cerrada Temporalmente),sabado,00:00,00:00,-1,-1,-1,-1
+2188,Casa-Estudio Leonora Carrington (Cerrada Temporalmente),domingo,00:00,00:00,-1,-1,-1,-1
+706,Museo de Sitio de la SEP,lunes,09:00,17:00,0,0,0,0
+706,Museo de Sitio de la SEP,martes,09:00,17:00,0,0,0,0
+706,Museo de Sitio de la SEP,miercoles,09:00,17:00,0,0,0,0
+706,Museo de Sitio de la SEP,jueves,09:00,17:00,0,0,0,0
+706,Museo de Sitio de la SEP,viernes,09:00,17:00,0,0,0,0
+706,Museo de Sitio de la SEP,sabado,10:00,16:00,0,0,0,0
+706,Museo de Sitio de la SEP,domingo,10:00,16:00,0,0,0,0
+965,Museo Casa de Carranza,lunes,00:00,00:00,-1,-1,-1,-1
+965,Museo Casa de Carranza,martes,10:00,17:00,70,0,0,0
+965,Museo Casa de Carranza,miercoles,10:00,17:00,70,0,0,0
+965,Museo Casa de Carranza,jueves,10:00,17:00,70,0,0,0
+965,Museo Casa de Carranza,viernes,10:00,17:00,70,0,0,0
+965,Museo Casa de Carranza,sabado,10:00,17:00,70,0,0,0
+965,Museo Casa de Carranza,domingo,10:00,17:00,70,0,0,0
+427,Laboratorio Arte Alameda,lunes,00:00,00:00,-1,-1,-1,-1
+427,Laboratorio Arte Alameda,martes,09:00,17:00,45,45,0,0
+427,Laboratorio Arte Alameda,miercoles,09:00,17:00,45,45,0,0
+427,Laboratorio Arte Alameda,jueves,09:00,17:00,45,45,0,0
+427,Laboratorio Arte Alameda,viernes,09:00,17:00,45,45,0,0
+427,Laboratorio Arte Alameda,sabado,09:00,17:00,45,45,0,0
+427,Laboratorio Arte Alameda,domingo,09:00,17:00,0,0,0,0
+768,Antiguo Colegio de San Ildefonso,lunes,00:00,00:00,-1,-1,-1,-1
+768,Antiguo Colegio de San Ildefonso,martes,11:00,17:30,50,0,0,25
+768,Antiguo Colegio de San Ildefonso,miercoles,11:00,17:30,50,0,0,25
+768,Antiguo Colegio de San Ildefonso,jueves,11:00,17:30,50,0,0,25
+768,Antiguo Colegio de San Ildefonso,viernes,11:00,17:30,50,0,0,25
+768,Antiguo Colegio de San Ildefonso,sabado,11:00,17:30,50,0,0,25
+768,Antiguo Colegio de San Ildefonso,domingo,11:00,17:30,0,0,0,0
+439,Museo Nacional de Arte (MUNAL),lunes,00:00,00:00,-1,-1,-1,-1
+439,Museo Nacional de Arte (MUNAL),martes,10:00,18:00,85,42.5,42.5,42.5
+439,Museo Nacional de Arte (MUNAL),miercoles,10:00,18:00,85,42.5,42.5,42.5
+439,Museo Nacional de Arte (MUNAL),jueves,10:00,18:00,85,42.5,42.5,42.5
+439,Museo Nacional de Arte (MUNAL),viernes,10:00,18:00,85,42.5,42.5,42.5
+439,Museo Nacional de Arte (MUNAL),sabado,10:00,18:00,85,42.5,42.5,42.5
+439,Museo Nacional de Arte (MUNAL),domingo,10:00,18:00,85,42.5,42.5,42.5
+1469,Museo del Objeto del Objeto (MODO),lunes,00:00,00:00,-1,-1,-1,-1
+1469,Museo del Objeto del Objeto (MODO),martes,00:00,00:00,-1,-1,-1,-1
+1469,Museo del Objeto del Objeto (MODO),miercoles,10:00,18:00,60,0,30,30
+1469,Museo del Objeto del Objeto (MODO),jueves,10:00,18:00,60,0,30,30
+1469,Museo del Objeto del Objeto (MODO),viernes,10:00,18:00,60,0,30,30
+1469,Museo del Objeto del Objeto (MODO),sabado,10:00,18:00,60,0,30,30
+1469,Museo del Objeto del Objeto (MODO),domingo,10:00,18:00,60,0,30,30
+812,Museo Nacional de la Estampa (MUNAE),lunes,00:00,00:00,-1,-1,-1,-1
+812,Museo Nacional de la Estampa (MUNAE),martes,10:00,18:00,55,55,0,0
+812,Museo Nacional de la Estampa (MUNAE),miercoles,10:00,18:00,55,55,0,0
+812,Museo Nacional de la Estampa (MUNAE),jueves,10:00,18:00,55,55,0,0
+812,Museo Nacional de la Estampa (MUNAE),viernes,10:00,18:00,55,55,0,0
+812,Museo Nacional de la Estampa (MUNAE),sabado,10:00,18:00,55,55,0,0
+812,Museo Nacional de la Estampa (MUNAE),domingo,10:00,18:00,0,0,0,0
+2008,Museo Vizcaínas,lunes,09:00,13:00,160,160,80,80
+2008,Museo Vizcaínas,martes,09:00,13:00,160,160,80,80
+2008,Museo Vizcaínas,miercoles,09:00,13:00,160,160,80,80
+2008,Museo Vizcaínas,jueves,09:00,13:00,160,160,80,80
+2008,Museo Vizcaínas,viernes,09:00,13:00,160,160,80,80
+2008,Museo Vizcaínas,sabado,09:00,13:00,160,160,80,80
+2008,Museo Vizcaínas,domingo,00:00,00:00,-1,-1,-1,-1
+1435,Museo de la Mujer,lunes,00:00,00:00,-1,-1,-1,-1
+1435,Museo de la Mujer,martes,10:00,18:00,0,0,0,0
+1435,Museo de la Mujer,miercoles,10:00,18:00,20,20,10,10
+1435,Museo de la Mujer,jueves,10:00,18:00,20,20,10,10
+1435,Museo de la Mujer,viernes,10:00,18:00,20,20,10,10
+1435,Museo de la Mujer,sabado,10:00,18:00,20,20,10,10
+1435,Museo de la Mujer,domingo,10:00,18:00,20,20,10,10
+2190,Museo del Perfume MUPE,lunes,00:00,00:00,-1,-1,-1,-1
+2190,Museo del Perfume MUPE,martes,10:00,17:00,70,70,35,35
+2190,Museo del Perfume MUPE,miercoles,10:00,17:00,70,70,35,35
+2190,Museo del Perfume MUPE,jueves,10:00,17:00,70,70,35,35
+2190,Museo del Perfume MUPE,viernes,10:00,17:00,70,70,35,35
+2190,Museo del Perfume MUPE,sabado,10:00,17:00,70,70,35,35
+2190,Museo del Perfume MUPE,domingo,10:00,17:00,70,70,35,35
+503,Herbario Medicinal del IMSS,lunes,10:00,14:00,0,0,0,0
+503,Herbario Medicinal del IMSS,martes,10:00,14:00,0,0,0,0
+503,Herbario Medicinal del IMSS,miercoles,10:00,14:00,0,0,0,0
+503,Herbario Medicinal del IMSS,jueves,10:00,14:00,0,0,0,0
+503,Herbario Medicinal del IMSS,viernes,10:00,14:00,0,0,0,0
+503,Herbario Medicinal del IMSS,sabado,00:00,00:00,-1,-1,-1,-1
+503,Herbario Medicinal del IMSS,domingo,00:00,00:00,-1,-1,-1,-1
+802,Museo Nacional de las Culturas del Mundo,lunes,00:00,00:00,-1,-1,-1,-1
+802,Museo Nacional de las Culturas del Mundo,martes,10:00,18:00,0,0,0,0
+802,Museo Nacional de las Culturas del Mundo,miercoles,10:00,18:00,0,0,0,0
+802,Museo Nacional de las Culturas del Mundo,jueves,10:00,18:00,0,0,0,0
+802,Museo Nacional de las Culturas del Mundo,viernes,10:00,18:00,0,0,0,0
+802,Museo Nacional de las Culturas del Mundo,sabado,10:00,18:00,0,0,0,0
+802,Museo Nacional de las Culturas del Mundo,domingo,10:00,18:00,0,0,0,0
+2075,Museo Centro de la Imagen,lunes,00:00,00:00,-1,-1,-1,-1
+2075,Museo Centro de la Imagen,martes,00:00,00:00,-1,-1,-1,-1
+2075,Museo Centro de la Imagen,miercoles,10:00,19:00,0,0,0,0
+2075,Museo Centro de la Imagen,jueves,10:00,19:00,0,0,0,0
+2075,Museo Centro de la Imagen,viernes,10:00,19:00,0,0,0,0
+2075,Museo Centro de la Imagen,sabado,10:00,19:00,0,0,0,0
+2075,Museo Centro de la Imagen,domingo,10:00,19:00,0,0,0,0
+1478,"Museo Soumaya, Plaza Carso",lunes,10:30,18:30,0,0,0,0
+1478,"Museo Soumaya, Plaza Carso",martes,10:30,18:30,0,0,0,0
+1478,"Museo Soumaya, Plaza Carso",miercoles,10:30,18:30,0,0,0,0
+1478,"Museo Soumaya, Plaza Carso",jueves,10:30,18:30,0,0,0,0
+1478,"Museo Soumaya, Plaza Carso",viernes,10:30,18:30,0,0,0,0
+1478,"Museo Soumaya, Plaza Carso",sabado,10:30,18:30,0,0,0,0
+1478,"Museo Soumaya, Plaza Carso",domingo,10:30,18:30,0,0,0,0
+548,Museo Casa de la Bola,lunes,00:00,00:00,50,50,50,50
+548,Museo Casa de la Bola,martes,00:00,00:00,50,50,50,50
+548,Museo Casa de la Bola,miercoles,00:00,00:00,50,50,50,50
+548,Museo Casa de la Bola,jueves,00:00,00:00,50,50,50,50
+548,Museo Casa de la Bola,viernes,00:00,00:00,50,50,50,50
+548,Museo Casa de la Bola,sabado,00:00,00:00,50,50,50,50
+548,Museo Casa de la Bola,domingo,00:00,00:00,50,50,50,50
+2166,Museo de la Brigada de Fusileros Paracaidistas,lunes,00:00,00:00,-1,-1,-1,-1
+2166,Museo de la Brigada de Fusileros Paracaidistas,martes,09:00,17:00,0,0,0,0
+2166,Museo de la Brigada de Fusileros Paracaidistas,miercoles,09:00,17:00,0,0,0,0
+2166,Museo de la Brigada de Fusileros Paracaidistas,jueves,09:00,17:00,0,0,0,0
+2166,Museo de la Brigada de Fusileros Paracaidistas,viernes,09:00,17:00,0,0,0,0
+2166,Museo de la Brigada de Fusileros Paracaidistas,sabado,09:00,17:00,0,0,0,0
+2166,Museo de la Brigada de Fusileros Paracaidistas,domingo,09:00,17:00,0,0,0,0
+2064,Museo de Sitio y Centro de Visitantes del Bosque de Chapultepec,lunes,00:00,00:00,-1,-1,-1,-1
+2064,Museo de Sitio y Centro de Visitantes del Bosque de Chapultepec,martes,10:00,17:00,0,0,0,0
+2064,Museo de Sitio y Centro de Visitantes del Bosque de Chapultepec,miercoles,10:00,17:00,0,0,0,0
+2064,Museo de Sitio y Centro de Visitantes del Bosque de Chapultepec,jueves,10:00,17:00,0,0,0,0
+2064,Museo de Sitio y Centro de Visitantes del Bosque de Chapultepec,viernes,10:00,17:00,0,0,0,0
+2064,Museo de Sitio y Centro de Visitantes del Bosque de Chapultepec,sabado,10:00,17:00,0,0,0,0
+2064,Museo de Sitio y Centro de Visitantes del Bosque de Chapultepec,domingo,10:00,17:00,0,0,0,0
+1484,Museo Jumex,lunes,00:00,00:00,-1,-1,-1,-1
+1484,Museo Jumex,martes,10:00,19:00,38,0,0,0
+1484,Museo Jumex,miercoles,10:00,19:00,38,0,0,0
+1484,Museo Jumex,jueves,10:00,19:00,38,0,0,0
+1484,Museo Jumex,viernes,10:00,19:00,38,0,0,0
+1484,Museo Jumex,sabado,10:00,19:00,38,0,0,0
+1484,Museo Jumex,domingo,10:00,19:00,0,0,0,0
+911,Mapoteca Manuel Orozco y Berra (MOB),lunes,08:00,16:00,0,0,0,0
+911,Mapoteca Manuel Orozco y Berra (MOB),martes,08:00,16:00,0,0,0,0
+911,Mapoteca Manuel Orozco y Berra (MOB),miercoles,08:00,16:00,0,0,0,0
+911,Mapoteca Manuel Orozco y Berra (MOB),jueves,08:00,16:00,0,0,0,0
+911,Mapoteca Manuel Orozco y Berra (MOB),viernes,08:00,16:00,0,0,0,0
+911,Mapoteca Manuel Orozco y Berra (MOB),sabado,00:00,00:00,-1,-1,-1,-1
+911,Mapoteca Manuel Orozco y Berra (MOB),domingo,00:00,00:00,-1,-1,-1,-1
+786,Sala de Arte Público Siqueiros,lunes,00:00,00:00,-1,-1,-1,-1
+786,Sala de Arte Público Siqueiros,martes,11:00,17:00,35,0,0,0
+786,Sala de Arte Público Siqueiros,miercoles,11:00,17:00,35,0,0,0
+786,Sala de Arte Público Siqueiros,jueves,11:00,17:00,35,0,0,0
+786,Sala de Arte Público Siqueiros,viernes,11:00,17:00,35,0,0,0
+786,Sala de Arte Público Siqueiros,sabado,11:00,17:00,35,0,0,0
+786,Sala de Arte Público Siqueiros,domingo,11:00,17:00,0,0,0,0
+2194,Cencalli Casa del Maíz y la Cultura Alimentaria,lunes,00:00,00:00,-1,-1,-1,-1
+2194,Cencalli Casa del Maíz y la Cultura Alimentaria,martes,10:00,17:00,0,0,0,0
+2194,Cencalli Casa del Maíz y la Cultura Alimentaria,miercoles,10:00,17:00,0,0,0,0
+2194,Cencalli Casa del Maíz y la Cultura Alimentaria,jueves,10:00,17:00,0,0,0,0
+2194,Cencalli Casa del Maíz y la Cultura Alimentaria,viernes,10:00,17:00,0,0,0,0
+2194,Cencalli Casa del Maíz y la Cultura Alimentaria,sabado,10:00,17:00,0,0,0,0
+2194,Cencalli Casa del Maíz y la Cultura Alimentaria,domingo,10:00,17:00,0,0,0,0
+238,Museo de Historia Natural y Cultura Ambiental,lunes,00:00,00:00,-1,-1,-1,-1
+238,Museo de Historia Natural y Cultura Ambiental,martes,10:00,17:00,34,16,0,16
+238,Museo de Historia Natural y Cultura Ambiental,miercoles,10:00,17:00,34,16,0,16
+238,Museo de Historia Natural y Cultura Ambiental,jueves,10:00,17:00,34,16,0,16
+238,Museo de Historia Natural y Cultura Ambiental,viernes,10:00,17:00,34,16,0,16
+238,Museo de Historia Natural y Cultura Ambiental,sabado,10:00,17:00,34,16,0,16
+238,Museo de Historia Natural y Cultura Ambiental,domingo,10:00,17:00,34,16,0,16
+478,La Casa Luis Barragán,lunes,11:00,17:00,300,300,200,200
+478,La Casa Luis Barragán,martes,11:00,17:00,300,300,200,200
+478,La Casa Luis Barragán,miercoles,11:00,17:00,300,300,200,200
+478,La Casa Luis Barragán,jueves,11:00,17:00,300,300,200,200
+478,La Casa Luis Barragán,viernes,11:00,17:00,300,300,200,200
+478,La Casa Luis Barragán,sabado,11:00,14:00,300,300,200,200
+478,La Casa Luis Barragán,domingo,11:00,14:00,300,300,200,200
+1232,Museo de Caballería,lunes,00:00,00:00,-1,-1,-1,-1
+1232,Museo de Caballería,martes,10:00,18:00,0,0,0,0
+1232,Museo de Caballería,miercoles,10:00,18:00,0,0,0,0
+1232,Museo de Caballería,jueves,10:00,18:00,0,0,0,0
+1232,Museo de Caballería,viernes,10:00,18:00,0,0,0,0
+1232,Museo de Caballería,sabado,10:00,18:00,0,0,0,0
+1232,Museo de Caballería,domingo,10:00,16:00,0,0,0,0
+375,Papalote Museo del Niño Chapultepec,lunes,00:00,00:00,-1,-1,-1,-1
+375,Papalote Museo del Niño Chapultepec,martes,10:00,18:00,199,199,199,199
+375,Papalote Museo del Niño Chapultepec,miercoles,10:00,18:00,199,199,199,199
+375,Papalote Museo del Niño Chapultepec,jueves,10:00,18:00,199,199,199,199
+375,Papalote Museo del Niño Chapultepec,viernes,10:00,18:00,199,199,199,199
+375,Papalote Museo del Niño Chapultepec,sabado,10:00,19:00,199,199,199,199
+375,Papalote Museo del Niño Chapultepec,domingo,10:00,19:00,199,199,199,199
+807,Museo Nacional de Antropología (MNA),lunes,00:00,00:00,-1,-1,-1,-1
+807,Museo Nacional de Antropología (MNA),martes,09:00,18:00,90,0,0,0
+807,Museo Nacional de Antropología (MNA),miercoles,09:00,18:00,90,0,0,0
+807,Museo Nacional de Antropología (MNA),jueves,09:00,18:00,90,0,0,0
+807,Museo Nacional de Antropología (MNA),viernes,09:00,18:00,90,0,0,0
+807,Museo Nacional de Antropología (MNA),sabado,09:00,18:00,90,0,0,0
+807,Museo Nacional de Antropología (MNA),domingo,09:00,18:00,90,0,0,0
+1874,Museo del Centenario del Ejército Mexicano,lunes,08:00,16:00,0,0,0,0
+1874,Museo del Centenario del Ejército Mexicano,martes,08:00,16:00,0,0,0,0
+1874,Museo del Centenario del Ejército Mexicano,miercoles,08:00,16:00,0,0,0,0
+1874,Museo del Centenario del Ejército Mexicano,jueves,08:00,16:00,0,0,0,0
+1874,Museo del Centenario del Ejército Mexicano,viernes,08:00,16:00,0,0,0,0
+1874,Museo del Centenario del Ejército Mexicano,sabado,09:00,12:00,0,0,0,0
+1874,Museo del Centenario del Ejército Mexicano,domingo,00:00,00:00,-1,-1,-1,-1
+335,Museo Tamayo Arte Contemporáneo,lunes,00:00,00:00,-1,-1,-1,-1
+335,Museo Tamayo Arte Contemporáneo,martes,11:00,17:00,70,0,0,0
+335,Museo Tamayo Arte Contemporáneo,miercoles,11:00,17:00,70,0,0,0
+335,Museo Tamayo Arte Contemporáneo,jueves,11:00,17:00,70,0,0,0
+335,Museo Tamayo Arte Contemporáneo,viernes,11:00,17:00,70,0,0,0
+335,Museo Tamayo Arte Contemporáneo,sabado,11:00,17:00,70,0,0,0
+335,Museo Tamayo Arte Contemporáneo,domingo,11:00,17:00,0,0,0,0
+970,"Galería de Historia, Museo del Caracol",lunes,00:00,00:00,-1,-1,-1,-1
+970,"Galería de Historia, Museo del Caracol",martes,09:00,16:45,95,0,0,0
+970,"Galería de Historia, Museo del Caracol",miercoles,09:00,16:45,95,0,0,0
+970,"Galería de Historia, Museo del Caracol",jueves,09:00,16:45,95,0,0,0
+970,"Galería de Historia, Museo del Caracol",viernes,09:00,16:45,95,0,0,0
+970,"Galería de Historia, Museo del Caracol",sabado,09:00,16:45,95,0,0,0
+970,"Galería de Historia, Museo del Caracol",domingo,09:00,16:45,0,0,0,0
+673,Museo Nacional de Historia Castillo de Chapultepec,lunes,00:00,00:00,-1,-1,-1,-1
+673,Museo Nacional de Historia Castillo de Chapultepec,martes,09:00,17:00,90,0,0,0
+673,Museo Nacional de Historia Castillo de Chapultepec,miercoles,09:00,17:00,90,0,0,0
+673,Museo Nacional de Historia Castillo de Chapultepec,jueves,09:00,17:00,90,0,0,0
+673,Museo Nacional de Historia Castillo de Chapultepec,viernes,09:00,17:00,90,0,0,0
+673,Museo Nacional de Historia Castillo de Chapultepec,sabado,09:00,17:00,90,0,0,0
+673,Museo Nacional de Historia Castillo de Chapultepec,domingo,09:00,17:00,90,0,0,0
+2181,Museo Casa Presidencial Lázaro Cárdenas,lunes,00:00,00:00,-1,-1,-1,-1
+2181,Museo Casa Presidencial Lázaro Cárdenas,martes,11:00,17:00,0,0,0,0
+2181,Museo Casa Presidencial Lázaro Cárdenas,miercoles,11:00,17:00,0,0,0,0
+2181,Museo Casa Presidencial Lázaro Cárdenas,jueves,11:00,17:00,0,0,0,0
+2181,Museo Casa Presidencial Lázaro Cárdenas,viernes,11:00,17:00,0,0,0,0
+2181,Museo Casa Presidencial Lázaro Cárdenas,sabado,11:00,17:00,0,0,0,0
+2181,Museo Casa Presidencial Lázaro Cárdenas,domingo,11:00,17:00,0,0,0,0
+1614,Museo de Geofísica,lunes,10:00,16:00,0,0,0,0
+1614,Museo de Geofísica,martes,10:00,16:00,0,0,0,0
+1614,Museo de Geofísica,miercoles,10:00,16:00,0,0,0,0
+1614,Museo de Geofísica,jueves,10:00,16:00,0,0,0,0
+1614,Museo de Geofísica,viernes,10:00,16:00,0,0,0,0
+1614,Museo de Geofísica,sabado,00:00,00:00,-1,-1,-1,-1
+1614,Museo de Geofísica,domingo,00:00,00:00,-1,-1,-1,-1
+658,Museo de Arte Moderno (MAM),lunes,00:00,00:00,-1,-1,-1,-1
+658,Museo de Arte Moderno (MAM),martes,10:15,17:30,80,80,0,0
+658,Museo de Arte Moderno (MAM),miercoles,10:15,17:30,80,80,0,0
+658,Museo de Arte Moderno (MAM),jueves,10:15,17:30,80,80,0,0
+658,Museo de Arte Moderno (MAM),viernes,10:15,17:30,80,80,0,0
+658,Museo de Arte Moderno (MAM),sabado,10:15,17:30,80,80,0,0
+658,Museo de Arte Moderno (MAM),domingo,10:15,17:30,0,0,0,0
+977,Museo Nacional de la Cartografía,lunes,00:00,00:00,-1,-1,-1,-1
+977,Museo Nacional de la Cartografía,martes,10:00,17:00,0,0,0,0
+977,Museo Nacional de la Cartografía,miercoles,10:00,17:00,0,0,0,0
+977,Museo Nacional de la Cartografía,jueves,10:00,17:00,0,0,0,0
+977,Museo Nacional de la Cartografía,viernes,10:00,17:00,0,0,0,0
+977,Museo Nacional de la Cartografía,sabado,10:00,17:00,0,0,0,0
+977,Museo Nacional de la Cartografía,domingo,10:00,16:00,0,0,0,0
+502,"Maná, Museo de la Biblia",lunes,00:00,00:00,-1,-1,-1,-1
+502,"Maná, Museo de la Biblia",martes,11:00,17:00,-1,-1,-1,-1
+502,"Maná, Museo de la Biblia",miercoles,11:00,17:00,-1,-1,-1,-1
+502,"Maná, Museo de la Biblia",jueves,11:00,17:00,-1,-1,-1,-1
+502,"Maná, Museo de la Biblia",viernes,11:00,17:00,-1,-1,-1,-1
+502,"Maná, Museo de la Biblia",sabado,11:00,17:00,-1,-1,-1,-1
+502,"Maná, Museo de la Biblia",domingo,00:00,00:00,-1,-1,-1,-1

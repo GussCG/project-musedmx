@@ -33,14 +33,27 @@ const MenuSort = forwardRef(({ sortBy, onSortChange }, ref) => {
         </label>
       </div>
       <div className="menu-sort-item">
-        <label htmlFor="sort-calif">Calificación</label>
+        <label htmlFor="sort-calif">Mejor Calificación</label>
         <label className="filtro-rad">
           <input
             type="radio"
             name="sort-filter"
-            id="sort-calif"
-            checked={selectedSort === "rating"}
-            onChange={() => handleSort("rating")}
+            id="sort-best-calif"
+            checked={selectedSort === "best-rating"}
+            onChange={() => handleSort("best-rating")}
+          />
+          <span className="radio-filter-span"></span>
+        </label>
+      </div>
+      <div className="menu-sort-item">
+        <label htmlFor="sort-calif">Peor Calificación</label>
+        <label className="filtro-rad">
+          <input
+            type="radio"
+            name="sort-filter"
+            id="sort-worst-calif"
+            checked={selectedSort === "worst-rating"}
+            onChange={() => handleSort("worst-rating")}
           />
           <span className="radio-filter-span"></span>
         </label>

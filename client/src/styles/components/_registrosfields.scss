@@ -972,7 +972,7 @@
   align-items: center;
 
   h1 {
-    font-size: 36px;
+    font-size: 2rem;
     margin: 50px;
     color: var(--font-color-primary);
   }
@@ -1079,6 +1079,7 @@
   min-height: 80vh;
 
   h1 {
+    font-size: 2rem;
     color: var(--font-color-primary);
     margin-bottom: 2rem;
   }
@@ -1181,6 +1182,107 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
+    }
+  }
+}
+
+#aprobar-res-main {
+  width: 80%;
+  height: 100%;
+  min-height: $main-height;
+  background-color: var(--bg-main);
+  margin: 10px auto;
+  border: none;
+  border-radius: 25px;
+  box-shadow: var(--box-shadow-2);
+  padding: 50px 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  h1 {
+    font-size: 2rem;
+    color: var(--font-color-primary);
+  }
+
+  .aprobar-res-container {
+    flex: 1;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+
+    .user-info {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+
+      p {
+        font-family: $font-primary;
+        font-size: 1rem;
+        color: var(--font-color-primary);
+      }
+    }
+
+    .user-resena-container {
+      flex: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 20px;
+
+      .user-resena {
+        text-align: justify;
+        font-family: $font-primary;
+        font-size: 1rem;
+        color: var(--font-color-primary);
+        padding: 20px;
+      }
+
+      .user-resena-imgs-container {
+        width: 100%;
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+        align-items: center;
+        justify-items: center;
+
+        img {
+          width: 100%;
+          max-width: 400px;
+          height: 200px;
+          object-fit: cover;
+          aspect-ratio: 16 / 9;
+          border-radius: 20px;
+
+          transition: transform 0.3s ease, opacity 0.3s ease;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+
+    .aprobar-res-buttons {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
     }
   }
 }

@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import { ThreeDot } from "react-loading-indicators";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 import MenuFiltroMuseo from "../../components/MenuFiltroMuseo";
 import { useSearchParams, useLocation } from "react-router";
@@ -11,11 +10,15 @@ import MuseoCard from "../../components/MuseoCard";
 import MuseosMapView from "./MuseosMapView";
 import MenuSort from "../../components/MenuSort";
 import MapIndicaciones from "../../components/MapIndicaciones";
+import Museo from "../../models/Museo/Museo";
 
 import { useViewMode } from "../../context/ViewModeProvider";
 
 import Icons from "../../components/IconProvider";
 import MuseumSearch from "../../components/MuseumSearch";
+import { TEMATICAS } from "../../constants/catalog";
+
+import ReactPaginate from "react-paginate";
 
 const {
   listButton,
@@ -25,6 +28,9 @@ const {
   FaMap,
   TbCardsFilled,
   FaAngleDoubleUp,
+  CgClose,
+  IoIosArrowForward,
+  IoIosArrowBack,
 } = Icons;
 
 // BACKEND_URL
@@ -49,133 +55,148 @@ function MuseosList({ titulo, tipo }) {
 
   // Para obtener el input de busqueda
   const [searchParams] = useSearchParams();
-  let tituloBusqueda = `${searchParams.get("search")}`;
+  const tituloSearch = `${searchParams.get("search")}`;
 
   const location = useLocation();
   const isBusquedaRoute = location.pathname.includes("/busqueda");
 
-  tituloBusqueda = isBusquedaRoute
-    ? `Resultados de búsqueda: ${searchParams.get("search")}`
+  const tituloBusqueda = isBusquedaRoute
+    ? `Resultados de búsqueda: ${tituloSearch}`
     : titulo;
-
-  const tituloSearch = searchParams.get("search");
 
   // Para obtener los museos del backend
   const [museos, setMuseos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [pagination, setPagination] = useState({
+    totalItems: 0,
+    totalPages: 0,
+    currentPage: 0,
+    itemsPerPage: 12,
+  });
   const [error, setError] = useState(null);
-  // const [page, setPage] = useState(1);
-  // const [loadingMore, setLoadingMore] = useState(false);
-  // const [hasMore, setHasMore] = useState(true);
-
-  useEffect(() => {
-    // if (!hasMore) return;
-
-    const fetchMuseos = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        let endpoint = `${BACKEND_URL}/api/museos/`;
-        let params = {
-          // page: page,
-          ...(tituloSearch && { search: tituloSearch }),
-        };
-
-        const response = await axios.get(endpoint, {
-          params,
-        });
-
-        // const nuevosMuseos = response.data.museos.filter(
-        //   (nuevoMuseo) => !museos.some((m) => m.mus_id === nuevoMuseo.mus_id)
-        // );
-
-        // if (nuevosMuseos.length === 0) {
-        //   setHasMore(false);
-        // } else {
-        //   setMuseos((prevMuseos) => [...prevMuseos, ...nuevosMuseos]);
-        // }
-
-        setMuseos(response.data.museos);
-      } catch (error) {
-        setError(error.message);
-        setMuseos([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchMuseos();
-  }, [tituloBusqueda, tipo]);
-
-  // const handleScroll = () => {
-  //   if (!hasMore || loadingMore) return;
-
-  //   if (
-  //     window.innerHeight + document.documentElement.scrollTop + 100 >=
-  //     document.documentElement.scrollHeight
-  //   ) {
-  //     setLoadingMore(true);
-  //     setPage((prev) => prev + 1);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
+  const [filters, setFilters] = useState({
+    tipos: [],
+    alcaldias: [],
+  });
+  const [sortBy, setSortBy] = useState(null);
 
   // Para cambiar la vista entre lista y mapa
   const { isMapView, setIsMapView } = useViewMode();
+  const [isMapLoading, setIsMapLoading] = useState(false);
   // Estado para controlar la visibilidad del menu de filtro
   const [menuVisible, setMenuVisible] = useState(false);
+
+  const fetchMuseos = useCallback(
+    async (page = 1) => {
+      try {
+        isMapView ? setIsMapLoading(true) : setIsLoading(true);
+
+        // Preparar parámetros
+        const params = new URLSearchParams();
+
+        if (tituloSearch && tituloSearch !== "null")
+          params.append("search", tituloSearch);
+        if (!isBusquedaRoute && tipo) params.append("tipo", tipo);
+        if (filters.tipos.length)
+          params.append("tipos", filters.tipos.join(","));
+        if (filters.alcaldias.length)
+          params.append("alcaldias", filters.alcaldias.join(","));
+        if (sortBy) params.append("sort", sortBy);
+
+        // Manejo especial para tipo "3" (populares)
+        if (tipo === "3") {
+          params.append("limit", "10");
+          params.append("sort", "best-rating");
+
+          // Solo agregar página si no es MapView
+          if (!isMapView) {
+            params.append("page", page.toString());
+          }
+        } else {
+          // Comportamiento normal para otros tipos
+          if (!isMapView) {
+            params.append("limit", "12");
+            params.append("page", page.toString());
+          }
+        }
+
+        params.append("isMapView", isMapView.toString());
+
+        const response = await axios.get(
+          `${BACKEND_URL}/api/museos?${params.toString()}`
+        );
+
+        setMuseos(response.data.data.items.map((museo) => new Museo(museo)));
+        setPagination({
+          totalItems: response.data.data.totalItems,
+          totalPages: response.data.data.pagination.totalPages,
+          currentPage: response.data.data.pagination.currentPage - 1,
+          itemsPerPage: response.data.data.pagination.itemsPerPage,
+        });
+      } catch (error) {
+        console.error("Error fetching museos:", error);
+        setError(error.message);
+        setMuseos([]);
+        setPagination({
+          totalItems: 0,
+          totalPages: 0,
+          currentPage: 0,
+          itemsPerPage: 12,
+        });
+      } finally {
+        setIsLoading(false);
+        setIsMapLoading(false);
+        setInitialLoad(false);
+      }
+    },
+    [tituloSearch, filters, sortBy, isBusquedaRoute, tipo, isMapView]
+  );
+
+  useEffect(() => {
+    // Recargar datos cuando cambia el modo de vista
+    fetchMuseos(1);
+  }, [isMapView, fetchMuseos]);
+
+  const handlePageClick = (event) => {
+    const newPage = event.selected + 1;
+    fetchMuseos(newPage);
+  };
 
   const abrirMenu = (event) => {
     event?.stopPropagation();
     setMenuVisible(true);
   };
 
-  const [museosFiltrados, setMuseosFiltrados] = useState([]);
-  const [filtrosAplicados, setFiltrosAplicados] = useState(false);
-
   const handleFilterApply = async (filtros) => {
-    try {
-      console.log("Filtros aplicados:", filtros);
-      if (!filtros) {
-        setMuseosFiltrados([]);
-        setFiltrosAplicados(false);
-        return;
-      }
-
-      // Filtramos localmente los museos
-      const museosFiltrados = museos.filter((museo) => {
-        const cumpleTematica =
-          !filtros.tipos?.length ||
-          filtros.tipos.includes(parseInt(museo.mus_tematica));
-
-        const cumpleAlcaldia =
-          !filtros.alcaldias?.length ||
-          filtros.alcaldias.includes(museo.mus_alcaldia);
-
-        return cumpleTematica && cumpleAlcaldia;
-      });
-
-      setMuseosFiltrados(museosFiltrados);
-      setFiltrosAplicados(true);
-    } catch (error) {
-      console.error("Error al aplicar filtros:", error);
-      setMuseosFiltrados([]);
-      setFiltrosAplicados(false);
-    }
+    setFilters({
+      tipos: filtros.tipos, // Ya deben ser IDs numéricos
+      alcaldias: filtros.alcaldias,
+    });
   };
 
-  const museosAMostrar = filtrosAplicados ? museosFiltrados : museos;
+  const handleFilterRemove = async (type, value) => {
+    setFilters((prev) => {
+      // Asegurarnos de que prev existe y tiene las propiedades necesarias
+      const currentFilters = prev || { tipos: [], alcaldias: [] };
+
+      if (type === "tipo") {
+        return {
+          ...currentFilters,
+          tipos: currentFilters.tipos?.filter((t) => t !== value) || [],
+        };
+      }
+      if (type === "alcaldia") {
+        return {
+          ...currentFilters,
+          alcaldias: currentFilters.alcaldias?.filter((a) => a !== value) || [],
+        };
+      }
+      return currentFilters;
+    });
+  };
 
   // MenuSort
-  const [sortBy, setSortBy] = useState("");
   const [isSortedMenuOpen, setIsSortedMenuOpen] = useState(false);
   const menuSortRef = useRef(null);
   const menuSortButtonRef = useRef(null);
@@ -184,15 +205,6 @@ function MuseosList({ titulo, tipo }) {
     event?.stopPropagation();
     setIsSortedMenuOpen((prev) => !prev);
   };
-
-  const sortedMuseos = [...museosAMostrar].sort((a, b) => {
-    if (sortBy === "name") {
-      return b.mus_nombre.localeCompare(a.mus_nombre);
-    } else if (sortBy === "rating") {
-      return b.mus_calificacion - a.mus_calificacion;
-    }
-    return 0;
-  });
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -216,6 +228,12 @@ function MuseosList({ titulo, tipo }) {
     }
   }, [menuVisible]);
 
+  useEffect(() => {
+    if (tipo === "2") {
+      setIsMapView(true);
+    }
+  }, [tipo, setIsMapView]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -228,6 +246,8 @@ function MuseosList({ titulo, tipo }) {
         menuVisible={menuVisible}
         setMenuVisible={setMenuVisible}
         onFilterApply={handleFilterApply}
+        onFilterRemove={handleFilterRemove}
+        currentFilters={filters}
       />
       {isMapView ? <MapIndicaciones /> : null}
       <main id="vermuseos-main">
@@ -235,28 +255,31 @@ function MuseosList({ titulo, tipo }) {
           <div className="museos-header-section-left">
             <div className="museos-header-section-left-tittles">
               <h1>{tituloBusqueda}</h1>
-              <p>Museos mostrados: {museosAMostrar.length}</p>
+              <p>Museos mostrados: {pagination.totalItems}</p>
             </div>
           </div>
+
           <div className="museos-header-section-right">
-            <button
-              type="button"
-              className="museos-header-section-right-button"
-              onClick={() => setIsMapView(!isMapView)}
-              title={isMapView ? "Ver lista" : "Ver mapa"}
-            >
-              {isMapView ? (
-                <>
-                  <p>Ver lista</p>
-                  <TbCardsFilled />
-                </>
-              ) : (
-                <>
-                  <p>Ver mapa</p>
-                  <FaMap />
-                </>
-              )}
-            </button>
+            {tipo !== "2" && (
+              <button
+                type="button"
+                className="museos-header-section-right-button"
+                onClick={() => setIsMapView(!isMapView)}
+                title={isMapView ? "Ver lista" : "Ver mapa"}
+              >
+                {isMapView ? (
+                  <>
+                    <p>Ver lista</p>
+                    <TbCardsFilled />
+                  </>
+                ) : (
+                  <>
+                    <p>Ver mapa</p>
+                    <FaMap />
+                  </>
+                )}
+              </button>
+            )}
             {isMapView ? null : (
               <>
                 <button
@@ -294,56 +317,134 @@ function MuseosList({ titulo, tipo }) {
           </div>
         </section>
 
+        <AnimatePresence mode="wait">
+          {(filters.tipos.length > 0 || filters.alcaldias.length > 0) && (
+            <motion.div
+              className="filtros-aplicados"
+              key="filtros-aplicados"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3>Filtros aplicados:</h3>
+              <div className="filtros-aplicados-list">
+                {filters.tipos.map((tipo) => {
+                  const tipoId = typeof tipo === "object" ? tipo.id : tipo;
+                  const tematica = TEMATICAS[tipoId];
+                  return tematica ? (
+                    <motion.div
+                      key={tipoId}
+                      className="filtro-aplicado"
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <p>{tematica.nombre}</p>
+                      <button
+                        type="button"
+                        className="filtro-aplicado-remove"
+                        onClick={() => handleFilterRemove("tipo", tipoId)}
+                      >
+                        <CgClose />
+                      </button>
+                    </motion.div>
+                  ) : null;
+                })}
+                {filters.alcaldias.map((alcaldia) => {
+                  return (
+                    <div key={alcaldia} className="filtro-aplicado">
+                      <p>{alcaldia}</p>
+                      <button
+                        type="button"
+                        className="filtro-aplicado-remove"
+                        onClick={() => handleFilterRemove("alcaldia", alcaldia)}
+                      >
+                        <CgClose />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {isMapView ? (
           <section className="museos-container-map-section">
-            <MuseosMapView
-              titulo={titulo}
-              MuseosMostrados={museosAMostrar}
-              tipo={tipo}
-              isMapView={isMapView}
-            />
+            {isMapLoading ? (
+              <div className="loading-indicator">
+                <ThreeDot width={50} height={50} color="#000" count={3} />
+              </div>
+            ) : (
+              <MuseosMapView
+                titulo={titulo}
+                MuseosMostrados={museos}
+                tipo={tipo}
+                isMapView={isMapView}
+              />
+            )}
           </section>
         ) : (
           <section className="museos-container-section">
-            {isLoading && (
+            {(initialLoad || isLoading) && (
               <div className="loading-indicator">
                 <ThreeDot width={50} height={50} color="#000" count={3} />
               </div>
             )}
-            <div className="museos-container">
-              {sortedMuseos.length === 0 && !isLoading ? (
-                <motion.div
-                  className="no-results"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  key="no-results"
-                  transition={{ duration: 0.5 }}
-                >
-                  <p>No se encontraron museos</p>
-                  <p>Intenta con otra búsqueda o filtros</p>
-                </motion.div>
-              ) : (
-                sortedMuseos.map((museo) => (
-                  <MuseoCard
-                    key={museo.mus_id}
-                    museo={museo}
-                    editMode={false}
-                    sliderType={null}
-                  />
-                ))
-              )}
-            </div>
-
-            {/* {loadingMore && (
-              <div className="loading-more-indicator">
-                <ThreeDot width={50} height={50} color="#000" count={3} />
-              </div>
+            {!isLoading && !initialLoad && (
+              <>
+                <div className="museos-container">
+                  {museos.length === 0 ? (
+                    <motion.div
+                      className="no-results"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      key="no-results"
+                      transition={{ duration: 0.5 }}
+                    >
+                      <p>No se encontraron museos</p>
+                      <p>Intenta con otra búsqueda o filtros</p>
+                    </motion.div>
+                  ) : (
+                    museos.map((museo) => (
+                      <MuseoCard
+                        key={museo.id}
+                        museo={museo}
+                        editMode={false}
+                        sliderType={null}
+                      />
+                    ))
+                  )}
+                </div>
+              </>
             )}
 
-            {!hasMore && (
-              <p className="nomoremuseos">No hay mas museos para cargar</p>
-            )} */}
+            {pagination.totalPages > 1 && tipo !== "3" && (
+              <ReactPaginate
+                breakLabel="..."
+                breakClassName="break"
+                nextLabel={<IoIosArrowForward />}
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={1}
+                marginPagesDisplayed={1}
+                pageCount={pagination.totalPages}
+                previousLabel={<IoIosArrowBack />}
+                renderOnZeroPageCount={null}
+                containerClassName="pagination"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="previous"
+                previousLinkClassName="previous"
+                nextClassName="next"
+                nextLinkClassName="next"
+                breakLinkClassName="page-link"
+                activeClassName="active"
+                forcePage={pagination.currentPage}
+              />
+            )}
           </section>
         )}
       </main>
@@ -366,8 +467,6 @@ function MuseosList({ titulo, tipo }) {
                   top: 0,
                   behavior: "smooth",
                 });
-                // setPage(1);
-                // setLoadingMore(false);
               }}
               title="Regresar al inicio"
             >
