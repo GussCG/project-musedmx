@@ -1,7 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
-
+import { useRef, useEffect, useState } from "react";
 import useUsuario from "../../hooks/Usuario/useUsuario";
-
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
@@ -9,55 +7,16 @@ import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { toast, Bounce } from "react-toastify";
 import "rc-slider/assets/index.css";
-
 import { motion } from "framer-motion";
-
-import { format, set } from "date-fns";
-import { es, se } from "react-day-picker/locale";
+import { format } from "date-fns";
+import { es } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
-
 import { useAuth } from "../../context/AuthProvider";
-
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 import fotoPrueba from "../../assets/images/others/museo-login-image.png";
-import ErrorCampo from "../../components/ErrorCampo";
-
-const validationSchema = Yup.object({
-  signinfrmnombre: Yup.string()
-    .matches(
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "El nombre solo puede contener letras"
-    )
-    .min(2, "El nombre debe tener al menos 2 caracteres")
-    .max(20, "El nombre no puede tener más de 20 caracteres")
-    .required("Campo requerido"),
-  signinfrmappaterno: Yup.string()
-    .matches(
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "El apellido paterno solo puede contener letras"
-    )
-    .min(2, "El apellido paterno debe tener al menos 2 caracteres")
-    .max(30, "El apellido paterno no puede tener más de 30 caracteres")
-    .required("Campo requerido"),
-  signinfrmapmaterno: Yup.string()
-    .matches(
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "El apellido materno solo puede contener letras"
-    )
-    .min(2, "El apellido materno debe tener al menos 2 caracteres")
-    .max(30, "El apellido materno no puede tener más de 30 caracteres")
-    .required("Campo requerido"),
-  signinfrmemail: Yup.string()
-    .email("Correo inválido")
-    .required("Campo requerido")
-    .min(5, "El correo debe tener al menos 5 caracteres")
-    .max(75, "El correo no puede tener más de 75 caracteres"),
-  signinfrmtelefono: Yup.string()
-    .matches(/^\+?[1-9]\d{1,14}$/, "Número de teléfono inválido")
-    .required("Campo requerido")
-    .min(10, "Número de teléfono inválido"),
-});
+import ErrorCampo from "../../components/Forms/ErrorCampo";
+import { userSchema } from "../../constants/validationSchemas";
 
 function ProfileEdit() {
   // Obtenemos el id de los parametros de la URL para saber que usuario editar
@@ -124,22 +83,6 @@ function ProfileEdit() {
 
   const today = new Date();
   today.setHours(today.getHours() - 6);
-
-  // // Logica para habilitar el rango de costo dependiendo del tipo de costo
-  // const handleCostoChange = (event) => {
-  //   const seleccion = event.target.value;
-  //   setCosto(seleccion);
-  //   setRangoHabilitado(
-  //     seleccion === "Siempre con costo" || seleccion === "A veces gratis"
-  //   );
-  //   if (seleccion !== "Siempre con costo" && seleccion !== "A veces gratis") {
-  //     setValorRango(0);
-  //   }
-  // };
-
-  // const handleRangeChange = (value) => {
-  //   setValorRango(value);
-  // };
 
   // Lógica para el cambio de imagen de perfil
   const handleImageChange = (event, setFieldValue) => {
@@ -339,7 +282,7 @@ function ProfileEdit() {
               //   user.tipoUsuario === 1 ? usuario?.rango_costo : 0,
               signinfrmfoto: "",
             }}
-            validationSchema={validationSchema}
+            validationSchema={userSchema}
             onSubmit={(values) => {
               handleEditar(values);
             }}

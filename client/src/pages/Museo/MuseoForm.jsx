@@ -1,29 +1,27 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import { toast, Bounce } from "react-toastify";
 import "react-phone-number-input/style.css";
-
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
-import ErrorCampo from "../../components/ErrorCampo";
-
+import ErrorCampo from "../../components/Forms/ErrorCampo";
 import { ThreeDot } from "react-loading-indicators";
-
 import { format } from "date-fns";
 import { es } from "react-day-picker/locale";
 import { DayPicker, Nav } from "react-day-picker";
 import "react-day-picker/style.css";
-
-import { ALCALDIAS, TEMATICAS } from "../../constants/catalog";
+import { ALCALDIAS, TEMATICAS, REDES_SOCIALES } from "../../constants/catalog";
 import { useMuseo } from "../../hooks/Museo/useMuseo";
+import useMuseoRedesSociales from "../../hooks/Museo/useMuseoRedesSociales";
 import { buildImage } from "../../utils/buildImage";
-
 import { museoSchema } from "../../constants/validationSchemas";
 import axios from "axios";
 import { BACKEND_URL } from "../../constants/api";
+import Icons from "../../components/Other/IconProvider";
+import LoadingIndicator from "../../components/Other/LoadingIndicator";
+
+const { FaPlus, CgClose, MdEdit, MdCheck } = Icons;
 
 function MuseoForm({ mode }) {
   const { museoId } = useParams();
@@ -116,9 +114,81 @@ function MuseoForm({ mode }) {
   let today = new Date();
   today.setHours(today.getHours() - 6);
 
+  // Redes sociales
+  const {
+    redesSociales,
+    loading: loadingRedes,
+    error: errorRedes,
+  } = useMuseoRedesSociales(museoId);
+  const [redesLocales, setRedesLocales] = useState([]);
+  const [redSeleccionada, setRedSeleccionada] = useState("");
+  const [redesTemporal, setRedesTemporal] = useState([]);
+  const [redesTemporalEditando, setRedesTemporalEditando] = useState([]);
+  const [redesEditando, setRedesEditando] = useState([]);
+
+  // Cuando cambian redesSociales, copiamos en el estado local editable
+  useEffect(() => {
+    if (redesSociales) {
+      setRedesLocales(redesSociales);
+    }
+  }, [redesSociales]);
+
+  // Al editar una red existente
+  const handleCambiarLinkRedExistente = (id, nuevoLink) => {
+    setRedesLocales((prev) =>
+      prev.map((r) => (r.mhrs_id === id ? { ...r, mhrs_link: nuevoLink } : r))
+    );
+  };
+
+  // Al eliminar red existente
+  const handleEliminarRedExistente = (id) => {
+    setRedesLocales((prev) => prev.filter((r) => r.mhrs_id !== id));
+  };
+
+  const handleAgregarRedTemporal = () => {
+    if (!redSeleccionada) return;
+
+    const id = parseInt(redSeleccionada);
+    const yaExiste = redesTemporal.some((r) => r.id === id);
+    if (yaExiste) return;
+
+    const red = REDES_SOCIALES[id];
+    setRedesTemporal([
+      ...redesTemporal,
+      { id: red.id, nombre: red.nombre, link: "" },
+    ]);
+
+    // Añade el id a redesTemporalEditando para que se active el input automáticamente
+    setRedesTemporalEditando([...redesTemporalEditando, id]);
+
+    setRedSeleccionada("");
+  };
+
+  // Al enviar todo:
+  const handleActualizarTodo = async () => {
+    const datosParaEnviar = [
+      ...redesLocales.map((r) => ({
+        id: r.mhrs_cve_rs,
+        nombre: REDES_SOCIALES[r.mhrs_cve_rs].nombre,
+        link: r.mhrs_link,
+        tipo: "existente",
+      })),
+      ...redesTemporal.map((r) => ({
+        id: r.id,
+        nombre: r.nombre,
+        link: r.link,
+        tipo: "nuevo",
+      })),
+    ];
+
+    // Aquí llamas a la API con datosParaEnviar
+    console.log(datosParaEnviar);
+  };
+
   const handleRegistroMuseo = async (values) => {
     const formData = new FormData();
 
+    let response;
     if (mode === "edit") {
       if (values.museofrmnombre !== museoEdit?.nombre) {
         formData.append("nombre", values.museofrmnombre);
@@ -160,30 +230,11 @@ function MuseoForm({ mode }) {
 
       // Enviar al backend
       const endpoint = `${BACKEND_URL}/api/museos/${museoId}`;
-      const response = await axios.put(
-        `${BACKEND_URL}/api/museos/${museoId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        // Actualizar la página
-        window.location.reload();
-      } else {
-        toast.error("Error al actualizar el museo", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
+      response = await axios.put(endpoint, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
     } else if (mode === "create") {
       formData.append("nombre", values.museofrmnombre);
       formData.append("calle", values.museofrmcalle);
@@ -205,26 +256,37 @@ function MuseoForm({ mode }) {
 
       // Enviar al backend
       const endpoint = `${BACKEND_URL}/api/museos`;
-      const response = await axios.post(endpoint, formData, {
+      response = await axios.post(endpoint, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+    }
 
-      if (response.status === 200) {
-        // Mandar a la pagina del museo creado
-        Navigate(`/museo/${response.data.museoId}`);
-      } else {
-        toast.error("Error al registrar el museo", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+    if (response.status === 200) {
+      // Actualizar la página
+      try {
+        await handleActualizarTodo();
+      } catch (error) {
+        console.error("Error al actualizar las redes sociales:", error);
       }
+
+      if (mode === "edit") {
+        window.location.reload();
+      } else {
+        // A editar los horarios
+        Navigate(`/museos/${response.data.museoId}/horarios`);
+      }
+    } else {
+      toast.error("Error al actualizar el museo", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -232,9 +294,7 @@ function MuseoForm({ mode }) {
     <>
       <main id="registros-main">
         {loading ? (
-          <div className="loading-indicator">
-            <ThreeDot color={["#004879", "#0067ac", "#0085df", "#13a0ff"]} />
-          </div>
+          <LoadingIndicator />
         ) : (
           <motion.div
             id="registros-form"
@@ -415,6 +475,187 @@ function MuseoForm({ mode }) {
                           }}
                           className="registros-calendar"
                         />
+                      </div>
+                      <hr />
+                      <div className="registros-redes-container">
+                        <h2>Redes Sociales</h2>
+                        <div className="registros-redes-select">
+                          <select
+                            className="registros-frm-select"
+                            value={redSeleccionada}
+                            onChange={(e) => setRedSeleccionada(e.target.value)}
+                          >
+                            <option value="" disabled>
+                              Selecciona la red social
+                            </option>
+                            {Object.values(REDES_SOCIALES).map((red) => (
+                              <option key={red.id} value={red.id}>
+                                {red.nombre}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={handleAgregarRedTemporal}
+                          >
+                            <FaPlus />
+                          </button>
+                        </div>
+                        <div className="registros-redes-list">
+                          {loadingRedes ? (
+                            <LoadingIndicator />
+                          ) : (
+                            <>
+                              {redesLocales.map((red) => {
+                                const redCatalogo =
+                                  REDES_SOCIALES[red.mhrs_cve_rs];
+                                const estaEditando = redesEditando.includes(
+                                  red.mhrs_id
+                                );
+
+                                return (
+                                  <div
+                                    className="registros-redes-item"
+                                    key={`bd-${red.mhrs_id}`}
+                                  >
+                                    <div className="registros-redes-item-info">
+                                      <h3>
+                                        {redCatalogo?.nombre || "Desconocido"}
+                                      </h3>
+                                      {estaEditando ? (
+                                        <input
+                                          type="text"
+                                          value={red.mhrs_link}
+                                          onChange={(e) =>
+                                            handleCambiarLinkRedExistente(
+                                              red.mhrs_id,
+                                              e.target.value
+                                            )
+                                          }
+                                        />
+                                      ) : (
+                                        <span>{red.mhrs_link}</span>
+                                      )}
+                                    </div>
+
+                                    {estaEditando ? (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setRedesEditando(
+                                            redesEditando.filter(
+                                              (id) => id !== red.mhrs_id
+                                            )
+                                          )
+                                        }
+                                      >
+                                        <MdCheck />
+                                      </button>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setRedesEditando([
+                                            ...redesEditando,
+                                            red.mhrs_id,
+                                          ])
+                                        }
+                                      >
+                                        <MdEdit />
+                                      </button>
+                                    )}
+
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleEliminarRedExistente(red.mhrs_id)
+                                      }
+                                    >
+                                      <CgClose />
+                                    </button>
+                                  </div>
+                                );
+                              })}
+
+                              {redesTemporal.map((red) => {
+                                const estaEditando =
+                                  redesTemporalEditando.includes(red.id);
+
+                                return (
+                                  <div
+                                    className="registros-redes-item"
+                                    key={`tmp-${red.id}`}
+                                  >
+                                    <div className="registros-redes-item-info">
+                                      <h3>{red.nombre}</h3>
+                                      {estaEditando ? (
+                                        <input
+                                          type="text"
+                                          placeholder="Ingresa el link"
+                                          value={red.link}
+                                          onChange={(e) => {
+                                            const nuevasRedes =
+                                              redesTemporal.map((r) =>
+                                                r.id === red.id
+                                                  ? {
+                                                      ...r,
+                                                      link: e.target.value,
+                                                    }
+                                                  : r
+                                              );
+                                            setRedesTemporal(nuevasRedes);
+                                          }}
+                                        />
+                                      ) : (
+                                        <span>{red.link || "Sin link"}</span>
+                                      )}
+                                    </div>
+
+                                    {estaEditando ? (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setRedesTemporalEditando(
+                                            redesTemporalEditando.filter(
+                                              (id) => id !== red.id
+                                            )
+                                          )
+                                        }
+                                      >
+                                        <MdCheck />
+                                      </button>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setRedesTemporalEditando([
+                                            ...redesTemporalEditando,
+                                            red.id,
+                                          ])
+                                        }
+                                      >
+                                        <MdEdit />
+                                      </button>
+                                    )}
+
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setRedesTemporal(
+                                          redesTemporal.filter(
+                                            (r) => r.id !== red.id
+                                          )
+                                        )
+                                      }
+                                    >
+                                      <CgClose />
+                                    </button>
+                                  </div>
+                                );
+                              })}
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div id="registros-linea"></div>

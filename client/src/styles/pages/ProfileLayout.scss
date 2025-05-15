@@ -103,14 +103,15 @@
 
   .perfil-section-museo {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: grid;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto 1fr;
     gap: 20px;
 
     .section-header {
       width: 100%;
-      height: 100%;
+      height: auto;
+      min-height: 100px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -118,9 +119,8 @@
       // padding-top: 36px;
       // padding-left: 48px;
 
-      margin: 15px auto;
-
       .section-header-controller {
+        flex: 1;
         width: 90%;
         height: auto;
         display: flex;
@@ -173,6 +173,7 @@
       }
 
       h2 {
+        flex: 1;
         width: fit-content;
         max-width: 400px;
         font-size: 1.7rem;
@@ -187,6 +188,7 @@
         align-items: center;
 
         padding-left: 40px;
+        margin-top: 30px;
       }
 
       #corazon-icon {
@@ -202,7 +204,7 @@
 }
 
 /* Responsive */
-@media screen and (max-width: 1070px) {
+@media screen and (max-width: 1400px) {
   #header-user-info {
     align-items: center;
   }

@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 
 import { Bounce, toast } from "react-toastify";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
-import Icons from "../../components/IconProvider";
-const { FaStar, FaTrash, IoIosCheckmarkCircle, LuImageUp, FaImage } = Icons;
+import Icons from "../../components/Other/IconProvider";
+const { FaTrash, IoIosCheckmarkCircle, LuImageUp, FaImage } = Icons;
 
 function MuseoImgEdit() {
   // Para las imagenes del museo

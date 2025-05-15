@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import "../../styles/pages/NotFound.scss";
-
 import { motion } from "framer-motion";
 
 function NotFound() {

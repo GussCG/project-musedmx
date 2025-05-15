@@ -3,6 +3,7 @@
 .museo-swiper-container {
   width: 85vw;
   height: auto;
+  min-height: 200px;
   margin: 0 auto;
   overflow: hidden;
 
@@ -36,72 +37,18 @@
       justify-content: center;
       align-items: center;
     }
-
-    .swiper-button-next,
-    .swiper-button-prev {
-      width: 50px;
-      height: 50px;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-
-      transition: all 0.3s ease-in-out;
-      background-color: white;
-      border-radius: 50%;
-      overflow: hidden;
-
-      svg {
-        width: 100%;
-        height: 100%;
-        color: var(--color-resena-button);
-      }
-
-      &::after {
-        display: none;
-      }
-
-      &:hover {
-        background-color: var(--color-resena-button);
-        svg {
-          color: white;
-        }
-      }
-    }
   }
-}
 
-.resena-swiper {
-  width: 100%;
-  max-width: fit-content;
-  height: fit-content;
-  margin: 0 auto;
-  overflow: hidden;
-
-  .swiper {
+  .museo-swiper-title {
     width: 100%;
-    height: 300px;
+    height: 100%;
+    min-height: 300px;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    .swiper-slide {
-      width: auto;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-shrink: 0;
-
-      img {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
-        display: block;
-        object-fit: cover;
-        margin: 0 auto;
-      }
-    }
+    color: var(--font-color-primary);
+    background-color: var(--bg-grad-color-2);
+    border-radius: 25px;
   }
 }
 
@@ -112,7 +59,7 @@
 @media screen and (max-width: 1500px) {
   .museo-swiper-container {
     .museo-swiper {
-      min-height: 300px;
+      // min-height: 300px;
 
       .swiper-slide {
         .museo-card {

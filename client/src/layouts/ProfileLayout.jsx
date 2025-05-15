@@ -1,12 +1,9 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
-
 import "../styles/pages/ProfileLayout.scss";
 import "../styles/pages/AuthLayout.scss";
 import "../styles/pages/AdmModPage.scss";
-
-import NavBarMenu from "../components/NavBarMenu.jsx";
-import Footer from "../components/Footer.jsx";
+import NavBarMenu from "../components/Other/NavBarMenu.jsx";
+import Footer from "../components/Other/Footer.jsx";
 
 function ProfileLayout() {
   return (

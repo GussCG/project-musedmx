@@ -1,41 +1,41 @@
 // Funcion para agrupar los horarios por dia
-
-const diasSemana = [
-  "Lunes",
-  "Martes",
-  "Miercoles",
-  "Jueves",
-  "Viernes",
-  "Sabado",
-  "Domingo",
-];
+import { DIAS_SEMANA } from "../constants/catalog";
 
 export const agruparHorarios = (horarios) => {
   let horariosAgrupados = {};
+
   // Se obtienen los horarios del museo de forma {Dia:Horario}
   let horariosArray = Object.entries(horarios);
 
   // Agrupamos los dias que tienen el mismo horario
-  horariosArray.forEach(([dia, horario]) => {
+  horariosArray.forEach(([dia, horarioObj]) => {
+    const horario = `${horarioObj.mh_hora_inicio} - ${horarioObj.mh_hora_fin}`; // Usamos el formato de hora inicio y fin
+
+    // Convertir el número de día a su nombre
+    const nombreDia = DIAS_SEMANA[dia];
+
     if (horariosAgrupados[horario]) {
-      horariosAgrupados[horario].push(dia);
+      horariosAgrupados[horario].push(nombreDia);
     } else {
-      horariosAgrupados[horario] = [dia];
+      horariosAgrupados[horario] = [nombreDia];
     }
   });
 
-  // Ordenar los dias en el orden correcto de la semana
+  // Convertir el objeto DIAS_SEMANA en un array de los días de la semana
+  const diasSemanaArray = Object.values(DIAS_SEMANA);
+
+  // Ordenar los días en el orden correcto de la semana
   Object.keys(horariosAgrupados).forEach((horario) => {
     horariosAgrupados[horario].sort(
-      (a, b) => diasSemana.indexOf(a) - diasSemana.indexOf(b)
+      (a, b) => diasSemanaArray.indexOf(a) - diasSemanaArray.indexOf(b)
     );
   });
 
   // Formatear el resultado
   let resultado = Object.entries(horariosAgrupados)
     .map(([horario, dias]) => {
-      // Si no tiene horario, no se muestra
-      if (horario === "") {
+      // Si el horario es 00:00:00 - 00:00:00, lo ignoramos
+      if (horario === "00:00:00 - 00:00:00") {
         return "";
       }
 
@@ -45,14 +45,14 @@ export const agruparHorarios = (horarios) => {
         let agrupados = [];
         let tempGroup = [dias[0]];
 
-        // Agrupar los dias consecutivos
+        // Agrupar los días consecutivos
         for (let i = 1; i < dias.length; i++) {
           let diaActual = dias[i];
           let diaAnterior = dias[i - 1];
 
           if (
-            diasSemana.indexOf(diaActual) ===
-            diasSemana.indexOf(diaAnterior) + 1
+            diasSemanaArray.indexOf(diaActual) ===
+            diasSemanaArray.indexOf(diaAnterior) + 1
           ) {
             tempGroup.push(diaActual);
           } else {

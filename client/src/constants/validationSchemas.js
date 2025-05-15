@@ -44,3 +44,70 @@ export const museoSchema = Yup.object({
     .required("Campo requerido")
     .typeError("La longitud debe ser un número"),
 });
+
+export const modSchema = Yup.object({
+  signinfrmnombre: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El nombre solo puede contener letras"
+    )
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(20, "El nombre no puede tener más de 20 caracteres")
+    .required("Campo requerido"),
+  signinfrmappaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido paterno solo puede contener letras"
+    )
+    .min(2, "El apellido paterno debe tener al menos 2 caracteres")
+    .max(30, "El apellido paterno no puede tener más de 30 caracteres")
+    .required("Campo requerido"),
+  signinfrmapmaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido materno solo puede contener letras"
+    )
+    .min(2, "El apellido materno debe tener al menos 2 caracteres")
+    .max(30, "El apellido materno no puede tener más de 30 caracteres")
+    .required("Campo requerido"),
+  signinfrmemail: Yup.string()
+    .email("Correo electrónico inválido")
+    .required("Campo requerido")
+    .min(5, "El correo electrónico debe tener al menos 5 caracteres"),
+});
+
+export const userSchema = Yup.object({
+  signinfrmnombre: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El nombre solo puede contener letras"
+    )
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(20, "El nombre no puede tener más de 20 caracteres")
+    .required("Campo requerido"),
+  signinfrmappaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido paterno solo puede contener letras"
+    )
+    .min(2, "El apellido paterno debe tener al menos 2 caracteres")
+    .max(30, "El apellido paterno no puede tener más de 30 caracteres")
+    .required("Campo requerido"),
+  signinfrmapmaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido materno solo puede contener letras"
+    )
+    .min(2, "El apellido materno debe tener al menos 2 caracteres")
+    .max(30, "El apellido materno no puede tener más de 30 caracteres")
+    .required("Campo requerido"),
+  signinfrmemail: Yup.string()
+    .email("Correo inválido")
+    .required("Campo requerido")
+    .min(5, "El correo debe tener al menos 5 caracteres")
+    .max(75, "El correo no puede tener más de 75 caracteres"),
+  signinfrmtelefono: Yup.string()
+    .matches(/^\+?[1-9]\d{1,14}$/, "Número de teléfono inválido")
+    .required("Campo requerido")
+    .min(10, "Número de teléfono inválido"),
+});

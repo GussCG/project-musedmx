@@ -1,15 +1,10 @@
 import "../../styles/pages/IndexPage.scss";
-import NavBarMenu from "../../components/NavBarMenu";
-import Footer from "../../components/Footer";
-
-import { useAuth } from "../../context/AuthProvider";
-
+import NavBarMenu from "../../components/Other/NavBarMenu";
+import Footer from "../../components/Other/Footer";
 import { motion } from "framer-motion";
-import IndexSlider from "../../components/IndexSlider";
+import IndexSlider from "../../components/Other/IndexSlider";
 
 function IndexPage() {
-  const { user, tipoUsuario } = useAuth();
-
   return (
     <motion.div
       initial={{ opacity: 0 }}

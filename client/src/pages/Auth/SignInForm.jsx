@@ -1,65 +1,21 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
 import useUsuario from "../../hooks/Usuario/useUsuario";
-
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { toast, Bounce } from "react-toastify";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-
-// import Slider from "rc-slider";
-// import "rc-slider/assets/index.css";
-
 import { format } from "date-fns";
 import { es } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
-
-import Icons from "../../components/IconProvider";
+import Icons from "../../components/Other/IconProvider";
 const { LuEye, LuEyeClosed } = Icons;
-
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
-import ValidPassword from "../../components/ValidPassword";
-import ErrorCampo from "../../components/ErrorCampo";
-import ImageCropper from "../../components/ImageCropper";
-
-const validationSchema = Yup.object({
-  signinfrmnombre: Yup.string()
-    .matches(
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "El nombre solo puede contener letras"
-    )
-    .min(2, "El nombre debe tener al menos 2 caracteres")
-    .max(20, "El nombre no puede tener más de 20 caracteres")
-    .required("Campo requerido"),
-  signinfrmappaterno: Yup.string()
-    .matches(
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "El apellido paterno solo puede contener letras"
-    )
-    .min(2, "El apellido paterno debe tener al menos 2 caracteres")
-    .max(30, "El apellido paterno no puede tener más de 30 caracteres")
-    .required("Campo requerido"),
-  signinfrmapmaterno: Yup.string()
-    .matches(
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "El apellido materno solo puede contener letras"
-    )
-    .min(2, "El apellido materno debe tener al menos 2 caracteres")
-    .max(30, "El apellido materno no puede tener más de 30 caracteres")
-    .required("Campo requerido"),
-  signinfrmemail: Yup.string()
-    .email("Correo inválido")
-    .required("Campo requerido")
-    .min(2, "El correo debe tener al menos 2 caracteres")
-    .max(75, "El correo no puede tener más de 75 caracteres"),
-  signinfrmtelefono: Yup.string()
-    .required("Campo requerido")
-    .matches(/^\+\d{1,3}\d{1,14}$/, "Número de teléfono inválido")
-    .min(10, "El número de teléfono debe tener al menos 10 dígitos"),
-});
+import ValidPassword from "../../components/Forms/ValidPassword";
+import ErrorCampo from "../../components/Forms/ErrorCampo";
+import { userSchema } from "../../constants/validationSchemas";
 
 function SignInForm() {
   // Estados
@@ -131,33 +87,7 @@ function SignInForm() {
     }
   };
 
-  // ImageCropper
-  // const handleImageChange = (event, setFieldValue) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     const objectURL = URL.createObjectURL(file);
-  //     setImage(objectURL);
-  //     setImageOriginal(file);
-  //     setOpenCropper(true);
-  //   }
-  // };
-
-  // const handleCroppedImage = (croppedImage, setFieldValue) => {
-  //   setImagePreview(croppedImage);
-  //   setFieldValue("signinfrmfoto", imageOriginal);
-  //   setOpenCropper(false);
-  // };
-
-  // useEffect(() => {
-  //   return () => {
-  //     if (image) {
-  //       URL.revokeObjectURL(image);
-  //     }
-  //   };
-  // }, [image]);
-
   // Manejo de temáticas
-
   const handleTematicaChange = (event) => {
     const { value, checked } = event.target;
     if (selectedTematicas.length === 3 && checked) {
@@ -360,7 +290,7 @@ function SignInForm() {
               // signinfrmrangocosto: 0,
               signinfrmfoto: "",
             }}
-            validationSchema={validationSchema}
+            validationSchema={userSchema}
             onSubmit={(values) => {
               // console.log(values);
               handleRegister(values);

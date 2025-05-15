@@ -3,86 +3,36 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import { useTheme } from "../../context/ThemeProvider";
 import { AnimatePresence, motion } from "framer-motion";
-import HeaderMuseoButtons from "../../components/HeaderMuseoButtons";
+import HeaderMuseoButtons from "../../components/Museo/HeaderMuseoButtons";
 import "../../styles/pages/MuseoDetails.scss";
-import Icons from "../../components/IconProvider";
-
-const iconosServicios = {
-  Tienda: Icons.tiendaIcon,
-  WiFi: Icons.wifiIcon,
-  Guardarropa: Icons.guardarropaIcon,
-  Biblioteca: Icons.bilbiotecaIcon,
-  Estacionamiento: Icons.estacionamientoIcon,
-  VisitaGuiada: Icons.visitaGuiadaIcon,
-  ServicioMédico: Icons.medicoIcon,
-  WC: Icons.banioIcon,
-  SilladeRuedas: Icons.sillaRuedasIcon,
-  Cafeteria: Icons.cafeteriaIcon,
-  Elevador: Icons.elevadorIcon,
-  Braille: Icons.brailleIcon,
-  LenguajedeSenas: Icons.lenguajeDeSenasIcon,
-};
-
-const titulosServicios = {
-  Tienda: "Tienda",
-  WiFi: "WiFi",
-  Guardarropa: "Guardarropa",
-  Biblioteca: "Biblioteca",
-  Estacionamiento: "Estacionamiento",
-  VisitaGuiada: "Visita Guiada",
-  ServicioMédico: "Servicio Médico",
-  WC: "Baños",
-  SilladeRuedas: "Silla de Ruedas",
-  Cafeteria: "Cafetería",
-  Elevador: "Elevador",
-  Braille: "Braille",
-  LenguajedeSenas: "Lenguaje de Señas",
-};
-
-const {
-  FaSquareFacebook,
-  FaSquareXTwitter,
-  FaSquareInstagram,
-  FaFilter,
-  webIcon,
-  estrellaIcon,
-} = Icons;
-
+import Icons from "../../components/Other/IconProvider";
+const { FaFilter, estrellaIcon, FaStar } = Icons;
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
-
 // Placeholder usuario
 import placeholderUserImage from "../../assets/images/placeholders/user_placeholder.png";
-import MenuFiltroResena from "../../components/MenuFiltroResena";
-import MapMuseoDetail from "../../components/MapMuseoDetail";
-import MuseoSlider from "../../components/MuseoSlider";
-import ImagenesSlider from "../../components/ImagenesSlider";
-import MuseoGallery from "../../components/MuseoGallery";
-import axios from "axios";
+import MenuFiltroResena from "../../components/Resena/MenuFiltroResena";
+import MapMuseoDetail from "../../components/Maps/MapMuseoDetail";
+import MuseoSlider from "../../components/Museo/MuseoSlider";
+import ImagenesSlider from "../../components/Resena/ImagenesSlider";
+import MuseoGallery from "../../components/Museo/MuseoGallery";
 import { buildImage } from "../../utils/buildImage";
-import Museo from "../../models/Museo/Museo";
-import { TEMATICAS, REDES_SOCIALES } from "../../constants/catalog";
+import { TEMATICAS, REDES_SOCIALES, SERVICIOS } from "../../constants/catalog";
 import { procesarCalificaciones } from "../../utils/calificacionesEncuesta";
 import { formatearFechaTitulo } from "../../utils/formatearFechas";
 import { formatearDireccion } from "../../utils/formatearDireccionVista";
-import FavoritoButton from "../../components/FavoritoButton";
+import FavoritoButton from "../../components/Museo/FavoritoButton";
 import { useMuseo } from "../../hooks/Museo/useMuseo";
-
 // BACKEND_URL
-import { BACKEND_URL } from "../../constants/api";
 import useMuseoGaleria from "../../hooks/Museo/useMuseoGaleria";
 import useMuseoHorarios from "../../hooks/Museo/useMuseoHorarios";
 import useMuseoRedesSociales from "../../hooks/Museo/useMuseoRedesSociales";
-import HorarioSlider from "../../components/HorarioSlider";
+import HorarioSlider from "../../components/Museo/HorarioSlider";
+import { ThreeDot } from "react-loading-indicators";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
   const { user, tipoUsuario, setIsLogginPopupOpen } = useAuth();
   const { isDarkMode } = useTheme();
-
-  // Obtenemos el dia de la semana de hoy para el horario
-  const diaSemana = new Date().toLocaleString("es-MX", {
-    weekday: "long",
-  });
 
   const navigate = useNavigate();
   const [contentLoaded, setContentLoaded] = useState(false);
@@ -91,7 +41,6 @@ function MuseoDetail() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [isExisting, setIsExisting] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [imagenes, setImagenes] = useState([]);
 
   const abrirMenu = () => {
     setMenuVisible(true);
@@ -121,7 +70,6 @@ function MuseoDetail() {
     loading: redesSocialesLoading,
     error: redesSocialesError,
   } = useMuseoRedesSociales(museoIdNumber);
-  console.log("redesSociales", redesSociales);
 
   const calificaciones = procesarCalificaciones({
     edad: 3,
@@ -130,110 +78,6 @@ function MuseoDetail() {
     entendible: 1,
     costo: 1,
   });
-
-  const museoPrueba = {
-    mus_id: 1,
-    mus_nombre: "Museo de Prueba1",
-    horarios: {
-      Lunes: "9:00 - 18:00",
-      Martes: "9:00 - 18:00",
-      Miercoles: "9:00 - 18:00",
-      Jueves: "9:00 - 18:00",
-      Viernes: "9:00 - 18:00",
-      Sabado: "9:00 - 14:00",
-      Domingo: "9:00 - 14:00",
-    },
-    mus_foto:
-      "https://www.shutterstock.com/image-photo/san-francisco-california-usa-1-600nw-2424683443.jpg",
-    mus_calificacion: 4,
-    costo: 0,
-    coords: {
-      lat: 19.426111111111,
-      lng: -99.186111111111,
-    },
-    mus_tematica: 5,
-    mus_alcaldia: "Alcaldía de Prueba",
-  };
-
-  const museoPrueba2 = {
-    mus_id: 2,
-    mus_nombre: "Museo de Prueba2",
-    horarios: {
-      Lunes: "9:00 - 18:00",
-      Martes: "9:00 - 18:00",
-      Miercoles: "9:00 - 18:00",
-      Jueves: "9:00 - 18:00",
-      Viernes: "9:00 - 18:00",
-      Sabado: "9:00 - 14:00",
-      Domingo: "9:00 - 14:00",
-    },
-    mus_foto: "https://i.ytimg.com/vi/tYI2eJZDHYQ/maxresdefault.jpg",
-    mus_calificacion: 4,
-    costo: 0,
-    coords: {
-      lat: 19.426111111111,
-      lng: -99.186111111111,
-    },
-    mus_tematica: 2,
-    mus_alcaldia: "Alcaldía de Prueba",
-  };
-
-  const museoPrueba3 = {
-    mus_id: 3,
-    mus_nombre: "Museo de Prueba3",
-    horarios: {
-      Lunes: "9:00 - 18:00",
-      Martes: "9:00 - 18:00",
-      Miercoles: "9:00 - 18:00",
-      Jueves: "9:00 - 18:00",
-      Viernes: "9:00 - 18:00",
-      Sabado: "9:00 - 14:00",
-      Domingo: "9:00 - 14:00",
-    },
-    mus_foto:
-      "https://th.bing.com/th/id/OIP.Dk9hzhtZz6ip3svewvBlGQHaEK?rs=1&pid=ImgDetMain",
-    mus_calificacion: 4,
-    costo: 0,
-    coords: {
-      lat: 19.426111111111,
-      lng: -99.186111111111,
-    },
-    mus_tematica: 2,
-    mus_alcaldia: "Alcaldía de Prueba",
-  };
-
-  const museoPrueba4 = {
-    mus_id: 4,
-    mus_nombre: "Museo de Prueba4",
-    horarios: {
-      Lunes: "9:00 - 18:00",
-      Martes: "9:00 - 18:00",
-      Miercoles: "9:00 - 18:00",
-      Jueves: "9:00 - 18:00",
-      Viernes: "9:00 - 18:00",
-      Sabado: "9:00 - 14:00",
-      Domingo: "9:00 - 14:00",
-    },
-    mus_foto: "https://media.timeout.com/images/103167639/image.jpg",
-    mus_calificacion: 4,
-    costo: 0,
-    coords: {
-      lat: 19.426111111111,
-      lng: -99.186111111111,
-    },
-    mus_tematica: 2,
-    mus_alcaldia: "Alcaldía de Prueba",
-  };
-
-  // Lista de museos para el slider
-  // Se obtienen del modelo para obtener los museos que a otros usuarios les gustaron con base en el museo actual
-  // De momento, se pondran valores de ejemplo
-  const museosSimilares = {
-    museoPrueba,
-    museoPrueba2,
-    museoPrueba3,
-    museoPrueba4,
-  };
 
   // Estado para los checkbox de favoritos
 
@@ -285,7 +129,7 @@ function MuseoDetail() {
   }, [tema, isDarkMode]);
 
   const redCorreo = redesSociales.find(
-    (redSocial) => redSocial.mhrs_cve_rs === 4
+    (redSocial) => redSocial.mhrs_cve_rs === 2
   );
 
   return (
@@ -308,18 +152,22 @@ function MuseoDetail() {
               <main id="museo-main">
                 <section id="museo-section-1" className="museo-detail-item">
                   <div className="museo-section-1-image">
-                    <motion.img
-                      src={buildImage(museoInfo) || museoPlaceholder || null}
-                      alt="Museo"
-                      layoutId={`museo-image-${museoIdNumber}`}
-                      key={`detail-${museoIdNumber}`}
-                      transition={{
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 25,
-                        duration: 0.5,
-                      }}
-                    />
+                    {isLoading ? (
+                      <div className="loading-indicator-img">
+                        <ThreeDot
+                          width={50}
+                          height={50}
+                          color="#000"
+                          count={3}
+                        />
+                      </div>
+                    ) : (
+                      <img
+                        src={buildImage(museoInfo)}
+                        alt={museoInfo.nombre}
+                        className="museo-image"
+                      />
+                    )}
                     <FavoritoButton />
                   </div>
                   <div
@@ -375,7 +223,7 @@ function MuseoDetail() {
                         <div className="museo-section-1-csm-social-media">
                           {!redesSocialesLoading &&
                             redesSociales.map((redSocial) => {
-                              if (redSocial.mhrs_cve_rs === 4) return null; // No mostrar si es email
+                              if (redSocial.mhrs_cve_rs === 2) return null; // No mostrar si es email
                               return (
                                 <a
                                   key={redSocial.mhrs_id}
@@ -463,12 +311,12 @@ function MuseoDetail() {
                     <div className="museo-section-2-servicios museo-detail-item">
                       <h1>Servicios</h1>
                       <div className="servicios-container">
-                        {Object.keys(iconosServicios).map((servicio) => (
-                          <div className="servicio-icon" key={servicio}>
+                        {Object.values(SERVICIOS).map((servicio) => (
+                          <div className="servicio-icon" key={servicio.id}>
                             <img
-                              src={iconosServicios[servicio]}
-                              alt={servicio}
-                              title={titulosServicios[servicio]}
+                              src={servicio.icon}
+                              alt={servicio.nombre}
+                              title={servicio.nombre}
                               style={
                                 isDarkMode
                                   ? { filter: "invert(1)" }
@@ -496,10 +344,7 @@ function MuseoDetail() {
                     <h1 className="h1-section">
                       A otros usuarios también les gusto
                     </h1>
-                    <MuseoSlider
-                      listaMuseos={museosSimilares}
-                      sliderType="Similares"
-                    />
+                    <MuseoSlider listaMuseos={null} sliderType="Similares" />
                   </section>
                   <section id="museo-section-5" className="museo-detail-item">
                     <div className="museo-section-5-header">
@@ -578,6 +423,9 @@ function MuseoDetail() {
                               <div
                                 className="museo-calif-grafica-estrellas-fill"
                                 id="museo-calif-grafica-3-estrellas-fill"
+                                style={{
+                                  width: `10%`,
+                                }}
                               ></div>
                             </div>
                             <div className="museo-calif-grafica-row">
@@ -594,6 +442,9 @@ function MuseoDetail() {
                               <div
                                 className="museo-calif-grafica-estrellas-fill"
                                 id="museo-calif-grafica-2-estrellas-fill"
+                                style={{
+                                  width: `1%`,
+                                }}
                               ></div>
                             </div>
                             <div className="museo-calif-grafica-row">
@@ -610,6 +461,9 @@ function MuseoDetail() {
                               <div
                                 className="museo-calif-grafica-estrellas-fill"
                                 id="museo-calif-grafica-1-estrellas-fill"
+                                style={{
+                                  width: `1%`,
+                                }}
                               ></div>
                             </div>
                           </div>
@@ -656,39 +510,26 @@ function MuseoDetail() {
                         </div>
                         <div className="resena-comentario-container">
                           <div className="resena-comentario-header">
-                            <p id="nombre-user">Nombre de Usuario</p>
-                            <p id="fecha-resena">17-09-2021</p>
+                            <p id="nombre-user">Juan Pérez</p>
+                            <p id="fecha-resena">17-09-2024</p>
                             <div className="resena-calificacion">
                               <p>4</p>
-                              <img
-                                src={estrellaIcon}
-                                alt="Estrella"
-                                style={
-                                  isDarkMode
-                                    ? { filter: "invert(1)" }
-                                    : { filter: "invert(0)" }
-                                }
-                              />
+                              <FaStar />
                             </div>
                           </div>
                           <div className="resena-comentario-body">
                             <p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit. Donec vel turpis aliquam odio condimentum
-                              convallis. In sit amet ex eu ex varius pretium id
-                              a quam. Proin faucibus turpis congue turpis
-                              ullamcorper, ac vehicula sapien volutpat. Sed
-                              placerat justo vitae neque semper, ut posuere
-                              lacus convallis. Curabitur consectetur a urna sit
-                              amet rutrum. Maecenas finibus, purus eget
-                              ultricies feugiat, lorem lacus sollicitudin enim,
-                              quis feugiat tellus lacus quis augue. Nunc
-                              sollicitudin vestibulum erat, at ullamcorper arcu
-                              finibus et. Fusce sollicitudin diam arcu, sit amet
-                              dignissim ligula pulvinar id.
+                              El Museo Nacional de Antropología es una visita
+                              imperdible en la Ciudad de México. Con
+                              impresionantes piezas como la Piedra del Sol y
+                              exposiciones interactivas, ofrece un recorrido
+                              fascinante por las culturas prehispánicas. Ideal
+                              para toda la familia y perfecto para quienes
+                              quieren conocer la historia de México de forma
+                              amena y visual.
                             </p>
                             {/* Slider de imagenes */}
-                            <ImagenesSlider />
+                            <ImagenesSlider listaImagenes={galeria} />
                           </div>
                         </div>
                       </div>

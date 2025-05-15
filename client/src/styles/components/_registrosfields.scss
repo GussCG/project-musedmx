@@ -77,6 +77,8 @@
           .registros-frm-select {
             width: 100%;
             font-weight: $font-w-semibold;
+            color: var(--font-color-primary);
+            border-bottom: 1px solid var(--font-color-primary);
           }
 
           hr {
@@ -457,6 +459,150 @@
       font-weight: $font-w-regular;
       color: var(--font-color-primary);
       font-size: 18px;
+    }
+  }
+}
+
+.registros-redes-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: $font-w-bold;
+    color: var(--font-color-primary);
+    text-align: center;
+  }
+
+  .registros-redes-select {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    button {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--museo-form-add-button-bg);
+      border: none;
+      border-radius: 10px;
+
+      transition: transform 0.3s ease;
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      svg {
+        width: 60%;
+        height: auto;
+        color: var(--font-color-primary);
+      }
+    }
+  }
+
+  .registros-redes-list {
+    width: 80%;
+    height: auto;
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
+    .registros-redes-item {
+      width: 100%;
+      height: 80px;
+      background-color: var(--bg-row-fotos);
+      border-radius: 10px;
+
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+
+      .registros-redes-item-info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 4px;
+
+        h3 {
+          font-family: $font-primary;
+          font-size: 1.2rem;
+          font-weight: $font-w-semibold;
+          color: var(--font-color-primary);
+        }
+
+        span {
+          width: fit-content;
+          min-width: 100%;
+          max-width: 200px;
+          font-family: $font-primary;
+          font-size: 1rem;
+          font-weight: $font-w-regular;
+          color: var(--font-color-primary);
+          padding-left: 15px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        input {
+          width: 80%;
+          height: 30px;
+          font-family: $font-primary;
+          font-size: 0.9rem;
+          font-weight: $font-w-regular;
+          padding: 10px;
+          color: var(--font-color-primary);
+          border-radius: 10px;
+          border: none;
+          outline: none;
+        }
+      }
+
+      button {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: transparent;
+        border: none;
+
+        svg {
+          width: 80%;
+          height: auto;
+          color: var(--font-color-primary);
+
+          transition: transform 0.3s ease;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
     }
   }
 }

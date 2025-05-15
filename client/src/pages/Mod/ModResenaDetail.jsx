@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import LightBox from "../../components/LightBox";
-import useLightBox from "../../hooks/useLightBox";
+import LightBox from "../../components/Other/LightBox";
+import useLightBox from "../../hooks/Other/useLightBox";
 import ModRechazar from "./ModRechazar";
 import { useState } from "react";
 

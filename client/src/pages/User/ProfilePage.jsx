@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 
-import AdminPage from "../../components/AdminPage";
-import ModPage from "../../components/ModPage";
-import UsuarioPage from "../../components/UsuarioPage";
-import HeaderButtons from "../../components/HeaderButtons";
+import AdminPage from "../../components/User/AdminPage";
+import ModPage from "../../components/User/ModPage";
+import UsuarioPage from "../../components/User/UsuarioPage";
+import HeaderButtons from "../../components/User/HeaderButtons";
 
 function ProfilePage() {
   const { user, logout } = useAuth();

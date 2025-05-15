@@ -16,7 +16,7 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 
 // Iconos
-import Icons from "../../components/IconProvider";
+import Icons from "../../components/Other/IconProvider";
 const { FaStar, FaTrash, IoIosCheckmarkCircle, LuImageUp, FaImage } = Icons;
 
 function ProfileHistoryDetail() {

@@ -25,7 +25,7 @@ function AuthProvider({ children }) {
     apPaterno: "Perez",
     apMaterno: "Gonzalez",
     email: "mail@mail.com",
-    tipoUsuario: 3,
+    tipoUsuario: 2,
     fecNac: "2002-09-30",
     tel: "+525527167255",
     foto: "https://a.espncdn.com/i/headshots/nba/players/full/3975.png",

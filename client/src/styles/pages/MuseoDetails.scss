@@ -836,8 +836,8 @@
 
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          align-items: flex-start;
+          justify-content: flex-start;
+          align-items: center;
 
           grid-area: 1 / 3 / 2 / 5;
 
@@ -846,7 +846,7 @@
             height: 100%;
             display: flex;
             flex-direction: row;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
 
             gap: 5px;
@@ -970,21 +970,27 @@
           }
 
           .resena-calificacion {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 4px;
+            width: 50px;
+            height: 50px;
+            position: relative;
 
             p {
-              font-size: 24px;
-              font-weight: $font-w-bold;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              font-size: 1.2rem;
+              font-weight: $font-w-semibold;
+              color: var(--font-color-primary);
+              filter: invert(1);
               margin: 0;
+              z-index: 1;
             }
 
             img,
             svg {
-              width: 38px;
+              width: 100%;
+              height: 100%;
               color: var(--font-color-primary);
             }
           }

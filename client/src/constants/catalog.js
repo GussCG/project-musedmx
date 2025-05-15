@@ -1,4 +1,4 @@
-import Icons from "../components/IconProvider";
+import Icons from "../components/Other/IconProvider";
 
 export const TEMATICAS = {
   1: {
@@ -101,32 +101,182 @@ export const REDES_SOCIALES = {
   },
   2: {
     id: 2,
-    nombre: "Página Web 2",
-    icon: Icons.AiOutlineGlobal,
-  },
-  3: {
-    id: 3,
-    nombre: "Página Web 3",
-    icon: Icons.AiOutlineGlobal,
-  },
-  4: {
-    id: 4,
     nombre: "Email",
     icon: Icons.IoMail,
   },
-  5: {
-    id: 5,
+  3: {
+    id: 3,
     nombre: "Facebook",
     icon: Icons.FaSquareFacebook,
   },
-  6: {
-    id: 6,
+  4: {
+    id: 4,
     nombre: "Twitter",
     icon: Icons.FaSquareXTwitter,
   },
-  7: {
-    id: 7,
+  5: {
+    id: 5,
     nombre: "Instagram",
     icon: Icons.FaSquareInstagram,
   },
 };
+
+// Modos de viaje con label, icono y valor
+export const TRAVEL_MODES = {
+  DRIVING: {
+    label: "Auto",
+    icon: Icons.FaCar,
+    value: "DRIVING",
+  },
+  BICYCLING: {
+    label: "Bicicleta",
+    icon: Icons.FaBicycle,
+    value: "BICYCLING",
+  },
+  WALKING: {
+    label: "Caminando",
+    icon: Icons.FaPersonWalking,
+    value: "WALKING",
+  },
+  TRANSIT: {
+    label: "Transporte Público",
+    icon: Icons.FaBus,
+    value: "TRANSIT",
+  },
+};
+
+// Tipos de Mapa
+export const MAP_TYPES = {
+  ROADMAP: {
+    label: "Mapa de Carretera",
+    icon: Icons.FaMap,
+    value: "ROADMAP",
+    normalized: "roadmap",
+  },
+  SATELLITE: {
+    label: "Mapa Satelital",
+    icon: Icons.FaSatellite,
+    value: "SATELLITE",
+    normalized: "satellite",
+  },
+  TERRAIN: {
+    label: "Mapa de Terreno",
+    icon: Icons.MdTerrain,
+    value: "TERRAIN",
+    normalized: "terrain",
+  },
+  HYBRID: {
+    label: "Mapa Híbrido",
+    icon: Icons.IoMapSharp,
+    value: "HYBRID",
+    normalized: "hybrid",
+  },
+};
+
+export const SERVICIOS = {
+  1: {
+    id: 1,
+    nombre: "Tienda de Regalos",
+    icon: Icons.tiendaIcon,
+  },
+  2: {
+    id: 2,
+    nombre: "WiFi",
+    icon: Icons.wifiIcon,
+  },
+  3: {
+    id: 3,
+    nombre: "Guardarropa",
+    icon: Icons.guardarropaIcon,
+  },
+  4: {
+    id: 4,
+    nombre: "Biblioteca",
+    icon: Icons.bilbiotecaIcon,
+  },
+  5: {
+    id: 5,
+    nombre: "Estacionamiento",
+    icon: Icons.estacionamientoIcon,
+  },
+  6: {
+    id: 6,
+    nombre: "Visitas Guiadas",
+    icon: Icons.visitaGuiadaIcon,
+  },
+  7: {
+    id: 7,
+    nombre: "Servicio Médico",
+    icon: Icons.medicoIcon,
+  },
+  8: {
+    id: 8,
+    nombre: "Baño",
+    icon: Icons.banioIcon,
+  },
+  9: {
+    id: 9,
+    nombre: "Sillas de Ruedas",
+    icon: Icons.sillaRuedasIcon,
+  },
+  10: {
+    id: 10,
+    nombre: "Cafetería",
+    icon: Icons.cafeteriaIcon,
+  },
+  11: {
+    id: 11,
+    nombre: "Elevador",
+    icon: Icons.elevadorIcon,
+  },
+  12: {
+    id: 12,
+    nombre: "Braille",
+    icon: Icons.brailleIcon,
+  },
+  13: {
+    id: 13,
+    nombre: "Lenguaje de Señas",
+    icon: Icons.lenguajeDeSenasIcon,
+  },
+};
+
+export const CALIFICACIONES_RUBROS = {
+  Edad: [
+    { valor: 3, titulo: "Para Adultos", icono: Icons.adultoIcon },
+    { valor: 2, titulo: "Para toda la familia", icono: Icons.familiarIcon },
+    { valor: 1, titulo: "Para Niños", icono: Icons.ninoIcon },
+  ],
+  Interesante: [
+    { valor: 5, titulo: "Muy Interesante", icono: Icons.dormirIcon },
+    { valor: 4, titulo: "Interesante", icono: Icons.dormirIcon },
+    { valor: 3, titulo: "Poco Interesante", icono: Icons.dormirIcon },
+    { valor: 2, titulo: "Aburrido", icono: Icons.dormirIcon },
+  ],
+  Limpio: [
+    { valor: 1, titulo: "Limpio", icono: Icons.limpioIcon },
+    { valor: 0.5, titulo: "Sucio", icono: Icons.limpioIcon },
+  ],
+
+  Entendible: [
+    { valor: 1, titulo: "Entendible", icono: Icons.entendibleIcon },
+    { valor: 0.5, titulo: "Difícil", icono: Icons.entendibleIcon },
+  ],
+
+  Costo: [
+    { valor: 4, titulo: "Muy Caro", icono: Icons.moneyIcon },
+    { valor: 3, titulo: "Caro", icono: Icons.moneyIcon },
+    { valor: 2, titulo: "Barato", icono: Icons.moneyIcon },
+    { valor: 1, titulo: "Gratis", icono: Icons.moneyIcon },
+  ],
+};
+
+export const DIAS_SEMANA = [
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+  "Domingo",
+];

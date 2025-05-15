@@ -1,21 +1,14 @@
-import React, { useState, useEffect, useMemo } from "react";
-import axios from "axios";
-
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthProvider";
-
-import Icons from "../../components/IconProvider";
+import Icons from "../../components/Other/IconProvider";
 const { LuArrowUpDown, editarModIcon, eliminarIcon } = Icons;
-
 import { motion } from "framer-motion";
-
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   getSortedRowModel,
 } from "@tanstack/react-table";
-
 // Toastify
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

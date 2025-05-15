@@ -14,7 +14,7 @@ export default function useMuseoRedesSociales(museoId) {
 
       const endpoint = `${BACKEND_URL}/api/museos/redes/${id}`;
       const response = await axios.get(endpoint);
-      console.log("Redes sociales response:", response.data);
+
       setRedesSociales(response.data.redes);
       setLoading(false);
     } catch (error) {

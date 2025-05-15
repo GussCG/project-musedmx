@@ -1,14 +1,9 @@
-import React from "react";
-import { Routes, Route, Outlet, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
-
-import NavBarMenu from "../components/NavBarMenu";
-import Footer from "../components/Footer";
+import { Routes, Route, Outlet } from "react-router-dom";
+import NavBarMenu from "../components/Other/NavBarMenu";
+import Footer from "../components/Other/Footer";
 import MuseosList from "../pages/Museo/MuseosList";
 import MuseoDetail from "../pages/Museo/MuseoDetail";
 import RegistroVisita from "../pages/Museo/RegistroVisita";
-import MuseoForm from "../pages/Museo/MuseoForm";
-
 import "../styles/pages/VerMuseosLayout.scss";
 
 function VerMuseosLayout() {

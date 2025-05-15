@@ -1,11 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
-import axios from "axios";
-
-import Icons from "../../components/IconProvider";
+import { useState, useEffect, useMemo } from "react";
+import Icons from "../../components/Other/IconProvider";
 const { LuArrowUpDown, verIcon } = Icons;
-
 import { motion } from "framer-motion";
-
 import { Link, useParams } from "react-router-dom";
 import {
   useReactTable,

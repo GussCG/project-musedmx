@@ -1,6 +1,5 @@
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Icons from "../../components/IconProvider";
+import { motion } from "framer-motion";
+import Icons from "../../components/Other/IconProvider";
 const { CgClose, IoIosArrowDown } = Icons;
 
 function ModRechazar({ onClose }) {

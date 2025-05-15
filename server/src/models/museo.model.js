@@ -85,7 +85,7 @@ export default class Museo {
 
     return {
       items: rows,
-      totalItems: limit ? Math.min(parseInt(limit), totalItems) : totalItems,
+      totalItems: totalItems,
       totalPages: limit ? Math.ceil(totalItems / parseInt(limit)) : 1,
       currentPage: currentPage,
       itemsPerPage: limit ? parseInt(limit) : totalItems,

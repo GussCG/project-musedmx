@@ -1,57 +1,21 @@
-import React, { useRef, useEffect, useState } from "react";
-
+import { useRef, useEffect, useState } from "react";
 import useUsuario from "../../hooks/Usuario/useUsuario";
-import ValidPassword from "../../components/ValidPassword";
-
+import ValidPassword from "../../components/Forms/ValidPassword";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { toast, Bounce } from "react-toastify";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-
 import { format } from "date-fns";
-import { es, is } from "react-day-picker/locale";
+import { es } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
-
 import { motion } from "framer-motion";
-
-import Icons from "../../components/IconProvider";
+import Icons from "../../components/Other/IconProvider";
 const { eyeClosedIcon, eyeOpenIcon } = Icons;
-
 import modPlaceholder from "../../assets/images/placeholders/mod-placeholder.png";
-import ErrorCampo from "../../components/ErrorCampo";
-
-const validationSchema = Yup.object({
-  signinfrmnombre: Yup.string()
-    .matches(
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "El nombre solo puede contener letras"
-    )
-    .min(2, "El nombre debe tener al menos 2 caracteres")
-    .max(20, "El nombre no puede tener más de 20 caracteres")
-    .required("Campo requerido"),
-  signinfrmappaterno: Yup.string()
-    .matches(
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "El apellido paterno solo puede contener letras"
-    )
-    .min(2, "El apellido paterno debe tener al menos 2 caracteres")
-    .max(30, "El apellido paterno no puede tener más de 30 caracteres")
-    .required("Campo requerido"),
-  signinfrmapmaterno: Yup.string()
-    .matches(
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "El apellido materno solo puede contener letras"
-    )
-    .min(2, "El apellido materno debe tener al menos 2 caracteres")
-    .max(30, "El apellido materno no puede tener más de 30 caracteres")
-    .required("Campo requerido"),
-  signinfrmemail: Yup.string()
-    .email("Correo electrónico inválido")
-    .required("Campo requerido")
-    .min(5, "El correo electrónico debe tener al menos 5 caracteres"),
-});
+import ErrorCampo from "../../components/Forms/ErrorCampo";
+import { modSchema } from "../../constants/validationSchemas";
 
 function ModForm() {
   // Estados
@@ -249,7 +213,7 @@ function ModForm() {
               signinfrmpassword: "",
               signinfrmrepassword: "",
             }}
-            validationSchema={validationSchema}
+            validationSchema={modSchema}
             onSubmit={(values) => {
               // console.log(values);
               handleRegister(values);

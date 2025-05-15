@@ -27,8 +27,6 @@ cursor = conn.cursor()
 
 nombresRedes = [
     "pagina_web",
-    "pagina_web2",
-    "pagina_web3",
     "email",
     "facebook",
     "twitter",
@@ -70,6 +68,18 @@ with open(csv_path, newline='', encoding='utf-8') as csvfile:
                     (id_museo, red_id, link.strip())
                 )
                 print(f"Inserted link: {link.strip()} for museum ID: {id_museo} and network: {red}")
+
+                        # Procesar página_web2 y página_web3 como si fueran 'pagina_web'
+        for extra_web in ["pagina_web2", "pagina_web3"]:
+            link = row.get(extra_web)
+            if link and link.strip():
+                red_id = catalogo_redes["pagina_web"]  # usar siempre el ID de 'pagina_web'
+                cursor.execute(
+                    "INSERT INTO museos_have_red_soc (mhrs_mus_id, mhrs_cve_rs, mhrs_link) VALUES (%s, %s, %s)",
+                    (id_museo, red_id, link.strip())
+                )
+                print(f"Inserted extra webpage: {link.strip()} for museum ID: {id_museo}")
+
 conn.commit()
 
 # Cerrar la conexión

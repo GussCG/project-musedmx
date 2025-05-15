@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthProvider";
 
 import { motion } from "framer-motion";
 
-import Icons from "../../components/IconProvider";
+import Icons from "../../components/Other/IconProvider";
 const { LuArrowUpDown, LuEye, FaTrash } = Icons;
 
 import {

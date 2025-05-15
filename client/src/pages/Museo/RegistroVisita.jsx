@@ -1,16 +1,11 @@
-import React, { use, useState, useEffect, useRef } from "react";
-
-import Icons from "../../components/IconProvider";
+import { useState, useEffect, useRef } from "react";
+import Icons from "../../components/Other/IconProvider";
 const { FaStar, FaTrash, IoIosCheckmarkCircle, LuImageUp, FaImage } = Icons;
-
 import { Formik, Form, Field } from "formik";
-import axios from "axios";
-
 import { format } from "date-fns";
 import { es } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
-
 import { motion } from "framer-motion";
 
 // Toastify

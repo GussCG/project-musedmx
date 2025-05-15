@@ -1,14 +1,11 @@
-import React, { useState, useRef, useEffect, useCallback, use } from "react";
-import MapMuseo from "../../components/MapMuseo";
-import MapIndicaciones from "../../components/MapIndicaciones";
+import React, { useState, useEffect, createElement } from "react";
+import MapMuseo from "../../components/Maps/MapMuseo";
+import MapIndicaciones from "../../components/Maps/MapIndicaciones";
 import { APIProvider } from "@vis.gl/react-google-maps";
 
-import Icons from "../../components/IconProvider";
+import Icons from "../../components/Other/IconProvider";
 const {
-  buscarimg,
   FaQuestion,
-  IoSearch,
-  TbRouteSquare,
   FaCar,
   FaBicycle,
   FaPersonWalking,
@@ -25,57 +22,7 @@ import { AnimatePresence, motion } from "framer-motion";
 // Para obtener la API de Google Maps
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-// Modos de viaje con label, icono y valor
-const TRAVEL_MODES = {
-  DRIVING: {
-    label: "Auto",
-    icon: <FaCar />,
-    value: "DRIVING",
-  },
-  BICYCLING: {
-    label: "Bicicleta",
-    icon: <FaBicycle />,
-    value: "BICYCLING",
-  },
-  WALKING: {
-    label: "Caminando",
-    icon: <FaPersonWalking />,
-    value: "WALKING",
-  },
-  TRANSIT: {
-    label: "Transporte Público",
-    icon: <FaBus />,
-    value: "TRANSIT",
-  },
-};
-
-// Tipos de Mapa
-const MAP_TYPES = {
-  ROADMAP: {
-    label: "Mapa de Carretera",
-    icon: <FaRoad />,
-    value: "ROADMAP",
-    normalized: "roadmap",
-  },
-  SATELLITE: {
-    label: "Mapa Satelital",
-    icon: <FaSatellite />,
-    value: "SATELLITE",
-    normalized: "satellite",
-  },
-  TERRAIN: {
-    label: "Mapa de Terreno",
-    icon: <MdTerrain />,
-    value: "TERRAIN",
-    normalized: "terrain",
-  },
-  HYBRID: {
-    label: "Mapa Híbrido",
-    icon: <IoMapSharp />,
-    value: "HYBRID",
-    normalized: "hybrid",
-  },
-};
+import { TRAVEL_MODES, MAP_TYPES } from "../../constants/catalog";
 
 // Dependiendo del titulo se muestra el radio de busqueda
 // En Ver Todos y en Populares no se muestra el radio
@@ -214,7 +161,7 @@ function MuseosMapView({
                 onClick={toggleTravelMode}
               >
                 <div className="btn-map-bg" />
-                {TRAVEL_MODES[selectedTravelMode]?.icon}
+                {createElement(TRAVEL_MODES[selectedTravelMode]?.icon)}
                 <motion.div
                   className="arrow-dd"
                   animate={{ rotate: isOpenTravelMode ? 180 : 0 }}
@@ -272,7 +219,7 @@ function MuseosMapView({
                         }}
                       >
                         <div className="btn-map-bg" />
-                        {mode.icon}
+                        {createElement(mode.icon)}
                       </motion.button>
                     ))}
                   </motion.div>
@@ -289,7 +236,7 @@ function MuseosMapView({
                 onClick={toggleMapType}
               >
                 <div className="btn-map-bg" />
-                {MAP_TYPES[selectedMapType]?.icon}
+                {createElement(MAP_TYPES[selectedMapType]?.icon)}
                 <motion.div
                   className="arrow-dd"
                   animate={{ rotate: isOpenMapType ? 180 : 0 }}
@@ -348,7 +295,7 @@ function MuseosMapView({
                         }}
                       >
                         <div className="btn-map-bg" />
-                        {type.icon}
+                        {createElement(type.icon)}
                       </motion.button>
                     ))}
                   </motion.div>
