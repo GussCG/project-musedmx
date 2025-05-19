@@ -3,6 +3,7 @@ import { pool } from "../db.js";
 
 import museoRoutes from "./museo.routes.js";
 import authRoutes from "./auth.routes.js";
+import userRoutes from "./usuarios.routes.js";
 
 
 const router = Router();
@@ -23,5 +24,6 @@ router.get("/", (req, res) => {
 // Rutas especificas
 router.use("/api/museos", museoRoutes);
 router.use("/api/auth", authRoutes);
+router.use("/api/usuarios", userRoutes);
 
 export default router;

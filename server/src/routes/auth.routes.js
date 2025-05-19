@@ -7,7 +7,9 @@ import {
 	logOut,
 	deleteUser,
 	updateUser,
-	verifyUser
+	verifyUser, 
+	verEmail,
+	// recuperarContrasena
 } from "../controllers/auth.controller.js";
 
 const router = Router();
@@ -19,6 +21,8 @@ router.post("/logout", logOut); // Cerrar sesión
 router.put("/update", authMiddleware, upload.single('usr_foto'), updateUser); // Actualizar datos de usuario
 router.get("/verify", authMiddleware, verifyUser); // Obtener perfil de usuario
 router.delete("/", deleteUser);
+router.get("/", verEmail); // Verificar correo electrónico
+// router.post("/recuperarContrasena", recuperarContrasena); // Recuperar contraseña
 
 /* 
 Nuevas rutas para el login y el logout

@@ -20,7 +20,7 @@ const ReseniaService = {
 		  'Content-Type': 'multipart/form-data'
 		},
 		withCredentials: true,
-	  });
+	  }, id);
     return response.data;
   },
 
@@ -32,8 +32,20 @@ const ReseniaService = {
 		  'Content-Type': 'multipart/form-data'
 		},
 		withCredentials: true,
-	  });
+	  }, id);
     return response.data;
+  },
+
+  // Obtener todas las reseñas
+  async obtenerResenias() {
+	const response = await axios.get(API_URL);
+	return response.data;
+  },
+
+  // Obtener reseñas por museo
+  async obtenerReseniasPorMuseo(id) {
+	const response = await axios.get(API_URL + id);
+	return response.data;
   },
 };
 

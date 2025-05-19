@@ -18,7 +18,7 @@ const UsuarioService = {
   },
 
   // Editar usuario
-  /* async editarUsuario(usuario) {
+  async editarUsuario(usuario) {
     const response = await axios.put(API_URL + "update", usuario, {
 		headers: {
 		  'Content-Type': 'multipart/form-data'
@@ -26,7 +26,7 @@ const UsuarioService = {
 		withCredentials: true, 
 	  });
     return response.data;
-  }, */
+  },
 
   // Recuperar contraseña
   async recuperarContrasena(usuario) {

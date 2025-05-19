@@ -1,6 +1,7 @@
 import Usuario from "../models/auth.model.js";
 import { handleHttpError } from "../helpers/httpError.js";
 import { hash, compare } from 'bcrypt';
+// import { sendEmail } from "../services/emailService";
 import jwt from 'jsonwebtoken';
 import fs from "fs";
 import path from "path";
@@ -219,27 +220,22 @@ export const updateUser = async (req, res) => {
 	}
 };
 
-/* export const recoverPassword = async (req, res) => {
-	try {
-		const { usr_correo } = req.body;
-		if (!usr_correo) {
-			return res.status(400).json({
-				success: false,
-				message: "Correo es requerido",
-			});
-		}
-
-
-		res.status(200).json({
-			success: true,
-			message: "Instrucciones para recuperar la contraseña enviadas al correo",
-		});
-	} catch (error) {
-		handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
-	}
+export const verEmail = async (req, res) => {
+	console.log(process.env.SMTP_HOST);
 };
 
-		res.status(200).json({
-			success: true,
-			message: "Contraseña recuperada con éxito",
-		}); */
+/* export const recuperarContrasena = (req, res) => {
+	//Usar el servicio de envio de correos
+	//El OTP se genera en el frontend
+
+	sendEmail(req.body)
+		.then((response) => res.send(response.message))
+		.catch((error) => {
+			handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
+		});
+
+	return res.status(200).json({
+		success: true,
+		message: "Email sent successfully"
+	});	
+} */
