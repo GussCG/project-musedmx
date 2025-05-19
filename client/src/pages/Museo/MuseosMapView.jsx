@@ -50,7 +50,9 @@ function MuseosMapView({
   const [selectedMapTypeNormalized, setSelectedMapTypeNormalized] =
     useState("roadmap");
   const [isOpenMapType, setIsOpenMapType] = useState(false);
-  const { obtenerUbicacion } = useUserLocation();
+  const { obtenerUbicacion, location } = useUserLocation();
+
+  console.log(location);
 
   const toggleTravelMode = () => {
     setIsOpenTravelMode((prev) => !prev);

@@ -3,11 +3,17 @@ import { useAuth } from "./AuthProvider";
 
 const UserLocationContext = createContext();
 
+const DEFAULT_LOCATION = {
+  lat: 19.4326077,
+  lng: -99.1332079,
+  accuracy: 0,
+};
+
 export const UserLocationProvider = ({ children }) => {
   const { user } = useAuth();
   const [location, setLocation] = useState({
     userLocation: null,
-    mapCenter: null,
+    mapCenter: DEFAULT_LOCATION,
   });
 
   // Cargar desde localStorage si ya hay ubicación guardada
@@ -41,6 +47,12 @@ export const UserLocationProvider = ({ children }) => {
     } else {
       console.error("La geolocalización no está disponible en este navegador.");
       alert("Tu navegador no permite acceder a la ubicación.");
+      // Si no hay geolocalización, mantenemos el centro en CDMX
+      setLocation((prev) => ({
+        ...prev,
+        userLocation: null,
+        mapCenter: DEFAULT_LOCATION,
+      }));
     }
   };
 
@@ -65,6 +77,12 @@ export const UserLocationProvider = ({ children }) => {
     } else if (error.code === error.TIMEOUT) {
       alert("La solicitud de geolocalización ha excedido el tiempo límite.");
     }
+    // En caso de error, mantenemos el centro en CDMX
+    setLocation((prev) => ({
+      ...prev,
+      userLocation: null,
+      mapCenter: DEFAULT_LOCATION,
+    }));
   };
 
   return (

@@ -150,6 +150,8 @@
   }
 
   .button-container {
+    width: auto;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -159,7 +161,7 @@
       width: 100%;
 
       svg {
-        width: 100%;
+        width: 30px;
         height: auto;
         color: black;
 
