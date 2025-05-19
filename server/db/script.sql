@@ -87,6 +87,9 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos` (
   PRIMARY KEY (`mus_id`)
 -- INDEX `mus_id` (`mus_id` ASC) VISIBLE
   );
+  
+  SELECT * FROM museos;
+  DELETE FROM museos WHERE mus_id = 2435;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`galeria`
@@ -104,13 +107,15 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`galeria` (
 --  INDEX `id_Museo` (`gal_mus_id` ASC) VISIBLE
   );
 
+SELECT * FROM galeria;
+
 -- -----------------------------------------------------
 -- Table `musedmx`.`horarios_precios_museo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `musedmx`.`horarios_precios_museo` (
   `mh_id` INT(11) NOT NULL AUTO_INCREMENT,
   `mh_mus_id` INT(11) NOT NULL,
-  `mh_dia` SET('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo') NOT NULL,
+  `mh_dia` SET('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo') NOT NULL,
   `mh_hora_inicio` TIME NOT NULL,
   `mh_hora_fin` TIME NOT NULL,
   `mh_precio_ad` VARCHAR(4) NOT NULL,
@@ -137,8 +142,11 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`red_soc` (
   `rds_nombre` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`rds_cve_rs`)
   );
+  
+-- TRUNCATE TABLE red_soc;
+-- TRUNCATE TABLE museos_have_red_soc;
 
--- -----------------------------------------------------
+-----------------------------------------------------
 -- Table `musedmx`.`museos_have_red_soc`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `musedmx`.`museos_have_red_soc` (
@@ -161,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos_have_red_soc` (
 --  INDEX `fk_red_soc_has_museos_red_soc1_idx` (`mhrs_cve_rs` ASC) VISIBLE
 );
 
-select * from red_soc;
+select * from museos_have_red_soc where mhrs_mus_id = 2447;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`favoritos`
@@ -264,6 +272,9 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
 --  INDEX `correo_Moderador` (`res_mod_correo` ASC) VISIBLE,
 --  INDEX `fk_resenia_visitas1_idx` (`visitas_vi_fechahora` ASC, `visitas_vi_usr_correo` ASC, `visitas_vi_mus_id` ASC) VISIBLE
   );
+  
+ SELECT * FROM resenia ;
+-- TRUNCATE TABLE resenia;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`foto_resenia`
@@ -301,22 +312,28 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos_has_encuesta` (
 --  INDEX `fk_museos_has_servicios_servicios1_idx` (`servicios_ser_cve` ASC) VISIBLE,
 --  INDEX `fk_museos_has_servicios_museos1_idx` (`museos_mus_id` ASC) VISIBLE
   );
+  
+  -- DROP TABLE museos_has_encuesta;
+SELECT * FROM museos_has_encuesta;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`encuesta`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `musedmx`.`encuesta` (
   `enc_cve` INT NOT NULL AUTO_INCREMENT,
-  `enc_nom` VARCHAR(45) NOT NULL,
+  `enc_nom` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`enc_cve`)
   );
+  
+-- DROP TABLE encuesta;
+SELECT * FROM encuesta;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`preguntas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `musedmx`.`preguntas` (
-  `preg_id` INT NOT NULL,
-  `pregunta` VARCHAR(45) NOT NULL,
+  `preg_id` INT NOT NULL AUTO_INCREMENT,
+  `pregunta` VARCHAR(255) NOT NULL,
   `encuesta_enc_cve` INT NOT NULL,
   PRIMARY KEY (`preg_id`, `encuesta_enc_cve`),
   CONSTRAINT `fk_preguntas_encuesta1`
@@ -326,6 +343,22 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`preguntas` (
     ON UPDATE CASCADE
 --  INDEX `fk_preguntas_encuesta1_idx` (`encuesta_enc_cve` ASC) VISIBLE
   );
+  
+-- DROP TABLE preguntas;
+SELECT * FROM preguntas;
+  
+-- -----------------------------------------------------
+-- Table `musedmx`.`servicios`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `musedmx`.`servicios` (
+  `ser_id` INT NOT NULL AUTO_INCREMENT,
+  `ser_nombre` VARCHAR(100) NOT NULL,
+  
+  PRIMARY KEY (`ser_id`)
+  );
+  
+-- DROP TABLE servicios; 
+SELECT * FROM servicios;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`respuestas`
@@ -343,6 +376,26 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas` (
 	ON UPDATE CASCADE
 --  INDEX `fk_respuestas_preguntas1_idx` (`preguntas_preg_id` ASC, `preguntas_encuesta_enc_cve` ASC) VISIBLE
 );
+
+CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas_servicios` (
+  `visitas_vi_fechahora` DATETIME NOT NULL,
+  `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,
+  `visitas_vi_mus_id` INT(11) NOT NULL,
+  `servicios_ser_id` INT NOT NULL,
+  PRIMARY KEY (`visitas_vi_fechahora`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`, `servicios_ser_id`),
+  CONSTRAINT `fk_ers_visitas`
+    FOREIGN KEY (`visitas_vi_fechahora`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`)
+    REFERENCES `musedmx`.`visitas` (`vi_fechahora`, `vi_usr_correo`, `vi_mus_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_ers_servicios`
+    FOREIGN KEY (`servicios_ser_id`)
+    REFERENCES `musedmx`.`servicios` (`ser_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+-- SELECT * FROM respuestas_servicios;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`calificaciones`
@@ -395,6 +448,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`tematicas` (
   `tm_nombre` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`tm_nombre`)
   );
+  
+SELECT * FROM tematicas;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`museos_has_servicios`
@@ -414,15 +469,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos_has_servicios` (
 	ON DELETE CASCADE
 	ON UPDATE CASCADE
 	);
-
--- -----------------------------------------------------
--- Table `musedmx`.`servicios`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `musedmx`.`servicios` (
-  `ser_id` INT NOT NULL AUTO_INCREMENT,
-  `ser_nombre` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`ser_id`)
-  );
+    
+-- DROP TABLE museos_has_servicios;
 
 select * from museos where mus_nombre = "Herbario Medicinal del IMSS";
 
