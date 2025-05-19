@@ -5,7 +5,7 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
-  z-index: 99;
+  z-index: 199;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -33,7 +33,7 @@
   margin: 0;
   background-color: var(--bg-filtro);
   position: fixed;
-  z-index: 100;
+  z-index: 200;
   top: 0;
   right: 0;
   transform: translateX(100%);

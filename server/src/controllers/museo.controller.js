@@ -120,3 +120,148 @@ export const getRedesById = async (req, res) => {
     handleHttpError(res, "ERROR_GET_REDES_ID", error);
   }
 };
+
+export const getResenasById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resenas = await Museo.findResenasById({ id: id });
+
+    res.json({
+      success: true,
+      id,
+      resenas,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_RESENAS_ID", error);
+  }
+};
+
+export const createMuseo = async (req, res) => {
+  try {
+    const {
+      mus_nombre,
+      mus_calle,
+      mus_num_ext,
+      mus_colonia,
+      mus_cp,
+      mus_alcaldia,
+      mus_descripcion,
+      mus_fec_ap,
+      mus_tematica,
+      mus_g_latitud,
+      mus_g_longitud,
+      galeria = [],
+      horarios_precios = [],
+      redes_sociales,
+    } = req.body;
+
+    const mus_foto = req.file ? req.file.buffer : null;
+
+    const museo = await Museo.create({
+      mus_nombre,
+      mus_calle,
+      mus_num_ext,
+      mus_colonia,
+      mus_cp,
+      mus_alcaldia,
+      mus_descripcion,
+      mus_fec_ap,
+      mus_tematica,
+      mus_foto,
+      mus_g_latitud,
+      mus_g_longitud,
+      galeria,
+      horarios_precios,
+      redes_sociales,
+    });
+    res.json({
+      success: true,
+      museo,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_CREATE_MUSEO", error);
+  }
+};
+
+export const updateMuseo = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Obtener el museo existente
+    const museoExistente = await Museo.findById({ id: id });
+    if (!museoExistente) {
+      return res.status(404).json({
+        success: false,
+        message: "Museo no encontrado",
+      });
+    }
+
+    const camposActualizados = {};
+
+    if (req.body?.mus_nombre)
+      camposActualizados.mus_nombre = req.body.mus_nombre;
+    if (req.body?.mus_calle) camposActualizados.mus_calle = req.body.mus_calle;
+    if (req.body?.mus_num_ext)
+      camposActualizados.mus_num_ext = req.body.mus_num_ext;
+    if (req.body?.mus_colonia)
+      camposActualizados.mus_colonia = req.body.mus_colonia;
+    if (req.body?.mus_cp) camposActualizados.mus_cp = req.body.mus_cp;
+    if (req.body?.mus_alcaldia)
+      camposActualizados.mus_alcaldia = req.body.mus_alcaldia;
+    if (req.body?.mus_descripcion)
+      camposActualizados.mus_descripcion = req.body.mus_descripcion;
+    if (req.body?.mus_fec_ap)
+      camposActualizados.mus_fec_ap = req.body.mus_fec_ap;
+    if (req.body?.mus_tematica)
+      camposActualizados.mus_tematica = req.body.mus_tematica;
+    if (req.body?.mus_g_latitud)
+      camposActualizados.mus_g_latitud = req.body.mus_g_latitud;
+    if (req.body?.mus_g_longitud)
+      camposActualizados.mus_g_longitud = req.body.mus_g_longitud;
+    // redes_sociales llega como string JSON, hay que parsear
+    if (req.body?.redes_sociales) {
+      try {
+        camposActualizados.redes_sociales = JSON.parse(req.body.redes_sociales);
+      } catch {
+        camposActualizados.redes_sociales = req.body.redes_sociales;
+      }
+    }
+
+    if (req.file) {
+      camposActualizados.mus_foto = req.file.buffer;
+    }
+
+    // Si no se han proporcionado campos para actualizar, devolver un error
+    if (Object.keys(camposActualizados).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No se proporcionaron campos para actualizar",
+      });
+    }
+
+    const museo = await Museo.update({ id, museoData: camposActualizados });
+
+    res.json({
+      success: true,
+      museo,
+      message: "Museo actualizado correctamente",
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_UPDATE_MUSEO", error);
+  }
+};
+
+export const getMuseosPopulares = async (req, res) => {
+  try {
+    const { top_n } = req.query;
+    const museos = await Museo.findPopulares({
+      top_n: top_n ? parseInt(top_n) : 5,
+    });
+    res.json({
+      success: true,
+      museos,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEOS_POPULARES", error);
+  }
+};

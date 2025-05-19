@@ -6,6 +6,7 @@
   color: var(--font-color-primary);
   width: 100%;
   height: auto;
+  min-height: 300px;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
@@ -13,7 +14,7 @@
   align-items: center;
   border-radius: 25px;
   box-shadow: var(--box-shadow-2);
-  padding: 20px 0;
+  padding: 20px 0 0 0;
   overflow: visible;
 
   h1 {
@@ -21,17 +22,6 @@
     font-weight: $font-w-bold;
     color: var(--font-color-primary);
     margin: 0;
-  }
-
-  .message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
   }
 
   .horario-swiper {

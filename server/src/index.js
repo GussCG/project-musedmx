@@ -10,10 +10,14 @@ const app = express();
 // Configuración de CORS
 const corsOptions = {
   origin: process.env.FRONTEND_URL + process.env.FRONTEND_PORT, // URL de frontend
-  methods: ["GET", "POST"], // Métodos permitidos
+  methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
   allowedHeaders: ["Content-Type"], // Cabeceras permitidas
 };
 app.use(cors(corsOptions));
+
+// Middleware para parsear el cuerpo de las peticiones
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(indexRoutes);
 

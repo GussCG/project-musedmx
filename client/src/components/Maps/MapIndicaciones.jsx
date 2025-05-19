@@ -36,8 +36,15 @@ function MapIndicaciones({ isOpen, onClose }) {
               <h2>Advertencias</h2>
               <p>
                 Para que el mapa cargue correctamente, debe estar activada la
-                opción <b>Aceleración por hardware</b> en el navegador. Para ver
-                como activarla{" "}
+                opción{" "}
+                <span
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  Aceleración por hardware
+                </span>{" "}
+                en el navegador. Para ver como activarla{" "}
                 <a
                   target="_blank"
                   href="https://doc.milestonesys.com/2023r3/es-ES/standard_features/sf_mc/sf_mcnodes/sf_3devices/mc_enableordisablehardwareacceleration_devices.htm?TocPath=XProtect%20Productos%20VMS%7CXProtect%20Administrador%20manual%20VMS%7CConfiguraci%C3%B3n%7CDispositivos%20-%20Detecci%C3%B3n%20de%20movimiento%7C_____3"
@@ -55,19 +62,43 @@ function MapIndicaciones({ isOpen, onClose }) {
               <h2>Indicaciones</h2>
               <ul>
                 <li>
-                  Si <b>No</b> permitiste obtener la ubicación, puedes ingresar
-                  tu dirección en la barra de búsqueda.
+                  Si{" "}
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  >
+                    No
+                  </span>{" "}
+                  permitiste obtener la ubicación o hubo algun error, puedes
+                  ingresar una dirección, código postal o un lugar en el botón
+                  de cambiar de ubicación.
                 </li>
                 <li>
-                  En la barra de búsqueda también puedes buscar el museo que
-                  quieras en el mapa.
+                  En la barra de búsqueda puedes buscar el museo que quieras o
+                  museos por palabra clave.
                 </li>
                 <li>
-                  Da click en el símbolo de <b>Museo</b> para más información.
+                  Da click en el símbolo de{" "}
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Museo
+                  </span>{" "}
+                  para más información.
                 </li>
                 <li>
-                  Si estas en <b>Cerca de mi</b> puedes agrandar el rango de
-                  búsqueda.
+                  Si estas en{" "}
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Cerca de mí
+                  </span>{" "}
+                  puedes agrandar el rango de búsqueda.
                 </li>
               </ul>
             </div>

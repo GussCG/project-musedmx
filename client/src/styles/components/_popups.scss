@@ -6,13 +6,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000;
+  z-index: 199;
   background-color: rgba(0, 0, 0, 0.2);
-  //   backdrop-filter: blur(3px);
+  // backdrop-filter: blur(3px);
 }
 
 #main-login-popup {
-  z-index: 1001;
+  z-index: $z-popups;
 
   background-color: var(--bg-popup);
   width: 90%;
@@ -142,13 +142,13 @@
 }
 
 #main-map-indicaciones {
-  z-index: 1001;
+  z-index: 200;
 
   background-color: $rose-w;
   width: 95%;
   height: 50%;
   max-width: 600px;
-  min-height: 900px;
+  min-height: 700px;
 
   position: fixed;
   top: 50%;
@@ -161,7 +161,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  gap: 20px;
+  gap: 10px;
 
   padding: 20px;
 
@@ -192,8 +192,8 @@
   }
 
   h1 {
-    font-size: 2rem;
-    margin-top: 20px;
+    font-size: 1.8rem;
+    margin-top: 10px;
   }
 
   .map-indicaciones-item {
@@ -210,7 +210,7 @@
       width: 100%;
       height: auto;
       font-family: $font-primary;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       font-weight: $font-w-bold;
       text-align: left;
     }
@@ -219,7 +219,7 @@
       width: 100%;
       height: auto;
       font-family: $font-primary;
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: $font-w-light;
       text-align: justify;
 
@@ -242,10 +242,8 @@
         height: auto;
         text-align: justify;
         font-family: $font-primary;
-        font-size: 1rem;
+        font-size: 0.9rem;
         font-weight: $font-w-light;
-
-        margin-top: 10px;
       }
     }
 
@@ -268,7 +266,7 @@
 
         p {
           font-family: $font-primary;
-          font-size: 1rem;
+          font-size: 0.8rem;
           font-weight: $font-w-semibold;
           text-align: center;
         }
@@ -422,6 +420,7 @@
 }
 
 .mod-rechazar-main {
+  z-index: $z-popups;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -438,6 +437,14 @@
   align-items: center;
   justify-content: space-evenly;
 
+  h1 {
+    font-family: $font-primary;
+    font-size: 2rem;
+    font-weight: $font-w-bold;
+    color: var(--font-color-primary);
+    text-align: center;
+  }
+
   .close-button {
     position: absolute;
     top: 20px;
@@ -452,6 +459,7 @@
     svg {
       width: 100%;
       height: 100%;
+      color: var(--font-color-primary);
     }
     &:hover {
       transform: scale(1.2);
@@ -491,7 +499,8 @@
 
         .rechazo-select {
           width: 100%;
-          background-color: var(--select-popup-bg);
+          background-color: var(--textarea-bg);
+          color: var(--font-color-primary);
           font-family: $font-primary;
           font-size: 16px;
           padding: 10px 40px 10px 20px;
@@ -500,6 +509,7 @@
           border: none;
           border-radius: 50px;
           cursor: pointer;
+          outline: none;
         }
 
         .select-arrow-icon {
@@ -517,13 +527,15 @@
 
     textarea {
       width: 100%;
-      background-color: var(--select-popup-bg);
+      background-color: var(--textarea-bg);
+      color: var(--font-color-primary);
       font-family: $font-primary;
       font-size: 16px;
       padding: 10px 20px;
       border: none;
       border-radius: 10px;
       resize: none;
+      outline: none;
     }
   }
 

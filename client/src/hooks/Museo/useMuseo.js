@@ -12,7 +12,7 @@ export function useMuseo(museoId) {
   const fetchMuseo = async (id) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/museos/${id}`;
+      const endpoint = `${BACKEND_URL}/api/museos/detalle/${id}`;
       const response = await axios.get(endpoint);
 
       const museoData = new Museo(response.data.museo[0]);
@@ -20,6 +20,44 @@ export function useMuseo(museoId) {
       setLoading(false);
     } catch (err) {
       console.error("Error fetching museo:", err);
+      setError(err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const registrarMuseo = async (formData) => {
+    try {
+      setLoading(true);
+
+      const endpoint = `${BACKEND_URL}/api/museos`;
+      const response = await axios.post(endpoint, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error("Error registering museo:", err);
+      setError(err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateMuseo = async (museoId, formData) => {
+    try {
+      setLoading(true);
+      console.log("Update museo data:", museoId);
+      const endpoint = `${BACKEND_URL}/api/museos/editar/${museoId}`;
+      const response = await axios.post(endpoint, formData);
+
+      return response.data;
+    } catch (err) {
+      console.error("Error updating museo:", err);
       setError(err);
       throw err;
     } finally {
@@ -42,5 +80,7 @@ export function useMuseo(museoId) {
     error,
     fetchMuseo,
     setMuseo,
+    registrarMuseo,
+    updateMuseo,
   };
 }

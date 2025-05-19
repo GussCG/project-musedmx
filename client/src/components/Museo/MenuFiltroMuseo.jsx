@@ -59,8 +59,6 @@ function MenuFiltroMuseo({
 
   useEffect(() => {
     if (currentFilters) {
-      console.log("[useEffect] currentFilters:", currentFilters);
-
       const newSelectedFilters = {
         tematica: {},
         alcaldia: {},
@@ -80,7 +78,6 @@ function MenuFiltroMuseo({
           currentFilters.alcaldias.includes(alcaldia);
       });
 
-      console.log("[useEffect] newSelectedFilters:", newSelectedFilters);
       setSelectedFilters(newSelectedFilters);
     }
   }, [currentFilters]);

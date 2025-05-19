@@ -167,6 +167,9 @@ import { FaPlus } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 
+import { LiaSearchLocationSolid } from "react-icons/lia";
+import { IoMdArrowDropdown } from "react-icons/io";
+
 const Icons = {
   estrellaIcon,
   moneyIcon,
@@ -280,6 +283,8 @@ const Icons = {
   FaPlus,
   MdEdit,
   MdCheck,
+  LiaSearchLocationSolid,
+  IoMdArrowDropdown,
 };
 
 export default Icons;

@@ -15,7 +15,7 @@
   opacity: 0;
   transition: opacity 0.3s ease-in;
 
-  z-index: 100;
+  z-index: $z-lightbox;
 
   &-img-container {
     width: 100%;
@@ -29,8 +29,7 @@
       height: auto;
       max-width: 100%;
       max-height: 80vh;
-      border-radius: 20px;
-      object-fit: contain;
+      object-fit: none;
     }
   }
 

@@ -80,3 +80,14 @@ $scrollbar-bg-w: #b6b6b6;
 $link-color: #0022ff;
 
 $museo-detail-h1-size: 1.8rem;
+
+// Z-indexes
+$z-menu-container: 1000;
+$z-popups: 500;
+$z-menu-filtros: 500;
+$z-lightbox: 500;
+$z-navbar-menu: 300;
+$z-botones-map: 300;
+$z-user-marker: 200;
+$z-museo-card: 100;
+$z-main: 10;

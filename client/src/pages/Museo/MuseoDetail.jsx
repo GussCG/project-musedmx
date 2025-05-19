@@ -1,5 +1,7 @@
 import { useEffect, useState, createElement } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { useAuth } from "../../context/AuthProvider";
 import { useTheme } from "../../context/ThemeProvider";
 import { AnimatePresence, motion } from "framer-motion";
@@ -8,26 +10,29 @@ import "../../styles/pages/MuseoDetails.scss";
 import Icons from "../../components/Other/IconProvider";
 const { FaFilter, estrellaIcon, FaStar } = Icons;
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
-// Placeholder usuario
-import placeholderUserImage from "../../assets/images/placeholders/user_placeholder.png";
 import MenuFiltroResena from "../../components/Resena/MenuFiltroResena";
 import MapMuseoDetail from "../../components/Maps/MapMuseoDetail";
 import MuseoSlider from "../../components/Museo/MuseoSlider";
-import ImagenesSlider from "../../components/Resena/ImagenesSlider";
 import MuseoGallery from "../../components/Museo/MuseoGallery";
 import { buildImage } from "../../utils/buildImage";
 import { TEMATICAS, REDES_SOCIALES, SERVICIOS } from "../../constants/catalog";
-import { procesarCalificaciones } from "../../utils/calificacionesEncuesta";
+import {
+  procesarCalificaciones,
+  procesarServicios,
+} from "../../utils/calificacionesEncuesta";
 import { formatearFechaTitulo } from "../../utils/formatearFechas";
 import { formatearDireccion } from "../../utils/formatearDireccionVista";
 import FavoritoButton from "../../components/Museo/FavoritoButton";
 import { useMuseo } from "../../hooks/Museo/useMuseo";
-// BACKEND_URL
 import useMuseoGaleria from "../../hooks/Museo/useMuseoGaleria";
 import useMuseoHorarios from "../../hooks/Museo/useMuseoHorarios";
 import useMuseoRedesSociales from "../../hooks/Museo/useMuseoRedesSociales";
+import useMuseoResenas from "../../hooks/Museo/useMuseoResenas";
 import HorarioSlider from "../../components/Museo/HorarioSlider";
-import { ThreeDot } from "react-loading-indicators";
+import LoadingIndicator from "../../components/Other/LoadingIndicator";
+import ResenaCard from "../../components/Resena/ResenaCard";
+import LoadingMessage from "../../components/Maps/LoadingMessage";
+import useRespuestasTotales from "../../hooks/Encuesta/useRespuestasTotales";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
@@ -70,14 +75,29 @@ function MuseoDetail() {
     loading: redesSocialesLoading,
     error: redesSocialesError,
   } = useMuseoRedesSociales(museoIdNumber);
-
-  const calificaciones = procesarCalificaciones({
-    edad: 3,
-    interesante: 2,
-    limpio: 1,
-    entendible: 1,
-    costo: 1,
+  const {
+    resenas,
+    loading: resenasLoading,
+    error: resenasError,
+    calificacionPromedio,
+    calificacionesDistribucion,
+  } = useMuseoResenas(museoIdNumber);
+  const {
+    respuestas: respuestasTotales,
+    servicios: serviciosTotales,
+    loading: respuestasLoading,
+    error: respuestasError,
+  } = useRespuestasTotales({
+    encuestaId: 1,
+    museoId: museoIdNumber,
   });
+
+  const calificaciones = procesarCalificaciones(respuestasTotales);
+  const serviciosOpacidad = procesarServicios(serviciosTotales);
+
+  // const servicios = procesarServicios({
+  //   serviciosTotales,
+  // });
 
   // Estado para los checkbox de favoritos
 
@@ -153,14 +173,7 @@ function MuseoDetail() {
                 <section id="museo-section-1" className="museo-detail-item">
                   <div className="museo-section-1-image">
                     {isLoading ? (
-                      <div className="loading-indicator-img">
-                        <ThreeDot
-                          width={50}
-                          height={50}
-                          color="#000"
-                          count={3}
-                        />
-                      </div>
+                      <Skeleton width={550} height={250} />
                     ) : (
                       <img
                         src={buildImage(museoInfo)}
@@ -179,28 +192,43 @@ function MuseoDetail() {
                   >
                     <div className="museo-section-1-info">
                       <label className="museo-section-1-info-title">
-                        <h1>{museoInfo.nombre}</h1>
+                        <h1>
+                          {isLoading ? (
+                            <Skeleton width={500} />
+                          ) : (
+                            <>{museoInfo.nombre}</>
+                          )}
+                        </h1>
                       </label>
                       <div className="museo-section-1-info-fundacion">
-                        <p>
-                          <b>Fecha de Apertura:</b>{" "}
-                          {formatearFechaTitulo(museoInfo.fecha_apertura)}{" "}
-                        </p>
+                        {isLoading ? (
+                          <Skeleton width={300} />
+                        ) : (
+                          <p>
+                            <b>Fecha de Apertura:</b>{" "}
+                            {formatearFechaTitulo(museoInfo.fecha_apertura)}
+                          </p>
+                        )}
                       </div>
                       {redCorreo && (
                         <div className="museo-section-1-info-correo">
                           {createElement(
                             REDES_SOCIALES[redCorreo.mhrs_cve_rs]?.icon
                           )}
-                          <p>{redCorreo.mhrs_link}</p>
+                          {isLoading ? (
+                            <Skeleton width={300} />
+                          ) : (
+                            <p>{redCorreo.mhrs_link}</p>
+                          )}
                         </div>
                       )}
                       <div className="museo-section-1-info-tematica">
-                        {tema && (
-                          <>
+                        {tema &&
+                          (isLoading ? (
+                            <Skeleton width={200} />
+                          ) : (
                             <h1>{tema.nombre}</h1>
-                          </>
-                        )}
+                          ))}
                       </div>
                     </div>
                     {user &&
@@ -209,7 +237,12 @@ function MuseoDetail() {
                     ) : (
                       <div className="museo-section-1-csm">
                         <div className="museo-section-1-csm-calificacion">
-                          <p>4.5</p>
+                          {isLoading ? (
+                            <Skeleton width={50} />
+                          ) : (
+                            <p>{calificacionPromedio}</p>
+                          )}
+
                           <img
                             src={estrellaIcon}
                             alt="Estrella"
@@ -221,8 +254,10 @@ function MuseoDetail() {
                           />
                         </div>
                         <div className="museo-section-1-csm-social-media">
-                          {!redesSocialesLoading &&
-                            redesSociales.map((redSocial) => {
+                          {redesSocialesLoading ? (
+                            <Skeleton width={100} />
+                          ) : (
+                            redesSociales?.map((redSocial) => {
                               if (redSocial.mhrs_cve_rs === 2) return null; // No mostrar si es email
                               return (
                                 <a
@@ -241,7 +276,8 @@ function MuseoDetail() {
                                   )}
                                 </a>
                               );
-                            })}
+                            })
+                          )}
                         </div>
                       </div>
                     )}
@@ -271,18 +307,15 @@ function MuseoDetail() {
                     <div className="museo-section-2-calificaciones museo-detail-item">
                       <h1 className="h1-section">Calificaciones</h1>
                       <div className="museo-section-2-calificaciones-container">
-                        {Object.keys(calificaciones).map((calificacion) => (
+                        {Object.values(calificaciones).map((calificacion) => (
                           <div
                             className="calificacion-container"
-                            key={calificacion}
+                            key={calificacion.titulo}
                           >
-                            <div className="calificacion-title">
-                              <h2>{calificacion}</h2>
-                            </div>
                             <div className="calificacion-icon">
-                              {calificaciones[calificacion].icono && (
+                              {calificacion.icono && (
                                 <img
-                                  src={calificaciones[calificacion].icono}
+                                  src={calificacion.icono}
                                   alt={calificacion}
                                   style={
                                     isDarkMode
@@ -294,57 +327,90 @@ function MuseoDetail() {
                             </div>
                             <div
                               className="calificacion-graph-bar"
-                              title={`${calificaciones[calificacion].width}%`}
+                              title={`${calificacion.width}%`}
                             >
                               <div
                                 className="calificacion-graph-bar-fill"
                                 style={{
-                                  width: `${calificaciones[calificacion].width}%`,
+                                  width: `${calificacion.width}%`,
                                 }}
                               ></div>
                             </div>
-                            <p>{calificaciones[calificacion].titulo}</p>
+                            <div className="calificacion-title">
+                              <h2>{calificacion.titulo}</h2>
+                            </div>
                           </div>
                         ))}
                       </div>
                     </div>
                     <div className="museo-section-2-servicios museo-detail-item">
                       <h1>Servicios</h1>
-                      <div className="servicios-container">
-                        {Object.values(SERVICIOS).map((servicio) => (
-                          <div className="servicio-icon" key={servicio.id}>
-                            <img
-                              src={servicio.icon}
-                              alt={servicio.nombre}
-                              title={servicio.nombre}
-                              style={
-                                isDarkMode
-                                  ? { filter: "invert(1)" }
-                                  : { filter: "invert(0)" }
-                              }
-                            />
-                          </div>
-                        ))}
-                      </div>
+                      {serviciosTotales.length === 0 ? (
+                        <div className="no-results" style={{ width: "90%" }}>
+                          <h2>No se han calificado los servicios</h2>
+                        </div>
+                      ) : (
+                        <div className="servicios-container">
+                          {Object.values(SERVICIOS).map((servicio) => (
+                            <div className="servicio-icon" key={servicio.id}>
+                              <img
+                                src={servicio.icon}
+                                alt={servicio.nombre}
+                                title={servicio.nombre}
+                                style={{
+                                  opacity:
+                                    serviciosOpacidad[servicio.id]?.opacidad ||
+                                    0,
+                                  filter: isDarkMode
+                                    ? "invert(1)"
+                                    : "invert(0)",
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div className="museo-section-2-descripcion">
                       <h1>Descripción</h1>
-                      <p>{museoInfo.mus_descripcion}</p>
+                      <p>
+                        {isLoading ? (
+                          <Skeleton count={5} width={950} />
+                        ) : (
+                          museoInfo.descripcion
+                        )}
+                      </p>
                     </div>
                     <div className="museo-section-2-ubicacion museo-detail-item">
                       <div className="museo-section-2-direccion">
                         <h1>Dirección:</h1>
-                        <p>{formatearDireccion(museoInfo)}</p>
+                        {isLoading ? (
+                          <Skeleton width={300} />
+                        ) : (
+                          <p>{formatearDireccion(museoInfo)}</p>
+                        )}
                       </div>
-                      <MapMuseoDetail museo={museoInfo} />
+                      {isLoading ? (
+                        <div className="no-results" style={{ width: "80%" }}>
+                          <LoadingIndicator />
+                        </div>
+                      ) : (
+                        <MapMuseoDetail museo={museoInfo} />
+                      )}
                     </div>
                   </section>
-                  <MuseoGallery images={galeria} />
+                  <MuseoGallery images={galeria} loading={isLoading} />
                   <section id="museo-section-4" className="museo-detail-item">
                     <h1 className="h1-section">
                       A otros usuarios también les gusto
                     </h1>
-                    <MuseoSlider listaMuseos={null} sliderType="Similares" />
+                    {isLoading ? (
+                      <div className="no-results">
+                        <LoadingIndicator />
+                      </div>
+                    ) : (
+                      <MuseoSlider listaMuseos={null} sliderType="Similares" />
+                    )}
                   </section>
                   <section id="museo-section-5" className="museo-detail-item">
                     <div className="museo-section-5-header">
@@ -364,7 +430,11 @@ function MuseoDetail() {
                         <h2>Calificación</h2>
                         <div className="museo-calificaciones">
                           <div className="museo-calif-prom">
-                            <p>4.5</p>
+                            {isLoading ? (
+                              <Skeleton width={50} />
+                            ) : (
+                              <p>{calificacionPromedio}</p>
+                            )}
                             <img
                               src={estrellaIcon}
                               alt="Estrella"
@@ -377,95 +447,38 @@ function MuseoDetail() {
                           </div>
                           <div className="museo-calif-linea"></div>
                           <div className="museo-calif-grafica">
-                            <div className="museo-calif-grafica-row">
-                              <p>5</p>
-                              <img
-                                src={estrellaIcon}
-                                alt="Estrella"
-                                style={
-                                  isDarkMode
-                                    ? { filter: "invert(1)" }
-                                    : { filter: "invert(0)" }
-                                }
-                              />
-                              <div
-                                className="museo-calif-grafica-estrellas-fill"
-                                id="museo-calif-grafica-5-estrellas-fill"
-                              ></div>
-                            </div>
-                            <div className="museo-calif-grafica-row">
-                              <p>4</p>
-                              <img
-                                src={estrellaIcon}
-                                alt="Estrella"
-                                style={
-                                  isDarkMode
-                                    ? { filter: "invert(1)" }
-                                    : { filter: "invert(0)" }
-                                }
-                              />
-                              <div
-                                className="museo-calif-grafica-estrellas-fill"
-                                id="museo-calif-grafica-4-estrellas-fill"
-                              ></div>
-                            </div>
-                            <div className="museo-calif-grafica-row">
-                              <p>3</p>
-                              <img
-                                src={estrellaIcon}
-                                alt="Estrella"
-                                style={
-                                  isDarkMode
-                                    ? { filter: "invert(1)" }
-                                    : { filter: "invert(0)" }
-                                }
-                              />
-                              <div
-                                className="museo-calif-grafica-estrellas-fill"
-                                id="museo-calif-grafica-3-estrellas-fill"
-                                style={{
-                                  width: `10%`,
-                                }}
-                              ></div>
-                            </div>
-                            <div className="museo-calif-grafica-row">
-                              <p>2</p>
-                              <img
-                                src={estrellaIcon}
-                                alt="Estrella"
-                                style={
-                                  isDarkMode
-                                    ? { filter: "invert(1)" }
-                                    : { filter: "invert(0)" }
-                                }
-                              />
-                              <div
-                                className="museo-calif-grafica-estrellas-fill"
-                                id="museo-calif-grafica-2-estrellas-fill"
-                                style={{
-                                  width: `1%`,
-                                }}
-                              ></div>
-                            </div>
-                            <div className="museo-calif-grafica-row">
-                              <p>1</p>
-                              <img
-                                src={estrellaIcon}
-                                alt="Estrella"
-                                style={
-                                  isDarkMode
-                                    ? { filter: "invert(1)" }
-                                    : { filter: "invert(0)" }
-                                }
-                              />
-                              <div
-                                className="museo-calif-grafica-estrellas-fill"
-                                id="museo-calif-grafica-1-estrellas-fill"
-                                style={{
-                                  width: `1%`,
-                                }}
-                              ></div>
-                            </div>
+                            {[5, 4, 3, 2, 1].map((star) => {
+                              const total =
+                                calificacionesDistribucion[star] || 0;
+                              const porcentaje =
+                                total > 0 && resenas.length > 0
+                                  ? (total / resenas.length) * 100
+                                  : 0;
+
+                              return (
+                                <div
+                                  className="museo-calif-grafica-row"
+                                  key={star}
+                                >
+                                  <p>{star}</p>
+                                  <img
+                                    src={estrellaIcon}
+                                    alt="Estrella"
+                                    style={
+                                      isDarkMode ? { filter: "invert(1)" } : {}
+                                    }
+                                  />
+                                  {isLoading ? (
+                                    <Skeleton width={600} />
+                                  ) : (
+                                    <div
+                                      className="museo-calif-grafica-estrellas-fill"
+                                      style={{ width: `${porcentaje}%` }}
+                                    ></div>
+                                  )}
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       </div>
@@ -504,35 +517,22 @@ function MuseoDetail() {
                       ) : null}
                     </div>
                     <div className="museo-section-5-resenas">
-                      <div className="museo-section-5-resena">
-                        <div className="resena-foto-container">
-                          <img src={placeholderUserImage} alt="Usuario" />
+                      {resenasLoading ? (
+                        <div className="no-results">
+                          <LoadingIndicator />
                         </div>
-                        <div className="resena-comentario-container">
-                          <div className="resena-comentario-header">
-                            <p id="nombre-user">Juan Pérez</p>
-                            <p id="fecha-resena">17-09-2024</p>
-                            <div className="resena-calificacion">
-                              <p>4</p>
-                              <FaStar />
-                            </div>
-                          </div>
-                          <div className="resena-comentario-body">
-                            <p>
-                              El Museo Nacional de Antropología es una visita
-                              imperdible en la Ciudad de México. Con
-                              impresionantes piezas como la Piedra del Sol y
-                              exposiciones interactivas, ofrece un recorrido
-                              fascinante por las culturas prehispánicas. Ideal
-                              para toda la familia y perfecto para quienes
-                              quieren conocer la historia de México de forma
-                              amena y visual.
-                            </p>
-                            {/* Slider de imagenes */}
-                            <ImagenesSlider listaImagenes={galeria} />
-                          </div>
+                      ) : resenas.length > 0 ? (
+                        resenas.map((resena) => (
+                          <ResenaCard
+                            key={resena.res_id_res}
+                            idResena={resena.res_id_res}
+                          />
+                        ))
+                      ) : (
+                        <div className="no-results">
+                          <p>No hay reseñas disponibles</p>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </section>
                 </motion.div>

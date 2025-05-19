@@ -15,6 +15,9 @@ import { useMuseos } from "../../hooks/Museo/useMuseos";
 import { useMuseoFilters } from "../../hooks/Museo/useMuseoFilters";
 import { useScrollToTop } from "../../hooks/Other/useScrollToTop";
 import LoadingIndicator from "../../components/Other/LoadingIndicator";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { useMuseosPopulares } from "../../hooks/Museo/useMuseosPopulares";
 
 const {
   listButton,
@@ -50,20 +53,39 @@ function MuseosList({ titulo, tipo }) {
     removeFilter(type, value);
   };
 
+  // Fetch de museos
+  const isPopulares = tipo === "3";
+
   const museosParams = useMemo(
     () => ({
       tipo,
-      searchQuery: tituloSearch,
-      filters,
-      sortBy,
-      isMapView,
+      searchQuery: isPopulares ? null : tituloSearch,
+      filters: isPopulares ? { tipos: [], alcaldias: [] } : filters,
+      sortBy: isPopulares ? null : sortBy,
+      isMapView: isPopulares ? false : isMapView,
     }),
-    [tipo, tituloSearch, filters, sortBy, isMapView]
+    [tipo, tituloSearch, filters, sortBy, isMapView, isPopulares]
   );
 
-  // Fetch de museos
-  const { museos, pagination, fetchMuseos, isLoading } =
-    useMuseos(museosParams);
+  const {
+    museos: museosNormales,
+    pagination,
+    fetchMuseos,
+    isLoading: isLoadingNormales,
+  } = useMuseos(museosParams);
+
+  const {
+    museosPopulares,
+    loading: isLoadingPopulares,
+    error: errorPopulares,
+  } = useMuseosPopulares({
+    top_n: 10,
+    enabled: isPopulares, // Solo se ejecuta si es tipo 3
+  });
+
+  // Decide qué datos usar basado en el tipo
+  const museos = isPopulares ? museosPopulares : museosNormales;
+  const isLoading = isPopulares ? isLoadingPopulares : isLoadingNormales;
 
   // Scroll to top
   const { showButton, scrollToTop } = useScrollToTop();
@@ -117,9 +139,7 @@ function MuseosList({ titulo, tipo }) {
     }
   }, [tipo, setIsMapView]);
 
-  useEffect(() => {
-    console.log("El padre se está re-renderizando");
-  }, [tipo, tituloSearch, filters, sortBy, isMapView]);
+  useEffect(() => {}, [tipo, tituloSearch, filters, sortBy, isMapView]);
 
   return (
     <motion.div
@@ -142,7 +162,9 @@ function MuseosList({ titulo, tipo }) {
           <div className="museos-header-section-left">
             <div className="museos-header-section-left-tittles">
               <h1>{tituloBusqueda}</h1>
-              <p>Museos mostrados: {pagination.totalItems}</p>
+              <p>
+                Museos mostrados: {isPopulares ? 10 : pagination.totalItems}
+              </p>
             </div>
           </div>
 
@@ -188,7 +210,7 @@ function MuseosList({ titulo, tipo }) {
               </>
             )}
 
-            {tipo !== "3" && (
+            {!isPopulares && (
               <button
                 type="button"
                 className="museos-header-section-right-button"
@@ -274,8 +296,8 @@ function MuseosList({ titulo, tipo }) {
         ) : (
           <section className="museos-container-section">
             {isLoading && (
-              <div className="loading-indicator">
-                <ThreeDot width={50} height={50} color="#000" count={3} />
+              <div className="no-results">
+                <LoadingIndicator />
               </div>
             )}
             {!isLoading && (
@@ -294,20 +316,26 @@ function MuseosList({ titulo, tipo }) {
                       <p>Intenta con otra búsqueda o filtros</p>
                     </motion.div>
                   ) : (
-                    museos.map((museo) => (
-                      <MuseoCard
-                        key={museo.id}
-                        museo={museo}
-                        editMode={false}
-                        sliderType={null}
-                      />
-                    ))
+                    museos.map((museo) =>
+                      isLoading ? (
+                        <div className="no-results">
+                          <LoadingIndicator />
+                        </div>
+                      ) : (
+                        <MuseoCard
+                          key={museo.id}
+                          museo={museo}
+                          editMode={false}
+                          sliderType={null}
+                        />
+                      )
+                    )
                   )}
                 </div>
               </>
             )}
 
-            {pagination.totalPages > 1 && tipo !== "3" && (
+            {pagination.totalPages > 1 && !isPopulares && (
               <ReactPaginate
                 breakLabel="..."
                 breakClassName="break"

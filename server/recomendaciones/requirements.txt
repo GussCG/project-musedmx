@@ -1,0 +1,15 @@
+# Backend
+fastapi==0.95.2
+uvicorn==0.22.0
+
+# Database
+mysql-connector-python==8.0.33
+
+# Machine Learning/Análisis
+scikit-learn==1.2.2
+pandas==2.0.2
+mlxtend==0.22.0
+
+# Otros
+python-multipart==0.0.6  # Para formularios FastAPI
+python-dotenv==1.0.0    # Para variables de entorno

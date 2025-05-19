@@ -3,6 +3,8 @@ import LightBox from "../../components/Other/LightBox";
 import useLightBox from "../../hooks/Other/useLightBox";
 import ModRechazar from "./ModRechazar";
 import { useState } from "react";
+import PopupPortal from "../../components/Other/PopupPortal";
+import LightBoxPortal from "../../components/Other/LightBoxPortal";
 
 function ModResenaDetail() {
   const galeria = [
@@ -33,14 +35,16 @@ function ModResenaDetail() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <LightBox
-        images={galeria}
-        isOpen={lightbox.isOpen}
-        currentIndex={lightbox.currentIndex}
-        closeLightBox={lightbox.closeLightBox}
-        goToPrev={lightbox.goToPrev}
-        goToNext={lightbox.goToNext}
-      />
+      <LightBoxPortal>
+        <LightBox
+          images={galeria}
+          isOpen={lightbox.isOpen}
+          currentIndex={lightbox.currentIndex}
+          closeLightBox={lightbox.closeLightBox}
+          goToPrev={lightbox.goToPrev}
+          goToNext={lightbox.goToNext}
+        />
+      </LightBoxPortal>
       <main id="aprobar-res-main">
         <h1>Aprobar Reseña</h1>
         <div className="aprobar-res-container">
@@ -89,10 +93,12 @@ function ModResenaDetail() {
       </main>
       <AnimatePresence>
         {showRechazarPop && (
-          <ModRechazar
-            key={`rechazar-pop`}
-            onClose={() => setShowRechazarPop(false)}
-          />
+          <PopupPortal>
+            <ModRechazar
+              key={`rechazar-pop`}
+              onClose={() => setShowRechazarPop(false)}
+            />
+          </PopupPortal>
         )}
       </AnimatePresence>
     </motion.div>

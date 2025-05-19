@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import SearchBar from "../Other/SearchBar";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function MuseumSearch({ swiperRef = null }) {
   const navigate = useNavigate();
@@ -40,9 +42,6 @@ function MuseumSearch({ swiperRef = null }) {
     navigate(`/Museos/busqueda?search=${encodeURIComponent(searchTerm)}`);
   };
 
-  if (loading) return <div className="loading">Cargando...</div>;
-  if (error) return <div className="error">{error}</div>; // Mostrar error si hay uno
-
   return (
     <motion.div
       className="nav-bar"
@@ -68,12 +67,16 @@ function MuseumSearch({ swiperRef = null }) {
         overscrollBehavior: "contain",
       }}
     >
-      <SearchBar
-        placeholder="Buscar museos..."
-        suggestions={museumSuggestions}
-        onSearch={handleSearch}
-        onSuggestionSelect={handleSearch}
-      />
+      {loading || error ? (
+        <Skeleton wrapper={SearchBar} />
+      ) : (
+        <SearchBar
+          placeholder="Buscar museos..."
+          suggestions={museumSuggestions}
+          onSearch={handleSearch}
+          onSuggestionSelect={handleSearch}
+        />
+      )}
     </motion.div>
   );
 }

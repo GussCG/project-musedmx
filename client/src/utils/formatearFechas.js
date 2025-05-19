@@ -47,3 +47,15 @@ export const formatearHora = (hora) => {
 
   return new Intl.DateTimeFormat("es-ES", opciones).format(fecha);
 };
+
+// Formatear fecha para la base de datos DATE -> YYYY-MM-DD
+export const formatearFechaBDDATE = (fecha) => {
+  const date = new Date(fecha);
+  return date.toISOString().split("T")[0];
+};
+
+// Formatear fecha para la base de datos DATETIME -> YYYY-MM-DD HH:MM:SS
+export const formatearFechaBDDATETIME = (fecha) => {
+  const date = new Date(fecha);
+  return date.toISOString().slice(0, 19).replace("T", " ");
+};

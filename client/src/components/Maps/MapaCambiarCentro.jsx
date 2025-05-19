@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMap } from "@vis.gl/react-google-maps";
+import { useUserLocation } from "../../context/UserLocationProvider";
 import Icons from "../Other/IconProvider";
 import LoadingMessage from "./LoadingMessage";
 const { TbLocationPin, IoSearch, IoIosArrowBack } = Icons;
@@ -11,6 +12,7 @@ function MapaCambiarCentro({ onPlaceSelected }) {
   const autocompleteRef = useRef(null);
   const containerRef = useRef(null);
   const map = useMap();
+  const { setLocation } = useUserLocation();
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
@@ -57,19 +59,25 @@ function MapaCambiarCentro({ onPlaceSelected }) {
           const location = place.location;
 
           if (location) {
+            const newCenter = {
+              lat: location.lat,
+              lng: location.lng,
+            };
+
+            setLocation((prev) => ({
+              ...prev,
+              mapCenter: newCenter,
+              userLocation: newCenter,
+            }));
+
             const placeData = {
               name,
               geometry: {
-                location: {
-                  lat: location.lat,
-                  lng: location.lng,
-                },
+                location: newCenter,
               },
             };
-            // Calcular los límites del mapa
-            calculateBounds(location);
 
-            // Llamar a la función onPlaceSelected con los datos del lugar
+            calculateBounds(location);
             onPlaceSelected(placeData);
           }
         });

@@ -98,26 +98,37 @@ export const REDES_SOCIALES = {
     id: 1,
     nombre: "Página Web",
     icon: Icons.AiOutlineGlobal,
+    validador: (link) =>
+      /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\/?$/.test(link),
   },
   2: {
     id: 2,
     nombre: "Email",
     icon: Icons.IoMail,
+    validador: (link) =>
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(link),
   },
   3: {
     id: 3,
     nombre: "Facebook",
     icon: Icons.FaSquareFacebook,
+    validador: (link) =>
+      /^(https?:\/\/)?(www\.)?facebook\.com\/[A-Za-z0-9._%+-]+\/?$/.test(link),
   },
   4: {
     id: 4,
     nombre: "Twitter",
     icon: Icons.FaSquareXTwitter,
+    validador: (link) =>
+      /^(https?:\/\/)?(www\.)?twitter\.com\/[A-Za-z0-9._%+-]+\/?$/.test(link) ||
+      /^https?:\/\/(www\.)?x\.com\/[A-Za-z0-9._]+\/?$/.test(link),
   },
   5: {
     id: 5,
     nombre: "Instagram",
     icon: Icons.FaSquareInstagram,
+    validador: (link) =>
+      /^(https?:\/\/)?(www\.)?instagram\.com\/[A-Za-z0-9._%+-]+\/?$/.test(link),
   },
 };
 
@@ -242,28 +253,26 @@ export const SERVICIOS = {
 };
 
 export const CALIFICACIONES_RUBROS = {
-  Edad: [
-    { valor: 3, titulo: "Para Adultos", icono: Icons.adultoIcon },
-    { valor: 2, titulo: "Para toda la familia", icono: Icons.familiarIcon },
-    { valor: 1, titulo: "Para Niños", icono: Icons.ninoIcon },
+  5: [
+    { valor: 3, titulo: "Adultos", icono: Icons.adultoIcon },
+    { valor: 2, titulo: "Familiar", icono: Icons.familiarIcon },
+    { valor: 1, titulo: "Niños", icono: Icons.ninoIcon },
   ],
-  Interesante: [
+  1: [
     { valor: 5, titulo: "Muy Interesante", icono: Icons.dormirIcon },
     { valor: 4, titulo: "Interesante", icono: Icons.dormirIcon },
     { valor: 3, titulo: "Poco Interesante", icono: Icons.dormirIcon },
     { valor: 2, titulo: "Aburrido", icono: Icons.dormirIcon },
   ],
-  Limpio: [
+  2: [
     { valor: 1, titulo: "Limpio", icono: Icons.limpioIcon },
     { valor: 0.5, titulo: "Sucio", icono: Icons.limpioIcon },
   ],
-
-  Entendible: [
+  3: [
     { valor: 1, titulo: "Entendible", icono: Icons.entendibleIcon },
     { valor: 0.5, titulo: "Difícil", icono: Icons.entendibleIcon },
   ],
-
-  Costo: [
+  4: [
     { valor: 4, titulo: "Muy Caro", icono: Icons.moneyIcon },
     { valor: 3, titulo: "Caro", icono: Icons.moneyIcon },
     { valor: 2, titulo: "Barato", icono: Icons.moneyIcon },
@@ -280,3 +289,100 @@ export const DIAS_SEMANA = [
   "Sábado",
   "Domingo",
 ];
+
+export const PREGUNTAS_RESPUESTAS = {
+  1: {
+    id: 1,
+    pregunta: "¿Qué tan interesante fue la visita?",
+    respuestas: [
+      {
+        valor: 5,
+        respuesta: "Muy Interesante",
+      },
+      {
+        valor: 4,
+        respuesta: "Interesante",
+      },
+      {
+        valor: 3,
+        respuesta: "Medio Interesante",
+      },
+      {
+        valor: 2,
+        respuesta: "Aburrido",
+      },
+      {
+        valor: 1,
+        respuesta: "Muy Aburrido",
+      },
+    ],
+  },
+  2: {
+    id: 2,
+    pregunta: "¿El museo estaba limpio?",
+    respuestas: [
+      {
+        valor: 1,
+        respuesta: "Limpio",
+      },
+      {
+        valor: 0,
+        respuesta: "Sucio",
+      },
+    ],
+  },
+  3: {
+    id: 3,
+    pregunta: "¿Es fácil de entender el museo?",
+    respuestas: [
+      {
+        valor: 1,
+        respuesta: "Sí",
+      },
+      {
+        valor: 0,
+        respuesta: "No",
+      },
+    ],
+  },
+  4: {
+    id: 4,
+    pregunta: "¿Qué tan costosa fue la entrada al museo?",
+    respuestas: [
+      {
+        valor: 1,
+        respuesta: "Muy costosa",
+      },
+      {
+        valor: 2,
+        respuesta: "Costosa",
+      },
+      {
+        valor: 3,
+        respuesta: "Barata",
+      },
+      {
+        valor: 4,
+        respuesta: "Gratis",
+      },
+    ],
+  },
+  5: {
+    id: 5,
+    pregunta: "¿Para qué público esta dirigido?",
+    respuestas: [
+      {
+        valor: 1,
+        respuesta: "Niños",
+      },
+      {
+        valor: 2,
+        respuesta: "Toda la familia",
+      },
+      {
+        valor: 3,
+        respuesta: "Adultos",
+      },
+    ],
+  },
+};

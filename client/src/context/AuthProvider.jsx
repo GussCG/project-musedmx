@@ -93,7 +93,8 @@ function AuthProvider({ children }) {
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("tipoUsuario");
-    navigate("/");
+    localStorage.removeItem("userLocation");
+    // navigate("/");
     // try {
     //   setError(null); // Limpiar errores
     //   // Ruta para cerrar sesión (Backend)

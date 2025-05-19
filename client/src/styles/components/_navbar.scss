@@ -148,4 +148,27 @@
       color: #800000;
     }
   }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    button {
+      width: 100%;
+
+      svg {
+        width: 100%;
+        height: auto;
+        color: black;
+
+        transition: scale 0.3s ease-in-out;
+
+        &:hover {
+          scale: 1.2;
+        }
+      }
+    }
+  }
 }

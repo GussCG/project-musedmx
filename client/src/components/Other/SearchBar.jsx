@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Icons from "./IconProvider";
-const { IoSearch } = Icons;
+const { IoSearch, CgClose, IoMdArrowDropdown } = Icons;
 
 function SearchBar({
   placeholder = "Buscar...",
@@ -111,6 +111,19 @@ function SearchBar({
     }, 200); // Ajusta el tiempo según sea necesario
   };
 
+  const handleClearInput = () => {
+    setInput("");
+    setFilteredSuggestions([]);
+    setShowSuggestions(false);
+    setError(null);
+  };
+
+  const [showSuggestionsState, setShowSuggestionsState] = useState(false);
+  const toggleShowSuggestions = () => {
+    setShowSuggestions((prev) => !prev);
+    setShowSuggestionsState((prev) => !prev);
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       {searchIcon && (
@@ -160,6 +173,21 @@ function SearchBar({
               No se encontraron resultados
             </motion.div>
           )}
+      </div>
+      <div className="button-container">
+        <button type="button" onClick={handleClearInput}>
+          <CgClose />
+        </button>
+        <button type="button" onClick={toggleShowSuggestions}>
+          <IoMdArrowDropdown
+            style={{
+              transform: showSuggestionsState
+                ? "rotate(180deg)"
+                : "rotate(0deg)",
+              transition: "transform 0.3s ease",
+            }}
+          />
+        </button>
       </div>
     </form>
   );

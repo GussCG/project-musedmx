@@ -1,6 +1,7 @@
 @use "../variables" as *;
 
 #nav-menu-container {
+  z-index: 100;
   position: sticky;
   background: transparent;
   width: 100%;
@@ -8,7 +9,6 @@
   top: 0;
   left: 0;
   margin-bottom: 30px;
-  z-index: 50;
   transition: all 0.3s ease-in-out;
 
   ul {
@@ -130,9 +130,9 @@
 #nav-menu-container.scrolled {
   background: linear-gradient(
     to bottom,
-    rgb(46, 44, 42) 0%,
-    rgba(46, 44, 42, 0.8) 35%,
-    rgba(46, 44, 42, 0) 100%
+    var(--navbarmenu-scroll-1) 0%,
+    var(--navbarmenu-scroll-2) 35%,
+    var(--navbarmenu-scroll-3) 100%
   );
 
   ul {

@@ -62,7 +62,7 @@ with open(csv_path, newline='', encoding='utf-8') as csvfile:
                 for file in os.listdir(os.path.join(imgs_path, carpeta_museo)):
                     imgs_museo.append(os.path.join(imgs_path, carpeta_museo, file))
 
-            print(f"Museo: {row["museo_nombre"]} insertando {len(imgs_museo)} fotos")
+            # print(f"Museo: {row["museo_nombre"]} insertando {len(imgs_museo)} fotos")
             for img in imgs_museo:
                 cursor.execute(
                     "INSERT INTO galeria (gal_mus_id, gal_foto) VALUES (%s, %s)", (

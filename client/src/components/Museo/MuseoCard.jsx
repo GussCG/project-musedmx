@@ -13,6 +13,7 @@ import { TEMATICAS } from "../../constants/catalog";
 import { agruparHorarios } from "../../utils/agruparHorarios";
 import FavoritoButton from "./FavoritoButton";
 import useMuseoHorarios from "../../hooks/Museo/useMuseoHorarios";
+import useMuseoResenas from "../../hooks/Museo/useMuseoResenas";
 
 const MuseoCard = memo(function MuseoCard({ museo, editMode, sliderType }) {
   // Prefijo unico basado en sliderType
@@ -50,6 +51,8 @@ const MuseoCard = memo(function MuseoCard({ museo, editMode, sliderType }) {
   } = useMuseoHorarios(museo.id);
 
   const horariosAgrupados = agruparHorarios(horarios);
+
+  const { calificacionPromedio } = useMuseoResenas(museo.id);
 
   // Funcion para devolver la imagen de costo dependiendo del numero
   const costoImagen = () => {
@@ -106,7 +109,7 @@ const MuseoCard = memo(function MuseoCard({ museo, editMode, sliderType }) {
               />
 
               <div className="museo-card-img-rating">
-                <p id="museo-card-rating">{museo.calificacion || 4}</p>
+                <p id="museo-card-rating">{calificacionPromedio}</p>
                 <FaStar
                   style={{
                     fill: TEMATICAS[museo.tematica].museoCardColors

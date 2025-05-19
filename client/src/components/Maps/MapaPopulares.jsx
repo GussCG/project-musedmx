@@ -101,10 +101,12 @@ function MapaPopulares({ museosMostrados }) {
                   }}
                 >
                   <div className="museo-list-item-img">
-                    <img
-                      src={buildImage(museo) || foto_default}
-                      alt={museo.nombre}
-                    />
+                    <Link to={`/Museos/${museo.id}`}>
+                      <img
+                        src={buildImage(museo) || foto_default}
+                        alt={museo.nombre}
+                      />
+                    </Link>
                     <div
                       className="museo-list-item-rank"
                       style={{

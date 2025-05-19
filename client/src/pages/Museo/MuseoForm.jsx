@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Formik, Form, Field } from "formik";
 import { toast, Bounce } from "react-toastify";
@@ -20,17 +20,21 @@ import axios from "axios";
 import { BACKEND_URL } from "../../constants/api";
 import Icons from "../../components/Other/IconProvider";
 import LoadingIndicator from "../../components/Other/LoadingIndicator";
+import { formatearFechaBDDATE } from "../../utils/formatearFechas";
 
 const { FaPlus, CgClose, MdEdit, MdCheck } = Icons;
 
 function MuseoForm({ mode }) {
   const { museoId } = useParams();
   const fileNameRef = useRef(null);
+  const navigate = useNavigate();
 
   const {
     museo: museoEdit,
     loading,
     error,
+    registrarMuseo,
+    updateMuseo,
   } = useMuseo(mode === "edit" ? museoId : null);
 
   // Para la imagen inicial
@@ -42,22 +46,13 @@ function MuseoForm({ mode }) {
         fileNameRef.current.textContent = museoEdit.img.name;
       }
     } else {
-      setImagePreview(museoPlaceholder);
+      setImagePreview(null);
       if (fileNameRef.current) {
-        fileNameRef.current.textContent = "Seleccionar Archivo";
+        fileNameRef.current.textContent =
+          "No se ha seleccionado ninguna imagen";
       }
-
-      // Convertir el placeholder a archivo y guardarlo
-      fetch(museoPlaceholder)
-        .then((res) => res.blob())
-        .then((blob) => {
-          const placeholderFile = new File([blob], "placeholder.jpg", {
-            type: blob.type,
-          });
-          setImage(placeholderFile); // puedes usar esto o actualizar Formik directamente en setFieldValue
-        });
     }
-  }, [mode, museoEdit]);
+  }, [museoEdit, mode]);
 
   // Para fecha de apertura
   useEffect(() => {
@@ -73,7 +68,7 @@ function MuseoForm({ mode }) {
 
   // Lógica para el cambio de imagen de perfil
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(museoPlaceholder);
+  const [imagePreview, setImagePreview] = useState(null);
   const imageInputRef = useRef(null);
   const [openCropper, setOpenCropper] = useState(false);
   const [imageOriginal, setImageOriginal] = useState(null);
@@ -164,118 +159,166 @@ function MuseoForm({ mode }) {
     setRedSeleccionada("");
   };
 
-  // Al enviar todo:
-  const handleActualizarTodo = async () => {
-    const datosParaEnviar = [
-      ...redesLocales.map((r) => ({
-        id: r.mhrs_cve_rs,
-        nombre: REDES_SOCIALES[r.mhrs_cve_rs].nombre,
-        link: r.mhrs_link,
-        tipo: "existente",
-      })),
-      ...redesTemporal.map((r) => ({
-        id: r.id,
-        nombre: r.nombre,
-        link: r.link,
-        tipo: "nuevo",
-      })),
-    ];
-
-    // Aquí llamas a la API con datosParaEnviar
-    console.log(datosParaEnviar);
-  };
-
   const handleRegistroMuseo = async (values) => {
     const formData = new FormData();
 
     let response;
     if (mode === "edit") {
       if (values.museofrmnombre !== museoEdit?.nombre) {
-        formData.append("nombre", values.museofrmnombre);
+        formData.append("mus_nombre", values.museofrmnombre);
       }
       if (values.museofrmcalle !== museoEdit?.calle) {
-        formData.append("calle", values.museofrmcalle);
+        formData.append("mus_calle", values.museofrmcalle);
       }
       if (values.museofrmnumext !== museoEdit?.num_ext) {
-        formData.append("num_ext", values.museofrmnumext);
+        formData.append("mus_num_ext", values.museofrmnumext);
       }
       if (values.museofrmcolonia !== museoEdit?.colonia) {
-        formData.append("colonia", values.museofrmcolonia);
+        formData.append("mus_colonia", values.museofrmcolonia);
       }
       if (values.museofrmcp !== museoEdit?.cp) {
-        formData.append("cp", values.museofrmcp);
+        formData.append("mus_cp", values.museofrmcp);
       }
       if (values.museofrmalcaldia !== museoEdit?.alcaldia) {
-        formData.append("alcaldia", values.museofrmalcaldia);
+        formData.append("mus_alcaldia", values.museofrmalcaldia);
       }
       if (values.museofrmfecapertura !== museoEdit?.fecha_apertura) {
-        formData.append("fecha_apertura", values.museofrmfecapertura);
+        formData.append(
+          "mus_fec_ap",
+          formatearFechaBDDATE(values.museofrmfecapertura)
+        );
       }
       if (values.museofrmdescripcion !== museoEdit?.descripcion) {
-        formData.append("descripcion", values.museofrmdescripcion);
+        formData.append("mus_descripcion", values.museofrmdescripcion);
       }
       if (values.museofrmtematicamuseo !== museoEdit?.tematica) {
-        formData.append("tematica", values.museofrmtematicamuseo);
+        formData.append("mus_tematica", values.museofrmtematicamuseo);
       }
       if (values.museofrmglatitud !== museoEdit?.g_latitud) {
-        formData.append("g_latitud", values.museofrmglatitud);
+        formData.append("mus_g_latitud", values.museofrmglatitud);
       }
       if (values.museofrmglongitud !== museoEdit?.g_longitud) {
-        formData.append("g_longitud", values.museofrmglongitud);
+        formData.append("mus_g_longitud", values.museofrmglongitud);
       }
       // Verifica si la imagen es un archivo File y no un Blob
-      if (values.museofrmfoto && values.museofrmfoto instanceof File) {
-        formData.append("img", values.museofrmfoto);
+      if (values.museofrmfoto) {
+        if (values.museofrmfoto instanceof File) {
+          formData.append("mus_foto", values.museofrmfoto);
+        } else {
+          // formData.append("mus_foto", values.museofrmfoto);
+        }
       }
 
-      // Enviar al backend
-      const endpoint = `${BACKEND_URL}/api/museos/${museoId}`;
-      response = await axios.put(endpoint, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const redesFinales = [
+        ...redesLocales.map((r) => ({
+          id: r.mhrs_cve_rs || r.id,
+          link: r.mhrs_link || r.link,
+        })),
+        ...redesTemporal.map((r) => ({
+          id: r.id,
+          link: r.link,
+        })),
+      ];
+
+      // Opcional: filtrar duplicados por id o link, por si acaso
+      const redesUnicas = redesFinales.filter(
+        (red, index, self) =>
+          index ===
+          self.findIndex(
+            (t) =>
+              t.id === red.id &&
+              t.link.trim().toLowerCase() === red.link.trim().toLowerCase()
+          )
+      );
+
+      formData.append(
+        "redes_sociales",
+        JSON.stringify(
+          redesUnicas.map((red) => ({
+            id: red.id,
+            link: red.link.trim(),
+          }))
+        )
+      );
+
+      formData.forEach((value, key) => {
+        console.log(key, value);
       });
+
+      try {
+        response = await updateMuseo(museoId, formData);
+        toast.success("Museo actualizado correctamente", {
+          transition: Bounce,
+        });
+        navigate("/museos");
+      } catch (error) {
+        console.error(error);
+        toast.error("Error al actualizar museo", { transition: Bounce });
+      }
     } else if (mode === "create") {
-      formData.append("nombre", values.museofrmnombre);
-      formData.append("calle", values.museofrmcalle);
-      formData.append("num_ext", values.museofrmnumext);
-      formData.append("colonia", values.museofrmcolonia);
-      formData.append("cp", values.museofrmcp);
-      formData.append("alcaldia", values.museofrmalcaldia);
-      formData.append("fecha_apertura", values.museofrmfecapertura);
-      formData.append("descripcion", values.museofrmdescripcion);
-      formData.append("tematica", values.museofrmtematicamuseo);
-      formData.append("g_latitud", values.museofrmglatitud);
-      formData.append("g_longitud", values.museofrmglongitud);
+      formData.append("mus_nombre", values.museofrmnombre);
+      formData.append("mus_calle", values.museofrmcalle);
+      formData.append("mus_num_ext", values.museofrmnumext);
+      formData.append("mus_colonia", values.museofrmcolonia);
+      formData.append("mus_cp", values.museofrmcp);
+      formData.append("mus_alcaldia", values.museofrmalcaldia);
+      formData.append(
+        "mus_fec_ap",
+        formatearFechaBDDATE(values.museofrmfecapertura)
+      );
+      formData.append("mus_descripcion", values.museofrmdescripcion);
+      formData.append("mus_tematica", values.museofrmtematicamuseo);
+      formData.append("mus_g_latitud", values.museofrmglatitud);
+      formData.append("mus_g_longitud", values.museofrmglongitud);
       // Asegúrate de que la imagen se añade si es nueva en el caso de creación
       if (!values.museofrmfoto && image instanceof File) {
-        formData.append("img", image); // 'image' contiene el placeholder convertido
+        formData.append("mus_foto", image); // 'image' contiene el placeholder convertido
       } else if (values.museofrmfoto) {
-        formData.append("img", values.museofrmfoto);
+        formData.append("mus_foto", values.museofrmfoto);
       }
+      // Horarios
+      formData.append("horarios_precios", JSON.stringify([]));
+      // Galería
+      formData.append("galeria", JSON.stringify([]));
 
-      // Enviar al backend
-      const endpoint = `${BACKEND_URL}/api/museos`;
-      response = await axios.post(endpoint, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // Redes sociales (mismo filtro)
+      const redesFiltradas = redesTemporal.filter(
+        (item, index, self) =>
+          index ===
+          self.findIndex(
+            (t) =>
+              t.id === item.id ||
+              t.link.trim().toLowerCase() === item.link.trim().toLowerCase()
+          )
+      );
+
+      // Agrega redes filtradas al formData
+      formData.append(
+        "redes_sociales",
+        JSON.stringify(
+          redesFiltradas.map((red) => ({
+            id: red.id,
+            link: red.link.trim(),
+          }))
+        )
+      );
+
+      try {
+        response = await registrarMuseo(formData);
+        toast.success("Museo registrado correctamente", { transition: Bounce });
+        navigate("/museos");
+      } catch (error) {
+        console.error(error);
+        toast.error("Error al registrar museo", { transition: Bounce });
+      }
     }
 
-    if (response.status === 200) {
-      // Actualizar la página
-      try {
-        await handleActualizarTodo();
-      } catch (error) {
-        console.error("Error al actualizar las redes sociales:", error);
-      }
-
+    if (response.museo.success) {
       if (mode === "edit") {
-        window.location.reload();
+        navigate(`/Museos/${response.museo.mus_id}`);
       } else {
         // A editar los horarios
-        Navigate(`/museos/${response.data.museoId}/horarios`);
+        navigate(`/Admin/Museo/EditarHorario/${response.museo.mus_id}/`);
       }
     } else {
       toast.error("Error al actualizar el museo", {
@@ -443,7 +486,7 @@ function MuseoForm({ mode }) {
                         </Field>
                       </div>
                       <div className="registros-field-calendar">
-                        <label>Fecha de Nacimiento</label>
+                        <label>Fecha de Apertura</label>
                         <DayPicker
                           hideNavigation
                           animate
@@ -523,16 +566,27 @@ function MuseoForm({ mode }) {
                                         {redCatalogo?.nombre || "Desconocido"}
                                       </h3>
                                       {estaEditando ? (
-                                        <input
-                                          type="text"
-                                          value={red.mhrs_link}
-                                          onChange={(e) =>
-                                            handleCambiarLinkRedExistente(
-                                              red.mhrs_id,
-                                              e.target.value
-                                            )
-                                          }
-                                        />
+                                        <>
+                                          <input
+                                            type="text"
+                                            value={red.mhrs_link}
+                                            onChange={(e) =>
+                                              handleCambiarLinkRedExistente(
+                                                red.mhrs_id,
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          {redCatalogo?.validador &&
+                                            red.link &&
+                                            !redCatalogo.validador(
+                                              red.link
+                                            ) && (
+                                              <ErrorCampo
+                                                mensaje={`Link inválido para ${red.nombre}`}
+                                              />
+                                            )}
+                                        </>
                                       ) : (
                                         <span>{red.mhrs_link}</span>
                                       )}
@@ -578,6 +632,7 @@ function MuseoForm({ mode }) {
                               })}
 
                               {redesTemporal.map((red) => {
+                                const redCatalogo = REDES_SOCIALES[red.id];
                                 const estaEditando =
                                   redesTemporalEditando.includes(red.id);
 
@@ -589,23 +644,34 @@ function MuseoForm({ mode }) {
                                     <div className="registros-redes-item-info">
                                       <h3>{red.nombre}</h3>
                                       {estaEditando ? (
-                                        <input
-                                          type="text"
-                                          placeholder="Ingresa el link"
-                                          value={red.link}
-                                          onChange={(e) => {
-                                            const nuevasRedes =
-                                              redesTemporal.map((r) =>
-                                                r.id === red.id
-                                                  ? {
-                                                      ...r,
-                                                      link: e.target.value,
-                                                    }
-                                                  : r
-                                              );
-                                            setRedesTemporal(nuevasRedes);
-                                          }}
-                                        />
+                                        <>
+                                          <input
+                                            type="text"
+                                            placeholder="Ingresa el link"
+                                            value={red.link}
+                                            onChange={(e) => {
+                                              const nuevasRedes =
+                                                redesTemporal.map((r) =>
+                                                  r.id === red.id
+                                                    ? {
+                                                        ...r,
+                                                        link: e.target.value,
+                                                      }
+                                                    : r
+                                                );
+                                              setRedesTemporal(nuevasRedes);
+                                            }}
+                                          />
+                                          {redCatalogo?.validador &&
+                                            red.link &&
+                                            !redCatalogo.validador(
+                                              red.link
+                                            ) && (
+                                              <ErrorCampo
+                                                mensaje={`Link inválido para ${red.nombre}`}
+                                              />
+                                            )}
+                                        </>
                                       ) : (
                                         <span>{red.link || "Sin link"}</span>
                                       )}
@@ -776,17 +842,17 @@ function MuseoForm({ mode }) {
                             />
                           </div>
                         </div>
-                        {imagePreview && (
+                        {imagePreview ? (
                           <div className="foto-preview">
-                            {errors.museofrmfoto && touched.museofrmfoto ? (
-                              <ErrorCampo mensaje={errors.museofrmfoto} />
-                            ) : (
-                              <img
-                                src={imagePreview}
-                                alt="Foto de Perfil"
-                                id="foto-preview"
-                              />
-                            )}
+                            <img
+                              src={imagePreview}
+                              alt="Preview"
+                              id="foto-preview"
+                            />
+                          </div>
+                        ) : (
+                          <div className="foto-preview">
+                            <p>No se ha seleccionado ninguna imagen</p>
                           </div>
                         )}
                       </div>

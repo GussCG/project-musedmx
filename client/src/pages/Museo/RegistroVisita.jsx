@@ -12,23 +12,48 @@ import { motion } from "framer-motion";
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const iconosServicios = {
-  Tienda: Icons.tiendaIcon,
-  WiFi: Icons.wifiIcon,
-  Guardarropa: Icons.guardarropaIcon,
-  Biblioteca: Icons.bilbiotecaIcon,
-  Estacionamiento: Icons.estacionamientoIcon,
-  VisitaGuiada: Icons.visitaGuiadaIcon,
-  ServicioMédico: Icons.medicoIcon,
-  WC: Icons.banioIcon,
-  SilladeRuedas: Icons.sillaRuedasIcon,
-  Cafeteria: Icons.cafeteriaIcon,
-  Elevador: Icons.elevadorIcon,
-  Braille: Icons.brailleIcon,
-  LenguajedeSenas: Icons.lenguajeDeSenasIcon,
-};
+import { SERVICIOS, PREGUNTAS_RESPUESTAS } from "../../constants/catalog";
+import useServicio from "../../hooks/Encuesta/useServicio";
+import usePreguntas from "../../hooks/Encuesta/usePreguntas";
+import useEncuesta from "../../hooks/Encuesta/useEncuesta";
+import { useParams } from "react-router";
+import { useAuth } from "../../context/AuthProvider";
 
 function RegistroVisita() {
+  const { servicios, loading, error } = useServicio();
+  const { museoId } = useParams();
+  const { user } = useAuth();
+
+  const {
+    preguntas,
+    loading: loadingPreguntas,
+    error: errorPreguntas,
+  } = usePreguntas({
+    encuestaId: 1,
+  });
+
+  const {
+    contestada,
+    respuestas: respuestasPreguntas,
+    respuestasServicios: serviciosSeleccionados,
+  } = useEncuesta({
+    encuestaId: 1,
+    museoId: museoId,
+    correo: user.email,
+  });
+
+  const respuestasEncuesta = {};
+  if (respuestasPreguntas && respuestasPreguntas.length > 0) {
+    respuestasPreguntas.forEach((respuesta) => {
+      respuestasEncuesta[`registrosfrmp${respuesta?.preg_id}`] =
+        respuesta?.res_respuesta;
+    });
+  } else if (preguntas && preguntas.length > 0) {
+    preguntas.forEach((pregunta) => {
+      respuestasEncuesta[`registrosfrmp${pregunta.preg_id}`] = "";
+    });
+  }
+
   // Variables para la reseña
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
@@ -181,68 +206,6 @@ function RegistroVisita() {
     }
   };
 
-  // Variables para guardar las respuestas de la encuesta
-  const [preguntas, setPreguntas] = useState({
-    registrosfrmp1: "",
-    registrosfrmp2: "",
-    registrosfrmp3: "",
-    registrosfrmp4: "",
-    registrosfrmp5: "",
-  });
-  const [servicios, setServicios] = useState([]);
-
-  // Variable que tomamos del backend para saber si la encuesta ya fue contestada o no
-  const [encuestaContestada, setEncuestaContestada] = useState(false);
-  const [respuestasGuardadas, setRespuestasGuardadas] = useState(null);
-
-  // Hacemos una petición al backend para saber si la encuesta ya fue contestada
-  useEffect(() => {
-    // Hacemos la petición al backend con axios
-    setEncuestaContestada(true);
-    // axios.get("/encuestaContestada").then((res) => {
-    //   setEncuestaContestada(res.data.encuestaContestada);
-    // });
-  }, []);
-
-  // Si la encuesta ya fue contestada, traemos las respuestas guardadas
-  useEffect(() => {
-    if (encuestaContestada) {
-      // Hacemos la petición al backend con axios
-      setRespuestasGuardadas({
-        registrosfrmp1: "5",
-        registrosfrmp2: "1",
-        registrosfrmp3: "1",
-        registrosfrmp4: "4",
-        registrosfrmp5: "2",
-        registrosfrmservicios: [
-          "Tienda",
-          "WiFi",
-          "Guardarropa",
-          "Biblioteca",
-          "Estacionamiento",
-          "Braille",
-        ],
-      });
-      // axios.get("/respuestasGuardadas").then((res) => {
-      //   setRespuestasGuardadas(res.data.respuestasGuardadas);
-      // });
-    }
-  }, [encuestaContestada]);
-
-  useEffect(() => {
-    if (respuestasGuardadas) {
-      console.log(respuestasGuardadas);
-      setPreguntas({
-        registrosfrmp1: respuestasGuardadas?.registrosfrmp1 || "",
-        registrosfrmp2: respuestasGuardadas?.registrosfrmp2 || "",
-        registrosfrmp3: respuestasGuardadas?.registrosfrmp3 || "",
-        registrosfrmp4: respuestasGuardadas?.registrosfrmp4 || "",
-        registrosfrmp5: respuestasGuardadas?.registrosfrmp5 || "",
-      });
-      setServicios(respuestasGuardadas.registrosfrmservicios || []);
-    }
-  }, [respuestasGuardadas]);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -257,7 +220,7 @@ function RegistroVisita() {
             initialValues={{
               regresfrmfecVis: diaSelected,
               regresfrmcomentario: "",
-              regresfrmrating: "",
+              regresfrmrating: 0,
               regresfrmfotos: uploadedFiles.length ? uploadedFiles : [],
             }}
             onSubmit={async (values) => {
@@ -301,18 +264,6 @@ function RegistroVisita() {
                     classNames={{ chevron: "calendar-chevron" }}
                   />
                 </div>
-                {/* <div className="registros-field">
-              <Field
-                type="date"
-                id="regres-frm-fecVis"
-                name="regresfrmfecVis"
-                placeholder="Fecha de Visita"
-                required
-              />
-              <label htmlFor="regres-frm-fecVis" className="frm-label">
-                Fecha de Visita
-              </label>
-            </div> */}
                 <div className="registros-field">
                   <textarea
                     id="regres-frm-comentario"
@@ -445,12 +396,8 @@ function RegistroVisita() {
           <h1>Encuesta</h1>
           <Formik
             initialValues={{
-              registrosfrmp1: preguntas.registrosfrmp1 || "",
-              registrosfrmp2: preguntas.registrosfrmp2 || "",
-              registrosfrmp3: preguntas.registrosfrmp3 || "",
-              registrosfrmp4: preguntas.registrosfrmp4 || "",
-              registrosfrmp5: preguntas.registrosfrmp5 || "",
-              registrosfrmservicios: servicios || [],
+              ...respuestasEncuesta,
+              registrosfrmservicios: serviciosSeleccionados || [],
             }}
             enableReinitialize
             onSubmit={(values) => {
@@ -460,148 +407,70 @@ function RegistroVisita() {
             {({ setFieldValue, values }) => (
               <Form id="registros-encuesta-form">
                 <p id="encuesta-contestada">
-                  {encuestaContestada
+                  {contestada
                     ? "Ya has contestado la encuesta. Puedes hacer cambios en tus respuestas"
                     : "Responde la encuesta para ayudar a otros visitantes"}
                 </p>
-                <div className="registros-field">
-                  <Field
-                    as="select"
-                    name="registrosfrmp1"
-                    className="registros-frm-select"
-                    value={values.registrosfrmp1}
-                    onChange={(e) =>
-                      setFieldValue("registrosfrmp1", e.target.value)
-                    }
-                    required
-                  >
-                    <option value="" disabled>
-                      ¿Qué tan interesante es el museo?
-                    </option>
-                    <option value="5">Muy interesante</option>
-                    <option value="4">Interesante</option>
-                    <option value="3">Medio interesante</option>
-                    <option value="2">Aburrido</option>
-                    <option value="1">Muy aburrido</option>
-                  </Field>
-                </div>
-                <div className="registros-field">
-                  <Field
-                    as="select"
-                    name="registrosfrmp2"
-                    className="registros-frm-select"
-                    value={values.registrosfrmp2}
-                    onChange={(e) =>
-                      setFieldValue("registrosfrmp2", e.target.value)
-                    }
-                    required
-                  >
-                    <option value="" disabled>
-                      ¿Cómo estaba el museo?
-                    </option>
-                    <option value="1">Limpio</option>
-                    <option value="0">Sucio</option>
-                  </Field>
-                </div>
-                <div className="registros-field">
-                  <Field
-                    as="select"
-                    name="registrosfrmp3"
-                    className="registros-frm-select"
-                    value={values.registrosfrmp3}
-                    onChange={(e) =>
-                      setFieldValue("registrosfrmp3", e.target.value)
-                    }
-                    required
-                  >
-                    <option value="" disabled>
-                      ¿Es fácil de entender el museo?
-                    </option>
-                    <option value="1">Sí</option>
-                    <option value="0">No</option>
-                  </Field>
-                </div>
-                <div className="registros-field">
-                  <Field
-                    as="select"
-                    name="registrosfrmp4"
-                    className="registros-frm-select"
-                    value={values.registrosfrmp4}
-                    onChange={(e) =>
-                      setFieldValue("registrosfrmp4", e.target.value)
-                    }
-                    required
-                  >
-                    <option value="" disabled>
-                      ¿Qué tan costosa fue la entrada al museo?
-                    </option>
-                    <option value="4">Muy costosa</option>
-                    <option value="3">Costosa</option>
-                    <option value="2">Barata</option>
-                    <option value="1">Gratis</option>
-                  </Field>
-                </div>
-                <div className="registros-field">
-                  <Field
-                    as="select"
-                    name="registrosfrmp5"
-                    className="registros-frm-select"
-                    value={values.registrosfrmp5}
-                    onChange={(e) =>
-                      setFieldValue("registrosfrmp5", e.target.value)
-                    }
-                    required
-                  >
-                    <option value="" disabled>
-                      ¿Para qué público está dirigido?
-                    </option>
-                    <option value="3">Niños</option>
-                    <option value="2">Toda la familia</option>
-                    <option value="1">Solo Adultos</option>
-                  </Field>
-                </div>
+                {preguntas.map((pregunta) => (
+                  <div className="registros-field" key={pregunta.preg_id}>
+                    <Field
+                      as="select"
+                      name={`registrosfrmp${pregunta.preg_id}`}
+                      className="registros-frm-select"
+                      value={values[`registrosfrmp${pregunta.preg_id}`]}
+                      onChange={(e) =>
+                        setFieldValue(
+                          `registrosfrmp${pregunta.preg_id}`,
+                          e.target.value
+                        )
+                      }
+                      required
+                    >
+                      <option value="" disabled>
+                        {pregunta.pregunta}
+                      </option>
+                      {PREGUNTAS_RESPUESTAS[pregunta.preg_id]?.respuestas.map(
+                        (respuesta) => (
+                          <option
+                            key={respuesta.respuesta}
+                            value={respuesta.valor}
+                          >
+                            {respuesta.respuesta}
+                          </option>
+                        )
+                      )}
+                    </Field>
+                  </div>
+                ))}
                 <div className="registros-chks">
                   <fieldset>
                     <legend>
                       Selecciona los servicios con los que cuenta el museo
                     </legend>
                     <div id="servicios-chks">
-                      {[
-                        "Tienda",
-                        "WiFi",
-                        "Guardarropa",
-                        "Biblioteca",
-                        "Estacionamiento",
-                        "VisitaGuiada",
-                        "ServicioMédico",
-                        "WC",
-                        "SilladeRuedas",
-                        "Cafeteria",
-                        "Elevador",
-                        "Braille",
-                        "LenguajedeSenas",
-                      ].map((servicio) => (
+                      {servicios.map((servicio) => (
                         <label
-                          title={servicio}
+                          title={servicio.ser_nombre}
                           className="registros-chk-serv"
-                          key={servicio}
+                          key={servicio.ser_id}
                         >
                           <Field
                             type="checkbox"
                             name="registrosfrmservicios"
-                            value={servicio}
+                            value={servicio.ser_id}
                             checked={values.registrosfrmservicios.includes(
-                              servicio
+                              servicio.ser_id
                             )}
                             onChange={(e) => {
                               const selectedServices = [
                                 ...values.registrosfrmservicios,
                               ];
                               if (e.target.checked) {
-                                selectedServices.push(servicio);
+                                selectedServices.push(servicio.ser_id);
                               } else {
-                                const index =
-                                  selectedServices.indexOf(servicio);
+                                const index = selectedServices.indexOf(
+                                  servicio.ser_id
+                                );
                                 if (index > -1) {
                                   selectedServices.splice(index, 1);
                                 }
@@ -614,8 +483,8 @@ function RegistroVisita() {
                           />
                           <span>
                             <img
-                              src={iconosServicios[servicio]}
-                              alt={servicio}
+                              src={SERVICIOS[servicio.ser_id].icon}
+                              alt={servicio.ser_nombre}
                             />
                           </span>
                         </label>
@@ -627,11 +496,7 @@ function RegistroVisita() {
                   className="button"
                   type="submit"
                   id="registros-button"
-                  value={
-                    encuestaContestada
-                      ? "Actualizar Encuesta"
-                      : "Enviar Encuesta"
-                  }
+                  value={contestada ? "Actualizar Encuesta" : "Enviar Encuesta"}
                 />
               </Form>
             )}
