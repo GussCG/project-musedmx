@@ -487,6 +487,7 @@ function MuseoForm({ mode }) {
                       </div>
                       <div className="registros-field-calendar">
                         <label>Fecha de Apertura</label>
+                        <label>Fecha de Apertura</label>
                         <DayPicker
                           hideNavigation
                           animate

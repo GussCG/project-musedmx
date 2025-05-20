@@ -265,3 +265,22 @@ export const getMuseosPopulares = async (req, res) => {
     handleHttpError(res, "ERROR_GET_MUSEOS_POPULARES", error);
   }
 };
+
+export const deleteMuseo = async (req, res) => {
+  try {
+    const museo = await Museo.deleteMuseo(req.body.mus_id);
+    if (!museo) {
+      return res.status(404).json({
+        success: false,
+        message: "Museo no encontrado",
+      });
+    }
+    res.json({
+      success: true,
+      message: "Museo eliminado",
+      museo,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_DELETE_MUSEO", error);
+  }
+};

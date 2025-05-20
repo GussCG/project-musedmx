@@ -10,7 +10,7 @@ export const useUsuario = () => {
     try {
       const response = await UsuarioService.registrarUsuario(usuario);
       return response;
-    } catch (error) {
+    } catch (error) { 
       setError(error);
       return null;
     } finally {
@@ -20,7 +20,7 @@ export const useUsuario = () => {
 
   // Editar Usuario
   const editarUsuario = async (usuario) => {
-    console.log(usuario);
+    // console.log(usuario);
     setError(null);
     try {
       const response = await UsuarioService.editarUsuario(usuario);
@@ -33,7 +33,21 @@ export const useUsuario = () => {
     }
   };
 
-  // Registrar Moderador
+  // Recuperar contraseña
+  const recuperarContrasena = async (usuario) => {
+	setError(null);
+	try {
+	  const response = await UsuarioService.recuperarContrasena(usuario);
+	  return response;
+	} catch (error) {
+	  setError(error);
+	  return null;
+	} finally {
+	  setError(null);
+	}
+  };
+
+  // Registrar Moderador (maybe se mueve a useModeradores)
   const registrarModerador = async (usuario) => {
     setError(null);
     console.log(usuario);

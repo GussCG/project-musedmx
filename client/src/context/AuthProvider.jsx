@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = "http://localhost:3000/api/auth/";
+
 // Crear el contexto de autenticación
 const AuthContext = createContext();
 
@@ -11,7 +13,15 @@ function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     // Verificar si hay un usuario en el localStorage
     const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
+    try {
+      return storedUser && storedUser !== "undefined"
+        ? JSON.parse(storedUser)
+        : null;
+    } catch (e) {
+      console.error("Error al parsear el usuario del localStorage:", e);
+      localStorage.removeItem("user"); // limpia lo dañado
+      return null;
+    }
   });
   // Estado del tipo de usuario
   // 1: Usuario normal, 2: Administrador, 3: Moderador
@@ -58,7 +68,7 @@ function AuthProvider({ children }) {
 
   // Función para iniciar sesión
   const login = async (userData) => {
-    // Logicar para iniciar sesión pero sin el backend
+    /* // Logica para iniciar sesión pero sin el backend
     setUser(userPrueba);
     localStorage.setItem("user", JSON.stringify(userPrueba));
     localStorage.setItem("tipoUsuario", tiposUsuario[userPrueba.tipoUsuario]);
@@ -70,63 +80,94 @@ function AuthProvider({ children }) {
       localStorage.getItem("redirectPath") || `/${tipoUsuario}`;
     localStorage.removeItem("redirectPath");
 
-    navigate(redirectPath);
-    // try {
-    //   setIsLoading(true);
-    //   setError(null); // Limpiar errores
-    //   // Ruta para iniciar sesión (Backend)
-    //   const response = await axios.post("/api/auth/login", userData);
-    //   setUser(response.data);
-    //   setTipoUsuario(tiposUsuario[response.data.tipoUsuario]);
-    //   localStorage.setItem("user", JSON.stringify(response.data)); // Guardar el usuario en el localStorage
-    // } catch (error) {
-    //   console.error(error);
-    //   setError(error);
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    navigate(redirectPath); */
+    try {
+      setIsLoading(true);
+      setError(null); // Limpiar errores
+
+      // Ruta para iniciar sesión (Backend)
+      const response = await axios.post(API_URL + "login", userData, {
+        withCredentials: true,
+      });
+
+      const user = response.data; // Desestructurar la respuesta del backend
+
+      setUser(user);
+      setTipoUsuario(tiposUsuario[user.tipoUsuario]);
+
+      localStorage.setItem("user", JSON.stringify(response.data)); // Guardar el usuario en el localStorage
+      localStorage.setItem(
+        "tipoUsuario",
+        tiposUsuario[response.data.tipoUsuario]
+      ); // Guardar el tipo de usuario en el localStorage
+      setIsLogginPopupOpen(false); // Cerrar el popup
+
+      const redirectPath =
+        localStorage.getItem("redirectPath") ||
+        `/${tiposUsuario[response.data.tipoUsuario]}`;
+      localStorage.removeItem("redirectPath");
+      navigate(redirectPath);
+    } catch (error) {
+      console.error("Error de login: ", error);
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Función para cerrar sesión
   const logout = async () => {
     // Lógica para cerrar sesión pero sin el backend
-    setUser(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("tipoUsuario");
-    localStorage.removeItem("userLocation");
+    // setUser(null);
+    // localStorage.removeItem("user");
+    // localStorage.removeItem("tipoUsuario");
     // navigate("/");
-    // try {
-    //   setError(null); // Limpiar errores
-    //   // Ruta para cerrar sesión (Backend)
-    //   await axios.post("/api/auth/logout");
-    //   setUser(null);
-    //   localStorage.removeItem("user");
-    // } catch (error) {
-    //   console.error(error);
-    //   setError(error);
-    // }
+    try {
+      setError(null); // Limpiar errores
+      // Ruta para cerrar sesión (Backend)
+      await axios.post(
+        API_URL + "logout",
+        {},
+        {
+          withCredentials: true, // para que se borre la cookie
+        }
+      );
+      setUser(null);
+      localStorage.removeItem("user");
+      navigate("/"); // Redirigir a la página de inicio
+    } catch (error) {
+      console.error(error);
+      setError(error);
+    }
   };
 
   // Verificar si hay un usuario loggeado al iniciar la aplicación
   useEffect(() => {
     const checkLoggedInUser = async () => {
       try {
-        const storedUser = localStorage.getItem("user");
+        // const storedUser = localStorage.getItem("user");
 
-        if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          setTipoUsuario(tiposUsuario[parsedUser.tipoUsuario]);
-        }
+        // if (storedUser) {
+        //   const parsedUser = JSON.parse(storedUser);
+        //   setUser(parsedUser);
+        //   setTipoUsuario(tiposUsuario[parsedUser.tipoUsuario]);
+        // }
 
         // Obtener la información del usuario (Backend)
-        // const response = await axios.get("/api/auth/user");
-        // if (response.data) {
-        //   setUser(response.data);
-        //   setTipoUsuario(tiposUsuario[response.data.tipoUsuario]);
-        //   localStorage.setItem("user", JSON.stringify(response.data));
-        // localStorage.setItem("tipoUsuario", tiposUsuario[response.data.tipoUsuario]);
-        // }
+        const response = await axios.get(API_URL + "verify", {
+          withCredentials: true,
+        });
+
+        if (response.data) {
+          setUser(response.data.usuario);
+          setTipoUsuario(tiposUsuario[response.data.usuario.tipoUsuario]);
+          localStorage.setItem("user", JSON.stringify(response.data.usuario));
+          localStorage.setItem(
+            "tipoUsuario",
+            tiposUsuario[response.data.usuario.tipoUsuario]
+          );
+        }
       } catch (error) {
         console.error(error);
       } finally {

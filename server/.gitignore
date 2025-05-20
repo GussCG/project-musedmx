@@ -131,3 +131,5 @@ dist
 
 # museos-imagenes carpeta
 scripts/images
+# pruebas de carga de imagenes
+/uploads
