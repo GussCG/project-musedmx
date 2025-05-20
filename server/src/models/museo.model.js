@@ -66,6 +66,8 @@ export default class Museo {
           query += ` ORDER BY mus_nombre ASC`;
           break;
       }
+    } else {
+      query += ` ORDER BY mus_nombre ASC`;
     }
 
     // Contar total
@@ -117,29 +119,6 @@ export default class Museo {
     queryParams.push(id);
     const [rows] = await pool.query(query, queryParams);
     return rows[0];
-  }
-
-  static async create(museoData) {
-  	let query = `INSERT INTO museos (` + Object.keys(museoData).join(", ") + `) VALUES (` + Object.keys(museoData).map(() => "?").join(", ") + `)`;
-  	const queryParams = Object.values(museoData);
-  	const [result] = await pool.query(query, queryParams);
-  	if (result.affectedRows === 0) {
-  		throw new Error("Error al crear el museo");
-  	}
-  	return result;
-  }
-
-  static async findGaleriaById({ id }) {
-    const query = `
-      SELECT * FROM galeria
-      WHERE gal_mus_id = ?
-      ORDER BY RAND()
-      LIMIT 10
-      `;
-    const queryParams = [];
-    queryParams.push(id);
-    const [rows] = await pool.query(query, queryParams);
-    return rows;
   }
 
   static async findGaleriaById({ id }) {

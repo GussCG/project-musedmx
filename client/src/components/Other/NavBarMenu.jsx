@@ -11,9 +11,7 @@ import { useAuth } from "../../context/AuthProvider";
 import MenuUsuario from "../User/MenuUsuario";
 
 function NavBarMenu() {
-  const { user, login, logout } = useAuth();
-
-  const { isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   const [showMenu, setShowMenu] = useState(false);
   const menuUserRef = useRef(null);
@@ -107,7 +105,7 @@ function NavBarMenu() {
                 style={{ cursor: "pointer" }}
               >
                 <img
-                  src={user.foto || userPlaceholder}
+                  src={user.usr_foto || userPlaceholder}
                   alt="Avatar"
                   id="nav-user-img"
                 />

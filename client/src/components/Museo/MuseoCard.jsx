@@ -89,7 +89,7 @@ const MuseoCard = memo(function MuseoCard({ museo, editMode, sliderType }) {
                 </button>
               </div>
             ) : (
-              <FavoritoButton />
+              <FavoritoButton museoId={museo.id} />
             )}
             <Link
               to={`/Museos/${museo.id}`}
@@ -99,7 +99,7 @@ const MuseoCard = memo(function MuseoCard({ museo, editMode, sliderType }) {
               }}
             >
               <motion.img
-                src={buildImage(museo)}
+                src={museo.img}
                 alt={museo.nombre}
                 className="museo-card-img"
                 layoutId={`${layoutPrefix}museo-image-${museo.id}`}

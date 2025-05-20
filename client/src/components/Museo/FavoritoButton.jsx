@@ -1,18 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthProvider";
+import { useFavorito } from "../../hooks/Favorito/useFavorito";
 
-export default function FavoritoButton() {
+export default function FavoritoButton({ museoId }) {
   const { user, setIsLogginPopupOpen } = useAuth();
+  const { agregarFavorito, eliminarFavorito, verificarFavorito } =
+    useFavorito();
 
   // Estado para los checkbox de favoritos
   const [isFavorite, setIsFavorite] = useState(false);
-  const handleFavoriteChange = () => {
-    // if (!user) {
-    //     navigate('/Auth/Iniciar')
-    //     return
-    // }
 
-    // Lógica para agregar o quitar de favoritos en el backend
+  useEffect(() => {
+    const fetchFavorito = async () => {
+      if (user) {
+        const fav = await verificarFavorito(user.usr_correo, museoId);
+        setIsFavorite(fav);
+      }
+    };
+    fetchFavorito();
+  }, [user, museoId]);
+
+  const handleFavoriteChange = async () => {
+    if (!user) return;
+
+    const correo = user.usr_correo;
+
+    if (isFavorite) {
+      await eliminarFavorito(correo, museoId);
+    } else {
+      await agregarFavorito(correo, museoId);
+    }
+
     setIsFavorite(!isFavorite);
   };
 

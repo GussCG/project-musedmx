@@ -13,9 +13,7 @@ function LoginForm() {
   const { login, isLoading, error } = useAuth();
   const [shown, setShown] = useState(false);
 
-  const [errorMessage, setErrorMessage] = useState(
-    "Correo o contraseña incorrecta"
-  );
+  const [errorMessage, setErrorMessage] = useState("");
 
   const clearError = () => setErrorMessage("");
 
@@ -23,7 +21,7 @@ function LoginForm() {
     setShown(!shown);
   };
 
-//   const [password, setPassword] = useState("");
+  //   const [password, setPassword] = useState("");
 
   useEffect(() => {}, []);
 
@@ -50,7 +48,7 @@ function LoginForm() {
                   usr_contrasenia: values.login_frm_password,
                 });
               } catch (error) {
-                setErrorMessage(error.message);
+                setErrorMessage(error.response.data.message);
               } finally {
                 setSubmitting(false);
               }
@@ -64,8 +62,8 @@ function LoginForm() {
                     id="login-frm-email"
                     name="login_frm_email"
                     placeholder="Correo Electrónico"
-					onChange={handleChange}
-  					value={values.login_frm_email}
+                    onChange={handleChange}
+                    value={values.login_frm_email}
                     required
                   />
                   <label htmlFor="login-frm-email">Correo Electrónico</label>
@@ -78,8 +76,8 @@ function LoginForm() {
                     placeholder="Contraseña"
                     // onChange={(e) => setPassword(e.target.value)}
                     // value={password}
-					onChange={handleChange}
-  					value={values.login_frm_password}
+                    onChange={handleChange}
+                    value={values.login_frm_password}
                     required
                   />
                   <label htmlFor="login-frm-password">Contraseña</label>

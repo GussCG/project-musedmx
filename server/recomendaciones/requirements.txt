@@ -13,3 +13,6 @@ mlxtend==0.22.0
 # Otros
 python-multipart==0.0.6  # Para formularios FastAPI
 python-dotenv==1.0.0    # Para variables de entorno
+
+# NLTK
+nltk

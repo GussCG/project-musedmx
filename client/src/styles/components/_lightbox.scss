@@ -23,13 +23,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    position: relative;
 
     img {
-      width: 50%;
-      height: auto;
-      max-width: 100%;
-      max-height: 80vh;
-      object-fit: none;
+      max-width: 90%;
+      max-height: 90vh;
+      object-fit: contain;
+      object-position: center;
+      touch-action: none;
     }
   }
 
@@ -40,8 +42,8 @@
     width: 50px;
     height: 50px;
     border-radius: 100px;
-    background: black;
-    border: 2px solid white;
+    background: rgb(255, 255, 255);
+    border: none;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -49,19 +51,22 @@
 
     transition: all 0.3s ease-in-out;
 
+    z-index: 1000;
+
     svg {
-      width: 30px;
+      width: 50%;
       height: auto;
-      color: white;
+      color: black;
+
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
 
     &:hover {
-      background-color: white;
-      border: 2px solid black;
-
-      svg {
-        color: black;
-      }
+      transform: scale(1.1);
     }
   }
 
@@ -72,27 +77,24 @@
     width: 50px;
     height: 50px;
     border-radius: 100px;
-    border: 2px solid white;
-    background: black;
+    border: none;
+    background: rgb(255, 255, 255);
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
 
-    transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    z-index: 1000;
 
     svg {
       width: 30px;
       height: auto;
-      color: white;
-    }
+      color: rgb(0, 0, 0);
 
-    &:hover {
-      background-color: white;
-      border: 2px solid black;
+      transition: all 0.3s ease-in-out;
 
-      svg {
-        color: black;
+      &:hover {
+        transform: scale(1.2);
       }
     }
   }
@@ -105,25 +107,94 @@
     right: 20px;
   }
 
-  .image-counter {
+  .zoom-controls {
     position: absolute;
     width: auto;
-    height: 30px;
+    height: auto;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    color: white;
 
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1rem;
-    font-weight: $font-w-regular;
+    flex-direction: row;
+    gap: 10px;
+    background-color: rgb(255, 255, 255);
 
-    background-color: black;
-    border: 2px solid white;
-    padding: 30px 40px;
-    border-radius: 30px;
+    border-radius: 100px;
+
+    .left-controls,
+    .right-controls {
+      button {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 50%;
+        margin: 10px;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+
+        svg {
+          width: 50%;
+          height: auto;
+          color: black;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+            filter: drop-shadow(0 0 5px black);
+          }
+        }
+      }
+    }
+
+    .center-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 5px;
+      padding: 10px;
+
+      p {
+        padding: 10px 20px;
+        font-size: 0.8rem;
+        color: black;
+        font-weight: $font-w-regular;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+
+      button {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 50%;
+        margin: 10px 0 0 0;
+
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+
+        svg {
+          width: 50%;
+          height: auto;
+          color: black;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+            transform: rotate(270deg);
+          }
+        }
+      }
+    }
   }
 }
 

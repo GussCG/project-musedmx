@@ -11,7 +11,7 @@ import UsuarioPage from "../../components/User/UsuarioPage";
 import HeaderButtons from "../../components/User/HeaderButtons";
 
 function ProfilePage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const tipoUsuarioLabel = {
     1: "Usuario",
@@ -20,11 +20,11 @@ function ProfilePage() {
   };
 
   const formatName = (user) => {
-    return `${user.nombre} ${user.apPaterno} ${user.apMaterno}`;
+    return `${user.usr_nombre} ${user.usr_ap_paterno} ${user.usr_ap_materno}`;
   };
 
   const formatAge = (user) => {
-    const birthdate = new Date(user.fecNac);
+    const birthdate = new Date(user.usr_fecha_nac);
     const today = new Date();
     const age = today.getFullYear() - birthdate.getFullYear();
     const month = today.getMonth() - birthdate.getMonth();
@@ -44,24 +44,22 @@ function ProfilePage() {
         transition={{ duration: 0.5, type: "spring", bounce: 0.18 }}
       >
         <div id="header-image">
-          <img src={user.foto || userPlaceholder} alt="Header" />
+          <img src={user.usr_foto || userPlaceholder} alt="Header" />
         </div>
         <div id="header-user-info">
           <h1>{formatName(user)}</h1>
-          <p id="light">{tipoUsuarioLabel[user.tipoUsuario]}</p>
+          <p id="light">{tipoUsuarioLabel[user.usr_tipo]}</p>
           <p id="semibold">{formatAge(user)} años</p>
-          {user.tipoUsuario === 1 ? (
-            <p id="regular">Museos visitados: 3</p>
-          ) : null}
+          {user.usr_tipo === 1 ? <p id="regular">Museos visitados: 3</p> : null}
         </div>
-        <HeaderButtons tipoUsuario={user.tipoUsuario} />
+        <HeaderButtons tipoUsuario={user.usr_tipo} />
       </motion.header>
 
-      {user.tipoUsuario === 1 && <UsuarioPage />}
+      {user.usr_tipo === 1 && <UsuarioPage />}
 
-      {user.tipoUsuario === 2 && <AdminPage />}
+      {user.usr_tipo === 2 && <AdminPage />}
 
-      {user.tipoUsuario === 3 && <ModPage />}
+      {user.usr_tipo === 3 && <ModPage />}
     </>
   );
 }

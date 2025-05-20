@@ -15,7 +15,7 @@ export function useMuseo(museoId) {
       const endpoint = `${BACKEND_URL}/api/museos/detalle/${id}`;
       const response = await axios.get(endpoint);
 
-      const museoData = new Museo(response.data.museo[0]);
+      const museoData = new Museo(response.data.museo);
       setMuseo(museoData);
       setLoading(false);
     } catch (err) {

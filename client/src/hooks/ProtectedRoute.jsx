@@ -9,7 +9,7 @@ function ProtectedRoute({ allowedRoles }) {
     return <Navigate to="/Auth/Iniciar" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.tipoUsuario)) {
+  if (allowedRoles && !allowedRoles.includes(user.usr_tipo)) {
     return <Navigate to="/" replace />;
   }
 

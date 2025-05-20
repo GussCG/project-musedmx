@@ -9,8 +9,9 @@ export const useUsuario = () => {
     setError(null);
     try {
       const response = await UsuarioService.registrarUsuario(usuario);
+      console.log("Response de registrarUsuario", response);
       return response;
-    } catch (error) { 
+    } catch (error) {
       setError(error);
       return null;
     } finally {
@@ -35,16 +36,16 @@ export const useUsuario = () => {
 
   // Recuperar contraseña
   const recuperarContrasena = async (usuario) => {
-	setError(null);
-	try {
-	  const response = await UsuarioService.recuperarContrasena(usuario);
-	  return response;
-	} catch (error) {
-	  setError(error);
-	  return null;
-	} finally {
-	  setError(null);
-	}
+    setError(null);
+    try {
+      const response = await UsuarioService.recuperarContrasena(usuario);
+      return response;
+    } catch (error) {
+      setError(error);
+      return null;
+    } finally {
+      setError(null);
+    }
   };
 
   // Registrar Moderador (maybe se mueve a useModeradores)

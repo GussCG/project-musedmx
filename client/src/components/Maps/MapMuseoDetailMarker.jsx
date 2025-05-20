@@ -95,10 +95,10 @@ const MapMuseoDetailMarker = React.memo(({ museo, isActive, onActivate }) => {
                   <div className="info-window-content">
                     <div className="info-window-img">
                       <img
-                        src={buildImage(museo)}
+                        src={museo.img}
                         alt={museo.nombre}
                         className="info-window-image"
-                        loading="lazy"
+                        loading="auto"
                       />
 
                       <div className="info-window-img-overlay">

@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios` (
 -- UNIQUE INDEX `correo` (`usr_correo` ASC) VISIBLE
   ) ENGINE=InnoDB;
 
+SELECT * FROM usuarios;
+DELETE FROM usuarios WHERE usr_correo = "gusester2002@gmail.com";
+
 -- -----------------------------------------------------
 -- Table `musedmx`.`administrador`
 -- -----------------------------------------------------
@@ -421,7 +424,19 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`foto_resenia` (
 	  ON UPDATE CASCADE
 --  INDEX `id_Historial` (`f_res_id_res` ASC) VISIBLE
   ) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- Table `musedmx`.`encuesta`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `musedmx`.`encuesta` (
+  `enc_cve` INT NOT NULL AUTO_INCREMENT,
+  `enc_nom` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`enc_cve`)
+  ) ENGINE=InnoDB;
   
+-- DROP TABLE encuesta;
+SELECT * FROM encuesta;
+
 -- -----------------------------------------------------
 -- Table `musedmx`.`museos_has_encuesta`
 -- -----------------------------------------------------
@@ -441,22 +456,10 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos_has_encuesta` (
 	  ON UPDATE CASCADE
 --  INDEX `fk_museos_has_servicios_servicios1_idx` (`servicios_ser_cve` ASC) VISIBLE,
 --  INDEX `fk_museos_has_servicios_museos1_idx` (`museos_mus_id` ASC) VISIBLE
-  );
+  ) ENGINE=InnoDB;
   
   -- DROP TABLE museos_has_encuesta;
 SELECT * FROM museos_has_encuesta;
-
--- -----------------------------------------------------
--- Table `musedmx`.`encuesta`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `musedmx`.`encuesta` (
-  `enc_cve` INT NOT NULL AUTO_INCREMENT,
-  `enc_nom` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`enc_cve`)
-  ) ENGINE=InnoDB;
-  
--- DROP TABLE encuesta;
-SELECT * FROM encuesta;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`preguntas`
@@ -472,7 +475,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`preguntas` (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 --  INDEX `fk_preguntas_encuesta1_idx` (`encuesta_enc_cve` ASC) VISIBLE
-  );
+  ) ENGINE=InnoDB;
   
 -- DROP TABLE preguntas;
 SELECT * FROM preguntas;
@@ -597,6 +600,9 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`calificaciones` (
 	  ON DELETE CASCADE
 	  ON UPDATE CASCADE
   ) ENGINE=InnoDB;
+    
+SHOW CREATE TABLE musedmx.visitas;
+SHOW CREATE TABLE musedmx.respuestas;
     
 -- DROP TABLE museos_has_servicios;
 

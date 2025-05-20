@@ -164,11 +164,13 @@ import { IoIosArrowForward } from "react-icons/io";
 
 import { AiOutlineGlobal } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa6";
+import { FaMinus } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import { MdCheck } from "react-icons/md";
 
 import { LiaSearchLocationSolid } from "react-icons/lia";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { RiResetLeftFill } from "react-icons/ri";
 
 const Icons = {
   estrellaIcon,
@@ -281,10 +283,12 @@ const Icons = {
   IoMail,
   AiOutlineGlobal,
   FaPlus,
+  FaMinus,
   MdEdit,
   MdCheck,
   LiaSearchLocationSolid,
   IoMdArrowDropdown,
+  RiResetLeftFill,
 };
 
 export default Icons;

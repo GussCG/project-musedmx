@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const API_URL = "http://localhost:3000/api/auth/";
+import { BACKEND_URL } from "../constants/api";
 
 // Crear el contexto de autenticación
 const AuthContext = createContext();
@@ -23,28 +22,8 @@ function AuthProvider({ children }) {
       return null;
     }
   });
-  // Estado del tipo de usuario
-  // 1: Usuario normal, 2: Administrador, 3: Moderador
 
   const navigate = useNavigate();
-
-  // Hacer un usuario de pruebas
-  const userPrueba = {
-    id: 1,
-    nombre: "Juan",
-    apPaterno: "Perez",
-    apMaterno: "Gonzalez",
-    email: "mail@mail.com",
-    tipoUsuario: 2,
-    fecNac: "2002-09-30",
-    tel: "+525527167255",
-    foto: "https://a.espncdn.com/i/headshots/nba/players/full/3975.png",
-
-    //Preferencias
-    tematicas: ["Arte", "Antropología", "Historia"],
-    tipo_costo: "A veces gratis",
-    rango_costo: [10, 100],
-  };
 
   // Tipos de usuario
   const tiposUsuario = {
@@ -54,9 +33,7 @@ function AuthProvider({ children }) {
     3: "Mod",
   };
 
-  const [tipoUsuario, setTipoUsuario] = useState(
-    tiposUsuario[userPrueba.tipoUsuario] || "No registrado"
-  );
+  const [tipoUsuario, setTipoUsuario] = useState("");
 
   // Gestionar el estado de carga
   const [isLoading, setIsLoading] = useState(true);
@@ -68,45 +45,41 @@ function AuthProvider({ children }) {
 
   // Función para iniciar sesión
   const login = async (userData) => {
-    /* // Logica para iniciar sesión pero sin el backend
-    setUser(userPrueba);
-    localStorage.setItem("user", JSON.stringify(userPrueba));
-    localStorage.setItem("tipoUsuario", tiposUsuario[userPrueba.tipoUsuario]);
-    setTipoUsuario(tiposUsuario[userPrueba.tipoUsuario]);
-    setIsLogginPopupOpen(false); // Cerrar el popup
-
-    // Obtenemos la ruta guardada o redirigimos a la página principal
-    const redirectPath =
-      localStorage.getItem("redirectPath") || `/${tipoUsuario}`;
-    localStorage.removeItem("redirectPath");
-
-    navigate(redirectPath); */
     try {
       setIsLoading(true);
       setError(null); // Limpiar errores
 
       // Ruta para iniciar sesión (Backend)
-      const response = await axios.post(API_URL + "login", userData, {
+      const endpoint = `${BACKEND_URL}/api/auth/login`;
+      const response = await axios.post(endpoint, userData, {
         withCredentials: true,
       });
 
-      const user = response.data; // Desestructurar la respuesta del backend
+      const user = response.data.usuario; // Desestructurar la respuesta del backend
 
       setUser(user);
-      setTipoUsuario(tiposUsuario[user.tipoUsuario]);
+      setTipoUsuario(tiposUsuario[user.usr_tipo]);
 
-      localStorage.setItem("user", JSON.stringify(response.data)); // Guardar el usuario en el localStorage
-      localStorage.setItem(
-        "tipoUsuario",
-        tiposUsuario[response.data.tipoUsuario]
-      ); // Guardar el tipo de usuario en el localStorage
+      localStorage.setItem("user", JSON.stringify(user)); // Guardar el usuario en el localStorage
+      localStorage.setItem("tipoUsuario", tiposUsuario[user.usr_tipo]); // Guardar el tipo de usuario en el localStorage
       setIsLogginPopupOpen(false); // Cerrar el popup
+      let redirectPath = "/"; // Ruta por defecto
 
-      const redirectPath =
-        localStorage.getItem("redirectPath") ||
-        `/${tiposUsuario[response.data.tipoUsuario]}`;
-      localStorage.removeItem("redirectPath");
-      navigate(redirectPath);
+      switch (user.usr_tipo) {
+        case 1:
+          redirectPath = "/Usuario";
+          break;
+        case 2:
+          redirectPath = "/Admin";
+          break;
+        case 3:
+          redirectPath = "/Mod";
+          break;
+        default:
+          redirectPath = "/";
+      }
+      console.log("Redirigiendo a:", redirectPath);
+      navigate(redirectPath); // Redirigir a la ruta correspondiente
     } catch (error) {
       console.error("Error de login: ", error);
       setError(error);
@@ -118,16 +91,12 @@ function AuthProvider({ children }) {
 
   // Función para cerrar sesión
   const logout = async () => {
-    // Lógica para cerrar sesión pero sin el backend
-    // setUser(null);
-    // localStorage.removeItem("user");
-    // localStorage.removeItem("tipoUsuario");
-    // navigate("/");
     try {
       setError(null); // Limpiar errores
       // Ruta para cerrar sesión (Backend)
+      const endpoint = `${BACKEND_URL}/api/auth/logout`;
       await axios.post(
-        API_URL + "logout",
+        endpoint,
         {},
         {
           withCredentials: true, // para que se borre la cookie
@@ -146,16 +115,9 @@ function AuthProvider({ children }) {
   useEffect(() => {
     const checkLoggedInUser = async () => {
       try {
-        // const storedUser = localStorage.getItem("user");
-
-        // if (storedUser) {
-        //   const parsedUser = JSON.parse(storedUser);
-        //   setUser(parsedUser);
-        //   setTipoUsuario(tiposUsuario[parsedUser.tipoUsuario]);
-        // }
-
         // Obtener la información del usuario (Backend)
-        const response = await axios.get(API_URL + "verify", {
+        const endpoint = `${BACKEND_URL}/api/auth/verify`;
+        const response = await axios.get(endpoint, {
           withCredentials: true,
         });
 

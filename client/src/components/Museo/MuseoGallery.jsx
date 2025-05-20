@@ -7,16 +7,16 @@ import LoadingIndicator from "../Other/LoadingIndicator";
 function MuseoGallery({ images, loading }) {
   const lightbox = useLightBox(images);
 
-  const galeria = useMemo(() => {
+  const imagesMemo = useMemo(() => {
     return images.map((image) => ({
-      src: buildImageGaleria(image),
+      src: image.gal_foto,
     }));
   }, [images]);
 
   return (
     <>
       <LightBox
-        images={galeria}
+        images={imagesMemo}
         isOpen={lightbox.isOpen}
         currentIndex={lightbox.currentIndex}
         closeLightBox={lightbox.closeLightBox}
@@ -34,14 +34,14 @@ function MuseoGallery({ images, loading }) {
             className={`museo-section-3-galeria count-${images.length}`}
             // onClick={openLightBox}
           >
-            {images.map((image, index) => (
+            {imagesMemo.map((image, index) => (
               <div
                 key={index}
                 className={`museo-galeria-foto foto-${index + 1}`}
                 onClick={() => lightbox.openLightBox(index)}
               >
                 <img
-                  src={buildImageGaleria(image)}
+                  src={image.src}
                   alt={`Foto ${index + 1}`}
                   className="gallery_img"
                   loading="lazy"

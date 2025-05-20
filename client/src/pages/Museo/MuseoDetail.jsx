@@ -176,7 +176,7 @@ function MuseoDetail() {
                       <Skeleton width={550} height={250} />
                     ) : (
                       <img
-                        src={buildImage(museoInfo)}
+                        src={museoInfo.img || museoPlaceholder}
                         alt={museoInfo.nombre}
                         className="museo-image"
                       />

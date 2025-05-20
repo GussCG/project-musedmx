@@ -175,7 +175,7 @@ function CercaDeMi({ userLocation, museosMostrados, radioKM, travelMode }) {
                       <div className="museo-list-item-img">
                         <Link to={`/Museos/${museo.id}`}>
                           <img
-                            src={buildImage(museo) || foto_default}
+                            src={museo.img || foto_default}
                             alt={museo.nombre}
                           />
                         </Link>

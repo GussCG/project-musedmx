@@ -17,10 +17,11 @@ import { useAuth } from "../../context/AuthProvider";
 
 function MenuUsuario({ className }) {
   const { user, logout, tipoUsuario } = useAuth();
+  console.log(tipoUsuario);
   const { isDarkMode, toggleTheme, isRetroMode } = useTheme();
 
   const formatName = (user) => {
-    return `${user.nombre} ${user.apPaterno} ${user.apMaterno}`;
+    return `${user.usr_nombre} ${user.usr_ap_paterno} ${user.usr_ap_materno}`;
   };
 
   const [modo] = isDarkMode
@@ -38,12 +39,12 @@ function MenuUsuario({ className }) {
       transition={{ duration: 0.3 }}
     >
       <div className="menu-usuario-header">
-        <img src={user?.foto || userPlaceholder} alt="Usuario" />
+        <img src={user?.usr_foto || userPlaceholder} alt="Usuario" />
         <div className="menu-usuario-header-info">
           <h1>{formatName(user) || "Nombre de Usuario"}</h1>
-          <p>{user?.email || "Correo"}</p>
-          {user?.tipoUsuario === 2 && <p>Administrador</p>}
-          {user?.tipoUsuario === 3 && <p>Moderador</p>}
+          <p>{user?.usr_correo || "Correo"}</p>
+          {user?.usr_tipo === 2 && <p>Administrador</p>}
+          {user?.usr_tipo === 3 && <p>Moderador</p>}
           <Link id="header-info-link" to={`/${tipoUsuario}/`}>
             Ver Perfil
           </Link>
@@ -59,7 +60,7 @@ function MenuUsuario({ className }) {
             Editar Perfil
           </Link>
         </div>
-        {user?.tipoUsuario === 1 && (
+        {user?.usr_tipo === 1 && (
           <div className="menu-usuario-body-item">
             <div className="menu-usuario-body-item-img-container">
               <img src={historialIcon} alt="Historial de visitas" />
@@ -70,7 +71,7 @@ function MenuUsuario({ className }) {
           </div>
         )}
 
-        {user?.tipoUsuario === 2 && (
+        {user?.usr_tipo === 2 && (
           <>
             <div className="menu-usuario-body-item">
               <div className="menu-usuario-body-item-img-container">
@@ -92,7 +93,7 @@ function MenuUsuario({ className }) {
           </>
         )}
 
-        {user?.tipoUsuario === 3 && (
+        {user?.usr_tipo === 3 && (
           <div className="menu-usuario-body-item">
             <div className="menu-usuario-body-item-img-container">
               <img src={verResIcon} alt="Historial de visitas" />

@@ -1,19 +1,15 @@
 import axios from "axios";
-
-const API_URL = "http://localhost:3000/api/auth/";
+import { BACKEND_URL } from "../constants/api";
 
 const UsuarioService = {
   // Registrar usuario
   async registrarUsuario(usuario) {
-	/* console.log("Recibe: ");
-	for (var pair of usuario.entries()) {
-		console.log(pair[0]+ ', ' + pair[1]); 
-	} */
-    const response = await axios.post(API_URL + "signup", usuario, {
-		headers: {
-		  'Content-Type': 'multipart/form-data'
-		}
-	  });
+    const endpoint = `${BACKEND_URL}/api/auth/signup`;
+    const response = await axios.post(endpoint, usuario, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 
@@ -30,17 +26,17 @@ const UsuarioService = {
 
   // Recuperar contraseña
   async recuperarContrasena(usuario) {
-	const response = await axios.post(API_URL + "recuperarContrasena", usuario);
-	return response.data;
+    const response = await axios.post(API_URL + "recuperarContrasena", usuario);
+    return response.data;
   },
 
   // Login
   // Aqui deberia estar el login y el logout cuando este el backend mientras en el AuthProvider para pruebas
   async login(usuario) {
     const response = await axios.post(API_URL + "login", usuario);
-	// { usr_correo, usr_contrasenia });
-	localStorage.setItem('token', res.data.token);
-	return response.data;
+    // { usr_correo, usr_contrasenia });
+    localStorage.setItem("token", res.data.token);
+    return response.data;
   },
 
   // Logout
