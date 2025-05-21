@@ -618,11 +618,11 @@ SELECT * from tematicas;
 alter table usuarios modify COLUMN usr_telefono varchar(15);
 describe usuarios;
 
-drop table auditorias;
-drop trigger trg_insert_auditoria;
-drop trigger trg_delete_auditoria;
-drop trigger trg_update_auditoria;
-delete from museos;
-delete from tematicas;
+-- drop table auditorias;
+-- drop trigger trg_insert_auditoria;
+-- drop trigger trg_delete_auditoria;
+-- drop trigger trg_update_auditoria;
+-- delete from museos;
+-- delete from tematicas;
 
 SHOW ENGINE INNODB STATUS;
