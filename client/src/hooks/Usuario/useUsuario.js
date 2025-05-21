@@ -8,10 +8,8 @@ export const useUsuario = () => {
   const registrarUsuario = async (usuario) => {
     setError(null);
     try {
-      const response = await UsuarioService.registrarUsuario(usuario);
-      console.log("Response de registrarUsuario", response);
-      return response;
-    } catch (error) {
+      return await UsuarioService.registrarUsuario(usuario);
+    } catch (error) { 
       setError(error);
       return null;
     } finally {
@@ -24,8 +22,7 @@ export const useUsuario = () => {
     // console.log(usuario);
     setError(null);
     try {
-      const response = await UsuarioService.editarUsuario(usuario);
-      return response;
+      return await UsuarioService.editarUsuario(usuario);
     } catch (error) {
       setError(error);
       return null;
@@ -38,8 +35,7 @@ export const useUsuario = () => {
   const recuperarContrasena = async (usuario) => {
     setError(null);
     try {
-      const response = await UsuarioService.recuperarContrasena(usuario);
-      return response;
+      return await UsuarioService.recuperarContrasena(usuario);
     } catch (error) {
       setError(error);
       return null;
@@ -48,21 +44,12 @@ export const useUsuario = () => {
     }
   };
 
-  // Registrar Moderador (maybe se mueve a useModeradores)
-  const registrarModerador = async (usuario) => {
-    setError(null);
-    console.log(usuario);
-    try {
-      const response = await UsuarioService.registrarModerador(usuario);
-      return response;
-    } catch (error) {
-      setError(error);
-      return null;
-    } finally {
-      setError(null);
-    }
+  return { 
+    registrarUsuario, 
+    editarUsuario, 
+    recuperarContrasena, 
+    error 
   };
-  return { registrarUsuario, editarUsuario, registrarModerador, error };
 };
 
 export default useUsuario;

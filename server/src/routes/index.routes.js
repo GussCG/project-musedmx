@@ -1,6 +1,7 @@
 import { Router } from "express";
 import museoRoutes from "./museo.routes.js";
 import authRoutes from "./auth.routes.js";
+import userRoutes from "./usuarios.routes.js";
 
 import resenaRoutes from "./resena.routes.js";
 import encuestaRoutes from "./encuesta.routes.js";

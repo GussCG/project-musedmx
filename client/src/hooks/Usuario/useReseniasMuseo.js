@@ -3,35 +3,35 @@ import axios from "axios";
 import Review from "../../models/Usuario/Review";
 import { BACKEND_URL } from "../../constants/api";
 
-export const useResenias = () => {
-  const [error, setError] = useState(null);
+export const useReseniasMuseo = (mus_id) => {
+  const [resenia, setResenia] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [resenias, setResenias] = useState([]);
+  const [error, setError] = useState(null);
 
-  // Obtener todas las reseñas
-  const fetchResenias = async () => {
+  const fetchReseniasMuseo = useCallback(async () => {
     try {
-      setLoading(true);      
-      const endpoint = `${BACKEND_URL}/api/resenias`;
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/resenias/museos/${mus_id}`;
       const response = await axios.get(endpoint);
 
-      setResenias(response.data.data.items.map((item) => new Review(item)));
+      setResenia(response.data.data.items.map((item) => new Review(item)));
       setLoading(false);
     } catch (error) {
       console.error("Error fetching resenias:", error);
       setError(error);
-      setResenias([]);
-      throw error;
     } finally {
       setLoading(false);
     }
-  };
+  }, [mus_id]);
+
+  useEffect(() => {
+    fetchReseniasMuseo();
+  }, [mus_id, fetchReseniasMuseo]);
 
   return { 
-    fetchResenias, 
-    error, 
+    resenia, 
     loading, 
-    resenias 
+    error, 
+    fetchReseniasMuseo 
   };
-
 }
