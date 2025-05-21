@@ -2,13 +2,22 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthProvider";
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
 
-export default function FavoritoButton({ museoId }) {
+export default function FavoritoButton({
+  museoId,
+  refetchFavoritos,
+  isFavorite,
+  setIsFavorite,
+}) {
   const { user, setIsLogginPopupOpen } = useAuth();
-  const { agregarFavorito, eliminarFavorito, verificarFavorito } =
-    useFavorito();
-
-  // Estado para los checkbox de favoritos
-  const [isFavorite, setIsFavorite] = useState(false);
+  const {
+    agregarFavorito,
+    eliminarFavorito,
+    verificarFavorito,
+    getFavoritosCountByMuseoId,
+    onFavoritoChange,
+  } = useFavorito({
+    museoId,
+  });
 
   useEffect(() => {
     const fetchFavorito = async () => {
@@ -18,7 +27,7 @@ export default function FavoritoButton({ museoId }) {
       }
     };
     fetchFavorito();
-  }, [user, museoId]);
+  }, [user, museoId, setIsFavorite, verificarFavorito]);
 
   const handleFavoriteChange = async () => {
     if (!user) return;
@@ -31,7 +40,19 @@ export default function FavoritoButton({ museoId }) {
       await agregarFavorito(correo, museoId);
     }
 
-    setIsFavorite(!isFavorite);
+    // Actualizamos favorito individual
+    const fav = await verificarFavorito(correo, museoId);
+    setIsFavorite(fav);
+
+    // Refrescar el contador si se usa en otro componente
+    if (onFavoritoChange) {
+      await onFavoritoChange(); // 🔁 Refresca el contador del componente externo
+    }
+
+    // Si hay que refrescar lista general
+    if (refetchFavoritos) {
+      await refetchFavoritos();
+    }
   };
 
   return (

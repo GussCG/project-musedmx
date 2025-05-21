@@ -65,7 +65,7 @@
         .museo-card {
           width: 90%;
           height: auto;
-          min-height: 150px;
+          min-height: 250px;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -76,15 +76,13 @@
             height: 100%;
             position: absolute;
 
-            transition: all 0.3s ease-in-out;
-
-            &:hover {
-              transform: scale(1.05);
-              transition: all 0.3s ease-in-out;
-            }
-
             .museo-card-img {
-              // display: none;
+              transition: all 0.3s ease-in-out;
+
+              &:hover {
+                transform: scale(1.05);
+                transition: all 0.3s ease-in-out;
+              }
             }
 
             .museo-card-img-tematica {
@@ -92,8 +90,7 @@
             }
 
             .museo-card-img-rating {
-              top: auto;
-              bottom: 0;
+              top: 0;
 
               #museo-card-rating {
                 font-size: 1rem;

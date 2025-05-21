@@ -17,7 +17,6 @@ import { useAuth } from "../../context/AuthProvider";
 
 function MenuUsuario({ className }) {
   const { user, logout, tipoUsuario } = useAuth();
-  console.log(tipoUsuario);
   const { isDarkMode, toggleTheme, isRetroMode } = useTheme();
 
   const formatName = (user) => {

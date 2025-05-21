@@ -7,11 +7,14 @@ const { FaArrowCircleLeft, FaArrowCircleRight } = Icons;
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 import { Navigation } from "swiper/modules";
+import LoadingIndicator from "../Other/LoadingIndicator";
 
 const MuseoSlider = memo(function MuseoSlider({
   listaMuseos = [],
   editMode,
   sliderType,
+  loading,
+  refetchFavoritos,
 }) {
   const swiperRef = useRef(null);
 
@@ -24,7 +27,9 @@ const MuseoSlider = memo(function MuseoSlider({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {listaMuseos?.length > 0 || listaMuseos !== null ? (
+      {loading ? (
+        <LoadingIndicator />
+      ) : listaMuseos && listaMuseos.length > 0 ? (
         <Swiper
           ref={swiperRef}
           modules={[Navigation]}
@@ -48,6 +53,7 @@ const MuseoSlider = memo(function MuseoSlider({
                 museo={museo}
                 editMode={editMode}
                 sliderType={sliderType}
+                refetchFavoritos={refetchFavoritos}
               />
             </SwiperSlide>
           ))}

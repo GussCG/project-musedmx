@@ -266,6 +266,81 @@ export const getMuseosPopulares = async (req, res) => {
   }
 };
 
+export const getMuseosSugeridosByCorreo = async (req, res) => {
+  try {
+    const { correo } = req.params;
+    const { top_n } = req.query;
+    const museos = await Museo.findSugeridosByCorreo({
+      correo,
+      top_n: top_n ? parseInt(top_n) : 5,
+    });
+
+    res.json({
+      success: true,
+      museos,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEOS_SUGERIDOS", error);
+  }
+};
+
+export const getMuseosSimilaresById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { top_n } = req.query;
+
+    const museos = await Museo.findSimilaresById({
+      id,
+      top_n: top_n ? parseInt(top_n) : 5,
+    });
+
+    res.json({
+      success: true,
+      museos,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEOS_SIMILARES", error);
+  }
+};
+
+export const getMuseosCercaById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { top_n } = req.query;
+
+    const museos = await Museo.findCercaById({
+      id,
+      top_n: top_n ? parseInt(top_n) : 5,
+    });
+
+    res.json({
+      success: true,
+      museos,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEOS_CERCA", error);
+  }
+};
+
+export const getMuseosAsociacionById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { top_n } = req.query;
+
+    const museos = await Museo.findAsociacionById({
+      id,
+      top_n: top_n ? parseInt(top_n) : 5,
+    });
+
+    res.json({
+      success: true,
+      museos,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEOS_ASOCIACION", error);
+  }
+};
+
 export const deleteMuseo = async (req, res) => {
   try {
     const museo = await Museo.deleteMuseo(req.body.mus_id);

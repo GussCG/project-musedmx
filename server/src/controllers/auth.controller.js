@@ -181,8 +181,6 @@ export const verifyUser = async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    console.log("Usuario encontrado:", usuario);
-
     res.status(200).json({
       usuario,
     });

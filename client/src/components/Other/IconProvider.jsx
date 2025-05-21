@@ -171,6 +171,7 @@ import { MdCheck } from "react-icons/md";
 import { LiaSearchLocationSolid } from "react-icons/lia";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { RiResetLeftFill } from "react-icons/ri";
+import { FaHeart } from "react-icons/fa";
 
 const Icons = {
   estrellaIcon,
@@ -289,6 +290,7 @@ const Icons = {
   LiaSearchLocationSolid,
   IoMdArrowDropdown,
   RiResetLeftFill,
+  FaHeart,
 };
 
 export default Icons;

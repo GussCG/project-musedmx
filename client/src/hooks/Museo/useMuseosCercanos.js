@@ -3,27 +3,27 @@ import axios from "axios";
 import Museo from "../../models/Museo/Museo";
 import { BACKEND_URL } from "../../constants/api";
 
-export const useMuseosSugeridos = ({ top_n = 10, correo }) => {
+export const useMuseosCercanos = ({ top_n = 10, museoId }) => {
   const [museos, setMuseos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetched = useRef(false);
 
-  const fetchMuseosSugeridos = async () => {
+  const fetchMuseosCercanos = async () => {
     try {
       setLoading(true);
-      const encodedCorreo = encodeURIComponent(correo);
-      const endpoint = `${BACKEND_URL}/api/museos/sugeridos/${encodedCorreo}`;
+      const endpoint = `${BACKEND_URL}/api/museos/cercanos/${museoId}`;
       const response = await axios.get(endpoint, {
         params: { top_n },
       });
+
       const museosData = response.data.museos.museos.map(
         (museo) => new Museo(museo)
       );
       setMuseos(museosData);
     } catch (error) {
-      console.error("Error al obtener los museos sugeridos:", error);
+      console.error("Error al obtener los museos cercanos:", error);
       setError(error);
     } finally {
       setLoading(false);
@@ -31,16 +31,16 @@ export const useMuseosSugeridos = ({ top_n = 10, correo }) => {
   };
 
   useEffect(() => {
-    if (correo && !fetched.current) {
+    if (museoId && !fetched.current) {
       fetched.current = true;
-      fetchMuseosSugeridos();
+      fetchMuseosCercanos();
     }
-  }, [correo]);
+  }, [museoId]);
 
   return {
     museos,
     loading,
     error,
-    refetch: fetchMuseosSugeridos,
+    refetch: fetchMuseosCercanos,
   };
 };

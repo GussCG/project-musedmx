@@ -3,62 +3,90 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import List, Dict
 import pandas as pd
-from nltk.corpus import stopwords 
-import nltk 
+from nltk.corpus import stopwords
+import nltk
+import re  # Para expresiones regulares en preprocesamiento
 
 # Descargar stopwords si no están instaladas
 nltk.download('stopwords')
 
+def preprocesar_texto(texto: str) -> str:
+    """
+    Limpia y normaliza el texto para mejorar la vectorización:
+    - Convierte a minúsculas
+    - Elimina puntuación
+    - Elimina números (opcional)
+    - Elimina espacios extras
+    """
+    if not isinstance(texto, str):
+        return ""
+    
+    texto = texto.lower()  # Minúsculas
+    texto = re.sub(r'[^\w\s]', '', texto)  # Elimina puntuación
+    texto = re.sub(r'\d+', '', texto)  # Opcional: Elimina números
+    texto = re.sub(r'\s+', ' ', texto).strip()  # Normaliza espacios
+    return texto
+
 def recomendar_por_contenido(museo_id: int, top_n: int = 5) -> List[Dict]:
     """
-    Recomendaciones de museos similares basadas en contenido.
-    - Utiliza TF-IDF para vectorizar el texto combinado de nombre, descripción y temática.
-    - Calcula la similitud del coseno entre los museos.
-    - Devuelve los museos más similares al museo de referencia.
-    - Elimina la foto del museo en los resultados.
-    - Se pueden ajustar los parámetros de TF-IDF y el número de recomendaciones.
+    Recomendaciones de museos similares basadas en contenido (versión mejorada).
+    
+    Mejoras incluidas:
+    - Preprocesamiento avanzado del texto
+    - Ajustes en TF-IDF (ngrams y filtrado de términos)
+    - Exclusión automática del museo de referencia
+    
     Args:
         museo_id (int): ID del museo de referencia.
         top_n (int): Número de recomendaciones a devolver.
 
     Returns:
-        List[Dict]: Lista de museos recomendados, excluyendo la foto.
+        List[Dict]: Lista de museos recomendados (sin foto y ordenados por similitud).
     """
 
-    # Obtener datos y convertirlos a DataFrame
+    # 1. Obtener datos y crear DataFrame
     museos = get_museos_data()
     museos_df = pd.DataFrame(museos)
     
-    # Crear columna de texto combinado
-    museos_df['texto'] = (
+    # 2. Preprocesamiento de texto combinado
+    museos_df['texto_procesado'] = (
         museos_df['mus_nombre'].astype(str) + ' ' +
         museos_df['mus_descripcion'].astype(str) + ' ' +
         museos_df['mus_tematica'].astype(str)
+    ).apply(preprocesar_texto)
+    
+    # 3. Vectorización TF-IDF con ajustes
+    spanish_stopwords = stopwords.words('spanish') + ['museo', 'exposición']  # Stopwords personalizadas
+    
+    tfidf = TfidfVectorizer(
+        stop_words=spanish_stopwords,
+        ngram_range=(1, 2),  # Captura palabras sueltas y bigramas
+        max_features=5000,   # Limita a los 5000 términos más relevantes
+        min_df=2            # Ignora términos que aparezcan en menos de 2 museos
     )
-
-    # Obtener stopwords en español
-    spanish_stopwords = stopwords.words('spanish')
     
-    # Vectorización TF-IDF con stopwords personalizadas
-    tfidf = TfidfVectorizer(stop_words=spanish_stopwords)  # Usar lista de stopwords
-    tfidf_matrix = tfidf.fit_transform(museos_df['texto'])
+    tfidf_matrix = tfidf.fit_transform(museos_df['texto_procesado'])
     
-    # Cálculo de similitud
+    # 4. Cálculo de similitud del coseno
     cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
     
-    # Encontrar índice del museo de referencia
-    idx = museos_df[museos_df['mus_id'] == museo_id].index[0]
+    # 5. Obtener índice del museo de referencia
+    try:
+        idx = museos_df[museos_df['mus_id'] == museo_id].index[0]
+    except IndexError:
+        return []  # Si el museo no existe
     
-    # Obtener puntuaciones de similitud
+    # 6. Ordenar por similitud (excluyendo al propio museo)
     sim_scores = list(enumerate(cosine_sim[idx]))
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:top_n + 1]  # Excluye el museo actual
     
-    # Obtener índices de los museos más similares
-    sim_indices = [i[0] for i in sim_scores[1:top_n+1]]
-    
-    # Convertir resultados y limpiar datos
-    resultados = museos_df.iloc[sim_indices].to_dict('records')
-    for museo in resultados:
-        museo.pop('mus_foto', None)
+    # 7. Generar resultados limpios
+    resultados = []
+    for i, score in sim_scores:
+        museo = museos_df.iloc[i].to_dict()
+        museo.pop('mus_foto', None)  # Eliminar campo binario
+        museo.pop('texto_procesado', None)  # Eliminar campo temporal
+        museo['similitud'] = float(score)  # Agregar puntuación (opcional)
+        resultados.append(museo)
     
     return resultados

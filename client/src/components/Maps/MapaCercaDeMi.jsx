@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { buildImage } from "../../utils/buildImage";
 import { TEMATICAS } from "../../constants/catalog";
 import FavoritoButton from "../Museo/FavoritoButton";
+import MuseoCercaItem from "../Museo/MuseoCercaItem";
 
 function CercaDeMi({ userLocation, museosMostrados, radioKM, travelMode }) {
   const [museosConTiempos, setMuseosConTiempos] = useState([]);
@@ -154,83 +155,11 @@ function CercaDeMi({ userLocation, museosMostrados, radioKM, travelMode }) {
               {museosConTiempos.map(
                 (museo) =>
                   museo.tematica && (
-                    <motion.li
+                    <MuseoCercaItem
                       key={museo.id}
-                      className="museo-list-item"
-                      initial={{ opacity: 0, x: 100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 100 }}
-                      transition={{
-                        duration: 0.2,
-                        ease: "easeInOut",
-                        type: "spring",
-                        stiffness: 50,
-                      }}
-                      style={{
-                        backgroundColor: `${
-                          TEMATICAS[museo.tematica].museoCardColors.background
-                        }`,
-                      }}
-                    >
-                      <div className="museo-list-item-img">
-                        <Link to={`/Museos/${museo.id}`}>
-                          <img
-                            src={museo.img || foto_default}
-                            alt={museo.nombre}
-                          />
-                        </Link>
-                        <div
-                          className="museo-list-item-distance"
-                          style={{
-                            backgroundColor: `${
-                              TEMATICAS[museo.tematica].museoCardColors
-                                .backgroundImage
-                            }`,
-                          }}
-                        >
-                          <p>{formatearDistancia(museo.distancia)}</p>
-                        </div>
-                        <FavoritoButton />
-                      </div>
-                      <div className="museo-list-item-info">
-                        <div className="museo-list-item-name">
-                          <Link to={`/Museos/${museo.id}`}>
-                            <p
-                              style={{
-                                color: `${
-                                  TEMATICAS[museo.tematica].museoCardColors
-                                    .header
-                                }`,
-                              }}
-                            >
-                              {museo.nombre}
-                            </p>
-                          </Link>
-                        </div>
-                        <div className="museo-list-item-tiempo">
-                          <p
-                            style={{
-                              color: `${
-                                TEMATICAS[museo.tematica].museoCardColors.text
-                              }`,
-                            }}
-                          >
-                            {museo.tiempoEstimado} min -{" "}
-                            {timeLabels[travelMode]}
-                          </p>
-                        </div>
-                        {museo.tematica && (
-                          <>
-                            <div className="museo-list-tematica-icon">
-                              <img
-                                src={TEMATICAS[museo.tematica].icon}
-                                alt=""
-                              />
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </motion.li>
+                      museo={museo}
+                      travelMode={travelMode}
+                    />
                   )
               )}
             </ul>

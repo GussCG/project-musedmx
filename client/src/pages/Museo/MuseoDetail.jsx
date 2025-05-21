@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import HeaderMuseoButtons from "../../components/Museo/HeaderMuseoButtons";
 import "../../styles/pages/MuseoDetails.scss";
 import Icons from "../../components/Other/IconProvider";
-const { FaFilter, estrellaIcon, FaStar } = Icons;
+const { FaFilter, estrellaIcon, FaStar, FaHeart } = Icons;
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
 import MenuFiltroResena from "../../components/Resena/MenuFiltroResena";
 import MapMuseoDetail from "../../components/Maps/MapMuseoDetail";
@@ -33,6 +33,9 @@ import LoadingIndicator from "../../components/Other/LoadingIndicator";
 import ResenaCard from "../../components/Resena/ResenaCard";
 import LoadingMessage from "../../components/Maps/LoadingMessage";
 import useRespuestasTotales from "../../hooks/Encuesta/useRespuestasTotales";
+import { useFavorito } from "../../hooks/Favorito/useFavorito";
+import { useMuseosSimilares } from "../../hooks/Museo/useMuseosSimilares";
+import { useMuseosCercanos } from "../../hooks/Museo/useMuseosCercanos";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
@@ -91,25 +94,37 @@ function MuseoDetail() {
     encuestaId: 1,
     museoId: museoIdNumber,
   });
+  const [favoritoCount, setFavoritoCount] = useState(0);
+  const { getFavoritosCountByMuseoId } = useFavorito({
+    museoId: museoIdNumber,
+  });
+  useEffect(() => {
+    const fetchFavorito = async () => {
+      const count = await getFavoritosCountByMuseoId(museoIdNumber);
+      setFavoritoCount(count);
+    };
+    fetchFavorito();
+  }, [museoIdNumber, getFavoritosCountByMuseoId]);
+
+  const {
+    museos: museosSimilares,
+    loading: museosSimilaresLoading,
+    error: museosSimilaresError,
+  } = useMuseosSimilares({
+    museoId: museoIdNumber,
+    top_n: 10,
+  });
+  const {
+    museos: museosCercanos,
+    loading: museosCercanosLoading,
+    error: museosCercanosError,
+  } = useMuseosCercanos({
+    museoId: museoIdNumber,
+    top_n: 10,
+  });
 
   const calificaciones = procesarCalificaciones(respuestasTotales);
   const serviciosOpacidad = procesarServicios(serviciosTotales);
-
-  // const servicios = procesarServicios({
-  //   serviciosTotales,
-  // });
-
-  // Estado para los checkbox de favoritos
-
-  const handleFavoriteChange = () => {
-    // if (!user) {
-    //     navigate('/Auth/Iniciar')
-    //     return
-    // }
-
-    // Lógica para agregar o quitar de favoritos en el backend
-    setIsFavorite(!isFavorite);
-  };
 
   useEffect(() => {
     const handleBackNavigation = () => {
@@ -181,7 +196,17 @@ function MuseoDetail() {
                         className="museo-image"
                       />
                     )}
-                    <FavoritoButton />
+                    <FavoritoButton
+                      museoId={museoInfo.id}
+                      isFavorite={isFavorite}
+                      setIsFavorite={setIsFavorite}
+                      onFavoritoChange={async () => {
+                        const count = await getFavoritosCountByMuseoId(
+                          museoInfo.id
+                        );
+                        setFavoritoCount(count);
+                      }}
+                    />
                   </div>
                   <div
                     className={
@@ -204,10 +229,12 @@ function MuseoDetail() {
                         {isLoading ? (
                           <Skeleton width={300} />
                         ) : (
-                          <p>
-                            <b>Fecha de Apertura:</b>{" "}
-                            {formatearFechaTitulo(museoInfo.fecha_apertura)}
-                          </p>
+                          <>
+                            <p>
+                              <b>Fecha de Apertura:</b>{" "}
+                              {formatearFechaTitulo(museoInfo.fecha_apertura)}
+                            </p>
+                          </>
                         )}
                       </div>
                       {redCorreo && (
@@ -236,22 +263,28 @@ function MuseoDetail() {
                       <HeaderMuseoButtons museoId={museoId} />
                     ) : (
                       <div className="museo-section-1-csm">
-                        <div className="museo-section-1-csm-calificacion">
-                          {isLoading ? (
-                            <Skeleton width={50} />
-                          ) : (
-                            <p>{calificacionPromedio}</p>
-                          )}
+                        <div className="museo-section-1-right">
+                          <div className="museo-section-1-csm-calificacion">
+                            {isLoading ? (
+                              <Skeleton width={50} />
+                            ) : (
+                              <p>{calificacionPromedio}</p>
+                            )}
 
-                          <img
-                            src={estrellaIcon}
-                            alt="Estrella"
-                            style={
-                              isDarkMode
-                                ? { filter: "invert(1)" }
-                                : { filter: "invert(0)" }
-                            }
-                          />
+                            <img
+                              src={estrellaIcon}
+                              alt="Estrella"
+                              style={
+                                isDarkMode
+                                  ? { filter: "invert(1)" }
+                                  : { filter: "invert(0)" }
+                              }
+                            />
+                          </div>
+                          <div className="museo-section-likes">
+                            <p>{favoritoCount}</p>
+                            <FaHeart />
+                          </div>
                         </div>
                         <div className="museo-section-1-csm-social-media">
                           {redesSocialesLoading ? (
@@ -401,16 +434,51 @@ function MuseoDetail() {
                   </section>
                   <MuseoGallery images={galeria} loading={isLoading} />
                   <section id="museo-section-4" className="museo-detail-item">
-                    <h1 className="h1-section">
-                      A otros usuarios también les gusto
-                    </h1>
-                    {isLoading ? (
-                      <div className="no-results">
-                        <LoadingIndicator />
-                      </div>
-                    ) : (
-                      <MuseoSlider listaMuseos={null} sliderType="Similares" />
-                    )}
+                    <h1 className="h1-section">Museos Relacionados</h1>
+                    <hr />
+                    <div className="museo-section-4-container">
+                      <h2 className="h2-section">Museos Similares</h2>
+                      {isLoading ? (
+                        <div className="no-results">
+                          <LoadingIndicator />
+                        </div>
+                      ) : (
+                        <MuseoSlider
+                          listaMuseos={museosSimilares}
+                          sliderType="Similares"
+                        />
+                      )}
+                    </div>
+                    <hr />
+                    <div className="museo-section-4-container">
+                      <h2 className="h2-section">
+                        A otros usuarios les gustaron
+                      </h2>
+                      {isLoading ? (
+                        <div className="no-results">
+                          <LoadingIndicator />
+                        </div>
+                      ) : (
+                        <MuseoSlider
+                          listaMuseos={null}
+                          sliderType="A otros usuarios les gustaron"
+                        />
+                      )}
+                    </div>
+                    <hr />
+                    <div className="museo-section-4-container">
+                      <h2 className="h2-section">Museos Cerca</h2>
+                      {isLoading ? (
+                        <div className="no-results">
+                          <LoadingIndicator />
+                        </div>
+                      ) : (
+                        <MuseoSlider
+                          listaMuseos={museosCercanos}
+                          sliderType="Cerca"
+                        />
+                      )}
+                    </div>
                   </section>
                   <section id="museo-section-5" className="museo-detail-item">
                     <div className="museo-section-5-header">

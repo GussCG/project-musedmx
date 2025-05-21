@@ -6,6 +6,7 @@ import io
 from PIL import Image
 from azure.storage.blob import BlobServiceClient
 import requests
+import json
 
 load_dotenv(dotenv_path="../.env")
 
@@ -154,6 +155,43 @@ def cargar_horarios():
         print(f"El archivo {csv_horarios_path} no se encontró.")
     except Exception as e:
         print(f"Error al cargar horarios y precios: {e}")          
+
+def cargar_descripciones():
+    print("Cargando descripciones...")
+    json_path = "./data/descripciones.json"
+
+    try:
+        with open(json_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            
+        for museo in data[1:]:
+            mus_id = museo.get('mus_id')
+            descripcion = museo.get('mus_descripcion')
+            if mus_id and descripcion:
+                try:
+                    query = """
+                        UPDATE museos
+                        SET mus_descripcion = %s
+                        WHERE mus_id = %s
+                    """
+                    cursor.execute(
+                        query,
+                        (descripcion, mus_id)
+                    )
+                    print(f"Descripción actualizada para el museo {mus_id}")
+                except mysql.connector.Error as err:
+                    print(f"Error al actualizar la descripción para el museo {mus_id}: {err}")
+                    continue
+
+        conn.commit()
+        print("Descripciones actualizadas correctamente.")
+    except FileNotFoundError:
+        print(f"El archivo {json_path} no se encontró.")
+    except json.JSONDecodeError:
+        print(f"Error al decodificar el archivo JSON {json_path}. Asegúrate de que esté bien formado.")
+    except Exception as e:
+        print(f"Error al cargar descripciones: {e}")
+
 
 def cargar_museos():
     print("Cargando museos...")
@@ -379,13 +417,14 @@ def cargar_preguntas_respuestas():
 
 def main():
     try:
-        cargar_museos()
-        cargar_tematicas()
-        cargar_redes_sociales()
-        cargar_preguntas_respuestas()
-        cargar_imagen_principal()
-        cargar_galeria()
-        cargar_horarios()
+        # cargar_museos()
+        cargar_descripciones()
+        # cargar_tematicas()
+        # cargar_redes_sociales()
+        # cargar_preguntas_respuestas()
+        # cargar_imagen_principal()
+        # cargar_galeria()
+        # cargar_horarios()
 
         print("Carga de datos finalizada.")
     except mysql.connector.Error as err:
