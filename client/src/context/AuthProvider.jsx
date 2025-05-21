@@ -67,16 +67,16 @@ function AuthProvider({ children }) {
 
       switch (user.usr_tipo) {
         case 1:
-          redirectPath = "/Usuario";
+          redirectPath = "Usuario";
           break;
         case 2:
-          redirectPath = "/Admin";
+          redirectPath = "Admin";
           break;
         case 3:
-          redirectPath = "/Mod";
+          redirectPath = "Mod";
           break;
         default:
-          redirectPath = "/";
+          redirectPath = "";
       }
       console.log("Redirigiendo a:", redirectPath);
       navigate(redirectPath); // Redirigir a la ruta correspondiente
@@ -104,6 +104,8 @@ function AuthProvider({ children }) {
       );
       setUser(null);
       localStorage.removeItem("user");
+      localStorage.removeItem("tipoUsuario");
+      setTipoUsuario("");
       navigate("/"); // Redirigir a la página de inicio
     } catch (error) {
       console.error(error);
@@ -123,11 +125,11 @@ function AuthProvider({ children }) {
 
         if (response.data) {
           setUser(response.data.usuario);
-          setTipoUsuario(tiposUsuario[response.data.usuario.tipoUsuario]);
+          setTipoUsuario(tiposUsuario[response.data.usuario.usr_tipo]);
           localStorage.setItem("user", JSON.stringify(response.data.usuario));
           localStorage.setItem(
             "tipoUsuario",
-            tiposUsuario[response.data.usuario.tipoUsuario]
+            tiposUsuario[response.data.usuario.usr_tipo]
           );
         }
       } catch (error) {

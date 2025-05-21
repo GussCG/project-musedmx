@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import foto_default from "../../assets/images/others/museo-main-1.jpg";
 import Icons from "../Other/IconProvider";
@@ -7,8 +7,12 @@ const { RiFireFill, CgClose } = Icons;
 import { TEMATICAS } from "../../constants/catalog";
 import { buildImage } from "../../utils/buildImage";
 import FavoritoButton from "../Museo/FavoritoButton";
+import { useFavorito } from "../../hooks/Favorito/useFavorito";
+import { useAuth } from "../../context/AuthProvider";
+import MuseoItem from "../Museo/MuseoItem";
 
 function MapaPopulares({ museosMostrados }) {
+  const { user } = useAuth();
   const [showInfo, setShowInfo] = useState(false);
   const [showInfoButton, setShowInfoButton] = useState(true);
   // Dia de hoy en formato "dd/mm/yyyy" utc-6
@@ -82,76 +86,7 @@ function MapaPopulares({ museosMostrados }) {
             <hr />
             <ul className="museos-list">
               {museosMostrados.map((museo, index) => (
-                <motion.li
-                  key={museo.id}
-                  className="museo-list-item"
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 100 }}
-                  transition={{
-                    duration: 0.2,
-                    ease: "easeInOut",
-                    type: "spring",
-                    stiffness: 50,
-                  }}
-                  style={{
-                    backgroundColor: `${
-                      TEMATICAS[museo.tematica].museoCardColors.background
-                    }`,
-                  }}
-                >
-                  <div className="museo-list-item-img">
-                    <Link to={`/Museos/${museo.id}`}>
-                      <img src={museo.img || foto_default} alt={museo.nombre} />
-                    </Link>
-                    <div
-                      className="museo-list-item-rank"
-                      style={{
-                        backgroundColor: `${
-                          TEMATICAS[museo.tematica].museoCardColors
-                            .backgroundImage
-                        }`,
-                      }}
-                    >
-                      <p>{index + 1}</p>
-                    </div>
-                    <FavoritoButton />
-                  </div>
-                  <div className="museo-list-item-info">
-                    <div className="museo-list-item-name">
-                      <Link to={`/Museos/${museo.id}`}>
-                        <p
-                          style={{
-                            color: `${
-                              TEMATICAS[museo.tematica].museoCardColors.header
-                            }`,
-                          }}
-                        >
-                          {museo.nombre}
-                        </p>
-                      </Link>
-                    </div>
-                    {museo.tematica && (
-                      <>
-                        <div className="museo-list-item-tematica">
-                          <p
-                            style={{
-                              color: `${
-                                TEMATICAS[museo.tematica].museoCardColors.text
-                              }`,
-                            }}
-                          >
-                            {TEMATICAS[museo.tematica].nombre}
-                          </p>
-                        </div>
-
-                        <div className="museo-list-tematica-icon">
-                          <img src={TEMATICAS[museo.tematica].icon} alt="" />
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </motion.li>
+                <MuseoItem key={museo.id} museo={museo} index={index} />
               ))}
             </ul>
           </motion.div>

@@ -1,5 +1,6 @@
 // Funcion para agrupar los horarios por dia
 import { DIAS_SEMANA } from "../constants/catalog";
+import { formatearHora } from "./formatearFechas";
 
 export const agruparHorarios = (horarios) => {
   let horariosAgrupados = {};
@@ -9,7 +10,15 @@ export const agruparHorarios = (horarios) => {
 
   // Agrupamos los dias que tienen el mismo horario
   horariosArray.forEach(([dia, horarioObj]) => {
-    const horario = `${horarioObj.mh_hora_inicio} - ${horarioObj.mh_hora_fin}`; // Usamos el formato de hora inicio y fin
+    if (
+      horarioObj.mh_hora_inicio === "00:00:00" &&
+      horarioObj.mh_hora_fin === "00:00:00"
+    ) {
+      return; // No agregar días cerrados
+    }
+    const horario = `${formatearHora(
+      horarioObj.mh_hora_inicio
+    )} - ${formatearHora(horarioObj.mh_hora_fin)}`; // Usamos el formato de hora inicio y fin
 
     // Convertir el número de día a su nombre
     const nombreDia = DIAS_SEMANA[dia];
@@ -34,11 +43,6 @@ export const agruparHorarios = (horarios) => {
   // Formatear el resultado
   let resultado = Object.entries(horariosAgrupados)
     .map(([horario, dias]) => {
-      // Si el horario es 00:00:00 - 00:00:00, lo ignoramos
-      if (horario === "00:00:00 - 00:00:00") {
-        return "";
-      }
-
       if (dias.length === 1) {
         return `${dias[0]}: ${horario}`;
       } else {

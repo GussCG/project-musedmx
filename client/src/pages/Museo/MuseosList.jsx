@@ -75,12 +75,11 @@ function MuseosList({ titulo, tipo }) {
   } = useMuseos(museosParams);
 
   const {
-    museosPopulares,
+    museos: museosPopulares,
     loading: isLoadingPopulares,
     error: errorPopulares,
   } = useMuseosPopulares({
     top_n: 10,
-    enabled: isPopulares, // Solo se ejecuta si es tipo 3
   });
 
   // Decide qué datos usar basado en el tipo

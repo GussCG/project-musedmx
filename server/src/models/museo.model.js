@@ -388,10 +388,158 @@ export default class Museo {
           top_n: top_n,
         },
       });
-      const data = response.data;
-      return data;
+
+      const museos = response.data;
+      if (!museos || museos.length === 0) {
+        return { museos: [] };
+      }
+
+      const museosIds = museos.map((museo) => museo.mus_id);
+
+      const museosMap = new Map(museos.map((m) => [m.mus_id, m]));
+
+      const placeholders = museosIds.map(() => "?").join(",");
+      const query = `SELECT * FROM museos WHERE mus_id IN (${placeholders})`;
+      const [rows] = await pool.query(query, museosIds);
+
+      const resultadosOrdenados = museosIds
+        .map((id) => rows.find((row) => row.mus_id === id))
+        .filter(Boolean); // Filtra nulls si algún ID no existe
+
+      return { museos: resultadosOrdenados };
     } catch (error) {
       console.error("Error fetching populares:", error);
+      throw error;
+    }
+  }
+
+  static async findSugeridosByCorreo({ correo, top_n }) {
+    try {
+      const endpoint = `${API_URL}/personalizada/${correo}`;
+      const response = await axios.get(endpoint, {
+        params: {
+          top_n: top_n,
+        },
+      });
+
+      const museos = response.data;
+      if (!museos || museos.length === 0) {
+        return { museos: [] };
+      }
+
+      const museosIds = museos.map((museo) => museo.mus_id);
+      const placeholders = museosIds.map(() => "?").join(",");
+      const query = `SELECT * FROM museos WHERE mus_id IN (${placeholders})`;
+      const [rows] = await pool.query(query, museosIds);
+
+      return { museos: rows };
+    } catch (error) {
+      console.error("Error fetching sugeridos:", error);
+      throw error;
+    }
+  }
+
+  static async findSimilaresById({ id, top_n }) {
+    try {
+      const endpoint = `${API_URL}/similares/${id}`;
+      const response = await axios.get(endpoint, {
+        params: {
+          top_n: top_n,
+        },
+      });
+
+      const museos = response.data;
+      if (!museos || museos.length === 0) {
+        return { museos: [] };
+      }
+
+      const museosIds = museos.map((museo) => museo.mus_id);
+      const museosMap = new Map(museos.map((m) => [m.mus_id, m]));
+
+      const placeholders = museosIds.map(() => "?").join(",");
+      const query = `SELECT * FROM museos WHERE mus_id IN (${placeholders})`;
+      const [rows] = await pool.query(query, museosIds);
+
+      // Corrección: Filtrar y mapear correctamente
+      const resultadosOrdenados = museosIds
+        .map((id) => rows.find((row) => row.mus_id === id))
+        .filter((museo) => museo !== undefined); // Filtramos los undefined
+
+      return {
+        museos: resultadosOrdenados,
+        metadatos: resultadosOrdenados.map((m) => ({
+          mus_id: m.mus_id,
+          similitud: museosMap.get(m.mus_id)?.similitud,
+        })),
+      };
+    } catch (error) {
+      console.error("Error fetching similares:", error);
+      throw error;
+    }
+  }
+
+  static async findCercaById({ id, top_n }) {
+    try {
+      const endpoint = `${API_URL}/cercanas/${id}`;
+      const response = await axios.get(endpoint, {
+        params: {
+          top_n: top_n,
+        },
+      });
+
+      const museos = response.data;
+      if (!museos || museos.length === 0) {
+        return { museos: [] };
+      }
+
+      const museosIds = museos.map((museo) => museo.mus_id);
+
+      const museosMap = new Map(museos.map((m) => [m.mus_id, m]));
+
+      const placeholders = museosIds.map(() => "?").join(",");
+      const query = `SELECT * FROM museos WHERE mus_id IN (${placeholders})`;
+      const [rows] = await pool.query(query, museosIds);
+
+      const resultadosOrdenados = museosIds
+        .map((id) => rows.find((row) => row.mus_id === id))
+        .filter(Boolean);
+
+      return {
+        museos: resultadosOrdenados,
+        // Opcional: incluir distancia
+        metadatos: resultadosOrdenados.map((m) => ({
+          mus_id: m.mus_id,
+          distancia: museosMap.get(m.mus_id)?.distancia,
+        })),
+      };
+    } catch (error) {
+      console.error("Error fetching cerca:", error);
+      throw error;
+    }
+  }
+
+  static async findAsociacionById({ id, top_n }) {
+    try {
+      const endpoint = `${API_URL}/asociadas/${id}`;
+      const response = await axios.get(endpoint, {
+        params: {
+          top_n: top_n,
+        },
+      });
+
+      const museos = response.data;
+      if (!museos || museos.length === 0) {
+        return { museos: [] };
+      }
+
+      const museosIds = museos.map((museo) => museo.mus_id);
+      const placeholders = museosIds.map(() => "?").join(",");
+      const query = `SELECT * FROM museos WHERE mus_id IN (${placeholders})`;
+      const [rows] = await pool.query(query, museosIds);
+
+      return { museos: rows };
+    } catch (error) {
+      console.error("Error fetching asociacion:", error);
       throw error;
     }
   }
