@@ -12,8 +12,8 @@ const router = Router();
 
 router.get("/", getReviews);
 router.get("/:id", getReviewByMuseumId);
-router.post("/", upload.single('mus_foto'), createReview);
-router.put("/:id", upload.single('mus_foto'), editReview);
+router.post("/", upload.array('f_res_foto', 10), createReview);
+router.put("/:id", upload.array('f_res_foto', 10), editReview);
 router.delete("/:id", deleteReview);
 
 export default router;
