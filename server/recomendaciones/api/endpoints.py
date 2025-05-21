@@ -5,6 +5,7 @@ from ..services.recomendacion_asociacion import recomendar_por_asociacion
 from ..services.recomendacion_contenido import recomendar_por_contenido
 from ..services.recomendacion_personalizada import recomendacion_por_personalizada
 from ..services.recomendacion_popularidad import recomendar_por_popularidad
+from ..services.recomendacion_cerca import recomendar_por_cercania
 
 router = APIRouter(prefix="/api/v1", tags=["Recomendaciones"])
 
@@ -36,3 +37,8 @@ async def obtener_asociadas(museoId: int, top_n: int = 5):
 async def obtener_populares(top_n: int = 5):
     """ Recomendaciones de museos populares {favoritos + visitas} """
     return recomendar_por_popularidad(top_n)
+
+@router.get("/recomendaciones/cercanas/{museoId}", response_model=List[dict])
+async def obtener_cercanas(museoId: int, top_n: int = 5):
+    """ Recomendaciones de museos cercanos """
+    return recomendar_por_cercania(museoId, top_n)

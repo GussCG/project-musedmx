@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import indexRoutes from "./routes/index.routes.js";
 import museoRoutes from "./routes/museo.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+// import reviewRoutes from "./routes/review.routes.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -32,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(indexRoutes);
 app.use(museoRoutes); 
 app.use(authRoutes);
+// app.use(reviewRoutes);
 
 // Endpoint para obtener la API key de Google Maps
 app.get("/api/maps-key", (req, res) => {

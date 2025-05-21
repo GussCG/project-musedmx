@@ -374,7 +374,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`visitas` (
 CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
   `res_id_res` INT(11) NOT NULL AUTO_INCREMENT,
   `res_comentario` TEXT NOT NULL,
-  `res_mod_correo` VARCHAR(75) NOT NULL,
+  `res_mod_correo` VARCHAR(75) NULL,
   `res_aprobado` TINYINT(1) NOT NULL,
   `res_calif_estrellas` INT(1) NOT NULL,
   `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,

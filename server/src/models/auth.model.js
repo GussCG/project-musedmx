@@ -67,9 +67,9 @@ export default class Usuario {
       for (const tematica of usr_tematicas) {
         await connection.query(
           `
-			INSERT INTO usuarios_has_tematicas (usuarios_usr_correo, tematicas_tm_nombre)
-			VALUES (?, ?)
-		  `,
+            INSERT INTO usuarios_has_tematicas (usuarios_usr_correo, tematicas_tm_nombre)
+            VALUES (?, ?)
+          `,
           [usr_correo, tematica]
         );
       }

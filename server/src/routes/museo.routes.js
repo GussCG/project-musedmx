@@ -12,6 +12,10 @@ import {
   createMuseo,
   updateMuseo,
   getMuseosPopulares,
+  getMuseosSugeridosByCorreo,
+  getMuseosSimilaresById,
+  getMuseosCercaById,
+  getMuseosAsociacionById,
 } from "../controllers/museo.controller.js";
 
 const router = Router();
@@ -28,5 +32,9 @@ router.get("/resenas/:id", getResenasById);
 router.post("/", upload.single("mus_foto"), createMuseo);
 router.post("/editar/:id", upload.single("mus_foto"), updateMuseo);
 router.get("/populares", getMuseosPopulares);
+router.get("/sugeridos/:correo", getMuseosSugeridosByCorreo);
+router.get("/similares/:id", getMuseosSimilaresById);
+router.get("/cercanos/:id", getMuseosCercaById);
+router.get("/asociacion/:id", getMuseosAsociacionById);
 
 export default router;

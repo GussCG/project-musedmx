@@ -1,7 +1,7 @@
 from typing import List
 from ..database import db
 
-temticas_a_id = {
+tematicas_a_id = {
     "Antropología": 1,
     "Arte": 2,
     "Arte Alternativo": 3,
@@ -23,7 +23,7 @@ def get_preferencias_by_usuario(correo: str) -> List[int]:
         """, (correo,))
         resultados = cursor.fetchall()
         return [
-            temticas_a_id[row['tematicas_tm_nombre']] for row in resultados if row['tematicas_tm_nombre'] in temticas_a_id
+            tematicas_a_id[row['tematicas_tm_nombre']] for row in resultados if row['tematicas_tm_nombre'] in tematicas_a_id
         ]
     except Exception as e:
         print(f"Error al obtener las preferencias: {e}")
