@@ -10,6 +10,19 @@ import re  # Para expresiones regulares en preprocesamiento
 # Descargar stopwords si no están instaladas
 nltk.download('stopwords')
 
+def ponderar_texto(nombre, descripcion, tematica, pesos=(3, 1, 2)):
+    nombre = preprocesar_texto(nombre)
+    descripcion = preprocesar_texto(descripcion)
+    tematica = preprocesar_texto(tematica)
+    
+    texto_ponderado = (
+        (nombre + ' ') * pesos[0] +
+        (descripcion + ' ') * pesos[1] +
+        (tematica + ' ') * pesos[2]
+    )
+    
+    return texto_ponderado.strip()
+
 def preprocesar_texto(texto: str) -> str:
     """
     Limpia y normaliza el texto para mejorar la vectorización:
@@ -49,14 +62,17 @@ def recomendar_por_contenido(museo_id: int, top_n: int = 5) -> List[Dict]:
     museos_df = pd.DataFrame(museos)
     
     # 2. Preprocesamiento de texto combinado
-    museos_df['texto_procesado'] = (
-        museos_df['mus_nombre'].astype(str) + ' ' +
-        museos_df['mus_descripcion'].astype(str) + ' ' +
-        museos_df['mus_tematica'].astype(str)
-    ).apply(preprocesar_texto)
+    museos_df['texto_procesado'] = museos_df.apply(
+        lambda row: ponderar_texto(
+            row['mus_nombre'],
+            row['mus_descripcion'],
+            row['mus_tematica']
+        ),
+        axis=1
+    )
     
     # 3. Vectorización TF-IDF con ajustes
-    spanish_stopwords = stopwords.words('spanish') + ['museo', 'exposición']  # Stopwords personalizadas
+    spanish_stopwords = stopwords.words('spanish') + ['museo', 'exposición'] # Agregar términos específicos a ignorar
     
     tfidf = TfidfVectorizer(
         stop_words=spanish_stopwords,

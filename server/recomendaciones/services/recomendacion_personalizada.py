@@ -1,6 +1,7 @@
 import pandas as pd
 from collections import defaultdict
 from typing import List, Dict
+from random import sample
 from ..models.tematicas import get_preferencias_by_usuario
 from ..models.favoritos import get_favoritos_by_usuario
 from ..models.visitas import get_visitas_by_usuario
@@ -59,7 +60,9 @@ def recomendacion_por_personalizada(correo: str, top_n: int = 10) -> List[Dict]:
         try:
             from ..similaridad import get_similares
             similares_favoritos = []
-            for fav in favoritos_usuario[:5]:  # Limitar a 5 favoritos para no sobrecargar
+            favoritos_para_similaridad = sample(favoritos_usuario, min(len(favoritos_usuario), 10))
+
+            for fav in favoritos_para_similaridad:
                 similares_favoritos.extend(get_similares(fav, top_n=3))
             
             museos_segunda_capa = museos_df[
@@ -70,6 +73,17 @@ def recomendacion_por_personalizada(correo: str, top_n: int = 10) -> List[Dict]:
             museos_candidatos = pd.concat([museos_primera_capa, museos_segunda_capa])
         except ImportError:
             pass  # Si no hay módulo de similaridad, continuar sin esta capa
+
+    # Capa 3: Museos similares recientes (toma a los ultimo 3 favoritos agregados)
+    if len(museos_candidatos) < top_n and len(favoritos_usuario) > 3:
+        ultimos_favoritos = favoritos_usuario[-3:]
+        museos_tercera_capa = museos_df[
+            museos_df['mus_id'].isin(ultimos_favoritos) &
+            ~museos_df['mus_id'].isin(favoritos_usuario + visitas_usuario + qv_usuario)
+        ].copy()
+        
+        museos_candidatos = pd.concat([museos_candidatos, museos_tercera_capa])
+
     
     # 5. Calcular puntuación personalizada
     museos_candidatos = museos_candidatos.assign(
