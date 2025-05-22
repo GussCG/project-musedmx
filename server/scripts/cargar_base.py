@@ -417,14 +417,14 @@ def cargar_preguntas_respuestas():
 
 def main():
     try:
-        # cargar_museos()
+        cargar_museos()
         cargar_descripciones()
-        # cargar_tematicas()
-        # cargar_redes_sociales()
-        # cargar_preguntas_respuestas()
-        # cargar_imagen_principal()
-        # cargar_galeria()
-        # cargar_horarios()
+        cargar_tematicas()
+        cargar_redes_sociales()
+        cargar_preguntas_respuestas()
+        cargar_imagen_principal()
+        cargar_galeria()
+        cargar_horarios()
 
         print("Carga de datos finalizada.")
     except mysql.connector.Error as err:

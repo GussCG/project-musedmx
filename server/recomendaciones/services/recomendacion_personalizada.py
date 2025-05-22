@@ -71,20 +71,6 @@ def recomendacion_por_personalizada(correo: str, top_n: int = 10) -> List[Dict]:
         except ImportError:
             pass  # Si no hay módulo de similaridad, continuar sin esta capa
     
-    # Capa 3: Museos populares como respaldo (si es necesario)
-    if len(museos_candidatos) < top_n:
-        # Asumimos que existe un campo de popularidad, si no, usar conteo de favoritos/visitas
-        if 'mus_popularidad' not in museos_df.columns:
-            museos_df['mus_popularidad'] = museos_df['mus_id'].map(
-                lambda x: fav_counts.get(x, 0) + vis_counts.get(x, 0)
-            )
-            
-        museos_tercera_capa = museos_df[
-            ~museos_df['mus_id'].isin(favoritos_usuario + visitas_usuario + qv_usuario)
-        ].sort_values(by='mus_popularidad', ascending=False).copy()
-        
-        museos_candidatos = pd.concat([museos_candidatos, museos_tercera_capa])
-    
     # 5. Calcular puntuación personalizada
     museos_candidatos = museos_candidatos.assign(
         puntuacion=lambda x: (
@@ -95,9 +81,10 @@ def recomendacion_por_personalizada(correo: str, top_n: int = 10) -> List[Dict]:
     ).drop_duplicates('mus_id')
 
     # 6. Seleccionar y devolver resultados
+    # Solo ordenar por puntuacion ya que mus_popularidad no existe
     resultados = museos_candidatos.sort_values(
-        by=['puntuacion', 'mus_popularidad'], 
-        ascending=[False, False]
+        by='puntuacion', 
+        ascending=False
     ).head(top_n)
     
     resultados = resultados.fillna(0)
