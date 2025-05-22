@@ -4,16 +4,12 @@ export default class Usuario {
   static async findById(usr_correo) {
     //Obtener los datos del usuario por su correo y las tematicas que tiene asignadas
     const query = `
-		SELECT u.*,    
-			JSON_ARRAYAGG(uht.tematicas_tm_nombre) AS usr_tematicas
-		FROM 
-			musedmx.usuarios u
-		JOIN 
-			musedmx.usuarios_has_tematicas uht ON u.usr_correo = uht.usuarios_usr_correo
-		WHERE 
-			u.usr_correo = ?
-		GROUP BY u.usr_correo;
-		`;
+      SELECT u.*, GROUP_CONCAT(t.tm_nombre) AS tematicas
+      FROM usuarios u
+      LEFT JOIN usuarios_has_tematicas ut ON u.usr_correo = ut.usuarios_usr_correo
+      LEFT JOIN tematicas t ON ut.tematicas_tm_nombre = t.tm_nombre
+      WHERE u.usr_correo = ?
+    `;
 
     const [rows] = await pool.query(query, [usr_correo]);
     return rows[0];
@@ -86,49 +82,53 @@ export default class Usuario {
     }
   }
 
-  static async updateUser(usr_correo, fields) {
-    // Separar la lógica de actualización de usuario y temáticas
-    // Actualizar el usuario quitando las temáticas
-    const allowedFields = [
-      "usr_nombre",
-      "usr_ap_paterno",
-      "usr_ap_materno",
-      "usr_contrasenia",
-      "usr_fecha_nac",
-      "usr_telefono",
-      "usr_foto",
-    ];
-    const filteredFields = Object.keys(fields).reduce((acc, key) => {
-      if (allowedFields.includes(key)) {
-        acc[key] = fields[key];
+  static async updateUser(usr_correo, userData) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      const data = { ...userData };
+      delete data.usr_tematicas;
+
+      console.log("Data a actualizar:", data);
+
+      if (Object.keys(data).length > 0) {
+        const campos = Object.keys(data);
+        const setClauses = campos.map((campo) => `${campo} = ?`).join(", ");
+        const query = `UPDATE usuarios SET ${setClauses} WHERE usr_correo = ?`;
+
+        await connection.query(query, [...Object.values(data), usr_correo]);
       }
-      return acc;
-    }, {});
 
-    const query =
-      `UPDATE usuarios SET ` +
-      Object.keys(filteredFields)
-        .map((key) => `${key} = ?`)
-        .join(", ") +
-      " WHERE usr_correo = ?";
-    const queryParams = [...Object.values(filteredFields), usr_correo];
-    const [result] = await pool.query(query, queryParams);
-    if (result.affectedRows === 0) {
-      throw new Error("Usuario no encontrado");
+      if (userData.usr_tematicas) {
+        await connection.query(
+          `DELETE FROM usuarios_has_tematicas WHERE usuarios_usr_correo = ?`,
+          [usr_correo]
+        );
+
+        for (const tematica of userData.usr_tematicas) {
+          await connection.query(
+            `
+          INSERT INTO usuarios_has_tematicas (usuarios_usr_correo, tematicas_tm_nombre)
+          VALUES (?, ?)
+        `,
+            [correoFinal, tematica]
+          );
+        }
+      }
+
+      await connection.commit();
+      return {
+        success: true,
+        message: "Usuario actualizado",
+      };
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      await connection.rollback();
+      throw error; // Preservamos el mensaje real del error
+    } finally {
+      connection.release();
     }
-
-    if (fields.tematicas) {
-      let query2 = `DELETE FROM usuarios_has_tematicas WHERE usuarios_usr_correo = ?`;
-      await pool.query(query2, [usr_correo]);
-
-      query2 = `INSERT INTO usuarios_has_tematicas VALUES `;
-      query2 +=
-        `('${usr_correo}', ?), `.repeat(fields.tematicas.length - 1) +
-        `('${usr_correo}', ?);`;
-      await pool.query(query2, [...fields.tematicas, ...fields.tematicas]);
-    }
-
-    return result;
   }
 
   static async deleteUser(usr_correo) {

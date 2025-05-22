@@ -3,16 +3,47 @@ import axios from "axios";
 
 import { BACKEND_URL } from "../../constants/api";
 
-export default function useMuseoGaleria(museoId) {
+export default function useMuseoGaleria(museoId, limit) {
   const [galeria, setGaleria] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const updateGaleria = (newGaleria) => {
+    try {
+      const endpoint = `${BACKEND_URL}/api/museos/galeria/update/${museoId}`;
+      const response = axios.put(endpoint, {
+        galeria: newGaleria,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error updating galeria:", error);
+      setError(error);
+    }
+  };
+
+  const uploadImages = async (files) => {
+    try {
+      const endpoint = `${BACKEND_URL}/api/museos/galeria/upload/${museoId}`;
+      const response = await axios.post(endpoint, files, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data.urls;
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      setError(error);
+    }
+  };
 
   const fetchGaleria = async (id) => {
     try {
       setLoading(true);
       const endpoint = `${BACKEND_URL}/api/museos/galeria/${id}`;
-      const response = await axios.get(endpoint);
+      const response = await axios.get(endpoint, {
+        params: { limit },
+      });
 
       setGaleria(response.data.galeria);
       setLoading(false);
@@ -38,5 +69,7 @@ export default function useMuseoGaleria(museoId) {
     loading,
     error,
     fetchGaleria,
+    uploadImages,
+    updateGaleria,
   };
 }

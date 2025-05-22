@@ -21,8 +21,6 @@ function LoginForm() {
     setShown(!shown);
   };
 
-  //   const [password, setPassword] = useState("");
-
   useEffect(() => {}, []);
 
   return (
@@ -74,8 +72,6 @@ function LoginForm() {
                     id="login-frm-password"
                     name="login_frm_password"
                     placeholder="Contraseña"
-                    // onChange={(e) => setPassword(e.target.value)}
-                    // value={password}
                     onChange={handleChange}
                     value={values.login_frm_password}
                     required

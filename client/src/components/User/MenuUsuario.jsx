@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 import Icons from "../Other/IconProvider";
+import { TIPOS_USUARIO } from "../../constants/catalog";
 const {
   editarPerfilIcon,
   historialIcon,
@@ -44,7 +45,10 @@ function MenuUsuario({ className }) {
           <p>{user?.usr_correo || "Correo"}</p>
           {user?.usr_tipo === 2 && <p>Administrador</p>}
           {user?.usr_tipo === 3 && <p>Moderador</p>}
-          <Link id="header-info-link" to={`/${tipoUsuario}/`}>
+          <Link
+            id="header-info-link"
+            to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/`}
+          >
             Ver Perfil
           </Link>
         </div>
@@ -55,7 +59,10 @@ function MenuUsuario({ className }) {
           <div className="menu-usuario-body-item-img-container">
             <img src={editarPerfilIcon} alt="Editar Perfil" />
           </div>
-          <Link id="body-item-link" to={`/${tipoUsuario}/Editar`}>
+          <Link
+            id="body-item-link"
+            to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/Editar`}
+          >
             Editar Perfil
           </Link>
         </div>
@@ -64,7 +71,10 @@ function MenuUsuario({ className }) {
             <div className="menu-usuario-body-item-img-container">
               <img src={historialIcon} alt="Historial de visitas" />
             </div>
-            <Link id="body-item-link" to={`/${tipoUsuario}/Historial`}>
+            <Link
+              id="body-item-link"
+              to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/Historial`}
+            >
               Historial de visitas
             </Link>
           </div>
@@ -76,7 +86,10 @@ function MenuUsuario({ className }) {
               <div className="menu-usuario-body-item-img-container">
                 <img src={modIcon} alt="Historial de visitas" />
               </div>
-              <Link id="body-item-link" to={`/${tipoUsuario}/VerMods`}>
+              <Link
+                id="body-item-link"
+                to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/VerMods`}
+              >
                 Moderadores
               </Link>
             </div>
@@ -85,7 +98,10 @@ function MenuUsuario({ className }) {
               <div className="menu-usuario-body-item-img-container">
                 <MdMuseum />
               </div>
-              <Link id="body-item-link" to={`/${tipoUsuario}/Museo/Registrar`}>
+              <Link
+                id="body-item-link"
+                to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/Museo/Registrar`}
+              >
                 Registrar Museo
               </Link>
             </div>
@@ -97,7 +113,10 @@ function MenuUsuario({ className }) {
             <div className="menu-usuario-body-item-img-container">
               <img src={verResIcon} alt="Historial de visitas" />
             </div>
-            <Link id="body-item-link" to={`/${tipoUsuario}/VerResenas`}>
+            <Link
+              id="body-item-link"
+              to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/VerResenas`}
+            >
               Reseñas
             </Link>
           </div>

@@ -9,7 +9,7 @@ export const useUsuario = () => {
     setError(null);
     try {
       return await UsuarioService.registrarUsuario(usuario);
-    } catch (error) { 
+    } catch (error) {
       setError(error);
       return null;
     } finally {
@@ -18,11 +18,11 @@ export const useUsuario = () => {
   };
 
   // Editar Usuario
-  const editarUsuario = async (usuario) => {
+  const editarUsuario = async (usuario, usr_correo) => {
     // console.log(usuario);
     setError(null);
     try {
-      return await UsuarioService.editarUsuario(usuario);
+      return await UsuarioService.editarUsuario(usuario, usr_correo);
     } catch (error) {
       setError(error);
       return null;
@@ -44,11 +44,24 @@ export const useUsuario = () => {
     }
   };
 
-  return { 
-    registrarUsuario, 
-    editarUsuario, 
-    recuperarContrasena, 
-    error 
+  const obtenerUsuarioByCorreo = async (usr_correo) => {
+    setError(null);
+    try {
+      return await UsuarioService.obtenerUsuarioPorCorreo(usr_correo);
+    } catch (error) {
+      setError(error);
+      return null;
+    } finally {
+      setError(null);
+    }
+  };
+
+  return {
+    registrarUsuario,
+    editarUsuario,
+    recuperarContrasena,
+    obtenerUsuarioByCorreo,
+    error,
   };
 };
 

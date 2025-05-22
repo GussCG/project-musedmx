@@ -17,6 +17,7 @@ function MuseoHorariosEdit() {
     error: errorHorarios,
     fetchHorarios,
     setHorarios,
+    updateHorarioByDia,
   } = useMuseoHorario(museoId);
   const [originalHorarios, setOriginalHorarios] = useState(horarios);
 
@@ -32,7 +33,7 @@ function MuseoHorariosEdit() {
   const handleSave = (rowIndex) => {
     setEditingRow(null);
     // Aquí puedes agregar la lógica para guardar los cambios en el horario
-    console.log("Guardando cambios en el horario:", horarios[rowIndex]);
+    updateHorarioByDia(horarios[rowIndex].mh_dia, horarios[rowIndex]);
   };
 
   const handleCancel = () => {
@@ -57,19 +58,22 @@ function MuseoHorariosEdit() {
         enableSorting: false,
       },
       {
-        accessorKey: "mh_hora_fin",
-        header: "Hora de Cierre",
+        accessorKey: "mh_hora_inicio",
+        header: "Hora de Inicio",
         cell: (info) => {
           const rowIndex = info.row.index;
           return editingRow === rowIndex ? (
             <input
+              key={`hora_fin-${rowIndex}`}
               type="time"
-              value={horarios[rowIndex].mh_hora_fin}
+              value={horarios[rowIndex].mh_hora_inicio}
               onChange={(e) => {
                 const newValue = e.target.value;
                 setHorarios((prev) =>
                   prev.map((row, idx) =>
-                    idx === rowIndex ? { ...row, mh_hora_fin: newValue } : row
+                    idx === rowIndex
+                      ? { ...row, mh_hora_inicio: newValue }
+                      : row
                   )
                 );
               }}
@@ -89,6 +93,7 @@ function MuseoHorariosEdit() {
           const rowIndex = info.row.index;
           return editingRow === rowIndex ? (
             <input
+              key={`hora_fin-${rowIndex}`}
               type="time"
               value={horarios[rowIndex].mh_hora_fin}
               onChange={(e) => {
@@ -108,24 +113,109 @@ function MuseoHorariosEdit() {
         enableSorting: false,
       },
       {
-        accessorKey: "mh_precio_dia",
-        header: "Costo de Entrada (MXN)",
+        accessorKey: "mh_precio_ad",
+        header: "Costo de Adulto",
         cell: (info) => {
           const rowIndex = info.row.index;
           return editingRow === rowIndex ? (
             <input
+              key={`precio-ad-${rowIndex}`}
               type="number"
-              value={horarios[rowIndex].mh_precio_dia}
+              value={horarios[rowIndex].mh_precio_ad}
               onChange={(e) => {
                 const newValue = e.target.value;
                 setHorarios((prev) =>
                   prev.map((row, idx) =>
-                    idx === rowIndex ? { ...row, mh_precio_dia: newValue } : row
+                    idx === rowIndex ? { ...row, mh_precio_ad: newValue } : row
                   )
                 );
               }}
-              onFocus={() => setFocusedField(`${rowIndex}-precio`)}
-              autoFocus={focusedField === `${rowIndex}-precio`}
+              onFocus={() => setFocusedField(`${rowIndex}-precio-ad`)}
+              autoFocus={focusedField === `${rowIndex}-precio-ad`}
+              min={0}
+            />
+          ) : (
+            `$ ${info.getValue()}`
+          );
+        },
+        enableSorting: false,
+      },
+      {
+        accessorKey: "mh_precio_ni",
+        header: "Costo de Niños",
+        cell: (info) => {
+          const rowIndex = info.row.index;
+          return editingRow === rowIndex ? (
+            <input
+              key={`precio-ni-${rowIndex}`}
+              type="number"
+              value={horarios[rowIndex].mh_precio_ni}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setHorarios((prev) =>
+                  prev.map((row, idx) =>
+                    idx === rowIndex ? { ...row, mh_precio_ni: newValue } : row
+                  )
+                );
+              }}
+              onFocus={() => setFocusedField(`${rowIndex}-precio-ni`)}
+              autoFocus={focusedField === `${rowIndex}-precio-ni`}
+              min={0}
+            />
+          ) : (
+            `$ ${info.getValue()}`
+          );
+        },
+        enableSorting: false,
+      },
+      {
+        accessorKey: "mh_precio_est",
+        header: "Costo de Estudiante",
+        cell: (info) => {
+          const rowIndex = info.row.index;
+          return editingRow === rowIndex ? (
+            <input
+              key={`precio-est-${rowIndex}`}
+              type="number"
+              value={horarios[rowIndex].mh_precio_est}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setHorarios((prev) =>
+                  prev.map((row, idx) =>
+                    idx === rowIndex ? { ...row, mh_precio_est: newValue } : row
+                  )
+                );
+              }}
+              onFocus={() => setFocusedField(`${rowIndex}-precio-est`)}
+              autoFocus={focusedField === `${rowIndex}-precio-est`}
+              min={0}
+            />
+          ) : (
+            `$ ${info.getValue()}`
+          );
+        },
+        enableSorting: false,
+      },
+      {
+        accessorKey: "mh_precio_ter",
+        header: "Costo de Tercera Edad",
+        cell: (info) => {
+          const rowIndex = info.row.index;
+          return editingRow === rowIndex ? (
+            <input
+              key={`precio-ter-${rowIndex}`}
+              type="number"
+              value={horarios[rowIndex].mh_precio_ter}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setHorarios((prev) =>
+                  prev.map((row, idx) =>
+                    idx === rowIndex ? { ...row, mh_precio_ter: newValue } : row
+                  )
+                );
+              }}
+              onFocus={() => setFocusedField(`${rowIndex}-precio-ter`)}
+              autoFocus={focusedField === `${rowIndex}-precio-ter`}
               min={0}
             />
           ) : (
@@ -140,7 +230,12 @@ function MuseoHorariosEdit() {
         cell: (info) =>
           editingRow === info.row.index ? (
             <div className="action-buttons">
-              <button onClick={() => handleSave(info.row.index)}>
+              <button
+                onClick={() => {
+                  handleSave(info.row.index);
+                  setEditingRow(null);
+                }}
+              >
                 Guardar
               </button>
               <button onClick={handleCancel}>Cancelar</button>

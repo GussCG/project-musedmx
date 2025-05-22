@@ -1,3 +1,4 @@
+import { redirect } from "react-router";
 import Icons from "../components/Other/IconProvider";
 
 export const TEMATICAS = {
@@ -384,5 +385,28 @@ export const PREGUNTAS_RESPUESTAS = {
         respuesta: "Adultos",
       },
     ],
+  },
+};
+
+export const TIPOS_USUARIO = {
+  1: {
+    id: 1,
+    nombre: "Usuario",
+    redirectPath: "/Usuario",
+  },
+  2: {
+    id: 2,
+    nombre: "Admin",
+    redirectPath: "/Admin",
+  },
+  3: {
+    id: 3,
+    nombre: "Mod",
+    redirectPath: "/Mod",
+  },
+  0: {
+    id: 0,
+    nombre: "No registrado",
+    redirectPath: "/",
   },
 };

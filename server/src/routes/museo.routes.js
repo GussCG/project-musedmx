@@ -16,6 +16,9 @@ import {
   getMuseosSimilaresById,
   getMuseosCercaById,
   getMuseosAsociacionById,
+  updateHorarioByDia,
+  uploadImages,
+  updateGaleria,
 } from "../controllers/museo.controller.js";
 
 const router = Router();
@@ -36,5 +39,8 @@ router.get("/sugeridos/:correo", getMuseosSugeridosByCorreo);
 router.get("/similares/:id", getMuseosSimilaresById);
 router.get("/cercanos/:id", getMuseosCercaById);
 router.get("/asociacion/:id", getMuseosAsociacionById);
+router.post("/horarios/updateByDia/:id", updateHorarioByDia);
+router.post("/galeria/upload/:id", uploadImages);
+router.post("/galeria/update/:id", updateGaleria);
 
 export default router;

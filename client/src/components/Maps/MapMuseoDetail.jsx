@@ -66,7 +66,7 @@ function MapMuseoDetail({ museo }) {
             </motion.div>
           ) : (
             <Map
-              defaultZoom={19}
+              defaultZoom={17}
               center={mapCenter}
               mapId={MAP_DETAIL}
               key={`${museo?.id}-MAP-DETAIL`}

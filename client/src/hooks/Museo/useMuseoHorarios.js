@@ -9,6 +9,21 @@ export default function useMuseoHorarios(museoId) {
   const [error, setError] = useState(null);
   const [cerrado, setCerrado] = useState(false);
 
+  const updateHorarioByDia = async (dia, updateData) => {
+    try {
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/museos/horarios/updateByDia/${museoId}`;
+
+      // Enviar al backend el día a actualizar y los nuevos datos
+      await axios.post(endpoint, { dia, updateData });
+    } catch (error) {
+      console.error("Error updating horario by dia:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchHorarios = async (id) => {
     try {
       setLoading(true);
@@ -50,5 +65,6 @@ export default function useMuseoHorarios(museoId) {
     cerrado,
     fetchHorarios,
     setHorarios,
+    updateHorarioByDia,
   };
 }

@@ -1,5 +1,10 @@
 import Museo from "../models/museo.model.js";
 import { handleHttpError } from "../helpers/httpError.js";
+import { formatMuseoImageName } from "../utils/formatNombreArchivos.js";
+import path from "path";
+import fs from "fs";
+import { uploadToAzure } from "../utils/azureUpload.js";
+import sharp from "sharp";
 
 export const getMuseos = async (req, res) => {
   try {
@@ -80,7 +85,8 @@ export const getMuseoById = async (req, res) => {
 export const getGaleriaById = async (req, res) => {
   try {
     const { id } = req.params;
-    const galeria = await Museo.findGaleriaById({ id: id });
+    const { limit } = req.query;
+    const galeria = await Museo.findGaleriaById({ id: id, limit });
     res.json({
       success: true,
       id,
@@ -340,6 +346,106 @@ export const getMuseosAsociacionById = async (req, res) => {
     handleHttpError(res, "ERROR_GET_MUSEOS_ASOCIACION", error);
   }
 };
+
+export const updateHorarioByDia = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { dia, updateData } = req.body;
+
+    if (!dia || !updateData) {
+      return res.status(400).json({
+        success: false,
+        message: "Faltan datos para actualizar el horario",
+      });
+    }
+
+    // Actualizar el horario por día
+    const updatedHorario = await Museo.updateHorarioByDia({
+      id,
+      dia,
+      horarioData: updateData,
+    });
+
+    res.json({
+      success: true,
+      message: "Horario actualizado correctamente",
+      updatedHorario,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_UPDATE_HORARIO_BY_DIA", error);
+  }
+};
+
+export const uploadImages = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const files = req.files;
+
+    if (!files || files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No se proporcionaron imágenes para subir",
+      });
+    }
+
+    // Verificar si el museo existe
+    const museoExistente = await Museo.findById({ id });
+    if (!museoExistente) {
+      return res.status(404).json({
+        success: false,
+        message: "Museo no encontrado",
+      });
+    }
+
+    // Borra solo los registros de imágenes antiguas en la base de datos,
+    // pero NO las imágenes del Blob Storage (porque se van a sobrescribir)
+    await Museo.deleteGaleriaById(id); // limpia solo BD
+
+    const nombreMuseoFormateado = formatMuseoImageName(
+      museoExistente.mus_nombre
+    );
+    const containerName = "imagenes-museos"; // Cambia según tu contenedor real
+
+    // Carpeta temporal para imágenes JPG convertidas
+    const tempDir = path.join(__dirname, "..", "temp", nombreMuseoFormateado);
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+
+    const urls = await Promise.all(
+      files.map(async (file, index) => {
+        const jpgFileName = `${nombreMuseoFormateado}_${index + 1}.jpg`;
+        const tempJpgPath = path.join(tempDir, jpgFileName);
+        const blobName = `${nombreMuseoFormateado}/${jpgFileName}`;
+
+        // Convertir a JPG y guardar temporalmente
+        await sharp(file.path).jpeg({ quality: 80 }).toFile(tempJpgPath);
+
+        // Subir al blob
+        const url = await uploadToAzure(containerName, tempJpgPath, blobName);
+
+        // Eliminar archivos temporales
+        if (fs.existsSync(tempJpgPath)) fs.unlinkSync(tempJpgPath);
+        if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+
+        return url;
+      })
+    );
+
+    // Guardar las URLs en la base de datos
+    await Museo.guardarGaleria(id, urls);
+
+    return res.status(200).json({
+      success: true,
+      message: "Imágenes subidas correctamente",
+      urls,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_UPLOAD_IMAGES", error);
+  }
+};
+
+export const updateGaleria = async (req, res) => {};
 
 export const deleteMuseo = async (req, res) => {
   try {

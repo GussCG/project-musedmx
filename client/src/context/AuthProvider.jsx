@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../constants/api";
+import { TIPOS_USUARIO } from "../constants/catalog";
 
 // Crear el contexto de autenticación
 const AuthContext = createContext();
@@ -25,15 +26,7 @@ function AuthProvider({ children }) {
 
   const navigate = useNavigate();
 
-  // Tipos de usuario
-  const tiposUsuario = {
-    0: "No registrado",
-    1: "Usuario",
-    2: "Admin",
-    3: "Mod",
-  };
-
-  const [tipoUsuario, setTipoUsuario] = useState("");
+  const [tipoUsuario, setTipoUsuario] = useState(0);
 
   // Gestionar el estado de carga
   const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +35,9 @@ function AuthProvider({ children }) {
   const [error, setError] = useState(null);
 
   const [isLogginPopupOpen, setIsLogginPopupOpen] = useState(false);
+  const [token, setToken] = useState(() => {
+    localStorage.getItem("token") || null;
+  });
 
   // Función para iniciar sesión
   const login = async (userData) => {
@@ -58,28 +54,13 @@ function AuthProvider({ children }) {
       const user = response.data.usuario; // Desestructurar la respuesta del backend
 
       setUser(user);
-      setTipoUsuario(tiposUsuario[user.usr_tipo]);
-
+      setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
       localStorage.setItem("user", JSON.stringify(user)); // Guardar el usuario en el localStorage
-      localStorage.setItem("tipoUsuario", tiposUsuario[user.usr_tipo]); // Guardar el tipo de usuario en el localStorage
-      setIsLogginPopupOpen(false); // Cerrar el popup
-      let redirectPath = "/"; // Ruta por defecto
+      localStorage.setItem("tipoUsuario", TIPOS_USUARIO[user.usr_tipo].nombre); // Guardar el tipo de usuario en el localStorage
 
-      switch (user.usr_tipo) {
-        case 1:
-          redirectPath = "Usuario";
-          break;
-        case 2:
-          redirectPath = "Admin";
-          break;
-        case 3:
-          redirectPath = "Mod";
-          break;
-        default:
-          redirectPath = "";
-      }
-      console.log("Redirigiendo a:", redirectPath);
-      navigate(redirectPath); // Redirigir a la ruta correspondiente
+      setIsLogginPopupOpen(false); // Cerrar el popup
+
+      navigate(TIPOS_USUARIO[user.usr_tipo].redirectPath); // Redirigir a la ruta correspondiente
     } catch (error) {
       console.error("Error de login: ", error);
       setError(error);
@@ -102,10 +83,13 @@ function AuthProvider({ children }) {
           withCredentials: true, // para que se borre la cookie
         }
       );
-      setUser(null);
+
       localStorage.removeItem("user");
       localStorage.removeItem("tipoUsuario");
-      setTipoUsuario("");
+      localStorage.removeItem("token");
+      setUser(null);
+      setTipoUsuario(0);
+      setToken(null); // Limpiar el token del estado
       navigate("/"); // Redirigir a la página de inicio
     } catch (error) {
       console.error(error);
@@ -125,11 +109,11 @@ function AuthProvider({ children }) {
 
         if (response.data) {
           setUser(response.data.usuario);
-          setTipoUsuario(tiposUsuario[response.data.usuario.usr_tipo]);
+          setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
           localStorage.setItem("user", JSON.stringify(response.data.usuario));
           localStorage.setItem(
             "tipoUsuario",
-            tiposUsuario[response.data.usuario.usr_tipo]
+            TIPOS_USUARIO[user.usr_tipo].nombre
           );
         }
       } catch (error) {
@@ -150,8 +134,10 @@ function AuthProvider({ children }) {
         isLoading,
         error,
         tipoUsuario,
+        token,
         isLogginPopupOpen,
         setIsLogginPopupOpen,
+        setUser,
       }}
     >
       {children}

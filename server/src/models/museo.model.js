@@ -121,17 +121,68 @@ export default class Museo {
     return rows[0];
   }
 
-  static async findGaleriaById({ id }) {
-    const query = `
+  static async findGaleriaById({ id, limit }) {
+    let query = `
       SELECT * FROM galeria
       WHERE gal_mus_id = ?
       ORDER BY RAND()
-      LIMIT 10
       `;
     const queryParams = [];
     queryParams.push(id);
+
+    if (limit) {
+      query += ` LIMIT ?`;
+      queryParams.push(parseInt(limit));
+    }
+
     const [rows] = await pool.query(query, queryParams);
     return rows;
+  }
+
+  static async deleteGaleriaById(id) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      const query = `
+        DELETE FROM galeria
+        WHERE gal_mus_id = ?
+      `;
+      const queryParams = [id];
+      await connection.query(query, queryParams);
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error deleting galeria:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async guardarGaleria(id, urls) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      for (const url of urls) {
+        const query = `
+          INSERT INTO galeria (gal_mus_id, gal_foto)
+          VALUES (?, ?)
+        `;
+        const queryParams = [id, url];
+        await connection.query(query, queryParams);
+      }
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error saving galeria:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
   }
 
   static async findHorariosById({ id }) {
@@ -541,6 +592,45 @@ export default class Museo {
     } catch (error) {
       console.error("Error fetching asociacion:", error);
       throw error;
+    }
+  }
+
+  static async updateHorarioByDia({ id, dia, horarioData }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      const query = `
+        UPDATE horarios_precios_museo
+        SET mh_hora_inicio = ?,
+            mh_hora_fin = ?,
+            mh_precio_ad = ?,
+            mh_precio_ni = ?,
+            mh_precio_ter = ?,
+            mh_precio_est = ?
+        WHERE mh_mus_id = ?
+        AND mh_dia = ?
+      `;
+
+      const queryParams = [
+        horarioData.mh_hora_inicio,
+        horarioData.mh_hora_fin,
+        horarioData.mh_precio_ad,
+        horarioData.mh_precio_ni,
+        horarioData.mh_precio_ter,
+        horarioData.mh_precio_est,
+        id,
+        dia,
+      ];
+
+      await connection.query(query, queryParams);
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error updating horario:", error);
+      throw error;
+    } finally {
+      connection.release();
     }
   }
 }

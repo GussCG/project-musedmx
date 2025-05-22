@@ -18,9 +18,15 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios` (
   PRIMARY KEY (`usr_correo`)
 -- UNIQUE INDEX `correo` (`usr_correo` ASC) VISIBLE
   ) ENGINE=InnoDB;
+  
+INSERT INTO musedmx.usuarios 
+(usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo)
+VALUES
+('admin@musedmx.com', 'Admin', 'Sistema', 'MuseDMX', '$2a$12$jtrzPRbUlgrq4.7GK9Ky9OGN6mR.Wbmv/I9ENXcgutdBNaFpBb1j2', '1980-01-01', "+525527167255", NULL, 2);
+
 
 SELECT * FROM usuarios;
-DELETE FROM usuarios WHERE usr_correo = "gusester2002@gmail.com";
+DELETE FROM usuarios WHERE usr_correo = "admin@musedmx.com";
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`administrador`
@@ -34,15 +40,15 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`administrador` (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 	) ENGINE=InnoDB;
-
+SELECT * FROM administrador;
 -- -----------------------------------------------------
 -- Trigger para cuando se inserte un nuevo usuario en usuarios con tipo 2, se inserte en administrador
 -- -----------------------------------------------------
 DELIMITER //
-CREATE TRIGGER `musedmx`.`trg_insert_administrador` AFTER INSERT ON `musedmx`.`usuarios` FOR EACH ROW
+CREATE TRIGGER musedmx.trg_insert_administrador AFTER INSERT ON musedmx.usuarios FOR EACH ROW
 BEGIN
   IF NEW.usr_tipo = 2 THEN
-    INSERT INTO `musedmx`.`administrador` (usuarios_usr_correo) VALUES (NEW.usr_correo);
+    INSERT INTO musedmx.administrador (usuarios_usr_correo) VALUES (NEW.usr_correo);
   END IF;
 END;
 //
@@ -55,11 +61,18 @@ DELIMITER //
 CREATE TRIGGER `musedmx`.`trg_update_administrador` AFTER UPDATE ON `musedmx`.`usuarios` FOR EACH ROW
 BEGIN
   IF NEW.usr_tipo = 2 THEN
-	INSERT INTO `musedmx`.`administrador` (usuarios_usr_correo) VALUES (NEW.usr_correo);
+    -- Solo inserta si no existe
+    IF NOT EXISTS (SELECT 1 FROM administrador WHERE usuarios_usr_correo = NEW.usr_correo) THEN
+      INSERT INTO administrador (usuarios_usr_correo) VALUES (NEW.usr_correo);
+    END IF;
+  ELSE
+    -- Opcional: si tipo cambió a diferente de 2, eliminar de administrador
+    DELETE FROM administrador WHERE usuarios_usr_correo = NEW.usr_correo;
   END IF;
 END;
 //
 DELIMITER ;
+
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`moderador`
@@ -94,11 +107,17 @@ DELIMITER //
 CREATE TRIGGER `musedmx`.`trg_update_moderador` AFTER UPDATE ON `musedmx`.`usuarios` FOR EACH ROW
 BEGIN
   IF NEW.usr_tipo = 3 THEN
-	INSERT INTO `musedmx`.`moderador` (usuarios_usr_correo) VALUES (NEW.usr_correo);
+    IF NOT EXISTS (SELECT 1 FROM moderador WHERE usuarios_usr_correo = NEW.usr_correo) THEN
+      INSERT INTO moderador (usuarios_usr_correo) VALUES (NEW.usr_correo);
+    END IF;
+  ELSE
+    -- Opcional: eliminar si tipo cambió a distinto de 3
+    DELETE FROM moderador WHERE usuarios_usr_correo = NEW.usr_correo;
   END IF;
 END;
 //
 DELIMITER ;
+
 -- -----------------------------------------------------
 -- Table `musedmx`.`auditorias`
 -- -----------------------------------------------------
@@ -324,6 +343,9 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`favoritos` (
   /* INDEX `correo_Usuario` (`fav_usr_correo` ASC) VISIBLE,
   INDEX `id_Museo` (`fav_mus_id` ASC) VISIBLE */
   ) ENGINE=InnoDB;
+  
+  SELECT * FROM favoritos WHERE fav_usr_correo = "gusester2002@gmail.com";
+  DELETE FROM favoritos WHERE fav_usr_correo = "gusester2002@gmail.com";
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`quiero_visitar`
@@ -374,7 +396,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`visitas` (
 CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
   `res_id_res` INT(11) NOT NULL AUTO_INCREMENT,
   `res_comentario` TEXT NOT NULL,
-  `res_mod_correo` VARCHAR(75) NULL,
+  `res_mod_correo` VARCHAR(75) NOT NULL,
   `res_aprobado` TINYINT(1) NOT NULL,
   `res_calif_estrellas` INT(1) NOT NULL,
   `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,

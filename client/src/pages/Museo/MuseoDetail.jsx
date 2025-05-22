@@ -15,7 +15,12 @@ import MapMuseoDetail from "../../components/Maps/MapMuseoDetail";
 import MuseoSlider from "../../components/Museo/MuseoSlider";
 import MuseoGallery from "../../components/Museo/MuseoGallery";
 import { buildImage } from "../../utils/buildImage";
-import { TEMATICAS, REDES_SOCIALES, SERVICIOS } from "../../constants/catalog";
+import {
+  TEMATICAS,
+  REDES_SOCIALES,
+  SERVICIOS,
+  TIPOS_USUARIO,
+} from "../../constants/catalog";
 import {
   procesarCalificaciones,
   procesarServicios,
@@ -67,7 +72,7 @@ function MuseoDetail() {
     galeria: galeria,
     loading: galeriaLoading,
     error: galeriaError,
-  } = useMuseoGaleria(museoIdNumber);
+  } = useMuseoGaleria(museoIdNumber, 10);
   const {
     horarios: horarios,
     loading: horariosLoading,
@@ -210,7 +215,7 @@ function MuseoDetail() {
                   </div>
                   <div
                     className={
-                      user && (user.tipoUsuario === 2 || user.tipoUsuario === 3)
+                      user && (user.usr_tipo === 2 || user.usr_tipo === 3)
                         ? "museo-section-1-container-botones"
                         : "museo-section-1-container"
                     }
@@ -258,8 +263,7 @@ function MuseoDetail() {
                           ))}
                       </div>
                     </div>
-                    {user &&
-                    (user.tipoUsuario === 2 || user.tipoUsuario === 3) ? (
+                    {user && (user.usr_tipo === 2 || user.usr_tipo === 3) ? (
                       <HeaderMuseoButtons museoId={museoId} />
                     ) : (
                       <div className="museo-section-1-csm">
@@ -550,7 +554,7 @@ function MuseoDetail() {
                           </div>
                         </div>
                       </div>
-                      {user?.tipoUsuario !== 2 && user?.tipoUsuario !== 3 ? (
+                      {user?.usr_tipo !== 2 && user?.usr_tipo !== 3 ? (
                         <div className="museo-section-5-registrar">
                           <h2>¿Fuiste al museo?</h2>
                           <Link
@@ -572,10 +576,10 @@ function MuseoDetail() {
                         </div>
                       ) : null}
 
-                      {user && user?.tipoUsuario === 3 ? (
+                      {user && user?.usr_tipo === 3 ? (
                         <div className="museo-section-5-registrar">
                           <Link
-                            to={`/${tipoUsuario}/VerResenas/${museoId}`}
+                            to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/VerResenas/${museoId}`}
                             // id="museo-section-5-registrar-button"
                             className="button-link"
                           >

@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from "react";
 import useUsuario from "../../hooks/Usuario/useUsuario";
 import ValidPassword from "../../components/Forms/ValidPassword";
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import { toast, Bounce } from "react-toastify";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";

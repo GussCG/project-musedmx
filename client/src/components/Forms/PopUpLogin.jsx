@@ -10,11 +10,8 @@ const { IoClose, LuEye, LuEyeClosed } = Icons;
 function PopUpLogin() {
   const { login, isLogginPopupOpen, setIsLogginPopupOpen, isLoading, error } =
     useAuth();
-
   const [shown, setShown] = useState(false);
-  const [password, setPassword] = useState("");
-
-  const [errorMessage, setErrorMessage] = useState("Correo Invalido");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const clearError = () => setErrorMessage("");
 
@@ -53,17 +50,17 @@ function PopUpLogin() {
               onSubmit={async (values, { setSubmitting }) => {
                 try {
                   await login({
-                    email: values.login_frm_email,
-                    password: values.login_frm_password,
+                    usr_correo: values.login_frm_email,
+                    usr_contrasenia: values.login_frm_password,
                   });
                 } catch (error) {
-                  setErrorMessage(error);
+                  setErrorMessage(error.response.data.message);
                 } finally {
                   setSubmitting(false);
                 }
               }}
             >
-              {({ handleChange, handleSubmit, isSubmitting }) => (
+              {({ values, handleChange, handleSubmit, isSubmitting }) => (
                 <div className="login-popup-container">
                   <Form onSubmit={handleSubmit}>
                     <div className="login-field">
@@ -72,6 +69,8 @@ function PopUpLogin() {
                         id="login-frm-email"
                         name="login_frm_email"
                         placeholder="Correo Electrónico"
+                        onChange={handleChange}
+                        value={values.login_frm_email}
                         required
                       />
                       <label htmlFor="login-frm-email">
@@ -84,8 +83,8 @@ function PopUpLogin() {
                         id="login-frm-password"
                         name="login_frm_password"
                         placeholder="Contraseña"
-                        onChange={(e) => setPassword(e.target.value)}
-                        value={password}
+                        onChange={handleChange}
+                        value={values.login_frm_password}
                         required
                       />
                       <label htmlFor="login-frm-password">Contraseña</label>
@@ -101,12 +100,42 @@ function PopUpLogin() {
                         {shown ? <LuEye /> : <LuEyeClosed />}
                       </motion.div>
                     </div>
-                    {errorMessage && (
-                      <LoginErrorMessage
-                        error={errorMessage}
-                        onClose={clearError}
-                      />
-                    )}
+                    <AnimatePresence mode="popLayout">
+                      {errorMessage && (
+                        <motion.div
+                          layout
+                          className="error-message-container"
+                          key={"error-message"}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{
+                            scale: 1,
+                            opacity: 1,
+                          }}
+                          exit={{
+                            scale: 0,
+                            opacity: 0,
+                            x: -20,
+                          }}
+                          transition={{
+                            duration: 0.01,
+                            ease: "easeIn",
+                            type: "spring",
+                            bounce: 0.4,
+                            stiffness: 100,
+                            damping: 20,
+                          }}
+                          style={{
+                            overflow: "hidden",
+                            width: "100%",
+                          }}
+                        >
+                          <LoginErrorMessage
+                            error={errorMessage}
+                            onClose={clearError}
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                     <input
                       type="submit"
                       value={isLoading ? "Cargando..." : "Iniciar Sesión"}

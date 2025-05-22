@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-
 import { Bounce, toast } from "react-toastify";
-
 import { motion } from "framer-motion";
-
 import Icons from "../../components/Other/IconProvider";
 const { FaTrash, IoIosCheckmarkCircle, LuImageUp, FaImage } = Icons;
+import { useParams, useNavigate } from "react-router-dom";
+import useMuseoGaleria from "../../hooks/Museo/useMuseoGaleria";
 
 function MuseoImgEdit() {
   // Para las imagenes del museo
@@ -13,75 +12,14 @@ function MuseoImgEdit() {
   const [progress, setProgress] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  // Cuando este el backend
-  // useEffect(() => {
-  //   // Simulación de obtención de imágenes desde la API
-  //   const fetchImages = async () => {
-  //     try {
-  //       // Aquí iría tu llamada real a la API
-  //       const response = await fetch("tu_endpoint_api");
-  //       const imagesFromDB = await response.json();
+  const navigate = useNavigate();
 
-  //       // Convertir los BLOBs a URLs de datos
-  //       const formattedImages = imagesFromDB.map((image) => ({
-  //         id: image.id,
-  //         name: image.nombre_archivo || `imagen_${image.id}`,
-  //         size: formatBytes(image.tamanio || 0),
-  //         url: `data:${image.tipo_mime};base64,${arrayBufferToBase64(
-  //           image.datos_imagen
-  //         )}`,
-  //       }));
+  const { museoId } = useParams();
 
-  //       setUploadedFiles(formattedImages);
-  //     } catch (error) {
-  //       console.error("Error al cargar imágenes:", error);
-  //     }
-  //   };
-  //   fetchImages();
-  // }, []);
+  const { galeria, loading, error, uploadImages, updateGaleria } =
+    useMuseoGaleria(museoId);
 
-  // // Función para convertir ArrayBuffer a Base64
-  // const arrayBufferToBase64 = (buffer) => {
-  //   if (!buffer) return '';
-  //   let binary = '';
-  //   const bytes = new Uint8Array(buffer);
-  //   const len = bytes.byteLength;
-  //   for (let i = 0; i < len; i++) {
-  //     binary += String.fromCharCode(bytes[i]);
-  //   }
-  //   return window.btoa(binary);
-  // };
-
-  // Para pruebas, despues aqui se llama a la API para obtener las imagenes del museo
-  useEffect(() => {
-    // Simular la carga de imágenes existentes
-    const imagenesMuseoPrueba = [
-      {
-        name: "imagen1.jpg",
-        size: "2 MB",
-        url: "https://a.espncdn.com/i/headshots/nba/players/full/3975.png",
-      },
-      {
-        name: "imagen2.jpg",
-        size: "1.5 MB",
-        url: "https://e00-us-marca.uecdn.es/assets/multimedia/imagenes/2024/08/22/17242852970948.jpg",
-      },
-      {
-        name: "imagen3.jpg",
-        size: "3 MB",
-        url: "https://cdn.vox-cdn.com/thumbor/CvvH4vnFRlg4RIKI0siY7VO7Gns=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/23634633/slack_imgs.jpg",
-      },
-    ];
-    setUploadedFiles(imagenesMuseoPrueba);
-
-    return () => {
-      // Limpiar el estado de las imágenes al desmontar el componente y las url de las imagenes al desmontar
-      setUploadedFiles([]);
-      uploadedFiles.forEach((file) => {
-        URL.revokeObjectURL(file.url); // Revocar la URL del objeto para liberar memoria
-      });
-    };
-  }, []);
+  console.log("galeria", galeria);
 
   // Función para abrir el input de file
   const handleFileClick = () => {
@@ -98,9 +36,8 @@ function MuseoImgEdit() {
     );
     const totalFiles = uploadedFiles.length + validFiles.length;
 
-    if (totalFiles > 8) {
-      // Mensaje de error si se superan las 8 imagenes
-      console.error("Máximo 8 fotos");
+    if (totalFiles > 20) {
+      console.error("Máximo 20 fotos");
       return;
     }
 
@@ -115,8 +52,8 @@ function MuseoImgEdit() {
     const validFiles = file.filter((file) => file.type.startsWith("image/"));
     const totalFiles = uploadedFiles.length + validFiles.length;
 
-    if (totalFiles > 8) {
-      toast.error(`Máximo 8 fotos`, {
+    if (totalFiles > 20) {
+      toast.error(`Máximo 20 fotos`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -200,6 +137,49 @@ function MuseoImgEdit() {
       }
     }, 500);
   };
+
+  const handleSave = async () => {
+    const nuevasImagenes = uploadedFiles.filter(
+      (f) => !f.url.startsWith("http")
+    );
+    const imagenesExistentes = uploadedFiles.filter((f) =>
+      f.url.startsWith("http")
+    );
+
+    const formData = new FormData();
+    nuevasImagenes.forEach((file) => {
+      formData.append("galeria", file.fileObject);
+    });
+
+    try {
+      const nuevasUrls = await uploadImages(formData);
+
+      const galeriaFinal = [
+        ...imagenesExistentes.map((f) => f.url),
+        ...nuevasUrls,
+      ];
+
+      const response = await updateGaleria(museoId, galeriaFinal);
+      if (response.success) {
+        navigate(`/Museo/${museoId}`);
+      }
+    } catch (error) {
+      console.error("Error al subir las imágenes:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (galeria && Array.isArray(galeria)) {
+      const newFiles = galeria.map((file) => ({
+        id: file.gal_foto_id,
+        name: file.gal_foto,
+        size: "",
+        url: file.gal_foto,
+        fileObject: null, // No tenemos el objeto de archivo original aquí
+      }));
+      setUploadedFiles(newFiles);
+    }
+  }, [galeria]);
 
   return (
     <motion.div

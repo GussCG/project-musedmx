@@ -101,11 +101,6 @@ export const userSchema = Yup.object({
     .min(2, "El apellido materno debe tener al menos 2 caracteres")
     .max(30, "El apellido materno no puede tener más de 30 caracteres")
     .required("Campo requerido"),
-  signinfrmemail: Yup.string()
-    .email("Correo inválido")
-    .required("Campo requerido")
-    .min(5, "El correo debe tener al menos 5 caracteres")
-    .max(75, "El correo no puede tener más de 75 caracteres"),
   signinfrmtelefono: Yup.string()
     .matches(/^\+?[1-9]\d{1,14}$/, "Número de teléfono inválido")
     .required("Campo requerido")

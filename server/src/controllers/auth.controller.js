@@ -1,11 +1,17 @@
 import Usuario from "../models/auth.model.js";
 import { handleHttpError } from "../helpers/httpError.js";
-import { hash, compare } from 'bcrypt';
+import { hash, compare } from "bcrypt";
+import sharp from "sharp";
 // import { sendEmail } from "../services/emailService";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
 import { uploadToAzure } from "../utils/azureUpload.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const logIn = async (req, res) => {
   try {
@@ -94,7 +100,7 @@ export const signUp = async (req, res) => {
     let usr_foto = null;
     if (req.file) {
       const sanitizedEmail = usr_correo.replace(/[^a-zA-Z0-9]/g, "-");
-      const blobName = `${sanitizedEmail}-imagenes/perfil/${req.file.filename}`;
+      const blobName = `${sanitizedEmail}-imagenes/perfil/perfil.jpg`;
       const containerName = "imagenes-usuarios";
       usr_foto = await uploadToAzure(containerName, req.file.path, blobName);
     }
@@ -193,45 +199,82 @@ export const verifyUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const correoDelToken = req.usuario.correo; // viene del token decodificado
-
+    const correoParam = req.params.usr_correo; // Correo del usuario a editar
+    const correoToken = req.usuario.correo; // viene del token decodificado
     // Evita que editen a otro usuario
-    if (correoDelToken !== req.body.usr_correo) {
+    if (correoToken !== correoParam) {
       return res
         .status(403)
         .json({ message: "No autorizado para editar este usuario" });
     }
 
+    // Obtener el usuario actual de la BD
+    const usuarioActual = await Usuario.findById(correoParam);
+    if (!usuarioActual) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuario no encontrado",
+      });
+    }
+
+    const datosActualizar = {};
+
     if (req.body.usr_contrasenia) {
       req.body.usr_contrasenia = await hash(req.body.usr_contrasenia, 10);
     }
 
-    // Obtener el usuario actual de la BD
-    const usuarioActual = await Usuario.findById(req.body.usr_correo);
-
-    // Validar si se subió una nueva imagen
-    if (
-      req.file &&
-      usuarioActual.usr_foto &&
-      usuarioActual.usr_foto !== req.file.filename
-    ) {
-      const rutaAnterior = path.join("uploads", usuarioActual.usr_foto);
-
-      // Verifica que exista antes de borrar
-      if (fs.existsSync(rutaAnterior)) {
-        fs.unlinkSync(rutaAnterior); // ❌ Borra la imagen anterior
-        console.log("Imagen anterior eliminada:", usuarioActual.usr_foto);
-      }
-
-      req.body.usr_foto = req.file.filename; // ✅ Guardar la nueva en BD
-    } else if (!req.file) {
-      req.body.usr_foto = usuarioActual.usr_foto; // 🧠 Si no hay nueva, conservar la anterior
+    if (req.body.usr_nombre) datosActualizar.usr_nombre = req.body.usr_nombre;
+    if (req.body.usr_ap_paterno)
+      datosActualizar.usr_ap_paterno = req.body.usr_ap_paterno;
+    if (req.body.usr_ap_materno)
+      datosActualizar.usr_ap_materno = req.body.usr_ap_materno;
+    if (req.body.usr_fecha_nac)
+      datosActualizar.usr_fecha_nac = req.body.usr_fecha_nac;
+    if (req.body.usr_telefono)
+      datosActualizar.usr_telefono = req.body.usr_telefono;
+    if (req.body.usr_tipo) datosActualizar.usr_tipo = req.body.usr_tipo;
+    if (req.body.usr_tematicas) {
+      datosActualizar.usr_tematicas = JSON.parse(req.body.usr_tematicas);
     }
 
-    const usuario = await Usuario.updateUser(req.body.usr_correo, req.body);
+    if (req.file) {
+      const sanitizedEmail = correoParam.replace(/[^a-zA-Z0-9]/g, "-");
+      const containerName = "imagenes-usuarios";
+      const tempJpgPath = path.join(
+        __dirname,
+        "..",
+        "temp",
+        `${sanitizedEmail}-imagenes`,
+        "perfil.jpg"
+      );
 
-    res.json({
+      const tempDir = path.dirname(tempJpgPath);
+      if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir, { recursive: true });
+      }
+
+      await sharp(req.file.path).jpeg({ quality: 80 }).toFile(tempJpgPath);
+
+      const blobName = `${sanitizedEmail}-imagenes/perfil/perfil.jpg`;
+
+      const nuevaFotoUrl = await uploadToAzure(
+        containerName,
+        tempJpgPath,
+        blobName
+      );
+
+      if (fs.existsSync(tempJpgPath)) {
+        fs.unlinkSync(tempJpgPath);
+      }
+
+      datosActualizar.usr_foto = nuevaFotoUrl;
+    }
+
+    const usuario = await Usuario.updateUser(correoParam, datosActualizar);
+
+    res.status(200).json({
       success: true,
+      message: "Usuario actualizado",
       usuario,
     });
   } catch (error) {
@@ -240,7 +283,26 @@ export const updateUser = async (req, res) => {
 };
 
 export const verEmail = async (req, res) => {
-	console.log(process.env.SMTP_HOST);
+  console.log(process.env.SMTP_HOST);
+};
+
+export const obtenerUsuarioByCorreo = async (req, res) => {
+  try {
+    const { usr_correo } = req.params;
+    const usuario = await Usuario.findById(usr_correo);
+    if (!usuario) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuario no encontrado",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      usuario,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_USER", error);
+  }
 };
 
 /* export const recuperarContrasena = (req, res) => {
