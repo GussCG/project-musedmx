@@ -250,7 +250,11 @@ function MuseoForm({ mode }) {
         toast.success("Museo actualizado correctamente", {
           transition: Bounce,
         });
-        navigate("/museos");
+
+        navigate(`/Museos/${response.museo.mus_id}`);
+        setTimeout(() => {
+          window.location.reload();
+        }, 750); // espera medio segundo para recargar
       } catch (error) {
         console.error(error);
         toast.error("Error al actualizar museo", { transition: Bounce });

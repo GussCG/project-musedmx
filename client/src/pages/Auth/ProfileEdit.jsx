@@ -17,6 +17,7 @@ import { userSchema } from "../../constants/validationSchemas";
 import { TEMATICAS } from "../../constants/catalog";
 import { formatearFechaBDDATE } from "../../utils/formatearFechas";
 import { TIPOS_USUARIO } from "../../constants/catalog";
+import UserImage from "../../components/User/UserImage";
 
 function ProfileEdit() {
   const { user, tipoUsuario, setUser } = useAuth();
@@ -178,6 +179,7 @@ function ProfileEdit() {
       });
 
       const response = await editarUsuario(userData, user.usr_correo);
+      console.log("Respuesta de editarUsuario:", response);
 
       if (response) {
         const datosActualizados = await obtenerUsuarioByCorreo(user.usr_correo);
@@ -440,7 +442,7 @@ function ProfileEdit() {
                               </div>
                             </div>
                             {imagePreview && (
-                              <img
+                              <UserImage
                                 src={imagePreview}
                                 alt="Foto de Perfil"
                                 id="foto-preview"

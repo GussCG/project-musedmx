@@ -67,7 +67,7 @@ function MuseoDetail() {
     loading: isLoading,
     error,
   } = useMuseo(museoIdNumber);
-  // Para obtener la galeria de imagenees del museo
+  console.log("Museo Info", museoInfo);
   const {
     galeria: galeria,
     loading: galeriaLoading,

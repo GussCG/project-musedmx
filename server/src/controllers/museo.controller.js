@@ -5,6 +5,7 @@ import path from "path";
 import fs from "fs";
 import { uploadToAzure } from "../utils/azureUpload.js";
 import sharp from "sharp";
+import { BlobServiceClient } from "@azure/storage-blob";
 
 export const getMuseos = async (req, res) => {
   try {
@@ -234,7 +235,26 @@ export const updateMuseo = async (req, res) => {
     }
 
     if (req.file) {
-      camposActualizados.mus_foto = req.file.buffer;
+      const nombreMuseoFormateado = formatMuseoImageName(
+        museoExistente.mus_nombre
+      );
+      console.log(museoExistente.mus_nombre);
+      console.log("Nombre museo formateado:", nombreMuseoFormateado);
+      const blobName = `${nombreMuseoFormateado}/${nombreMuseoFormateado}_Main.jpg`;
+
+      const bufferJpg = await sharp(req.file.buffer)
+        .jpeg({ quality: 85 })
+        .toBuffer();
+
+      const urlBlob = await uploadToAzure(
+        "imagenes-museos",
+        bufferJpg,
+        blobName,
+        "image/jpeg"
+      );
+
+      console.log("URL Blob:", urlBlob);
+      camposActualizados.mus_foto = urlBlob;
     }
 
     // Si no se han proporcionado campos para actualizar, devolver un error

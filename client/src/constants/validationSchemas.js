@@ -2,12 +2,12 @@ import * as Yup from "yup";
 
 export const museoSchema = Yup.object({
   museofrmnombre: Yup.string()
-    .matches(/^[a-zA-Z0-9\s().:,áéíóúÁÉÍÓÚñÑ]+$/, "Caracteres no válidos")
+    .matches(/^[a-zA-Z0-9\s()-.:,áéíóúÁÉÍÓÚñÑ]+$/, "Caracteres no válidos")
     .min(3, "El nombre debe tener al menos 3 caracteres")
     .max(100, "El nombre no puede exceder los 100 caracteres")
     .required("Campo requerido"),
   museofrmcalle: Yup.string()
-    .matches(/^[a-zA-Z0-9\s().:,áéíóúÁÉÍÓÚñÑ]+$/, "Caracteres no válidos")
+    .matches(/^[a-zA-Z0-9\s()-.:,áéíóúÁÉÍÓÚñÑ]+$/, "Caracteres no válidos")
     .min(3, "La calle debe tener al menos 3 caracteres")
     .max(100, "La calle no puede exceder los 100 caracteres")
     .required("Campo requerido"),
@@ -20,7 +20,7 @@ export const museoSchema = Yup.object({
     .max(10, "El número exterior no puede exceder los 10 dígitos")
     .required("Campo requerido"),
   museofrmcolonia: Yup.string()
-    .matches(/^[a-zA-Z0-9\s().:,áéíóúÁÉÍÓÚñÑ]+$/, "Caracteres no válidos")
+    .matches(/^[a-zA-Z0-9\s()-.:,áéíóúÁÉÍÓÚñÑ]+$/, "Caracteres no válidos")
     .min(3, "La colonia debe tener al menos 3 caracteres")
     .max(100, "La colonia no puede exceder los 100 caracteres")
     .required("Campo requerido"),
@@ -35,7 +35,7 @@ export const museoSchema = Yup.object({
   museofrmtematicamuseo: Yup.string().required("Campo requerido"),
   museofrmdescripcion: Yup.string()
     .required("Campo requerido")
-    .max(500, "La descripción no puede exceder los 500 caracteres")
+    .max(1000, "La descripción no puede exceder los 1000 caracteres")
     .min(3, "La descripción debe tener al menos 3 caracteres"),
   museofrmglatitud: Yup.number()
     .required("Campo requerido")

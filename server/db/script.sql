@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios` (
 INSERT INTO musedmx.usuarios 
 (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo)
 VALUES
-('admin@musedmx.com', 'Admin', 'Sistema', 'MuseDMX', '$2a$12$jtrzPRbUlgrq4.7GK9Ky9OGN6mR.Wbmv/I9ENXcgutdBNaFpBb1j2', '1980-01-01', "+525527167255", NULL, 2);
+('admin@musedmx.com', 'Admin', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '1980-01-01', "+525527167255", NULL, 2);
 
 
 SELECT * FROM usuarios;

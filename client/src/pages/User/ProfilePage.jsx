@@ -9,6 +9,7 @@ import AdminPage from "../../components/User/AdminPage";
 import ModPage from "../../components/User/ModPage";
 import UsuarioPage from "../../components/User/UsuarioPage";
 import HeaderButtons from "../../components/User/HeaderButtons";
+import UserImage from "../../components/User/UserImage";
 
 function ProfilePage() {
   const { user } = useAuth();
@@ -44,7 +45,7 @@ function ProfilePage() {
         transition={{ duration: 0.5, type: "spring", bounce: 0.18 }}
       >
         <div id="header-image">
-          <img src={user.usr_foto || userPlaceholder} alt="Header" />
+          <UserImage src={user.usr_foto || userPlaceholder} alt="Usuario" />
         </div>
         <div id="header-user-info">
           <h1>{formatName(user)}</h1>

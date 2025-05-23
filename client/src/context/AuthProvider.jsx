@@ -26,7 +26,18 @@ function AuthProvider({ children }) {
 
   const navigate = useNavigate();
 
-  const [tipoUsuario, setTipoUsuario] = useState(0);
+  const [tipoUsuario, setTipoUsuario] = useState(() => {
+    const storedTipoUsuario = localStorage.getItem("tipoUsuario");
+    try {
+      return storedTipoUsuario && storedTipoUsuario !== "undefined"
+        ? JSON.parse(storedTipoUsuario)
+        : 0;
+    } catch (e) {
+      console.error("Error al parsear el tipo de usuario del localStorage:", e);
+      localStorage.removeItem("tipoUsuario"); // limpia lo dañado
+      return 0;
+    }
+  });
 
   // Gestionar el estado de carga
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +47,7 @@ function AuthProvider({ children }) {
 
   const [isLogginPopupOpen, setIsLogginPopupOpen] = useState(false);
   const [token, setToken] = useState(() => {
-    localStorage.getItem("token") || null;
+    return localStorage.getItem("token") || null;
   });
 
   // Función para iniciar sesión
@@ -56,7 +67,7 @@ function AuthProvider({ children }) {
       setUser(user);
       setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
       localStorage.setItem("user", JSON.stringify(user)); // Guardar el usuario en el localStorage
-      localStorage.setItem("tipoUsuario", TIPOS_USUARIO[user.usr_tipo].nombre); // Guardar el tipo de usuario en el localStorage
+      localStorage.setItem("tipoUsuario", TIPOS_USUARIO[user.usr_tipo].id); // Guardar el tipo de usuario en el localStorage
 
       setIsLogginPopupOpen(false); // Cerrar el popup
 
@@ -107,13 +118,14 @@ function AuthProvider({ children }) {
           withCredentials: true,
         });
 
-        if (response.data) {
-          setUser(response.data.usuario);
-          setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
-          localStorage.setItem("user", JSON.stringify(response.data.usuario));
+        if (response.data?.usuario) {
+          const userVerified = response.data.usuario;
+          setUser(userVerified);
+          setTipoUsuario(TIPOS_USUARIO[userVerified.usr_tipo]?.id || 0);
+          localStorage.setItem("user", JSON.stringify(userVerified));
           localStorage.setItem(
             "tipoUsuario",
-            TIPOS_USUARIO[user.usr_tipo].nombre
+            TIPOS_USUARIO[userVerified.usr_tipo]?.nombre || ""
           );
         }
       } catch (error) {

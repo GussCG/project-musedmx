@@ -51,7 +51,6 @@ export function useMuseo(museoId) {
   const updateMuseo = async (museoId, formData) => {
     try {
       setLoading(true);
-      console.log("Update museo data:", museoId);
       const endpoint = `${BACKEND_URL}/api/museos/editar/${museoId}`;
       const response = await axios.post(endpoint, formData);
 

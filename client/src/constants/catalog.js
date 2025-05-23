@@ -406,7 +406,7 @@ export const TIPOS_USUARIO = {
   },
   0: {
     id: 0,
-    nombre: "No registrado",
+    nombre: "",
     redirectPath: "/",
   },
 };
