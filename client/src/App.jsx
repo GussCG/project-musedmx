@@ -31,6 +31,7 @@ import ModResenaDetail from "./pages/Mod/ModResenaDetail.jsx";
 import { ViewModeProvider } from "./context/ViewModeProvider.jsx";
 import { ThemeProvider } from "./context/ThemeProvider.jsx";
 import { UserLocationProvider } from "./context/UserLocationProvider.jsx";
+import ScrollToTop from "./components/Other/ScrollToTop.jsx";
 
 function App() {
   const location = useLocation();
@@ -40,6 +41,7 @@ function App() {
         <UserLocationProvider>
           <ViewModeProvider>
             <PopUpLogin />
+            <ScrollToTop />
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
                 {/* INDEX */}

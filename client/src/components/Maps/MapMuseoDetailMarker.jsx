@@ -6,8 +6,28 @@ import Icons from "../Other/IconProvider";
 import { buildImage } from "../../utils/buildImage";
 import FavoritoButton from "../Museo/FavoritoButton";
 const { museoIcon, CgClose, FaStar } = Icons;
+import { useFavorito } from "../../hooks/Favorito/useFavorito";
+import { useAuth } from "../../context/AuthProvider";
 
 const MapMuseoDetailMarker = React.memo(({ museo, isActive, onActivate }) => {
+  const { user } = useAuth();
+  const { verificarFavorito, getFavoritosCountByMuseoId } = useFavorito();
+
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [localeCount, setLocaleCount] = useState(0);
+
+  useEffect(() => {
+    const fetchFavorito = async () => {
+      if (user) {
+        const fav = await verificarFavorito(user.usr_correo, museo.id);
+        setIsFavorite(fav);
+      }
+      const count = await getFavoritosCountByMuseoId(museo.id);
+      setLocaleCount(count);
+    };
+    fetchFavorito();
+  }, [user, museo.id]);
+
   const [wasClicked, setWasClicked] = useState(false);
 
   useEffect(() => {
@@ -110,7 +130,12 @@ const MapMuseoDetailMarker = React.memo(({ museo, isActive, onActivate }) => {
                             <FaStar />
                           </span>
                         </div>
-                        <FavoritoButton />
+                        <FavoritoButton
+                          museoId={museo.id}
+                          refetchFavoritos={null}
+                          isFavorite={isFavorite}
+                          setIsFavorite={setIsFavorite}
+                        />
                       </div>
                     </div>
                     <div className="info-window-title">

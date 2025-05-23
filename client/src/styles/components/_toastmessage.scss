@@ -1,0 +1,49 @@
+@use "../variables" as *;
+
+.musedmx-toast {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+
+  z-index: 1000;
+  width: fit-content !important;
+  height: auto !important;
+  padding: 10px 40px !important;
+  border-radius: 10px !important;
+
+  font-family: $font-primary !important;
+  font-size: 1.1rem !important;
+  font-weight: $font-w-regular !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+
+  background-color: var(--toast-bg-color) !important;
+  color: var(--toast-text-color) !important;
+
+  &.error {
+    background-color: var(--toast-error-bg-color) !important;
+    color: var(--toast-error-text-color) !important;
+  }
+
+  &.success {
+    background-color: var(--toast-success-bg-color) !important;
+    color: var(--toast-success-text-color) !important;
+  }
+
+  &.warning {
+    background-color: var(--toast-warning-bg-color) !important;
+    color: var(--toast-warning-text-color) !important;
+  }
+
+  &.info {
+    background-color: var(--toast-info-bg-color) !important;
+    color: var(--toast-info-text-color) !important;
+  }
+
+  button {
+    display: none !important;
+  }
+}

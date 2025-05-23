@@ -63,7 +63,7 @@ function AuthProvider({ children }) {
       });
 
       const user = response.data.usuario; // Desestructurar la respuesta del backend
-
+      console.log("Usuario logueado: ", user);
       setUser(user);
       setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
       localStorage.setItem("user", JSON.stringify(user)); // Guardar el usuario en el localStorage
@@ -129,7 +129,12 @@ function AuthProvider({ children }) {
           );
         }
       } catch (error) {
-        console.error(error);
+        if (error.response?.status === 401) {
+          console.log("No hay sesión activa");
+        } else {
+          console.error("Error inesperado:", error);
+          setError(error);
+        }
       } finally {
         setIsLoading(false);
       }

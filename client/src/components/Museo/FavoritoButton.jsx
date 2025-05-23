@@ -7,6 +7,7 @@ export default function FavoritoButton({
   refetchFavoritos,
   isFavorite,
   setIsFavorite,
+  refreshSugeridos,
 }) {
   const { user, setIsLogginPopupOpen } = useAuth();
   const {
@@ -31,27 +32,24 @@ export default function FavoritoButton({
 
   const handleFavoriteChange = async () => {
     if (!user) return;
+    try {
+      const correo = user.usr_correo;
 
-    const correo = user.usr_correo;
+      if (isFavorite) {
+        await eliminarFavorito(correo, museoId);
+        if (refreshSugeridos) refreshSugeridos();
+      } else {
+        await agregarFavorito(correo, museoId);
+        if (refreshSugeridos) refreshSugeridos();
+      }
 
-    if (isFavorite) {
-      await eliminarFavorito(correo, museoId);
-    } else {
-      await agregarFavorito(correo, museoId);
-    }
+      const fav = await verificarFavorito(correo, museoId);
+      setIsFavorite(fav);
 
-    // Actualizamos favorito individual
-    const fav = await verificarFavorito(correo, museoId);
-    setIsFavorite(fav);
-
-    // Refrescar el contador si se usa en otro componente
-    if (onFavoritoChange) {
-      await onFavoritoChange(); // 🔁 Refresca el contador del componente externo
-    }
-
-    // Si hay que refrescar lista general
-    if (refetchFavoritos) {
-      await refetchFavoritos();
+      if (onFavoritoChange) await onFavoritoChange();
+      if (refetchFavoritos) await refetchFavoritos();
+    } catch (error) {
+      console.error("Error al cambiar favorito:", error);
     }
   };
 

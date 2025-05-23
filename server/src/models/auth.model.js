@@ -22,8 +22,6 @@ export default class Usuario {
       WHERE u.usr_correo = ?
     `;
       const [rows] = await connection.query(query, [usr_correo]);
-      await connection.commit();
-
       if (rows.length === 0) return null;
 
       const userInfo = {

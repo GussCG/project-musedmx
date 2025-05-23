@@ -21,6 +21,8 @@ const MuseoCard = memo(function MuseoCard({
   editMode,
   sliderType,
   refetchFavoritos,
+  onDeleteFromQV,
+  refreshSugeridos,
 }) {
   // Prefijo unico basado en sliderType
   const layoutPrefix = sliderType ? `${sliderType}-` : ``;
@@ -43,27 +45,6 @@ const MuseoCard = memo(function MuseoCard({
     };
     fetchFavorito();
   }, [user, museo.id, getFavoritosCountByMuseoId]);
-
-  // Eliminar un museo de Quiero Visitar
-  const handleQVDelete = (id) => {
-    // Lógica para eliminar el museo de Quiero Visitar en el backend
-    try {
-      // Eliminar el museo de la lista
-      toast.success(`${museo.nombre} eliminado de la lista`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-      });
-    } catch (error) {
-      console.error("Error al eliminar el museo de Quiero Visitar", error);
-    }
-  };
 
   const {
     horarios,
@@ -106,7 +87,7 @@ const MuseoCard = memo(function MuseoCard({
           <div className="museo-card-img-container">
             {editMode ? (
               <div className="museo-card-delete-container">
-                <button type="button" onClick={() => handleQVDelete(museo.id)}>
+                <button type="button" onClick={onDeleteFromQV}>
                   <FaTrash />
                 </button>
               </div>
@@ -116,6 +97,7 @@ const MuseoCard = memo(function MuseoCard({
                 refetchFavoritos={refetchFavoritos}
                 isFavorite={isFavorite}
                 setIsFavorite={setIsFavorite}
+                refreshSugeridos={refreshSugeridos}
               />
             )}
             <Link

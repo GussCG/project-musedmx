@@ -18,6 +18,7 @@ import { TEMATICAS } from "../../constants/catalog";
 import { formatearFechaBDDATE } from "../../utils/formatearFechas";
 import { TIPOS_USUARIO } from "../../constants/catalog";
 import UserImage from "../../components/User/UserImage";
+import ToastMessage from "../../components/Other/ToastMessage";
 
 function ProfileEdit() {
   const { user, tipoUsuario, setUser } = useAuth();
@@ -29,9 +30,22 @@ function ProfileEdit() {
   const [imagePreview, setImagePreview] = useState(
     user?.usr_foto || userPlaceholder
   );
-  const [selectedTematicas, setSelectedTematicas] = useState(
-    user?.usr_tematicas || []
-  );
+  const [selectedTematicas, setSelectedTematicas] = useState(() => {
+    if (!user?.usr_tematicas) return [];
+    return typeof user.usr_tematicas === "string"
+      ? JSON.parse(user.usr_tematicas)
+      : user.usr_tematicas;
+  });
+
+  useEffect(() => {
+    const tematicas = !user?.usr_tematicas
+      ? []
+      : typeof user.usr_tematicas === "string"
+      ? JSON.parse(user.usr_tematicas)
+      : user.usr_tematicas;
+    setSelectedTematicas(tematicas);
+  }, [user]);
+
   const [selectedDate, setSelectedDate] = useState(() => {
     const f = new Date(user?.usr_fecha_nac);
     return isNaN(f.getTime()) ? new Date() : f;
@@ -84,11 +98,10 @@ function ProfileEdit() {
   const handleTematicaChange = (event) => {
     const { value, checked } = event.target;
     if (selectedTematicas.length === 3 && checked) {
-      toast.error("Solamente 3 temáticas", {
+      ToastMessage({
+        tipo: "warning",
+        mensaje: "Solo puedes seleccionar 3 temáticas",
         position: "top-right",
-        autoClose: 3000,
-        theme: "colored",
-        transition: Bounce,
       });
       return;
     }
@@ -251,7 +264,7 @@ function ProfileEdit() {
                 <Form id="signin-form">
                   <div
                     className={`registros-container ${
-                      tipoUsuario === "Usuario" ? "" : "admod"
+                      tipoUsuario === 1 ? "" : "admod"
                     }`}
                   >
                     <div className="registros-datos">

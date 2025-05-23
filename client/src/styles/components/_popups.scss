@@ -64,6 +64,7 @@
     font-size: 2rem;
     margin-bottom: 20px;
     color: var(--font-color-primary);
+    font-family: $font-tertiary;
   }
 
   .login-popup-container {
@@ -80,7 +81,7 @@
       justify-content: space-between;
       align-items: center;
       color: var(--font-color-primary);
-      gap: 20px;
+      gap: 30px;
 
       .login-field {
         position: relative;
@@ -194,6 +195,7 @@
   h1 {
     font-size: 1.8rem;
     margin-top: 10px;
+    font-family: $font-tertiary;
   }
 
   .map-indicaciones-item {
@@ -209,7 +211,7 @@
     h2 {
       width: 100%;
       height: auto;
-      font-family: $font-primary;
+      font-family: $font-tertiary;
       font-size: 1.3rem;
       font-weight: $font-w-bold;
       text-align: left;
@@ -438,7 +440,7 @@
   justify-content: space-evenly;
 
   h1 {
-    font-family: $font-primary;
+    font-family: $font-tertiary;
     font-size: 2rem;
     font-weight: $font-w-bold;
     color: var(--font-color-primary);

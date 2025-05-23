@@ -188,7 +188,7 @@ function MuseosList({ titulo, tipo }) {
                 )}
               </button>
             )}
-            {isMapView ? null : (
+            {isMapView || isPopulares ? null : (
               <>
                 <button
                   className="museos-header-section-right-button"

@@ -175,6 +175,7 @@
         color: white;
         font-weight: $font-w-bold;
         text-align: center;
+        font-family: $font-primary;
       }
     }
 
@@ -201,6 +202,7 @@
         text-align: left;
         margin: 0;
         padding: 0;
+        font-family: $font-tertiary;
       }
     }
 
@@ -227,6 +229,7 @@
         text-align: left;
         margin: 0;
         padding: 0;
+        font-family: $font-primary;
       }
 
       svg {
@@ -259,6 +262,7 @@
 
       #museo-card-nombre {
         font-size: 1.2rem;
+        font-family: $font-tertiary;
         color: var(--museo-card-h1-color);
         font-weight: $font-w-extrabold;
         text-align: center;
@@ -284,6 +288,7 @@
         font-size: 14px;
         color: var(--museo-card-text-color);
         font-weight: $font-w-regular;
+        font-family: $font-tertiary;
       }
     }
 
@@ -293,10 +298,10 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
 
       .museo-card-info-body-item {
-        width: 100%;
+        width: 90%;
         height: fit-content;
         display: flex;
         align-items: flex-start;
@@ -304,20 +309,17 @@
         flex-direction: column;
 
         .semibold {
-          font-size: 18px;
+          font-size: 1rem;
           font-weight: $font-w-semibold;
           color: var(--museo-card-h1-color);
+          font-family: $font-tertiary;
         }
 
         p {
-          font-size: 16px;
+          font-size: 0.95rem;
           color: var(--museo-card-text-color);
-          font-weight: $font-w-light;
+          font-weight: $font-w-regular;
           text-align: left;
-
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
       }
 

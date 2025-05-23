@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import { m, motion } from "framer-motion";
 import Icons from "../Other/IconProvider";
 const { corazonIcon } = Icons;
 import MuseoSlider from "../Museo/MuseoSlider";
@@ -8,18 +8,11 @@ import { useMuseos } from "../../hooks/Museo/useMuseos";
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
 import { useAuth } from "../../context/AuthProvider";
 import { useMuseosSugeridos } from "../../hooks/Usuario/useUsuarioMuseosSugeridos";
+import { useQV } from "../../hooks/QuieroVisitar/useQV";
 
 function UsuarioPage() {
   const [editMode, setEditMode] = useState(false);
   const { user } = useAuth();
-
-  const { museos: sugeridos, loading } = useMuseos({
-    tipo: "3",
-    searchQuery: "",
-    isMapView: false,
-    filters: { tipos: [], alcaldias: [] },
-    sortBy: null,
-  });
 
   const {
     museosFavoritos,
@@ -27,15 +20,38 @@ function UsuarioPage() {
     fetchMuseosFavoritosUsuario,
   } = useFavorito();
 
-  const { museos: museosSugeridos, loading: loadingSugeridos } =
-    useMuseosSugeridos({
-      top_n: 10,
-      correo: user.usr_correo,
-    });
+  const {
+    museos: museosSugeridosData,
+    loading: loadingSugeridos,
+    refetch,
+  } = useMuseosSugeridos({
+    top_n: 10,
+    correo: user.usr_correo,
+  });
+
+  const [museosSugeridos, setMuseosSugeridos] = useState([]);
+
+  // Actualiza el estado local cuando cambie el hook
+  useEffect(() => {
+    setMuseosSugeridos(museosSugeridosData || []);
+  }, [museosSugeridosData]);
+
+  // Nueva función que hace refetch y actualiza el estado local
+  const refreshSugeridos = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
+
+  const {
+    museosQV,
+    loading: loadingQV,
+    fetchMuseosQVUsuario,
+    agregarQV,
+  } = useQV();
 
   useEffect(() => {
     if (user) {
       fetchMuseosFavoritosUsuario(user.usr_correo);
+      fetchMuseosQVUsuario(user.usr_correo);
     }
   }, [user]);
 
@@ -57,6 +73,8 @@ function UsuarioPage() {
             refetchFavoritos={() => {
               fetchMuseosFavoritosUsuario(user.usr_correo);
             }}
+            refreshSugeridos={refreshSugeridos}
+            loading={loadingSugeridos}
           />
         </section>
         <hr />
@@ -80,7 +98,12 @@ function UsuarioPage() {
           <div className="section-header">
             <h2>Museos que quiero visitar</h2>
             <div className="section-header-controller">
-              <QVSearch />
+              <QVSearch
+                correo={user.usr_correo}
+                agregarQV={agregarQV}
+                refreshQV={() => fetchMuseosQVUsuario(user.usr_correo)}
+                museosQV={museosQV}
+              />
               <button
                 type="button"
                 id="editar-button"
@@ -91,12 +114,15 @@ function UsuarioPage() {
             </div>
           </div>
           <MuseoSlider
-            listaMuseos={null}
+            listaMuseos={museosQV}
             editMode={editMode}
             sliderType="Quiero-visitar"
-            refetchFavoritos={() =>
-              fetchMuseosFavoritosUsuario(user.usr_correo)
-            }
+            refetchFavoritos={() => {
+              fetchMuseosFavoritosUsuario(user.usr_correo);
+            }}
+            refreshQV={() => fetchMuseosQVUsuario(user.usr_correo)}
+            correo={user.usr_correo}
+            loading={loadingQV}
           />
         </section>
       </main>

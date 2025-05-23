@@ -14,6 +14,7 @@ export default class Favorito {
             `;
       const values = [correo, museoId];
       const [result] = await connection.query(query, values);
+      await connection.commit();
       return result;
     } catch (error) {
       await connection.rollback();

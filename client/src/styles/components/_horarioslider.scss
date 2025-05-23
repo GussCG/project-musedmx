@@ -18,6 +18,7 @@
   overflow: visible;
 
   h1 {
+    font-family: $font-tertiary;
     font-size: $museo-detail-h1-size;
     font-weight: $font-w-bold;
     color: var(--font-color-primary);
@@ -62,6 +63,14 @@
 
         &:hover {
           transform: scale(1.1);
+        }
+
+        h2 {
+          font-family: $font-tertiary;
+          font-size: 1.6rem;
+          font-weight: $font-w-bold;
+          color: var(--font-color-primary);
+          margin: 0;
         }
 
         .horario-container-item-horario {

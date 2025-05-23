@@ -744,6 +744,7 @@ function SignInForm() {
                     `button ` + (isFormValid && isValid ? "" : "disabled")
                   }
                   id="registros-button"
+                  name="signinfrmregistrar"
                   ref={signInButtonRef}
                   disabled={isFormValid && isValid ? false : true}
                 />

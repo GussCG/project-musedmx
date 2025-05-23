@@ -368,7 +368,9 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`quiero_visitar` (
 --  INDEX `id_Museo` (`qv_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
 
--- -----------------------------------------------------
+SELECT * FROM quiero_visitar WHERE qv_usr_correo = "gusester2002@gmail.com";
+
+-----------------------------------------------------
 -- Table `musedmx`.`visitas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `musedmx`.`visitas` (
