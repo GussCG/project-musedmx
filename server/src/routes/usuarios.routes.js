@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  getVisitas,
   addVisita,
   deleteVisita,
 } from "../controllers/listas/visitas.controller.js";

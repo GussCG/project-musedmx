@@ -13,7 +13,7 @@ export function useUsuarioMuseosVisitasPrev (listId) {
     async (mus_id) => {
       try {
         setLoading(true);
-        const endpoint = `${BACKEND_URL}/api/usuarios/${usr_correo}/visitas`;
+        const endpoint = `${BACKEND_URL}/api/usuarios/visitas/${usr_correo}`;
         const response = await axios.post(endpoint, { mus_id });
 
         setVisitas((prev) => [
@@ -34,7 +34,7 @@ export function useUsuarioMuseosVisitasPrev (listId) {
 	async () => {
 	  try {
 	    setLoading(true);
-	    const endpoint = `${BACKEND_URL}/api/usuarios/${id}/visitas`;
+	    const endpoint = `${BACKEND_URL}/api/usuarios/visitas/${usr_correo}`;
 	    const response = await axios.get(endpoint);
 
 	    setVisitas(response.data.data.items.map((lista) => new Lista(lista)))
@@ -58,7 +58,7 @@ export function useUsuarioMuseosVisitasPrev (listId) {
     async (mus_id) => {
       try {
         setLoading(true);
-        const endpoint = `${BACKEND_URL}/api/usuarios/${usr_correo}/visitas/${mus_id}`;
+        const endpoint = `${BACKEND_URL}/api/usuarios/visitas/${encodeURIComponent(usr_correo)}/${encodeURIComponent(mus_id)}`;
         await axios.delete(endpoint);
 
         setVisitas((prev) => 
