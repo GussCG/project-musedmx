@@ -18,7 +18,6 @@ export const useUsuario = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("Usuario registrado:", response.data);
       setUser(response.data.usuario.usuario);
       localStorage.setItem(
         "user",

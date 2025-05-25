@@ -20,6 +20,7 @@
   "homepage": "https://github.com/GussCG/project-musedmx#readme",
   "dependencies": {
     "@azure/storage-blob": "^12.27.0",
+    "@googlemaps/markerclusterer": "^2.5.3",
     "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",

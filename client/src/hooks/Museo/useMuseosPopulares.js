@@ -26,7 +26,9 @@ export const useMuseosPopulares = ({ top_n = 10 }) => {
       console.error("Error al obtener los museos populares:", error);
       setError(error);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500); // Simular un retraso de carga
     }
   };
 

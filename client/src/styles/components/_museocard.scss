@@ -25,6 +25,7 @@
     width: 100%;
     height: 230px;
     margin: 0 auto;
+    aspect-ratio: 16 / 9;
 
     pointer-events: all;
 
@@ -133,16 +134,16 @@
       margin: 0 auto;
       object-fit: cover;
       object-position: center;
+      overflow: hidden;
 
       z-index: 30;
 
       //Inner-shadow para todos los navegadores
       box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.5);
 
-      transition: filter 0.3s ease-in-out;
-
       &:hover {
         filter: brightness(0.8);
+        transition: filter 0.5s ease-in-out;
       }
     }
 

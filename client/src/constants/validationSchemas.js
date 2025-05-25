@@ -70,10 +70,13 @@ export const modSchema = Yup.object({
     .min(2, "El apellido materno debe tener al menos 2 caracteres")
     .max(30, "El apellido materno no puede tener más de 30 caracteres")
     .required("Campo requerido"),
+  signinfrmtelefono: Yup.string()
+    .matches(/^\+?[1-9]\d{1,14}$/, "Número de teléfono inválido")
+    .required("Campo requerido")
+    .min(10, "Número de teléfono inválido"),
   signinfrmemail: Yup.string()
     .email("Correo electrónico inválido")
-    .required("Campo requerido")
-    .min(5, "El correo electrónico debe tener al menos 5 caracteres"),
+    .required("Campo requerido"),
 });
 
 export const userSchema = Yup.object({
@@ -105,4 +108,7 @@ export const userSchema = Yup.object({
     .matches(/^\+?[1-9]\d{1,14}$/, "Número de teléfono inválido")
     .required("Campo requerido")
     .min(10, "Número de teléfono inválido"),
+  signinfrmemail: Yup.string()
+    .email("Correo electrónico inválido")
+    .required("Campo requerido"),
 });

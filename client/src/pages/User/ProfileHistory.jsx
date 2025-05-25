@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
-import axios from "axios";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
-
 import { motion } from "framer-motion";
-
 import Icons from "../../components/Other/IconProvider";
 const { LuArrowUpDown, LuEye, FaTrash } = Icons;
+import ToastMessage from "../../components/Other/ToastMessage";
 
 import {
   useReactTable,
@@ -14,10 +12,6 @@ import {
   flexRender,
   getSortedRowModel,
 } from "@tanstack/react-table";
-
-// Toastify
-import { toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 function ProfileHistory() {
   // Definimos estado para el historial de visitas
@@ -65,16 +59,10 @@ function ProfileHistory() {
     //   .catch((error) => {
     //     console.log(error);
     //   });
-    toast.success(`Visita Eliminada`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
+    ToastMessage({
+      type: "success",
+      message: "Visita eliminada",
+      duration: 2000,
     });
   };
 

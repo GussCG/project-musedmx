@@ -105,7 +105,6 @@ export default class Usuario {
       };
     } catch (error) {
       await connection.rollback();
-      connection.release();
       throw new Error("Error al crear el usuario");
     } finally {
       connection.release();

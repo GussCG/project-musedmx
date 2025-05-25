@@ -67,7 +67,10 @@ function AuthProvider({ children }) {
       setUser(user);
       setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
       localStorage.setItem("user", JSON.stringify(user)); // Guardar el usuario en el localStorage
-      localStorage.setItem("tipoUsuario", TIPOS_USUARIO[user.usr_tipo].id); // Guardar el tipo de usuario en el localStorage
+      localStorage.setItem(
+        "tipoUsuario",
+        JSON.stringify(TIPOS_USUARIO[user.usr_tipo].id)
+      );
 
       setIsLogginPopupOpen(false); // Cerrar el popup
 
@@ -125,7 +128,7 @@ function AuthProvider({ children }) {
           localStorage.setItem("user", JSON.stringify(userVerified));
           localStorage.setItem(
             "tipoUsuario",
-            TIPOS_USUARIO[userVerified.usr_tipo]?.nombre || ""
+            JSON.stringify(TIPOS_USUARIO[user.usr_tipo].id || 0)
           );
         }
       } catch (error) {

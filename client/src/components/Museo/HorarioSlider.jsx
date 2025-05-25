@@ -5,12 +5,9 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { Navigation, EffectCoverflow } from "swiper/modules";
-import { ThreeDot } from "react-loading-indicators";
-
 import Icons from "../Other/IconProvider";
 import HorarioPrecioCard from "./HorarioCard";
 import LoadingIndicator from "../Other/LoadingIndicator";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 const { FaArrowCircleLeft, FaArrowCircleRight } = Icons;
 
@@ -77,7 +74,7 @@ function HorarioSlider({ horarios, loading, error }) {
             slidesPerView={"auto"}
             grabCursor={true}
             spaceBetween={80}
-            loop={horarios.length > 1}
+            loop={horarios.length > 4 ? true : false}
             pagination={false}
             navigation={{
               prevEl: ".swiper-button-prev",

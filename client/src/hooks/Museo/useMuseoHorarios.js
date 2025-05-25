@@ -24,6 +24,33 @@ export default function useMuseoHorarios(museoId) {
     }
   };
 
+  const addHorarioByDia = async (dia, museoId) => {
+    try {
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/museos/horarios/agregarByDia/${museoId}`;
+      await axios.post(endpoint, { dia });
+    } catch (error) {
+      console.error("Error adding horario by dia:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteHorarioByDia = async (dia, museoId) => {
+    try {
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/museos/horarios/eliminarByDia/${museoId}`;
+      const response = await axios.post(endpoint, { dia });
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting horario by dia:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchHorarios = async (id) => {
     try {
       setLoading(true);
@@ -66,5 +93,7 @@ export default function useMuseoHorarios(museoId) {
     fetchHorarios,
     setHorarios,
     updateHorarioByDia,
+    addHorarioByDia,
+    deleteHorarioByDia,
   };
 }

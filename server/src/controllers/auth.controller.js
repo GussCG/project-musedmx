@@ -148,19 +148,6 @@ export const signUp = async (req, res) => {
 
     usr_contrasenia = await bcrypt.hash(usr_contrasenia, 10);
 
-    console.log("Datos del usuario:", {
-      usr_correo,
-      usr_nombre,
-      usr_ap_paterno,
-      usr_ap_materno,
-      usr_contrasenia,
-      usr_fecha_nac,
-      usr_telefono,
-      usr_foto,
-      usr_tipo,
-      usr_tematicas,
-    });
-
     const usuario = await Usuario.create({
       usr_correo,
       usr_nombre,

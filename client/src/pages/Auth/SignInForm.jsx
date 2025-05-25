@@ -6,11 +6,9 @@ import useUsuario from "../../hooks/Usuario/useUsuario";
 import { useAuth } from "../../context/AuthProvider";
 
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import { toast, Bounce } from "react-toastify";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { format } from "date-fns";
 import { es } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
@@ -20,33 +18,28 @@ import userPlaceholder from "../../assets/images/placeholders/user_placeholder.p
 import ValidPassword from "../../components/Forms/ValidPassword";
 import ErrorCampo from "../../components/Forms/ErrorCampo";
 import { userSchema } from "../../constants/validationSchemas";
+import { formatearFechaBDDATE } from "../../utils/formatearFechas";
+import { TIPOS_USUARIO, TEMATICAS } from "../../constants/catalog";
+import ToastMessage from "../../components/Other/ToastMessage";
+import UserImage from "../../components/User/UserImage";
+import { formatFileName } from "../../utils/formatFileName";
 
 function SignInForm() {
-  // Definimos los tipos de usuario
-  const tiposUsuario = {
-    0: "No registrado",
-    1: "Usuario",
-    2: "Admin",
-    3: "Mod",
-  };
-
   // Estados
   const [tel, setTel] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [isValidPass, setIsValidPass] = useState(true);
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
-  // const [costo, setCosto] = useState("");
-  // const [valorRango, setValorRango] = useState([0, 100]);
-  // const [rangoHabilitado, setRangoHabilitado] = useState(false);
-
   const navigate = useNavigate();
-
   const [selectedTematicas, setSelectedTematicas] = useState([]);
   const signInButtonRef = useRef(null);
   const passwordRef = useRef(null);
   const password2Ref = useRef(null);
   const imageInputRef = useRef(null);
+
+  const [fileLabel, setFileLabel] = useState("Seleccionar Archivo");
+  const fileNameRef = useRef(null);
 
   // Fecha de nacimiento
   const [mes, setMes] = useState(new Date());
@@ -57,28 +50,13 @@ function SignInForm() {
       setSelectedDate(new Date());
     } else {
       setSelectedDate(date);
+      setMes(date);
     }
   };
 
   // Fecha actual en UTC -6
   let today = new Date();
   today.setHours(today.getHours() - 6);
-
-  // // Logica para habilitar el rango de costo dependiendo del tipo de costo
-  // const handleCostoChange = (event) => {
-  //   const seleccion = event.target.value;
-  //   setCosto(seleccion);
-  //   setRangoHabilitado(
-  //     seleccion === "Siempre con costo" || seleccion === "A veces gratis"
-  //   );
-  //   if (seleccion !== "Siempre con costo" && seleccion !== "A veces gratis") {
-  //     setValorRango(0);
-  //   }
-  // };
-
-  // const handleRangeChange = (value) => {
-  //   setValorRango(value);
-  // };
 
   // Lógica para el cambio de imagen de perfil
   const [image, setImage] = useState(null);
@@ -93,11 +71,11 @@ function SignInForm() {
     if (file) {
       setFieldValue("signinfrmfoto", file);
       setImagePreview(URL.createObjectURL(file));
-      document.getElementById("file-name").textContent = file.name;
+      if (fileNameRef.current) fileNameRef.current.innerHTML = file.name;
+      setFileLabel(file.name);
     } else {
       setImagePreview(userPlaceholder);
-      document.getElementById("file-name").textContent =
-        "Ningún archivo seleccionado";
+      setFileLabel("Seleccionar Archivo");
     }
   };
 
@@ -105,16 +83,10 @@ function SignInForm() {
   const handleTematicaChange = (event) => {
     const { value, checked } = event.target;
     if (selectedTematicas.length === 3 && checked) {
-      toast.error("Solamente 3 temáticas", {
+      ToastMessage({
+        mensaje: "Solo puedes seleccionar 3 temáticas",
+        tipo: "warning",
         position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
       });
       return;
     }
@@ -180,14 +152,24 @@ function SignInForm() {
   // Desabilitar el boton de registro si algun campo es invalido
   const [isFormValid, setIsFormValid] = useState(false);
   useEffect(() => {
-    setIsFormValid(
+    let valid = false;
+
+    const isTelValid =
+      typeof tel === "string" &&
+      tel.trim() !== "" &&
+      isPossiblePhoneNumber(tel);
+
+    const isDateValid =
+      selectedDate instanceof Date && !isNaN(selectedDate.getTime());
+
+    valid =
       isValidPass &&
-        isPasswordMatch &&
-        isPossiblePhoneNumber(tel) &&
-        selectedTematicas.length === 3 &&
-        selectedDate !== null
-    );
-  }, [isValidPass, isPasswordMatch, tel, selectedTematicas, selectedDate]);
+      isPasswordMatch &&
+      isTelValid &&
+      isDateValid &&
+      selectedTematicas.length === 3;
+    setIsFormValid(valid);
+  }, [tel, password, password2, selectedDate, selectedTematicas]);
 
   const { registrarUsuario } = useUsuario();
   const { login } = useAuth();
@@ -197,16 +179,10 @@ function SignInForm() {
       const userData = new FormData();
 
       if (!isPossiblePhoneNumber(tel)) {
-        toast.error("Número de teléfono inválido", {
+        ToastMessage({
+          mensaje: "Número de teléfono inválido",
+          tipo: "error",
           position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
         });
         return;
       }
@@ -223,8 +199,6 @@ function SignInForm() {
       userData.append("usr_contrasenia", password);
       userData.append("usr_tematicas", JSON.stringify(selectedTematicas));
       userData.append("usr_tipo", 1);
-      // userData.append("tipo_costo", costo);
-      // userData.append("rango_costo", valorRango);
       if (values.signinfrmfoto) {
         userData.append("usr_foto", values.signinfrmfoto);
       } else {
@@ -235,16 +209,10 @@ function SignInForm() {
       const response = await registrarUsuario(userData);
 
       if (response) {
-        toast.success("Usuario registrado correctamente", {
+        ToastMessage({
+          mensaje: "Usuario registrado correctamente",
+          tipo: "success",
           position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
         });
         // Redirigir al perfil del usuario
         await login({
@@ -252,19 +220,12 @@ function SignInForm() {
           usr_contrasenia: password,
         });
       } else {
-        toast.error("Error al registrar el usuario", {
+        ToastMessage({
+          mensaje: "Error al registrar el usuario",
+          tipo: "error",
           position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
         });
       }
-
       // Manejo de la respuesta del backend
     } catch (error) {
       console.error(error);
@@ -303,17 +264,14 @@ function SignInForm() {
               signinfrmpassword: "",
               signinfrmrepassword: "",
               signinfrmtematica: [],
-              // signinfrmtipoCosto: "",
-              // signinfrmrangocosto: 0,
               signinfrmfoto: "",
             }}
             validationSchema={userSchema}
             onSubmit={(values) => {
-              // console.log(values);
               handleRegister(values);
             }}
           >
-            {({ errors, touched, setFieldValue, isValid }) => (
+            {({ errors, touched, setFieldValue }) => (
               <Form id="signin-form">
                 <div className="registros-container">
                   <div className="registros-datos">
@@ -433,7 +391,7 @@ function SignInForm() {
                         onSelect={handleDayPickerSelect}
                         footer={
                           selectedDate
-                            ? `Seleccionaste el ${format(
+                            ? `Seleccionaste el ${formatearFechaBDDATE(
                                 selectedDate,
                                 "dd-MM-yyyy"
                               )}`
@@ -530,173 +488,32 @@ function SignInForm() {
                           Dale click a tus temáticas favoritas (3 máx)
                         </legend>
                         <div className="registros-chk-container">
-                          <div className="registros-chk">
-                            <Field
-                              type="checkbox"
-                              id="antropologia"
-                              name="signinfrmtematica"
-                              value="Antropología"
-                              onChange={handleTematicaChange}
-                              checked={selectedTematicas.includes(
-                                "Antropología"
-                              )}
-                            />
-                            <label htmlFor="antropologia">Antropología</label>
-                          </div>
-                          <div className="registros-chk">
-                            <Field
-                              type="checkbox"
-                              id="arte"
-                              name="signinfrmtematica"
-                              value="Arte"
-                              onChange={handleTematicaChange}
-                              checked={selectedTematicas.includes("Arte")}
-                            />
-                            <label htmlFor="arte">Arte</label>
-                          </div>
-                          <div className="registros-chk">
-                            <Field
-                              type="checkbox"
-                              id="arte-alternativo"
-                              name="signinfrmtematica"
-                              value="Arte Alternativo"
-                              onChange={handleTematicaChange}
-                              checked={selectedTematicas.includes(
-                                "Arte Alternativo"
-                              )}
-                            />
-                            <label htmlFor="arte-alternativo">
-                              Arte Alternativo
-                            </label>
-                          </div>
-                          <div className="registros-chk">
-                            <Field
-                              type="checkbox"
-                              id="arqueologia"
-                              name="signinfrmtematica"
-                              value="Arqueología"
-                              onChange={handleTematicaChange}
-                              checked={selectedTematicas.includes(
-                                "Arqueología"
-                              )}
-                            />
-                            <label htmlFor="arqueologia">Arqueología</label>
-                          </div>
-                          <div className="registros-chk">
-                            <Field
-                              type="checkbox"
-                              id="ciencia-tecnologia"
-                              name="signinfrmtematica"
-                              value="Ciencia y Tecnología"
-                              onChange={handleTematicaChange}
-                              checked={selectedTematicas.includes(
-                                "Ciencia y Tecnología"
-                              )}
-                            />
-                            <label htmlFor="ciencia-tecnologia">
-                              Ciencia y Tecnología
-                            </label>
-                          </div>
-                          <div className="registros-chk">
-                            <Field
-                              type="checkbox"
-                              id="especializado"
-                              name="signinfrmtematica"
-                              value="Especializado"
-                              onChange={handleTematicaChange}
-                              checked={selectedTematicas.includes(
-                                "Especializado"
-                              )}
-                            />
-                            <label htmlFor="especializado">Especializado</label>
-                          </div>
-                          <div className="registros-chk">
-                            <Field
-                              type="checkbox"
-                              id="historia"
-                              name="signinfrmtematica"
-                              value="Historia"
-                              onChange={handleTematicaChange}
-                              checked={selectedTematicas.includes("Historia")}
-                            />
-                            <label htmlFor="historia">Historia</label>
-                          </div>
-                          <div className="registros-chk">
-                            <Field
-                              type="checkbox"
-                              id="otro"
-                              name="signinfrmtematica"
-                              value="Otro"
-                              onChange={handleTematicaChange}
-                              checked={selectedTematicas.includes("Otro")}
-                            />
-                            <label htmlFor="otro">Otro</label>
-                          </div>
+                          {Object.values(TEMATICAS).map((tematica) => (
+                            <div className="registros-chk" key={tematica.id}>
+                              <Field
+                                type="checkbox"
+                                id={tematica.nombre}
+                                name="signinfrmtematica"
+                                value={tematica.nombre}
+                                onChange={handleTematicaChange}
+                                checked={selectedTematicas.includes(
+                                  tematica.nombre
+                                )}
+                              />
+                              <label htmlFor={tematica.nombre}>
+                                {tematica.nombre}
+                              </label>
+                            </div>
+                          ))}
                         </div>
                       </fieldset>
                     </div>
-                    {/* <div className="registros-field">
-                      <div className="registros-field-header">
-                        <h2>Tipo de Costo</h2>
-                      </div>
-                      <select
-                        name="signinfrmtipoCosto"
-                        className="registros-frm-select"
-                        id="registros-frm-costo"
-                        value={costo}
-                        onChange={handleCostoChange}
-                        required
-                      >
-                        <option value="" disabled>
-                          Selecciona un tipo de costo
-                        </option>
-                        <option value="Siempre gratis">Siempre gratis</option>
-                        <option value="A veces gratis">A veces gratis</option>
-                        <option value="Siempre con costo">
-                          Siempre con costo
-                        </option>
-                      </select>
-                    </div>
-                    <div
-                      className={`registros-field-rango ${
-                        costo === "Siempre con costo" ||
-                        costo === "A veces gratis"
-                          ? "rango-visible"
-                          : ""
-                      }`}
-                    >
-                      <label
-                        htmlFor="registros-frm-rango-costo"
-                        id="frm-costo-label"
-                      >
-                        Rango de Costo (MXN) $ {valorRango[0]} - ${" "}
-                        {valorRango[1]}
-                      </label>
-                      <div className="slider-precio-container">
-                        <Slider
-                          range
-                          min={0}
-                          max={100}
-                          step={5}
-                          value={valorRango}
-                          onChange={handleRangeChange}
-                          id="registros-frm-rango-costo"
-                          name="signinfrmrangocosto"
-                          handleStyle={[
-                            { backgroundColor: "#000", borderColor: "#000" },
-                            { backgroundColor: "#000", borderColor: "#000" },
-                          ]}
-                          trackStyle={[{ backgroundColor: "#000" }]}
-                          railStyle={{ backgroundColor: "#d9d9d9" }}
-                        />
-                      </div>
-                    </div> */}
                     <hr />
                     <div className="registros-field-foto">
                       <div className="registros-field-foto-input">
                         <h2>Foto de perfil</h2>
                         <div className="foto-input">
-                          <Field
+                          <button
                             className="file-btn"
                             type="button"
                             onClick={() =>
@@ -705,11 +522,16 @@ function SignInForm() {
                                 .click()
                             }
                             value="Seleccionar Archivo"
-                          />
-                          <span id="file-name">Seleccionar Archivo</span>
+                          >
+                            Seleccionar Archivo
+                          </button>
+                          <span id="file-name" ref={fileNameRef}>
+                            {formatFileName(fileLabel)}
+                          </span>
                           <input
                             type="file"
                             accept="image/*"
+                            name="signinfrmfoto"
                             ref={imageInputRef}
                             id="registros-frm-foto"
                             style={{ display: "none" }}
@@ -720,34 +542,25 @@ function SignInForm() {
                         </div>
                       </div>
                       {imagePreview && (
-                        <img
+                        <UserImage
                           src={imagePreview}
                           alt="Foto de Perfil"
-                          id="foto-preview"
+                          className="user-image"
                         />
                       )}
-                      {/* {openCropper && (
-                        <ImageCropper
-                          image={image}
-                          onCropComplete={(croppedImage) =>
-                            handleCroppedImage(croppedImage, setFieldValue)
-                          }
-                        />
-                      )} */}
                     </div>
                   </div>
                 </div>
-                <Field
+                <button
                   type="submit"
-                  value="Registrarse"
-                  className={
-                    `button ` + (isFormValid && isValid ? "" : "disabled")
-                  }
+                  className={`button ` + (isFormValid ? "" : "disabled")}
                   id="registros-button"
                   name="signinfrmregistrar"
                   ref={signInButtonRef}
-                  disabled={isFormValid && isValid ? false : true}
-                />
+                  disabled={isFormValid ? false : true}
+                >
+                  Registrarse
+                </button>
               </Form>
             )}
           </Formik>

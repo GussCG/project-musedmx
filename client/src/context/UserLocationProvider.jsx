@@ -31,12 +31,14 @@ export const UserLocationProvider = ({ children }) => {
   // Guardar ubicación si hay usuario
   useEffect(() => {
     if (user && location.userLocation) {
-      localStorage.setItem(
-        "userLocation",
-        JSON.stringify(location.userLocation)
-      );
-    }
-    if (!user) {
+      const savedLocation = localStorage.getItem("userLocation");
+      if (savedLocation !== JSON.stringify(location.userLocation)) {
+        localStorage.setItem(
+          "userLocation",
+          JSON.stringify(location.userLocation)
+        );
+      }
+    } else if (!user) {
       localStorage.removeItem("userLocation");
     }
   }, [user, location.userLocation]);

@@ -21,6 +21,8 @@ import { BACKEND_URL } from "../../constants/api";
 import Icons from "../../components/Other/IconProvider";
 import LoadingIndicator from "../../components/Other/LoadingIndicator";
 import { formatearFechaBDDATE } from "../../utils/formatearFechas";
+import { parseFecha } from "../../utils/parsearFecha";
+import ToastMessage from "../../components/Other/ToastMessage";
 
 const { FaPlus, CgClose, MdEdit, MdCheck } = Icons;
 
@@ -37,31 +39,22 @@ function MuseoForm({ mode }) {
     updateMuseo,
   } = useMuseo(mode === "edit" ? museoId : null);
 
-  // Para la imagen inicial
-  useEffect(() => {
-    if (mode === "edit" && museoEdit?.img) {
-      const image = buildImage(museoEdit);
-      setImagePreview(image);
-      if (fileNameRef.current) {
-        fileNameRef.current.textContent = museoEdit.img.name;
-      }
-    } else {
-      setImagePreview(null);
-      if (fileNameRef.current) {
-        fileNameRef.current.textContent =
-          "No se ha seleccionado ninguna imagen";
-      }
-    }
-  }, [museoEdit, mode]);
-
-  // Para fecha de apertura
-  useEffect(() => {
-    if (museoEdit?.fecha_apertura) {
-      const fecha = new Date(museoEdit.fecha_apertura);
-      setMes(fecha);
-      setSelectedDate(fecha);
-    }
-  }, [museoEdit]);
+  // // Para la imagen inicial
+  // useEffect(() => {
+  //   if (mode === "edit" && museoEdit?.img) {
+  //     const image = buildImage(museoEdit);
+  //     setImagePreview(image);
+  //     if (fileNameRef.current) {
+  //       fileNameRef.current.textContent = museoEdit.img.name;
+  //     }
+  //   } else {
+  //     setImagePreview(null);
+  //     if (fileNameRef.current) {
+  //       fileNameRef.current.textContent =
+  //         "No se ha seleccionado ninguna imagen";
+  //     }
+  //   }
+  // }, [museoEdit, mode]);
 
   // TextArea
   const [comment, setComment] = useState("");
@@ -70,8 +63,6 @@ function MuseoForm({ mode }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const imageInputRef = useRef(null);
-  const [openCropper, setOpenCropper] = useState(false);
-  const [imageOriginal, setImageOriginal] = useState(null);
 
   // Sin ImageCropper
   const handleImageChange = (e, setFieldValue) => {
@@ -98,16 +89,25 @@ function MuseoForm({ mode }) {
   // Fecha de apertura
   const [mes, setMes] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const today = new Date();
 
-  const handleDayPickerSelect = (date, setFieldValue) => {
-    const selectedDate = date || new Date();
-    setSelectedDate(selectedDate);
-    setFieldValue("museofrmfecapertura", format(selectedDate, "yyyy-MM-dd"));
+  const handleDayPickerSelect = (date) => {
+    if (!date) {
+      setSelectedDate(new Date());
+    } else {
+      const fecha = parseFecha(date);
+      setSelectedDate(fecha);
+      setMes(fecha);
+    }
   };
 
-  // Fecha actual en UTC -6
-  let today = new Date();
-  today.setHours(today.getHours() - 6);
+  useEffect(() => {
+    if (mode === "edit" && museoEdit?.fecha_apertura) {
+      const fecha = parseFecha(museoEdit.fecha_apertura);
+      setSelectedDate(fecha);
+      setMes(fecha);
+    }
+  }, [museoEdit, mode]);
 
   // Redes sociales
   const {
@@ -161,49 +161,70 @@ function MuseoForm({ mode }) {
 
   const handleRegistroMuseo = async (values) => {
     const formData = new FormData();
+    let algoCambio = false;
+
+    if (!(selectedDate instanceof Date) || isNaN(selectedDate)) {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "Fecha inválida",
+        position: "top-right",
+      });
+      return;
+    }
+    const parsedDate = selectedDate.toISOString().split("T")[0];
 
     let response;
     if (mode === "edit") {
       if (values.museofrmnombre !== museoEdit?.nombre) {
         formData.append("mus_nombre", values.museofrmnombre);
+        algoCambio = true;
       }
       if (values.museofrmcalle !== museoEdit?.calle) {
         formData.append("mus_calle", values.museofrmcalle);
+        algoCambio = true;
       }
       if (values.museofrmnumext !== museoEdit?.num_ext) {
         formData.append("mus_num_ext", values.museofrmnumext);
+        algoCambio = true;
       }
       if (values.museofrmcolonia !== museoEdit?.colonia) {
         formData.append("mus_colonia", values.museofrmcolonia);
+        algoCambio = true;
       }
       if (values.museofrmcp !== museoEdit?.cp) {
         formData.append("mus_cp", values.museofrmcp);
+        algoCambio = true;
       }
       if (values.museofrmalcaldia !== museoEdit?.alcaldia) {
         formData.append("mus_alcaldia", values.museofrmalcaldia);
+        algoCambio = true;
       }
-      if (values.museofrmfecapertura !== museoEdit?.fecha_apertura) {
-        formData.append(
-          "mus_fec_ap",
-          formatearFechaBDDATE(values.museofrmfecapertura)
-        );
+      const fechaApActual = new Date(museoEdit?.fecha_apertura);
+      if (fechaApActual !== parsedDate) {
+        formData.append("mus_fec_ap", parsedDate);
+        algoCambio = true;
       }
       if (values.museofrmdescripcion !== museoEdit?.descripcion) {
         formData.append("mus_descripcion", values.museofrmdescripcion);
+        algoCambio = true;
       }
       if (values.museofrmtematicamuseo !== museoEdit?.tematica) {
         formData.append("mus_tematica", values.museofrmtematicamuseo);
+        algoCambio = true;
       }
       if (values.museofrmglatitud !== museoEdit?.g_latitud) {
         formData.append("mus_g_latitud", values.museofrmglatitud);
+        algoCambio = true;
       }
       if (values.museofrmglongitud !== museoEdit?.g_longitud) {
         formData.append("mus_g_longitud", values.museofrmglongitud);
+        algoCambio = true;
       }
       // Verifica si la imagen es un archivo File y no un Blob
       if (values.museofrmfoto) {
         if (values.museofrmfoto instanceof File) {
           formData.append("mus_foto", values.museofrmfoto);
+          algoCambio = true;
         } else {
           // formData.append("mus_foto", values.museofrmfoto);
         }
@@ -247,8 +268,10 @@ function MuseoForm({ mode }) {
 
       try {
         response = await updateMuseo(museoId, formData);
-        toast.success("Museo actualizado correctamente", {
-          transition: Bounce,
+        ToastMessage({
+          tipo: "success",
+          mensaje: "Museo actualizado correctamente",
+          position: "top-right",
         });
 
         navigate(`/Museos/${response.museo.mus_id}`);
@@ -266,10 +289,7 @@ function MuseoForm({ mode }) {
       formData.append("mus_colonia", values.museofrmcolonia);
       formData.append("mus_cp", values.museofrmcp);
       formData.append("mus_alcaldia", values.museofrmalcaldia);
-      formData.append(
-        "mus_fec_ap",
-        formatearFechaBDDATE(values.museofrmfecapertura)
-      );
+      formData.append("mus_fec_ap", parsedDate);
       formData.append("mus_descripcion", values.museofrmdescripcion);
       formData.append("mus_tematica", values.museofrmtematicamuseo);
       formData.append("mus_g_latitud", values.museofrmglatitud);
@@ -309,13 +329,23 @@ function MuseoForm({ mode }) {
 
       try {
         response = await registrarMuseo(formData);
-        toast.success("Museo registrado correctamente", { transition: Bounce });
+        ToastMessage({
+          tipo: "success",
+          mensaje: "Museo registrado correctamente",
+          position: "top-right",
+        });
         navigate("/museos");
       } catch (error) {
         console.error(error);
-        toast.error("Error al registrar museo", { transition: Bounce });
+        ToastMessage({
+          tipo: "error",
+          mensaje: "Error al registrar museo",
+          position: "top-right",
+        });
       }
     }
+
+    console.log("Response:", response);
 
     if (response.museo.success) {
       if (mode === "edit") {
@@ -325,14 +355,10 @@ function MuseoForm({ mode }) {
         navigate(`/Admin/Museo/EditarHorario/${response.museo.mus_id}/`);
       }
     } else {
-      toast.error("Error al actualizar el museo", {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "Error al registrar museo",
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
     }
   };
@@ -362,7 +388,7 @@ function MuseoForm({ mode }) {
                 museofrmcolonia: museoEdit?.colonia || "",
                 museofrmcp: museoEdit?.cp || "",
                 museofrmalcaldia: museoEdit?.alcaldia || "",
-                museofrmfecapertura: museoEdit?.fecha_apertura || "",
+                museofrmfechapertura: museoEdit?.fecha_apertura || "",
                 museofrmdescripcion: museoEdit?.descripcion || "",
                 museofrmtematicamuseo: museoEdit?.tematica || "",
                 museofrmglatitud: museoEdit?.g_latitud || "",
@@ -373,6 +399,7 @@ function MuseoForm({ mode }) {
               validateOnMount={true}
               onSubmit={(values) => {
                 // Aquí puedes manejar el envío del formulario
+                console.log("Valores del formulario:", values);
                 handleRegistroMuseo(values);
               }}
             >
@@ -503,14 +530,11 @@ function MuseoForm({ mode }) {
                           autoFocus
                           mode="single"
                           selected={selectedDate}
-                          onSelect={(date) =>
-                            handleDayPickerSelect(date, setFieldValue)
-                          }
+                          onSelect={handleDayPickerSelect}
                           footer={
                             selectedDate
-                              ? `Seleccionaste el ${format(
-                                  selectedDate,
-                                  "dd-MM-yyyy"
+                              ? `Seleccionaste el ${formatearFechaBDDATE(
+                                  selectedDate
                                 )}`
                               : "Selecciona una fecha"
                           }

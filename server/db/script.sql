@@ -23,6 +23,10 @@ INSERT INTO musedmx.usuarios
 (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo)
 VALUES
 ('admin@musedmx.com', 'Admin', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '1980-01-01', "+525527167255", NULL, 2);
+INSERT INTO musedmx.usuarios 
+(usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo)
+VALUES
+('mod@musedmx.com', 'Mod', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2000-04-02', "+525531933874", NULL, 3);
 
 
 SELECT * FROM usuarios;
@@ -86,6 +90,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`moderador` (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 	) ENGINE=InnoDB;
+    
+SELECT * FROM moderador;
 
 -- -----------------------------------------------------
 -- Trigger para cuando se inserte un nuevo usuario en usuarios con tipo 3, se inserte en moderador
@@ -582,6 +588,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios_has_tematicas` (
 --  INDEX `fk_usuarios_has_tematicas_tematicas1_idx` (`tematicas_tm_nombre` ASC) VISIBLE,
 --  INDEX `fk_usuarios_has_tematicas_usuarios1_idx` (`usuarios_usr_correo` ASC) VISIBLE
   ) ENGINE=InnoDB;
+
+SELECT * FROM usuarios_has_tematicas;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`museos_has_servicios`

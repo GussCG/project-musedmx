@@ -67,7 +67,9 @@ const MapMuseoDetailMarker = React.memo(({ museo, isActive, onActivate }) => {
   );
 
   return (
-    museo && (
+    museo &&
+    museo.g_latitud &&
+    museo.g_longitud && (
       <>
         <AdvancedMarker
           position={{

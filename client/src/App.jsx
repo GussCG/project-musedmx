@@ -85,7 +85,7 @@ function App() {
                     <Route path="Agregar" element={<ModForm />} />
                     <Route
                       path="VerMods/Editar/:userId"
-                      element={<ProfileEdit />}
+                      element={<ModForm />}
                     />
                     <Route
                       path="Museo/Registrar"

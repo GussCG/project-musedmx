@@ -71,7 +71,7 @@ function MuseosList({ titulo, tipo }) {
     museos: museosNormales,
     pagination,
     fetchMuseos,
-    isLoading: isLoadingNormales,
+    loading: isLoadingNormales,
   } = useMuseos(museosParams);
 
   const {
@@ -289,57 +289,49 @@ function MuseosList({ titulo, tipo }) {
                 MuseosMostrados={museos}
                 tipo={tipo}
                 isMapView={isMapView}
+                loading={isLoading}
               />
             )}
           </section>
         ) : (
           <section className="museos-container-section">
-            {isLoading && (
-              <div className="no-results">
-                <LoadingIndicator />
+            <>
+              <div className="museos-container">
+                {museos.length === 0 ? (
+                  <motion.div
+                    className="no-results"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    key="no-results"
+                    transition={{ duration: 0.5 }}
+                  >
+                    <p>No se encontraron museos</p>
+                    <p>Intenta con otra búsqueda o filtros</p>
+                  </motion.div>
+                ) : (
+                  museos.map((museo) => (
+                    <MuseoCard
+                      key={museo.id}
+                      museo={museo}
+                      editMode={false}
+                      sliderType={null}
+                      loading={isLoading}
+                    />
+                  ))
+                )}
               </div>
-            )}
-            {!isLoading && (
-              <>
-                <div className="museos-container">
-                  {museos.length === 0 ? (
-                    <motion.div
-                      className="no-results"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 20 }}
-                      key="no-results"
-                      transition={{ duration: 0.5 }}
-                    >
-                      <p>No se encontraron museos</p>
-                      <p>Intenta con otra búsqueda o filtros</p>
-                    </motion.div>
-                  ) : (
-                    museos.map((museo) =>
-                      isLoading ? (
-                        <div className="no-results">
-                          <LoadingIndicator />
-                        </div>
-                      ) : (
-                        <MuseoCard
-                          key={museo.id}
-                          museo={museo}
-                          editMode={false}
-                          sliderType={null}
-                        />
-                      )
-                    )
-                  )}
-                </div>
-              </>
-            )}
+            </>
 
             {pagination.totalPages > 1 && !isPopulares && (
               <ReactPaginate
                 breakLabel="..."
                 breakClassName="break"
                 nextLabel={<IoIosArrowForward />}
-                onPageChange={handlePageClick}
+                onPageChange={(event) => {
+                  handlePageClick(event);
+                  scrollToTop();
+                }}
                 pageRangeDisplayed={1}
                 marginPagesDisplayed={1}
                 pageCount={pagination.totalPages}

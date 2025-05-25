@@ -1,6 +1,3 @@
-import adminFoto from "../assets/images/placeholders/admin-placeholder.png";
-import modFoto from "../assets/images/placeholders/mod-placeholder.png";
-
 class Usuario {
   constructor(
     correo,
@@ -24,16 +21,14 @@ class Usuario {
 }
 
 class Admin extends Usuario {
-  foto = { adminFoto };
   constructor(correo, nombre, apPaterno, apMaterno, telefono, fecNac) {
-    super(correo, nombre, apPaterno, apMaterno, telefono, fecNac, foto, null);
+    super(correo, nombre, apPaterno, apMaterno, telefono, fecNac);
   }
 }
 
 class Mod extends Usuario {
-  foto = { modFoto };
   constructor(correo, nombre, apPaterno, apMaterno, telefono, fecNac) {
-    super(correo, nombre, apPaterno, apMaterno, telefono, fecNac, foto, null);
+    super(correo, nombre, apPaterno, apMaterno, telefono, fecNac);
   }
 }
 

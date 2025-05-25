@@ -60,7 +60,9 @@ export function useMuseo(museoId) {
       setError(err);
       throw err;
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000); // Simulate loading delay
     }
   };
 

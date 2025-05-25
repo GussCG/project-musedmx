@@ -141,7 +141,8 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
 
   // Aplicamos los bounds cuando cambian
   useEffect(() => {
-    if (!map || tipo === "2" || !mapBounds) return;
+    if (!map || tipo === "2" || tipo === "4" || tipo === "3" || !mapBounds)
+      return;
 
     const padding = 50;
 
@@ -172,12 +173,6 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
     }
   }, [map]);
 
-  useEffect(() => {
-    if (map && location.mapCenter && userInteracted === false) {
-      map.panTo(location.mapCenter);
-    }
-  }, [map, location.mapCenter, userInteracted]);
-
   // Cuando sea un solo museo se desplaza el mapa a su ubicación
   useEffect(() => {
     if (map && museosMostrados.length === 1) {
@@ -207,7 +202,7 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
         <Map
           key={`map-${mapKey}`}
           defaultZoom={12}
-          center={location.mapCenter}
+          defaultCenter={location.mapCenter}
           mapId={currentMapId}
           mapTypeId={mapType}
           onCenterChanged={handleCenterChanged}

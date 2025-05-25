@@ -1,10 +1,9 @@
 import { useRef, useEffect, useState } from "react";
 import useUsuario from "../../hooks/Usuario/useUsuario";
 import { Formik, Form, Field } from "formik";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { toast, Bounce } from "react-toastify";
 import "rc-slider/assets/index.css";
 import { motion } from "framer-motion";
 import { es } from "react-day-picker/locale";
@@ -19,6 +18,9 @@ import { formatearFechaBDDATE } from "../../utils/formatearFechas";
 import { TIPOS_USUARIO } from "../../constants/catalog";
 import UserImage from "../../components/User/UserImage";
 import ToastMessage from "../../components/Other/ToastMessage";
+import { formatFileName } from "../../utils/formatFileName";
+import { parseFecha } from "../../utils/parsearFecha";
+import { parseTematicas } from "../../utils/parseTematicas";
 
 function ProfileEdit() {
   const { user, tipoUsuario, setUser } = useAuth();
@@ -26,55 +28,25 @@ function ProfileEdit() {
   const navigate = useNavigate();
 
   // Estados
-  const [tel, setTel] = useState(user?.usr_telefono || "");
-  const [imagePreview, setImagePreview] = useState(
-    user?.usr_foto || userPlaceholder
-  );
-  const [selectedTematicas, setSelectedTematicas] = useState(() => {
-    if (!user?.usr_tematicas) return [];
-    return typeof user.usr_tematicas === "string"
-      ? JSON.parse(user.usr_tematicas)
-      : user.usr_tematicas;
-  });
-
-  useEffect(() => {
-    const tematicas = !user?.usr_tematicas
-      ? []
-      : typeof user.usr_tematicas === "string"
-      ? JSON.parse(user.usr_tematicas)
-      : user.usr_tematicas;
-    setSelectedTematicas(tematicas);
-  }, [user]);
-
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const f = new Date(user?.usr_fecha_nac);
-    return isNaN(f.getTime()) ? new Date() : f;
-  });
+  const [tel, setTel] = useState("");
+  const [imagePreview, setImagePreview] = useState(userPlaceholder);
+  const [selectedTematicas, setSelectedTematicas] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [mes, setMes] = useState(new Date());
   const today = new Date();
-
-  useEffect(() => {
-    if (selectedDate) {
-      setMes(selectedDate);
-    }
-  }, [selectedDate]);
+  const [fileLabel, setFileLabel] = useState("Seleccionar Archivo");
 
   const fileNameRef = useRef(null);
 
-  useEffect(() => {
-    // Actualizar estado si cambia user
+  function resetForm(user) {
     setTel(user?.usr_telefono || "");
-    setSelectedTematicas(user?.usr_tematicas || []);
-    const f = new Date(user?.usr_fecha_nac);
-    setSelectedDate(isNaN(f.getTime()) ? new Date() : f);
+    setSelectedTematicas(parseTematicas(user?.usr_tematicas));
+    const fecha = parseFecha(user?.usr_fecha_nac);
+    setSelectedDate(fecha);
+    setMes(fecha);
     setImagePreview(user?.usr_foto || userPlaceholder);
-
-    if (fileNameRef.current) {
-      fileNameRef.current.innerHTML = user?.usr_foto
-        ? "Cambiar Archivo"
-        : "Seleccionar Archivo";
-    }
-  }, [user]);
+    setFileLabel(user?.usr_foto ? "Cambiar Archivo" : "Seleccionar Archivo");
+  }
 
   // Lógica para el cambio de imagen de perfil
   const handleImageChange = (event, setFieldValue) => {
@@ -84,12 +56,10 @@ function ProfileEdit() {
       setImagePreview(URL.createObjectURL(file));
       setNuevaFoto(true);
       if (fileNameRef.current) fileNameRef.current.innerHTML = file.name;
+      setFileLabel(file.name);
     } else {
       setImagePreview(user?.usr_foto);
-      if (fileNameRef.current)
-        fileNameRef.current.innerHTML = user?.usr_foto
-          ? "Cambiar Archivo"
-          : "Seleccionar Archivo";
+      setFileLabel(user?.usr_foto ? "Cambiar Archivo" : "Seleccionar Archivo");
     }
     event.target.value = null;
   };
@@ -118,21 +88,19 @@ function ProfileEdit() {
       let algoCambio = false;
 
       if (!isPossiblePhoneNumber(tel)) {
-        toast.error("Número de teléfono inválido", {
+        ToastMessage({
+          tipo: "error",
+          mensaje: "Teléfono inválido",
           position: "top-right",
-          autoClose: 3000,
-          theme: "colored",
-          transition: Bounce,
         });
         return;
       }
 
       if (!(selectedDate instanceof Date) || isNaN(selectedDate)) {
-        toast.error("Fecha de nacimiento inválida", {
+        ToastMessage({
+          tipo: "error",
+          mensaje: "Fecha inválida",
           position: "top-right",
-          autoClose: 3000,
-          theme: "colored",
-          transition: Bounce,
         });
         return;
       }
@@ -178,11 +146,10 @@ function ProfileEdit() {
       }
 
       if (!algoCambio) {
-        toast.info("No hiciste cambios", {
+        ToastMessage({
+          tipo: "info",
+          mensaje: "No se realizaron cambios",
           position: "top-right",
-          autoClose: 3000,
-          theme: "colored",
-          transition: Bounce,
         });
         return;
       }
@@ -192,25 +159,22 @@ function ProfileEdit() {
       });
 
       const response = await editarUsuario(userData, user.usr_correo);
-      console.log("Respuesta de editarUsuario:", response);
 
       if (response) {
         const datosActualizados = await obtenerUsuarioByCorreo(user.usr_correo);
         const datos = datosActualizados.usuario;
         setUser(datos);
-        toast.success("Usuario editado correctamente", {
+        ToastMessage({
+          tipo: "success",
+          mensaje: "Usuario editado correctamente",
           position: "top-right",
-          autoClose: 3000,
-          theme: "colored",
-          transition: Bounce,
         });
         navigate(TIPOS_USUARIO[user.usr_tipo].redirectPath);
       } else {
-        toast.error("Error al editar el usuario", {
+        ToastMessage({
+          tipo: "error",
+          mensaje: "Error al editar el usuario",
           position: "top-right",
-          autoClose: 3000,
-          theme: "colored",
-          transition: Bounce,
         });
       }
     } catch (error) {
@@ -223,19 +187,29 @@ function ProfileEdit() {
   useEffect(() => {
     let valid = false;
 
+    if (!user) return;
+
+    const isTelValid =
+      typeof tel === "string" &&
+      tel.trim() !== "" &&
+      isPossiblePhoneNumber(tel);
+
+    const isDateValid =
+      selectedDate instanceof Date && !isNaN(selectedDate.getTime());
     if (user.usr_tipo === 1) {
-      valid =
-        tel.trim() !== "" &&
-        selectedDate instanceof Date &&
-        !isNaN(selectedDate.getTime()) &&
-        selectedTematicas.length === 3;
+      valid = isTelValid && isDateValid && selectedTematicas.length === 3;
     } else {
-      valid =
-        tel && selectedDate instanceof Date && !isNaN(selectedDate.getTime());
+      valid = isTelValid && isDateValid;
     }
 
     setIsFormValid(valid);
-  }, [tel, selectedDate, selectedTematicas, user.usr_tipo]);
+  }, [tel, selectedDate, selectedTematicas, user]);
+
+  useEffect(() => {
+    if (user) {
+      resetForm(user);
+    }
+  }, [user]);
 
   return (
     <motion.div
@@ -355,10 +329,10 @@ function ProfileEdit() {
                       <div className="registros-field-calendar">
                         <label>Fecha de Nacimiento</label>
                         <DayPicker
-                          hideNavigation={false}
+                          hideNavigation
                           animate
                           locale={es}
-                          timeZone="America/Mexico_City"
+                          timeZone="UTC"
                           captionLayout="dropdown"
                           fixedWeeks
                           month={mes}
@@ -383,6 +357,9 @@ function ProfileEdit() {
                           }
                           modifiers={{
                             disabled: { after: today },
+                          }}
+                          classNames={{
+                            chevron: "calendar-chevron",
                           }}
                           className="registros-calendar"
                         />
@@ -427,7 +404,7 @@ function ProfileEdit() {
                             <div className="registros-field-foto-input">
                               <h2>Foto de perfil</h2>
                               <div className="foto-input">
-                                <Field
+                                <button
                                   className="file-btn"
                                   type="button"
                                   onClick={() =>
@@ -436,11 +413,11 @@ function ProfileEdit() {
                                       .click()
                                   }
                                   value="Seleccionar Archivo"
-                                />
+                                >
+                                  Seleccionar Archivo
+                                </button>
                                 <span id="file-name" ref={fileNameRef}>
-                                  {user?.usr_foto
-                                    ? "Cambiar Archivo"
-                                    : "Seleccionar Archivo"}
+                                  {formatFileName(fileLabel)}
                                 </span>
                                 <input
                                   type="file"
@@ -469,7 +446,6 @@ function ProfileEdit() {
                   <button
                     type="submit"
                     className={`button ` + (isFormValid ? "" : "disabled")}
-                    value="Guardar cambios"
                     id="registros-button"
                     disabled={isFormValid ? false : true}
                   >
