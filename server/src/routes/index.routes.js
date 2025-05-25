@@ -1,12 +1,12 @@
 import { Router } from "express";
 import museoRoutes from "./museo.routes.js";
 import authRoutes from "./auth.routes.js";
-import userRoutes from "./usuarios.routes.js";
 
 import resenaRoutes from "./resena.routes.js";
 import encuestaRoutes from "./encuesta.routes.js";
 import favoritoRoutes from "./favorito.routes.js";
 import qvRoutes from "./quierovisitar.routes.js";
+import visitasRoutes from "./visitas.routes.js";
 
 const router = Router();
 
@@ -34,5 +34,6 @@ router.use("/api/resena", resenaRoutes);
 router.use("/api/encuesta", encuestaRoutes);
 router.use("/api/favoritos", favoritoRoutes);
 router.use("/api/qv", qvRoutes);
+router.use("/api/visitas", visitasRoutes);
 
 export default router;
