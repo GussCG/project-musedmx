@@ -40,6 +40,7 @@ export const getResenasFoto = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 export const getResenasByMuseo = async (req, res) => {
   try {
     const { museoId } = req.params;
@@ -60,3 +61,18 @@ export const getResenasByMuseo = async (req, res) => {
     handleHttpError(res, "ERROR_GET_RESENAS_BY_MUSEO", error);
   }
 };
+=======
+export const aprobarResena = async (req, res) => {
+  try {
+	const { id } = req.params;
+	const resena = await Resena.aprobar({ id });
+	res.json({
+	  success: true,
+	  id,
+	  resena,
+	});
+  } catch (error) {
+	handleHttpError(res, "ERROR_APROBAR_RESENA", error);
+  }
+}
+>>>>>>> d8a90a34c06e5bc20fe741c22563539c225de6da

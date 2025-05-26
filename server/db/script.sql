@@ -408,13 +408,13 @@ SELECT * FROM visitas;
 CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
   `res_id_res` INT(11) NOT NULL AUTO_INCREMENT,
   `res_comentario` TEXT NOT NULL,
-  `res_mod_correo` VARCHAR(75) NOT NULL,
+  `res_mod_correo` VARCHAR(75) NULL DEFAULT NULL,
   `res_aprobado` TINYINT(1) NOT NULL,
   `res_calif_estrellas` INT(1) NOT NULL,
   `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,
   `visitas_vi_mus_id` INT(11) NOT NULL,
   `visitas_vi_fechahora` DATETIME NOT NULL,
-  PRIMARY KEY (`res_id_res`, `res_mod_correo`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`, `visitas_vi_fechahora`),
+  PRIMARY KEY (`res_id_res`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`, `visitas_vi_fechahora`),
 /*   CONSTRAINT `fk_resenia_museos1`
 	FOREIGN KEY (`visitas_vi_mus_id`)
 	REFERENCES `musedmx`.`museos` (`mus_id`)
