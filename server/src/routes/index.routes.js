@@ -7,6 +7,7 @@ import encuestaRoutes from "./encuesta.routes.js";
 import favoritoRoutes from "./favorito.routes.js";
 import qvRoutes from "./quierovisitar.routes.js";
 import visitasRoutes from "./visitas.routes.js";
+import reviewsRoutes from "./reviews.routes.js";
 
 const router = Router();
 
@@ -35,5 +36,6 @@ router.use("/api/encuesta", encuestaRoutes);
 router.use("/api/favoritos", favoritoRoutes);
 router.use("/api/qv", qvRoutes);
 router.use("/api/visitas", visitasRoutes);
+router.use("/api/reviews", reviewsRoutes);
 
 export default router;

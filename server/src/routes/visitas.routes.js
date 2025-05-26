@@ -3,7 +3,7 @@ import {
   getVisitas,
   addVisita,
   deleteVisita, 
-} from "../controllers/listas/visitas.controller.js";
+} from "../controllers/visitas.controller.js";
 
 
 const router = Router();

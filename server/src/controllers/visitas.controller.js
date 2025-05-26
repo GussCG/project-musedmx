@@ -1,5 +1,5 @@
-import Lista from '../../models/visitas.model.js';
-import { handleHttpError } from '../../helpers/httpError.js';
+import Lista from '../models/visitas.model.js';
+import { handleHttpError } from '../helpers/httpError.js';
 
 export const getVisitas = async (req, res) => {
   try {
