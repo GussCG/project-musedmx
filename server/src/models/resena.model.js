@@ -183,4 +183,22 @@ export default class Resena {
       connection.release();
     }
   }
+
+  static async aprobar({ res_id_res, res_mod_correo, res_aprobado }) {
+	const query = `
+		UPDATE resenia
+		SET res_aprobado = ?, 
+			res_mod_correo = ?
+		WHERE res_id_res = ?
+		`;
+	const queryParams = [];
+	queryParams.push(res_aprobado, res_mod_correo, res_id_res);
+	const [result] = await pool.query(query, queryParams);
+	
+	if (result.affectedRows === 0) {
+	  throw new Error("No se encontró la reseña para aprobar");
+	}
+
+	return { success: true, id: res_id_res };
+  }
 }
