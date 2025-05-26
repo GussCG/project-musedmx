@@ -21,14 +21,25 @@ export default function FavoritoButton({
   });
 
   useEffect(() => {
+    if (!user) return;
+
+    let isMounted = true;
+
     const fetchFavorito = async () => {
-      if (user) {
+      try {
         const fav = await verificarFavorito(user.usr_correo, museoId);
-        setIsFavorite(fav);
+        if (isMounted) setIsFavorite(fav);
+      } catch (error) {
+        console.error(error);
       }
     };
+
     fetchFavorito();
-  }, [user, museoId, setIsFavorite, verificarFavorito]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.usr_correo, museoId, verificarFavorito]);
 
   const handleFavoriteChange = async () => {
     if (!user) return;

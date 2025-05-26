@@ -12,7 +12,7 @@ import "react-day-picker/style.css";
 import { useAuth } from "../../context/AuthProvider";
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 import ErrorCampo from "../../components/Forms/ErrorCampo";
-import { userSchema } from "../../constants/validationSchemas";
+import { userEditSchema } from "../../constants/validationSchemas";
 import { TEMATICAS } from "../../constants/catalog";
 import { formatearFechaBDDATE } from "../../utils/formatearFechas";
 import { TIPOS_USUARIO } from "../../constants/catalog";
@@ -230,10 +230,11 @@ function ProfileEdit() {
               signinfrmtelefono: user?.usr_telefono || "",
               signinfrmfoto: "",
             }}
-            validationSchema={userSchema}
+            validationSchema={userEditSchema}
             onSubmit={handleEditar}
           >
             {({ setFieldValue, errors, touched }) => {
+              console.log(errors);
               return (
                 <Form id="signin-form">
                   <div

@@ -1,46 +1,106 @@
-import React from "react";
 import placeholderUserImage from "../../assets/images/placeholders/user_placeholder.png";
 import ImagenesSlider from "../../components/Resena/ImagenesSlider";
 import Icons from "../Other/IconProvider";
 const { FaStar } = Icons;
-import useResena from "../../hooks/Resena/useResena";
-import LoadingIndicator from "../Other/LoadingIndicator";
+import { formatName } from "../../utils/formatName";
+import {
+  formatearFecha,
+  formatearFechaRelativa,
+  formatearFechaRelativaCompleta,
+} from "../../utils/formatearFechas";
+import { SERVICIOS } from "../../constants/catalog";
+import { useTheme } from "../../context/ThemeProvider";
+import Skeleton from "react-loading-skeleton";
 
-function ResenaCard({ idResena }) {
-  const { resena, loading: loadingResena, error } = useResena(idResena);
-
+function ResenaCard({ resena = {}, loadingResena = true }) {
+  loadingResena = false;
+  const { isDarkMode } = useTheme();
   return (
     <>
-      {loadingResena && <LoadingIndicator />}
-
       <div className="resena-card">
         <div className="resena-foto-container">
-          <img src={placeholderUserImage} alt="Usuario" />
+          {loadingResena ? (
+            <Skeleton width={100} height={100} circle={true} />
+          ) : (
+            <img
+              src={resena.usr_foto || placeholderUserImage}
+              alt="Foto de usuario"
+            />
+          )}
         </div>
         <div className="resena-comentario-container">
           <div className="resena-comentario-header">
             <div className="nombre-calif-container">
-              <p id="nombre-user">Juan Pérez</p>
+              <div className="left-header">
+                <p id="nombre-user">
+                  {formatName({
+                    nombre: resena?.usr_nombre,
+                    apPaterno: resena?.usr_ap_paterno,
+                    apMaterno: resena?.usr_ap_materno,
+                  })}
+                </p>
 
-              <div className="resena-calificacion">
-                {Array.from(
-                  { length: resena[0]?.res_calif_estrellas },
-                  (_, i) => (
-                    <FaStar key={i} />
-                  )
+                <div className="resena-calificacion">
+                  {loadingResena ? (
+                    <Skeleton width={100} height={20} />
+                  ) : (
+                    Array.from(
+                      { length: resena?.res_calif_estrellas },
+                      (_, i) => <FaStar key={i} />
+                    )
+                  )}
+                </div>
+              </div>
+
+              <div
+                className="resena-servicios"
+                key={`servicios-${resena?.visitas_vi_fechahora}`}
+              >
+                {loadingResena ? (
+                  <Skeleton width={100} height={20} />
+                ) : (
+                  resena?.servicios?.length > 0 &&
+                  resena.servicios.map((servicioId) => {
+                    const servicio = SERVICIOS[servicioId];
+                    if (!servicio) return null; // ← solo renderiza si existe en el catálogo
+
+                    return (
+                      <img
+                        src={servicio.icon}
+                        alt={servicio.nombre}
+                        key={servicioId}
+                        title={servicio.nombre}
+                        style={{
+                          filter: isDarkMode ? "invert(1)" : "none",
+                        }}
+                      />
+                    );
+                  })
                 )}
               </div>
             </div>
-            <p id="fecha-resena">17-09-2024</p>
+            <p id="fecha-resena">
+              {loadingResena ? (
+                <Skeleton width={100} height={20} />
+              ) : (
+                formatearFechaRelativaCompleta(resena?.visitas_vi_fechahora)
+              )}
+            </p>
           </div>
           <div className="resena-comentario-body">
             {loadingResena ? (
-              <LoadingIndicator />
+              <Skeleton count={3} width={"500px"} />
             ) : (
-              <p>{resena[0]?.res_comentario || ""}</p>
+              <p>{resena?.res_comentario || ""}</p>
             )}
             {/* Slider de imagenes */}
-            {/* {fotosResena && <ImagenesSlider listaImagenes={fotosResena} />} */}
+
+            {resena?.fotos && resena.fotos.length > 0 && (
+              <ImagenesSlider
+                fotos={resena.fotos}
+                id={`slider-${resena.visitas_vi_fechahora}`}
+              />
+            )}
           </div>
         </div>
       </div>

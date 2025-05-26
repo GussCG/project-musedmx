@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, use } from "react";
 import { m, motion } from "framer-motion";
 import Icons from "../Other/IconProvider";
 const { corazonIcon } = Icons;
 import MuseoSlider from "../Museo/MuseoSlider";
 import QVSearch from "../Museo/QVSearch";
-import { useMuseos } from "../../hooks/Museo/useMuseos";
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
 import { useAuth } from "../../context/AuthProvider";
 import { useMuseosSugeridos } from "../../hooks/Usuario/useUsuarioMuseosSugeridos";

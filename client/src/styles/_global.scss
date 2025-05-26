@@ -211,3 +211,103 @@ main {
     text-align: center;
   }
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding: 20px 0;
+  margin: 0 auto;
+  gap: 10px;
+
+  .page-item {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    .page-link {
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: var(--font-color-primary);
+      transition: font-weight 0.3s ease-in-out;
+      position: relative;
+      padding: 0 5px;
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        font-weight: $font-w-bold;
+
+        &::after {
+          transform: scaleX(1);
+          opacity: 1;
+        }
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        border-bottom: 2px solid var(--font-color-primary);
+        width: 100%;
+        background-color: currentColor;
+        transform: scaleX(0);
+        transform-origin: bottom left;
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        opacity: 0;
+      }
+    }
+
+    &.active {
+      background-color: var(--pagination-active-bg);
+      border-radius: 50%;
+      color: var(--font-color-primary);
+      font-weight: $font-w-bold;
+
+      .page-link::after {
+        display: none;
+      }
+    }
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.2;
+
+      .page-link::after {
+        display: none;
+      }
+    }
+  }
+
+  .break,
+  .previous,
+  .next {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--font-color-primary);
+    font-size: 1.5rem;
+
+    svg {
+      width: 35px;
+      height: 35px;
+      color: var(--font-color-primary);
+
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      &:hover {
+        opacity: 0.5;
+        transform: scale(1.1);
+      }
+    }
+
+    .page-link::after {
+      display: none !important;
+    }
+  }
+}

@@ -22,17 +22,13 @@ function SearchBar({
   const searchRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-.,;:¡!¿?'()]+$/;
 
   useEffect(() => {
-    if (input.length > 0) {
-      // Creamos las sugerencias combinando los nombres de museos y las tematicas
+    if (input.length > 0 && Array.isArray(suggestions)) {
       const sugerenciasNombres = suggestions.map((museo) => museo.mus_nombre);
-
       const allSuggestions = [...sugerenciasNombres];
-
       const filteredSuggestions = allSuggestions.filter((item) =>
         item.toLowerCase().includes(input.toLowerCase())
       );
       setFilteredSuggestions(filteredSuggestions);
-      setShowSuggestions(true);
     } else {
       setFilteredSuggestions([]);
       setShowSuggestions(false);
@@ -118,10 +114,8 @@ function SearchBar({
     setError(null);
   };
 
-  const [showSuggestionsState, setShowSuggestionsState] = useState(false);
   const toggleShowSuggestions = () => {
     setShowSuggestions((prev) => !prev);
-    setShowSuggestionsState((prev) => !prev);
   };
 
   return (
@@ -181,9 +175,7 @@ function SearchBar({
         <button type="button" onClick={toggleShowSuggestions}>
           <IoMdArrowDropdown
             style={{
-              transform: showSuggestionsState
-                ? "rotate(180deg)"
-                : "rotate(0deg)",
+              transform: showSuggestions ? "rotate(180deg)" : "rotate(0deg)",
               transition: "transform 0.3s ease",
             }}
           />

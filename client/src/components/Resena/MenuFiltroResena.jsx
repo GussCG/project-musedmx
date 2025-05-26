@@ -2,24 +2,42 @@ import { useState } from "react";
 import Icons from "../Other/IconProvider";
 const { FaStar, CgClose } = Icons;
 
-function MenuFiltroResena({ menuVisible, setMenuVisible }) {
+function MenuFiltroResena({
+  menuVisible,
+  setMenuVisible,
+  setFiltros,
+  setPagina,
+}) {
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
   const [tieneFotos, setTieneFotos] = useState(false);
-
-  // Para manejar los radio buttons de fecha
   const [radioFecha, setRadioFecha] = useState("");
 
   const handleBorrar = () => {
+    // Limpiar estados internos
     setRating(null);
-    setRadioFecha([false, false]);
+    setRadioFecha("");
     setTieneFotos(false);
+
+    // Aplicar filtros vacíos para mostrar sin filtro
+    setFiltros({});
+
+    // Reiniciar página a la 1
+    setPagina(1);
+
+    // Cerrar menú
+    setMenuVisible(false);
   };
 
   const handleFiltrar = () => {
-    console.log("Rating: ", rating);
-    console.log("Fecha: ", radioFecha);
-    console.log("Fotos: ", tieneFotos);
+    const filtrosAplicados = {};
+    if (rating !== null) filtrosAplicados.rating = rating;
+    if (tieneFotos) filtrosAplicados.tieneFotos = tieneFotos;
+    if (radioFecha !== "") filtrosAplicados.fecha = radioFecha;
+
+    setFiltros(filtrosAplicados);
+    setPagina(1); // Reiniciar a la primera página al aplicar filtros
+    setMenuVisible(false);
   };
 
   const cerrarMenu = () => {
@@ -80,7 +98,9 @@ function MenuFiltroResena({ menuVisible, setMenuVisible }) {
           </div>
           <div className="filtro-menu-filter-body open" id="fecha-menu">
             <div className="filtro-menu-filter-body-item">
-              <label htmlFor="fecha-1">Ordenar más antiguo a reciente</label>
+              <label htmlFor="fecha-1">
+                Ordenar más reciente a más antiguo
+              </label>
               <label className="filtro-rad">
                 <input
                   type="radio"
@@ -94,7 +114,9 @@ function MenuFiltroResena({ menuVisible, setMenuVisible }) {
               </label>
             </div>
             <div className="filtro-menu-filter-body-item">
-              <label htmlFor="fecha-2">Ordenar más reciente a antiguo</label>
+              <label htmlFor="fecha-2">
+                Ordenar más antiguo a más reciente
+              </label>
               <label className="filtro-rad">
                 <input
                   type="radio"

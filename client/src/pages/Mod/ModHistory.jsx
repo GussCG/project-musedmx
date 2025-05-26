@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import Icons from "../../components/Other/IconProvider";
-const { LuArrowUpDown, verIcon } = Icons;
+const { LuArrowUpDown, LuEye } = Icons;
 import { motion } from "framer-motion";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -131,7 +131,7 @@ function ModHistory() {
         header: "Ver Detalles",
         cell: ({ row }) => (
           <Link to={`/Mod/Resena/${row.original.id}`}>
-            <img src={verIcon} alt="Ver" />
+            <LuEye />
           </Link>
         ),
         enableSorting: false,

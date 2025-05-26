@@ -1,10 +1,9 @@
 import { Router } from "express";
 import {
   addVisita,
-  deleteVisita, 
-  verificarVisita,
-  getVisitaByCorreo,
-  getVisitaCountByMuseoId
+  deleteVisita,
+  getVisitas,
+  getVisitasCount,
 } from "../controllers/listas/visitas.controller.js";
 
 /*import {
@@ -13,11 +12,13 @@ import {
 
 const router = Router();
 
-router.post("/visitas", addVisita);
-router.delete("/visitas", deleteVisita);
-router.get("/visitas", verificarVisita);
-router.get("/visitas/:usr_correo", getVisitaByCorreo);
-router.get("/visitas/numero/:museoId", getVisitaCountByMuseoId);
+router.post("/visitas/agregar", addVisita);
+router.delete("/visitas/eliminar", deleteVisita);
+router.get("/visitas/:correo", getVisitas);
+router.get("/visitas/numero/:correo", getVisitasCount);
+// router.get("/visitas", verificarVisita);
+// router.get("/visitas/:usr_correo", getVisitaByCorreo);
+// router.get("/visitas/numero/:museoId", getVisitaCountByMuseoId);
 
 // router.get("/usuarios/:id/reviews", getReviewByUserId);
 

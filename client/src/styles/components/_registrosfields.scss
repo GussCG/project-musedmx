@@ -727,8 +727,10 @@
   height: auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  gap: 30px;
   place-content: center;
+  align-items: center;
+  justify-items: center;
 }
 
 .registros-frm-select {

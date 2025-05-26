@@ -34,5 +34,6 @@ router.use("/api/resena", resenaRoutes);
 router.use("/api/encuesta", encuestaRoutes);
 router.use("/api/favoritos", favoritoRoutes);
 router.use("/api/qv", qvRoutes);
+router.use("/api/usuarios", userRoutes);
 
 export default router;

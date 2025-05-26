@@ -171,10 +171,13 @@
 
       #museo-card-rating {
         position: absolute;
+        top: 50%;
+        right: 50%;
+        transform: translate(50%, -40%);
         z-index: 20;
         font-size: 1rem;
         color: white;
-        font-weight: $font-w-bold;
+        font-weight: $font-w-semibold;
         text-align: center;
         font-family: $font-primary;
       }
@@ -226,7 +229,7 @@
       h2 {
         color: white;
         font-size: 1.2rem;
-        font-weight: $font-w-semibold;
+        font-weight: $font-w-regular;
         text-align: left;
         margin: 0;
         padding: 0;

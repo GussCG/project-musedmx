@@ -80,6 +80,13 @@ import entendibleIcon from "../../assets/icons/entendible-icon.png";
 import ninoIcon from "../../assets/icons/nino-icon.png";
 import familiarIcon from "../../assets/icons/familiar-icon.png";
 import adultoIcon from "../../assets/icons/adulto-icon.png";
+import interesanteIcon from "../../assets/icons/interesante-icon.png";
+import dificilIcon from "../../assets/icons/dificil-icon.png";
+import sucioIcon from "../../assets/icons/sucio-icon.png";
+import muyCaroIcon from "../../assets/icons/muy-caro-icon.png";
+import caroIcon from "../../assets/icons/caro-icon.png";
+import baratoIcon from "../../assets/icons/barato-icon.png";
+import gratisIcon from "../../assets/icons/gratis-icon.png";
 
 // Iconos de Servicios
 import banioIcon from "../../assets/icons/bano-icon.svg";
@@ -214,6 +221,13 @@ const Icons = {
   limpioIcon,
   entendibleIcon,
   ninoIcon,
+  interesanteIcon,
+  dificilIcon,
+  sucioIcon,
+  muyCaroIcon,
+  caroIcon,
+  baratoIcon,
+  gratisIcon,
   banioIcon,
   tiendaIcon,
   wifiIcon,

@@ -260,24 +260,24 @@ export const CALIFICACIONES_RUBROS = {
     { valor: 1, titulo: "Niños", icono: Icons.ninoIcon },
   ],
   1: [
-    { valor: 5, titulo: "Muy Interesante", icono: Icons.dormirIcon },
-    { valor: 4, titulo: "Interesante", icono: Icons.dormirIcon },
+    { valor: 5, titulo: "Muy Interesante", icono: Icons.interesanteIcon },
+    { valor: 4, titulo: "Interesante", icono: Icons.interesanteIcon },
     { valor: 3, titulo: "Poco Interesante", icono: Icons.dormirIcon },
     { valor: 2, titulo: "Aburrido", icono: Icons.dormirIcon },
   ],
   2: [
     { valor: 1, titulo: "Limpio", icono: Icons.limpioIcon },
-    { valor: 0.5, titulo: "Sucio", icono: Icons.limpioIcon },
+    { valor: 0.5, titulo: "Sucio", icono: Icons.sucioIcon },
   ],
   3: [
     { valor: 1, titulo: "Entendible", icono: Icons.entendibleIcon },
-    { valor: 0.5, titulo: "Difícil", icono: Icons.entendibleIcon },
+    { valor: 0.5, titulo: "Difícil", icono: Icons.dificilIcon },
   ],
   4: [
-    { valor: 4, titulo: "Muy Caro", icono: Icons.moneyIcon },
-    { valor: 3, titulo: "Caro", icono: Icons.moneyIcon },
-    { valor: 2, titulo: "Barato", icono: Icons.moneyIcon },
-    { valor: 1, titulo: "Gratis", icono: Icons.moneyIcon },
+    { valor: 4, titulo: "Muy Caro", icono: Icons.muyCaroIcon },
+    { valor: 3, titulo: "Caro", icono: Icons.caroIcon },
+    { valor: 2, titulo: "Barato", icono: Icons.baratoIcon },
+    { valor: 1, titulo: "Gratis", icono: Icons.gratisIcon },
   ],
 };
 

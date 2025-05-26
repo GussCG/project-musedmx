@@ -86,9 +86,6 @@ function MuseosList({ titulo, tipo }) {
   const museos = isPopulares ? museosPopulares : museosNormales;
   const isLoading = isPopulares ? isLoadingPopulares : isLoadingNormales;
 
-  // Scroll to top
-  const { showButton, scrollToTop } = useScrollToTop();
-
   // MenuSort
   const [isSortedMenuOpen, setIsSortedMenuOpen] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
@@ -352,33 +349,6 @@ function MuseosList({ titulo, tipo }) {
           </section>
         )}
       </main>
-
-      <AnimatePresence>
-        {showButton && !isMapView && (
-          <motion.div
-            className="b2up"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.2, type: "tween" }}
-            key="b2up"
-          >
-            <button
-              className="b2up-button"
-              onClick={() => {
-                window.scrollTo({
-                  top: 0,
-                  behavior: "smooth",
-                });
-              }}
-              title="Regresar al inicio"
-            >
-              <FaAngleDoubleUp />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }

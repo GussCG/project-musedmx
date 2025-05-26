@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import MapaPopulares from "./MapaPopulares";
 import MapaCambiarCentro from "./MapaCambiarCentro";
 import LoadingMessage from "./LoadingMessage";
+import ToastMessage from "../Other/ToastMessage";
 
 function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
   const { isDarkMode, isRetroMode } = useTheme();
@@ -70,6 +71,11 @@ function MapMuseo({ radioKM, museosMostrados, tipo, travelMode, mapType }) {
     const center = location.userLocation;
 
     if (!center || isNaN(center.lat) || isNaN(center.lng)) {
+      ToastMessage({
+        tipo: "warning",
+        mensaje: "No tienes habilitada la ubicación",
+        position: "top-right",
+      });
       console.warn(
         "Ubicación del usuario no válida, usando ubicación por defecto."
       );

@@ -5,19 +5,7 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import { useUserLocation } from "../../context/UserLocationProvider";
 
 import Icons from "../../components/Other/IconProvider";
-const {
-  FaQuestion,
-  FaCar,
-  FaBicycle,
-  FaPersonWalking,
-  FaBus,
-  IoIosArrowDown,
-  FaRoad,
-  FaSatellite,
-  MdTerrain,
-  IoMapSharp,
-  LiaSearchLocationSolid,
-} = Icons;
+const { FaQuestion, IoIosArrowDown, LiaSearchLocationSolid } = Icons;
 
 import { AnimatePresence, motion } from "framer-motion";
 

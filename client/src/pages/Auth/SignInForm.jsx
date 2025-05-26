@@ -1,10 +1,8 @@
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
 import useUsuario from "../../hooks/Usuario/useUsuario";
 import { useAuth } from "../../context/AuthProvider";
-
 import { Formik, Form, Field } from "formik";
 import { toast, Bounce } from "react-toastify";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
@@ -17,7 +15,7 @@ const { LuEye, LuEyeClosed } = Icons;
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 import ValidPassword from "../../components/Forms/ValidPassword";
 import ErrorCampo from "../../components/Forms/ErrorCampo";
-import { userSchema } from "../../constants/validationSchemas";
+import { userRegistroSchema } from "../../constants/validationSchemas";
 import { formatearFechaBDDATE } from "../../utils/formatearFechas";
 import { TIPOS_USUARIO, TEMATICAS } from "../../constants/catalog";
 import ToastMessage from "../../components/Other/ToastMessage";
@@ -266,7 +264,7 @@ function SignInForm() {
               signinfrmtematica: [],
               signinfrmfoto: "",
             }}
-            validationSchema={userSchema}
+            validationSchema={userRegistroSchema}
             onSubmit={(values) => {
               handleRegister(values);
             }}

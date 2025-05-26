@@ -39,6 +39,7 @@ function HorarioSlider({ horarios, loading, error }) {
   return (
     <section id="museo-section-horario" className="museo-detail-item">
       <h1>Horarios y Precios</h1>
+      <p>Desliza para ver mas días</p>
       {loading && (
         <div className="horario-swiper">
           <div className="no-results">

@@ -95,7 +95,7 @@ const MuseoSlider = memo(function MuseoSlider({
         <div className="museo-swiper-title">
           <h2 className="museo-swiper-title-text">
             {sliderType
-              ? `No tiene museos ${sliderType.toLowerCase()}`
+              ? `No tiene ${sliderType.toLowerCase()}`
               : "No tiene museos por visitar"}
           </h2>
         </div>

@@ -9,7 +9,7 @@ import { TEMATICAS } from "../../constants/catalog";
 import { agruparHorarios } from "../../utils/agruparHorarios";
 import FavoritoButton from "./FavoritoButton";
 import useMuseoHorarios from "../../hooks/Museo/useMuseoHorarios";
-import useMuseoResenas from "../../hooks/Museo/useMuseoResenas";
+import useResenaMuseo from "../../hooks/Resena/useResenaMuseo";
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -54,7 +54,7 @@ const MuseoCard = memo(function MuseoCard({
   } = useMuseoHorarios(museo.id);
 
   const horariosAgrupados = agruparHorarios(horarios);
-  const { calificacionPromedio } = useMuseoResenas(museo.id);
+  const { calificacionPromedio } = useResenaMuseo(museo.id);
 
   return (
     <>
@@ -116,8 +116,10 @@ const MuseoCard = memo(function MuseoCard({
                 <p id="museo-card-rating">
                   {loading ? (
                     <Skeleton count={1} />
+                  ) : calificacionPromedio !== 0 ? (
+                    calificacionPromedio.toFixed(1)
                   ) : (
-                    calificacionPromedio.toFixed(0)
+                    0
                   )}
                 </p>
                 <FaStar

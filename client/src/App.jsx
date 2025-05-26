@@ -32,6 +32,7 @@ import { ViewModeProvider } from "./context/ViewModeProvider.jsx";
 import { ThemeProvider } from "./context/ThemeProvider.jsx";
 import { UserLocationProvider } from "./context/UserLocationProvider.jsx";
 import ScrollToTop from "./components/Other/ScrollToTop.jsx";
+import ScrollToTopButton from "./components/Other/ScrollToTopButton.jsx";
 
 function App() {
   const location = useLocation();
@@ -42,6 +43,7 @@ function App() {
           <ViewModeProvider>
             <PopUpLogin />
             <ScrollToTop />
+            <ScrollToTopButton />
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
                 {/* INDEX */}

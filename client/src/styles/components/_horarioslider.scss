@@ -25,6 +25,13 @@
     margin: 0;
   }
 
+  p {
+    font-size: 1rem;
+    font-weight: $font-w-light;
+    color: var(--font-color-secondary);
+    text-align: center;
+  }
+
   .horario-swiper {
     width: 90%;
     height: auto !important;

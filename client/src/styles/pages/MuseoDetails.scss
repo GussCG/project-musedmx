@@ -102,6 +102,7 @@
         align-items: center;
 
         h1 {
+          font-family: $font-tertiary;
           font-size: $museo-detail-h1-size;
           font-weight: $font-w-bold;
           color: var(--font-color-primary);
@@ -377,10 +378,26 @@
 
     grid-area: 1 / 1 / 2 / 3;
 
-    h1 {
-      font-size: $museo-detail-h1-size;
-      font-weight: $font-w-bold;
-      margin: 20px 0;
+    .museo-section-header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      padding: 20px;
+      h1 {
+        font-size: $museo-detail-h1-size;
+        font-weight: $font-w-bold;
+      }
+
+      p {
+        width: 100%;
+        font-size: 1rem;
+        font-weight: $font-w-light;
+        margin: 0;
+        text-align: center;
+      }
     }
 
     .museo-section-2-calificaciones-container {
@@ -471,10 +488,26 @@
 
     grid-area: 1 / 3 / 2 / 4;
 
-    h1 {
-      font-size: $museo-detail-h1-size;
-      font-weight: $font-w-bold;
-      margin: 25px 0;
+    .museo-section-header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      padding: 20px;
+      h1 {
+        font-size: $museo-detail-h1-size;
+        font-weight: $font-w-bold;
+      }
+
+      p {
+        width: 100%;
+        font-size: 1rem;
+        font-weight: $font-w-light;
+        margin: 0;
+        text-align: center;
+      }
     }
 
     .servicios-container {
@@ -484,6 +517,7 @@
       grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
       grid-column-gap: 10px;
       grid-row-gap: 10px;
+      flex-wrap: wrap;
 
       padding: 20px 0;
 
