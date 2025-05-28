@@ -8,15 +8,32 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 import { Navigation } from "swiper/modules";
 import LoadingIndicator from "../Other/LoadingIndicator";
+import { useQV } from "../../hooks/QuieroVisitar/useQV";
 
 const MuseoSlider = memo(function MuseoSlider({
   listaMuseos = [],
   editMode,
   sliderType,
   loading,
+  refreshSugeridos,
   refetchFavoritos,
+  refreshQV,
+  correo,
 }) {
   const swiperRef = useRef(null);
+
+  const { eliminarQV } = useQV();
+  const handleDeleteFromQV = async (correo, museoId) => {
+    try {
+      await eliminarQV(correo, museoId);
+      refreshQV();
+      if (refreshSugeridos) {
+        refreshSugeridos();
+      }
+    } catch (error) {
+      console.error("Error al eliminar el museo de Quiero Visitar:", error);
+    }
+  };
 
   return (
     <motion.div
@@ -46,17 +63,22 @@ const MuseoSlider = memo(function MuseoSlider({
           }
           className="museo-swiper"
         >
-          {listaMuseos.map((museo) => (
-            <SwiperSlide className="swiper-slide" key={`slide-${museo.id}`}>
-              <MuseoCard
-                key={`museo-card-${museo.id}`}
-                museo={museo}
-                editMode={editMode}
-                sliderType={sliderType}
-                refetchFavoritos={refetchFavoritos}
-              />
-            </SwiperSlide>
-          ))}
+          {listaMuseos.map((museo) =>
+            loading ? (
+              <LoadingIndicator key={museo.id} />
+            ) : (
+              <SwiperSlide className="swiper-slide" key={`slide-${museo.id}`}>
+                <MuseoCard
+                  key={`museo-card-${museo.id}`}
+                  museo={museo}
+                  editMode={editMode}
+                  sliderType={sliderType}
+                  refetchFavoritos={refetchFavoritos}
+                  onDeleteFromQV={() => handleDeleteFromQV(correo, museo.id)}
+                />
+              </SwiperSlide>
+            )
+          )}
 
           {listaMuseos.length > 3 && (
             <>
@@ -73,7 +95,7 @@ const MuseoSlider = memo(function MuseoSlider({
         <div className="museo-swiper-title">
           <h2 className="museo-swiper-title-text">
             {sliderType
-              ? `No tiene museos ${sliderType.toLowerCase()}`
+              ? `No tiene ${sliderType.toLowerCase()}`
               : "No tiene museos por visitar"}
           </h2>
         </div>

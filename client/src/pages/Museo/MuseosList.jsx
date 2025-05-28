@@ -13,20 +13,14 @@ import { TEMATICAS } from "../../constants/catalog";
 import ReactPaginate from "react-paginate";
 import { useMuseos } from "../../hooks/Museo/useMuseos";
 import { useMuseoFilters } from "../../hooks/Museo/useMuseoFilters";
-import { useScrollToTop } from "../../hooks/Other/useScrollToTop";
 import LoadingIndicator from "../../components/Other/LoadingIndicator";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { useMuseosPopulares } from "../../hooks/Museo/useMuseosPopulares";
 
 const {
-  listButton,
-  mapaButton,
   LuArrowUpDown,
   FaFilter,
   FaMap,
   TbCardsFilled,
-  FaAngleDoubleUp,
   CgClose,
   IoIosArrowForward,
   IoIosArrowBack,
@@ -42,8 +36,11 @@ function MuseosList({ titulo, tipo }) {
     ? `Resultados de búsqueda: ${tituloSearch}`
     : titulo;
 
-  // Vista
+  const prevTipo = useRef(null);
   const { isMapView, setIsMapView } = useViewMode();
+  useEffect(() => {
+    setIsMapView(tipo === "2");
+  }, [tipo]);
 
   // Filtros
   const { filters, sortBy, setSortBy, applyFilters, removeFilter } =
@@ -71,23 +68,33 @@ function MuseosList({ titulo, tipo }) {
     museos: museosNormales,
     pagination,
     fetchMuseos,
-    isLoading: isLoadingNormales,
+    loading: isLoadingNormales,
   } = useMuseos(museosParams);
 
-  const {
-    museos: museosPopulares,
-    loading: isLoadingPopulares,
-    error: errorPopulares,
-  } = useMuseosPopulares({
-    top_n: 10,
-  });
+  const { fetchMuseosPopulares, loading: isLoadingPopulares } =
+    useMuseosPopulares();
+
+  const [museosPopulares, setMuseosPopulares] = useState([]);
+  useEffect(() => {
+    if (isPopulares) {
+      const fetchData = async () => {
+        try {
+          const response = await fetchMuseosPopulares();
+          console.log("Museos populares:", response);
+          setMuseosPopulares(response);
+        } catch (error) {
+          console.error("Error fetching popular museums:", error);
+        }
+      };
+      fetchData();
+    } else {
+      setMuseosPopulares([]);
+    }
+  }, [isPopulares]);
 
   // Decide qué datos usar basado en el tipo
   const museos = isPopulares ? museosPopulares : museosNormales;
   const isLoading = isPopulares ? isLoadingPopulares : isLoadingNormales;
-
-  // Scroll to top
-  const { showButton, scrollToTop } = useScrollToTop();
 
   // MenuSort
   const [isSortedMenuOpen, setIsSortedMenuOpen] = useState(false);
@@ -188,7 +195,7 @@ function MuseosList({ titulo, tipo }) {
                 )}
               </button>
             )}
-            {isMapView ? null : (
+            {isMapView || isPopulares ? null : (
               <>
                 <button
                   className="museos-header-section-right-button"
@@ -289,57 +296,49 @@ function MuseosList({ titulo, tipo }) {
                 MuseosMostrados={museos}
                 tipo={tipo}
                 isMapView={isMapView}
+                loading={isLoading}
               />
             )}
           </section>
         ) : (
           <section className="museos-container-section">
-            {isLoading && (
-              <div className="no-results">
-                <LoadingIndicator />
+            <>
+              <div className="museos-container">
+                {museos.length === 0 ? (
+                  <motion.div
+                    className="no-results"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    key="no-results"
+                    transition={{ duration: 0.5 }}
+                  >
+                    <p>No se encontraron museos</p>
+                    <p>Intenta con otra búsqueda o filtros</p>
+                  </motion.div>
+                ) : (
+                  museos.map((museo) => (
+                    <MuseoCard
+                      key={museo.id}
+                      museo={museo}
+                      editMode={false}
+                      sliderType={null}
+                      loading={isLoading}
+                    />
+                  ))
+                )}
               </div>
-            )}
-            {!isLoading && (
-              <>
-                <div className="museos-container">
-                  {museos.length === 0 ? (
-                    <motion.div
-                      className="no-results"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 20 }}
-                      key="no-results"
-                      transition={{ duration: 0.5 }}
-                    >
-                      <p>No se encontraron museos</p>
-                      <p>Intenta con otra búsqueda o filtros</p>
-                    </motion.div>
-                  ) : (
-                    museos.map((museo) =>
-                      isLoading ? (
-                        <div className="no-results">
-                          <LoadingIndicator />
-                        </div>
-                      ) : (
-                        <MuseoCard
-                          key={museo.id}
-                          museo={museo}
-                          editMode={false}
-                          sliderType={null}
-                        />
-                      )
-                    )
-                  )}
-                </div>
-              </>
-            )}
+            </>
 
             {pagination.totalPages > 1 && !isPopulares && (
               <ReactPaginate
                 breakLabel="..."
                 breakClassName="break"
                 nextLabel={<IoIosArrowForward />}
-                onPageChange={handlePageClick}
+                onPageChange={(event) => {
+                  handlePageClick(event);
+                  scrollToTop();
+                }}
                 pageRangeDisplayed={1}
                 marginPagesDisplayed={1}
                 pageCount={pagination.totalPages}
@@ -360,33 +359,6 @@ function MuseosList({ titulo, tipo }) {
           </section>
         )}
       </main>
-
-      <AnimatePresence>
-        {showButton && !isMapView && (
-          <motion.div
-            className="b2up"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.2, type: "tween" }}
-            key="b2up"
-          >
-            <button
-              className="b2up-button"
-              onClick={() => {
-                window.scrollTo({
-                  top: 0,
-                  behavior: "smooth",
-                });
-              }}
-              title="Regresar al inicio"
-            >
-              <FaAngleDoubleUp />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }

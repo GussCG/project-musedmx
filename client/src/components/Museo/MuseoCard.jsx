@@ -3,24 +3,26 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import { motion } from "framer-motion";
-// Toastify
-import { toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { buildImage } from "../../utils/buildImage";
 import Icons from "../Other/IconProvider";
-const { moneyIcon, freeIcon, FaTrash, FaStar, FaHeart } = Icons;
+const { FaTrash, FaStar, FaHeart } = Icons;
 import { TEMATICAS } from "../../constants/catalog";
 import { agruparHorarios } from "../../utils/agruparHorarios";
 import FavoritoButton from "./FavoritoButton";
 import useMuseoHorarios from "../../hooks/Museo/useMuseoHorarios";
-import useMuseoResenas from "../../hooks/Museo/useMuseoResenas";
+import useResenaMuseo from "../../hooks/Resena/useResenaMuseo";
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import ImageSkeleton from "../Other/ImageSkeleton";
 
 const MuseoCard = memo(function MuseoCard({
   museo,
   editMode,
   sliderType,
   refetchFavoritos,
+  onDeleteFromQV,
+  refreshSugeridos,
+  loading,
 }) {
   // Prefijo unico basado en sliderType
   const layoutPrefix = sliderType ? `${sliderType}-` : ``;
@@ -44,27 +46,6 @@ const MuseoCard = memo(function MuseoCard({
     fetchFavorito();
   }, [user, museo.id, getFavoritosCountByMuseoId]);
 
-  // Eliminar un museo de Quiero Visitar
-  const handleQVDelete = (id) => {
-    // Lógica para eliminar el museo de Quiero Visitar en el backend
-    try {
-      // Eliminar el museo de la lista
-      toast.success(`${museo.nombre} eliminado de la lista`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-      });
-    } catch (error) {
-      console.error("Error al eliminar el museo de Quiero Visitar", error);
-    }
-  };
-
   const {
     horarios,
     loading: loadingHorarios,
@@ -73,19 +54,7 @@ const MuseoCard = memo(function MuseoCard({
   } = useMuseoHorarios(museo.id);
 
   const horariosAgrupados = agruparHorarios(horarios);
-
-  const { calificacionPromedio } = useMuseoResenas(museo.id);
-
-  // Funcion para devolver la imagen de costo dependiendo del numero
-  const costoImagen = () => {
-    if (museo.costo === 0) {
-      return <img src={freeIcon} alt="Costo" key="gratis" />;
-    } else {
-      return Array.from({ length: museo.costo }, (_, index) => (
-        <img src={moneyIcon} alt="Costo" key={index} />
-      ));
-    }
-  };
+  const { calificacionPromedio } = useResenaMuseo(museo.id);
 
   return (
     <>
@@ -99,14 +68,15 @@ const MuseoCard = memo(function MuseoCard({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut", type: "tween" }}
           style={{
-            backgroundColor:
-              TEMATICAS[museo.tematica].museoCardColors.background,
+            backgroundColor: loading
+              ? "white"
+              : TEMATICAS[museo.tematica].museoCardColors.background,
           }}
         >
           <div className="museo-card-img-container">
             {editMode ? (
               <div className="museo-card-delete-container">
-                <button type="button" onClick={() => handleQVDelete(museo.id)}>
+                <button type="button" onClick={onDeleteFromQV}>
                   <FaTrash />
                 </button>
               </div>
@@ -116,6 +86,7 @@ const MuseoCard = memo(function MuseoCard({
                 refetchFavoritos={refetchFavoritos}
                 isFavorite={isFavorite}
                 setIsFavorite={setIsFavorite}
+                refreshSugeridos={refreshSugeridos}
               />
             )}
             <Link
@@ -125,42 +96,65 @@ const MuseoCard = memo(function MuseoCard({
                 setTimeout(() => navigate(`/Museos/${museo.id}`), 0);
               }}
             >
-              <motion.img
-                src={museo.img}
-                alt={museo.nombre}
-                className="museo-card-img"
-                layoutId={`${layoutPrefix}museo-image-${museo.id}`}
-                key={`${layoutPrefix}img-${museo.id}`}
-                title={museo.nombre}
-                loading="lazy"
-              />
+              {loading ? (
+                // Mientras los datos no llegaron, un Skeleton general (puede ser un placeholder más simple)
+                <Skeleton
+                  width={"100%"}
+                  height={"100%"}
+                  style={{ borderRadius: "20px" }}
+                />
+              ) : (
+                // Ya tenemos datos, mostramos la imagen con skeleton interno para la carga de la imagen
+                <ImageSkeleton
+                  src={museo.img}
+                  alt={museo.nombre}
+                  className={"museo-card-img"}
+                />
+              )}
 
               <div className="museo-card-img-rating">
-                <p id="museo-card-rating">{calificacionPromedio}</p>
+                <p id="museo-card-rating">
+                  {loading ? (
+                    <Skeleton count={1} />
+                  ) : calificacionPromedio !== 0 ? (
+                    calificacionPromedio.toFixed(1)
+                  ) : (
+                    0
+                  )}
+                </p>
                 <FaStar
                   style={{
-                    fill: TEMATICAS[museo.tematica].museoCardColors.header,
+                    fill: loading
+                      ? "white"
+                      : TEMATICAS[museo.tematica].museoCardColors.header,
                   }}
                 />
               </div>
               <div
                 className="museo-card-img-tematica"
                 style={{
-                  backgroundColor:
-                    TEMATICAS[museo.tematica].museoCardColors.header,
+                  backgroundColor: loading
+                    ? "#d9d9d9"
+                    : TEMATICAS[museo.tematica].museoCardColors.header,
                 }}
               >
-                {museo.tematica && <h2>{TEMATICAS[museo.tematica].nombre}</h2>}
+                {museo.tematica &&
+                  (loading ? (
+                    <Skeleton width={"70px"} />
+                  ) : (
+                    <h2>{TEMATICAS[museo.tematica].nombre}</h2>
+                  ))}
               </div>
 
               <div
                 className="museo-card-likes"
                 style={{
-                  backgroundColor:
-                    TEMATICAS[museo.tematica].museoCardColors.header,
+                  backgroundColor: loading
+                    ? "#d9d9d9"
+                    : TEMATICAS[museo.tematica].museoCardColors.header,
                 }}
               >
-                <h2>{localeCount}</h2>
+                <h2>{loading ? <Skeleton width={"30px"} /> : localeCount}</h2>
                 <FaHeart />
               </div>
             </Link>
@@ -180,7 +174,7 @@ const MuseoCard = memo(function MuseoCard({
                     color: TEMATICAS[museo.tematica].museoCardColors.header,
                   }}
                 >
-                  {museo.nombre}
+                  {loading ? <Skeleton width={250} /> : museo.nombre}
                 </h2>
               </Link>
               <p
@@ -189,7 +183,7 @@ const MuseoCard = memo(function MuseoCard({
                   color: TEMATICAS[museo.tematica].museoCardColors.text,
                 }}
               >
-                {museo.alcaldia}
+                {loading ? <Skeleton width={150} /> : museo.alcaldia}
               </p>
             </div>
             <div className="museo-card-info-body">
@@ -201,9 +195,17 @@ const MuseoCard = memo(function MuseoCard({
                       color: TEMATICAS[museo.tematica].museoCardColors.header,
                     }}
                   >
-                    Horarios:
+                    {loading ? <Skeleton width={100} /> : "Horarios"}
                   </p>
-                  {cerrado && (
+
+                  {loading ? (
+                    // Mostrar 2-3 Skeletons como placeholders de horarios
+                    <>
+                      <Skeleton width={150} height={16} />
+                      <Skeleton width={120} height={16} />
+                      <Skeleton width={100} height={16} />
+                    </>
+                  ) : cerrado ? (
                     <p
                       style={{
                         color: TEMATICAS[museo.tematica].museoCardColors.text,
@@ -211,8 +213,7 @@ const MuseoCard = memo(function MuseoCard({
                     >
                       Cerrado
                     </p>
-                  )}
-                  {horarios.length === 0 && !cerrado && (
+                  ) : horarios.length === 0 ? (
                     <p
                       style={{
                         color: TEMATICAS[museo.tematica].museoCardColors.text,
@@ -220,21 +221,41 @@ const MuseoCard = memo(function MuseoCard({
                     >
                       No se encontraron horarios disponibles
                     </p>
+                  ) : (
+                    horariosAgrupados.map((horario, index) => (
+                      <p
+                        key={`${horario}-${index}`}
+                        style={{
+                          color: TEMATICAS[museo.tematica].museoCardColors.text,
+                        }}
+                      >
+                        {horario}
+                      </p>
+                    ))
                   )}
-                  {horariosAgrupados.map((horario, index) => (
-                    <p
-                      key={`${horario}-${index}`}
-                      style={{
-                        color: TEMATICAS[museo.tematica].museoCardColors.text,
-                      }}
-                    >
-                      {horario}
-                    </p>
-                  ))}
                 </>
               </div>
+
               <div className="museo-card-info-body-tematica">
-                <img src={TEMATICAS[museo.tematica].icon} alt="Tematica" />
+                {loading ? (
+                  <Skeleton
+                    circle
+                    height="100px"
+                    width="100px"
+                    style={{
+                      position: "relative",
+                      top: "50%",
+                      left: "40%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={TEMATICAS[museo.tematica].icon}
+                    alt={museo.tematica}
+                    className="museo-card-tematica-icon"
+                  />
+                )}
               </div>
             </div>
           </div>

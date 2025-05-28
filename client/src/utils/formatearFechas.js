@@ -1,3 +1,10 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/es";
+
+dayjs.extend(relativeTime);
+dayjs.locale("es");
+
 export const formatearFecha = (fecha) => {
   const opciones = {
     year: "numeric",
@@ -59,3 +66,20 @@ export const formatearFechaBDDATETIME = (fecha) => {
   const date = new Date(fecha);
   return date.toISOString().slice(0, 19).replace("T", " ");
 };
+
+export const formatearFechaRelativa = (fecha) => {
+  const fechaValida = new Date(fecha);
+  if (isNaN(fechaValida.getTime())) {
+    return "Fecha inválida";
+  }
+  return dayjs(fechaValida).fromNow();
+};
+
+export function formatearFechaRelativaCompleta(fecha) {
+  const fechaValida = new Date(fecha);
+  const fechaAbsoluta = dayjs(fechaValida).format(
+    "D [de] MMMM YYYY [a las] HH:mm"
+  );
+  const relativa = dayjs(fechaValida).fromNow();
+  return `${fechaAbsoluta} (${relativa})`;
+}

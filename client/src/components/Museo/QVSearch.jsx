@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import SearchBar from "../Other/SearchBar";
 import axios from "axios";
 
-function QVSearch() {
+function QVSearch({ correo, agregarQV, refreshQV, museosQV }) {
   const [museumSuggestions, setMuseumSuggestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,11 +38,18 @@ function QVSearch() {
   // Por el momento solo se hace un console log
   const registerMuseum = async (museumId) => {
     try {
-      //   await axios.post(``, {
-      //     mus_id: museumId,
-      //   });
+      // Verificar si ya está en la lista
+      const yaAgregado = museosQV.some((m) => {
+        return m.id === museumId;
+      });
+      if (yaAgregado) {
+        console.log("Ya agregado");
+        return;
+      }
+
+      await agregarQV(correo, museumId);
       setSelectedMuseum(museumId);
-      console.log("Museo registrado:", museumId);
+      refreshQV();
     } catch (error) {
       console.error("Error al registrar el museo:", error);
     }

@@ -1,71 +1,41 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
-
+import { useState, useRef, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-
-// Toastify
-import { toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import { motion } from "framer-motion";
-
-import { format } from "date-fns";
-import { es, se } from "react-day-picker/locale";
+import { es } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
-
-// Iconos
 import Icons from "../../components/Other/IconProvider";
 const { FaStar, FaTrash, IoIosCheckmarkCircle, LuImageUp, FaImage } = Icons;
+import { useResena } from "../../hooks/Resena/useResena";
+import { resenaEditSchema } from "../../constants/validationSchemas";
+import ToastMessage from "../../components/Other/ToastMessage";
+import { formatearFechaBDDATE } from "../../utils/formatearFechas";
+import useResenaUsuario from "../../hooks/Resena/useResenaUsuario";
 
 function ProfileHistoryDetail() {
   // Agarrar el id de la reseña a editar de la URL
   const { id } = useParams();
+  const { fetchResenaByIdResena } = useResena();
+  const [resena, setResena] = useState(null);
+  const { editarResena } = useResenaUsuario();
+  const navigate = useNavigate();
 
   // Obtenemos la reseña a editar con el id del backend
   useEffect(() => {
-    // Aquí se hace la petición al backend para obtener la reseña a editar con axios y el id
-    // axios.get(`/resena/${id}`)
-    //   .then((res) => {
-    //     const resena = res.data;
-    // }).catch((err) => {
-    //     console.log(err);
-    // });
+    const fetchData = async () => {
+      try {
+        const resenaData = await fetchResenaByIdResena(id);
+        setResena(resenaData);
+      } catch (error) {
+        console.error("Error fetching resena:", error);
+      }
+    };
+    fetchData();
   }, [id]);
-
-  // Datos de la reseña de prueba
-  const resena = {
-    fechaVisita: "2021-09-01",
-    calificacion: 4,
-    comentario: "Excelente lugar, muy recomendado",
-    fotos: [
-      { name: "foto1.jpg", size: "1.2 MB" },
-      { name: "foto2.jpg", size: "1.5 MB" },
-    ],
-  };
-
-  // Validación del formulario
-  const validationSchema = Yup.object({
-    regresFrmFecVis: Yup.date().required("La fecha de visita es requerida"),
-    regresFrmCalif: Yup.number()
-      .min(1, "La calificación mínima es 1")
-      .max(5, "La calificación máxima es 5")
-      .required("La calificación es requerida"),
-    regresFrmComentario: Yup.string().required("El comentario es requerido"),
-    // Máximo de 5 fotos
-    regresFrmFotos: Yup.array().max(5, "Máximo de 5 fotos").nullable(),
-  });
 
   // Para la fecha de visita
   const [fechaVisita, setFechaVisita] = useState(new Date());
-  const handleDayPickerSelect = (date) => {
-    if (!date) {
-      setFechaVisita(new Date());
-    } else {
-      setFechaVisita(date);
-    }
-  };
 
   // Para el comentario
   const [comentario, setComentario] = useState("");
@@ -85,68 +55,84 @@ function ProfileHistoryDetail() {
   // Función para subir las imagenes desde arrastrar y soltar
   const handleDrop = (e, setFieldValue, values) => {
     e.preventDefault();
-    const files = e.dataTransfer.files;
-    const uploadedFiles = Array.from(files);
 
-    if (uploadedFiles.length + values.regresFrmFotos.length > 5) {
-      toast.error(`Máximo 5 fotos`, {
+    const droppedFiles = Array.from(e.dataTransfer.files);
+
+    if (droppedFiles.length + values.regresFrmFotos.length > 5) {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "Máximo 5 fotos permitidas",
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
       });
       return;
     }
 
+    const filesWithPreview = addFilesWithPreview(droppedFiles);
+
+    // Agregamos los nuevos archivos con preview al estado global
+    setUploadedFiles((prev) => [...prev, ...filesWithPreview]);
+
+    // Actualizamos el formulario con solo los archivos reales (sin la propiedad preview)
     setFieldValue("regresFrmFotos", [
       ...values.regresFrmFotos,
-      ...uploadedFiles,
+      ...droppedFiles,
     ]);
 
-    uploadedFiles.forEach((file) => {
+    droppedFiles.forEach((file) => {
       handleFileUpload(file);
     });
   };
 
   // Funcion para subir las imagenes
-  const handleFileChange = ({ target }, setFieldValue) => {
-    const file = target.files[0];
-    if (file && uploadedFiles.length < 5) {
-      handleFileUpload(file);
+  const handleFileChange = ({ target }, setFieldValue, currentFiles = []) => {
+    const files = Array.from(target.files);
 
-      // Agregar la nueva imagen a la lista de imagenes
-      setFieldValue("regresFrmFotos", [...uploadedFiles, file]);
-    } else {
-      toast.error(`Máximo 5 fotos`, {
+    if (files.length + uploadedFiles.length > 5) {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "Máximo 5 fotos permitidas",
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
       });
+      return;
+    }
+
+    const filesWithPreview = addFilesWithPreview(files);
+
+    setUploadedFiles((prev) => [...prev, ...filesWithPreview]);
+
+    // Aquí actualizas el valor del formulario con los archivos actuales + nuevos
+    setFieldValue("regresFrmFotos", [...currentFiles, ...files]);
+  };
+
+  // Funcion para eliminar las imagenes sean subidas o URLs del backend
+  const handleFileDelete = (fileObj, setFieldValue, values) => {
+    if (fileObj.file instanceof File) {
+      // Es un archivo local (objeto con .file)
+      // Liberar preview para evitar fugas de memoria
+      URL.revokeObjectURL(fileObj.preview);
+
+      setUploadedFiles((prevFiles) =>
+        prevFiles.filter((file) => file.name !== fileObj.name)
+      );
+
+      setFieldValue(
+        "regresFrmFotos",
+        values.regresFrmFotos.filter((file) => file.name !== fileObj.name)
+      );
+    } else if (fileObj.url) {
+      // Es un archivo remoto (objeto con .url)
+      setUploadedFiles((prevFiles) =>
+        prevFiles.filter((file) => file.url !== fileObj.url)
+      );
+
+      setFieldValue(
+        "regresFrmFotos",
+        values.regresFrmFotos.filter((file) => file !== fileObj.url)
+      );
     }
   };
 
-  // Funcion para eliminar las imagenes
-  const handleFileDelete = (name, setFieldValue, values) => {
-    const updatedFiles = values.regresFrmFotos.filter(
-      (file) => file.name !== name
-    );
-    const updatedUploadedFiles = uploadedFiles.filter(
-      (file) => file.name !== name
-    );
-    setFieldValue("regresFrmFotos", updatedFiles);
-    setUploadedFiles(updatedUploadedFiles);
-  };
+  console.log(uploadedFiles);
 
   // Función para el tamaño de la imagen
   const formatBytes = (bytes) => {
@@ -178,74 +164,155 @@ function ProfileHistoryDetail() {
     }, 500);
   };
 
-  // Para editar la reseña
-  const handleEditarResena = (values) => {
-    try {
-      // Preparar los datos para enviarlos al backend
-      const resenaData = new FormData();
+  const addFilesWithPreview = (files) => {
+    return files.map((file) => ({
+      file,
+      name: file.name,
+      size: file.size,
+      preview: URL.createObjectURL(file),
+    }));
+  };
 
-      // Pasar la calificación a int
+  // Para editar la reseña
+  const handleEditarResena = async (values) => {
+    try {
+      const resenaData = new FormData();
       values.regresFrmCalif = parseInt(values.regresFrmCalif);
 
-      // Agregar los datos de la reseña
-      resenaData.append("fechaVisita", fechaVisita);
-      resenaData.append("calificacion", values.regresFrmCalif);
-      resenaData.append("comentario", values.regresFrmComentario);
+      let algoCambio = false;
 
-      // Agregar las fotos
-      values.regresFrmFotos.forEach((file) => {
-        resenaData.append("fotos", file);
+      if (!(fechaVisita instanceof Date) || isNaN(fechaVisita)) {
+        ToastMessage({
+          tipo: "error",
+          mensaje: "Fecha de visita inválida",
+          position: "top-right",
+        });
+        return;
+      }
+
+      const parsedDate = fechaVisita.toISOString().split("T")[0];
+      const fechaActualResena = new Date(resena.visitas_vi_fechahora)
+        .toISOString()
+        .split("T")[0];
+
+      if (values.regresFrmCalif !== resena.res_calif_estrellas) {
+        resenaData.append("res_calif_estrellas", values.regresFrmCalif);
+        algoCambio = true;
+      }
+      if (values.regresFrmComentario !== resena.res_comentario) {
+        resenaData.append("res_comentario", values.regresFrmComentario);
+        algoCambio = true;
+      }
+      if (parsedDate !== fechaActualResena) {
+        resenaData.append("visitas_vi_fechahora", parsedDate);
+        algoCambio = true;
+      }
+
+      // Para las fotos mandamos todas las fotos que esten subidas
+      const fotosSubidas = values.regresFrmFotos.filter(
+        (file) => file instanceof File || typeof file === "string"
+      );
+
+      fotosSubidas.forEach((file) => {
+        if (file instanceof File) {
+          resenaData.append("fotos", file);
+        } else {
+          resenaData.append("fotos", file.trim());
+        }
       });
-
-      // Aquí se hace la petición al backend para editar la reseña con axios y el id
-      // axios.put(`/resena/${id}`, resenaData)
-      //   .then((res) => {
-      //     console.log(res.data);
-      // }).catch((err) => {
-      //     console.log(err);
-      // });
 
       resenaData.forEach((value, key) => {
-        console.log(key, value);
+        console.log(`${key}: ${value}`);
       });
 
-      toast.success(`Se han registrado sus cambios correctamente`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
-      toast.warn(`Un moderador revisará los cambios`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      // resenaData.append("mus_id", resena.visitas_vi_mus_id);
+
+      // const response = await editarResena(resena.res_id_res, resenaData);
+
+      // if (response) {
+      //   ToastMessage({
+      //     tipo: "success",
+      //     mensaje: "Reseña editada correctamente.",
+      //     position: "top-right",
+      //   });
+      //   navigate("/Usuario/Historial", {
+      //     state: { updated: true },
+      //   });
+      // } else {
+      //   ToastMessage({
+      //     tipo: "error",
+      //     mensaje: "Error al editar la reseña.",
+      //     position: "top-right",
+      //   });
+      // }
     } catch (error) {
-      console.log(error);
+      console.error("Error al editar la reseña:", error);
+      ToastMessage({
+        tipo: "error",
+        mensaje: "Error al editar la reseña.",
+        position: "top-right",
+      });
     }
   };
 
   // Para llenar los campos con la información de la reseña
   useEffect(() => {
-    // Llenar los campos con la información de la reseña
-    if (resena) {
-      setFechaVisita(resena.fechaVisita);
-      setRating(resena.calificacion);
-      setComentario(resena.comentario);
-      setUploadedFiles(resena.fotos);
+    if (!resena) return; // Si no hay reseña, salimos rápido
+
+    // Validar la fecha para evitar errores
+    const fecha = resena.visitas_vi_fechahora
+      ? new Date(resena.visitas_vi_fechahora)
+      : null;
+    setFechaVisita(fecha);
+
+    setRating(resena.res_calif_estrellas || 0);
+    setComentario(resena.res_comentario || "");
+
+    if (resena.fotos) {
+      const fotosArray = Array.isArray(resena.fotos)
+        ? resena.fotos
+        : resena.fotos.split(",");
+
+      const fotosConPreview = fotosArray.map((url, index) => ({
+        name: `foto-${index}`,
+        preview: url.trim(),
+        url: url.trim(),
+      }));
+
+      setUploadedFiles(fotosConPreview);
+
+      if (typeof setFieldValue === "function") {
+        setFieldValue("regresFrmFotos", fotosArray);
+      }
+    } else {
+      setUploadedFiles([]);
+      if (typeof setFieldValue === "function") {
+        setFieldValue("regresFrmFotos", []);
+      }
     }
-  }, []);
+  }, [resena]);
+
+  const [isFormValid, setIsFormValid] = useState(false);
+  useEffect(() => {
+    let valid = true;
+
+    if (!resena) return;
+
+    const isDateValid =
+      fechaVisita instanceof Date && !isNaN(fechaVisita.getTime());
+
+    const isRatingValid = rating !== null && rating >= 1 && rating <= 5;
+
+    valid = isDateValid && isRatingValid;
+    setIsFormValid(valid);
+  }, [fechaVisita, rating, resena]);
+
+  useEffect(() => {
+    // Limpia URLs temporales
+    return () => {
+      uploadedFiles.forEach(({ preview }) => URL.revokeObjectURL(preview));
+    };
+  }, [uploadedFiles]);
 
   return (
     <motion.div
@@ -254,16 +321,20 @@ function ProfileHistoryDetail() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {" "}
       <main id="editar-res-main">
         <h1>Editar Reseña</h1>
         <Formik
-          validationSchema={validationSchema}
+          enableReinitialize
+          validationSchema={resenaEditSchema}
           initialValues={{
-            regresFrmFecVis: resena?.fechaVisita || "",
-            regresFrmCalif: resena?.calificacion || "",
-            regresFrmComentario: resena?.comentario || "",
-            regresFrmFotos: resena?.fotos || [],
+            regresFrmFecVis: resena?.visitas_vi_fechahora || "",
+            regresFrmCalif: resena?.res_calif_estrellas || "",
+            regresFrmComentario: resena?.res_comentario || "",
+            regresFrmFotos: resena?.fotos
+              ? Array.isArray(resena.fotos)
+                ? resena.fotos
+                : resena.fotos.split(",")
+              : [],
           }}
           onSubmit={(values) => {
             handleEditarResena(values);
@@ -301,10 +372,13 @@ function ProfileHistoryDetail() {
                     autoFocus
                     mode="single"
                     selected={fechaVisita}
-                    onSelect={handleDayPickerSelect}
+                    onSelect={(date) => {
+                      setFechaVisita(date);
+                      setFieldValue("regresFrmFecVis", date?.toISOString());
+                    }}
                     footer={
                       fechaVisita
-                        ? `Seleccionaste el ${format(
+                        ? `Seleccionaste el ${formatearFechaBDDATE(
                             fechaVisita,
                             "dd-MM-yyyy"
                           )}`
@@ -366,8 +440,16 @@ function ProfileHistoryDetail() {
                       id="file-input"
                       name="regresFrmFotos"
                       ref={fileInputRef}
-                      onChange={(e) => handleFileChange(e, setFieldValue)}
+                      onChange={(e) =>
+                        handleFileChange(
+                          e,
+                          setFieldValue,
+                          values.regresFrmFotos
+                        )
+                      }
                       hidden
+                      accept="image/*"
+                      multiple
                     />
                     <LuImageUp />
                     <label>
@@ -409,7 +491,6 @@ function ProfileHistoryDetail() {
                           <FaImage />
                           <div className="details">
                             <span className="name">{file.name} • Subida</span>
-                            <span className="size">{file.size}</span>
                           </div>
                         </div>
                         <div className="icons-file">
@@ -418,7 +499,7 @@ function ProfileHistoryDetail() {
                             type="button"
                             className="delete-button"
                             onClick={() =>
-                              handleFileDelete(file.name, setFieldValue, values)
+                              handleFileDelete(file, setFieldValue, values)
                             }
                           >
                             <FaTrash />
@@ -431,10 +512,11 @@ function ProfileHistoryDetail() {
                 </div>
               </div>
               <Field
-                className="button"
+                className={`button ` + (isFormValid ? "" : "disabled")}
                 id="registros-button"
                 type="submit"
                 value="Guardar los cambios"
+                disabled={isFormValid ? false : true}
               />
             </Form>
           )}

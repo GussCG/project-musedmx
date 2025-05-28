@@ -26,7 +26,9 @@ export const useMuseosCercanos = ({ top_n = 10, museoId }) => {
       console.error("Error al obtener los museos cercanos:", error);
       setError(error);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000); // Simular un retraso de carga
     }
   };
 

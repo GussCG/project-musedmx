@@ -34,7 +34,9 @@ function MapaCambiarCentro({ onPlaceSelected }) {
         await google.maps.importLibrary("places");
 
         const placeAutocomplete =
-          new google.maps.places.PlaceAutocompleteElement();
+          new google.maps.places.PlaceAutocompleteElement({
+            includedRegionCodes: ["mx"],
+          });
 
         // Configurar las restricciones
         placeAutocomplete.setAttribute(

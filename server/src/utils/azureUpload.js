@@ -7,7 +7,7 @@ dotenv.config();
 const AZURE_STORAGE_CONNECTION_STRING =
   process.env.AZURE_STORAGE_CONNECTION_STRING;
 
-export async function uploadToAzure(containerName, filePath, blobName) {
+export async function uploadToAzure(containerName, buffer, blobName, mimeType) {
   try {
     const blobServiceClient = BlobServiceClient.fromConnectionString(
       AZURE_STORAGE_CONNECTION_STRING
@@ -21,8 +21,9 @@ export async function uploadToAzure(containerName, filePath, blobName) {
 
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    const uploadBlobResponse = await blockBlobClient.uploadFile(filePath);
-    fs.unlinkSync(filePath); // Eliminar el archivo local después de subirlo
+    await blockBlobClient.uploadData(buffer, {
+      blobHTTPHeaders: { blobContentType: mimeType },
+    });
 
     return blockBlobClient.url; // URL del blob subido
   } catch (error) {

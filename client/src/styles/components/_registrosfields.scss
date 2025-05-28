@@ -19,6 +19,7 @@
       margin: 60px 0 30px 0;
       text-align: center;
       color: var(--font-color-primary);
+      font-family: $font-tertiary;
     }
 
     #signin-form,
@@ -156,6 +157,7 @@
           h1 {
             font-size: 36px;
             color: var(--font-color-primary);
+            font-family: $font-tertiary;
           }
 
           hr {
@@ -191,6 +193,7 @@
     font-size: 36px;
     margin: 50px 0;
     color: var(--font-color-primary);
+    font-family: $font-tertiary;
   }
 
   #registros-encuesta-form {
@@ -247,6 +250,7 @@
 
     h1 {
       font-size: 36px;
+      font-family: $font-tertiary;
     }
 
     hr {
@@ -389,7 +393,7 @@
     width: 100%;
     font-family: $font-primary;
     font-size: 16px;
-    font-weight: $font-w-semibold;
+    font-weight: $font-w-bold;
     color: var(--font-color-primary);
     text-align: left;
   }
@@ -479,6 +483,7 @@
     font-weight: $font-w-bold;
     color: var(--font-color-primary);
     text-align: center;
+    font-family: $font-tertiary;
   }
 
   .registros-redes-select {
@@ -558,10 +563,10 @@
         gap: 10px;
 
         h3 {
-          font-family: $font-primary;
           font-size: 1.2rem;
           font-weight: $font-w-semibold;
           color: var(--font-color-primary);
+          font-family: $font-primary;
         }
 
         span {
@@ -618,13 +623,9 @@
 }
 
 .registros-chks {
-  width: 80%;
+  width: 85%;
   height: auto;
   margin-bottom: 50px;
-
-  // background-color: var(--bg-form-calendar);
-  // padding: 30px;
-  // border-radius: 30px;
 
   fieldset {
     border: 3px solid rgba(0, 0, 0, 0.2);
@@ -635,13 +636,38 @@
   legend {
     font-family: $font-primary;
     font-size: 18px;
-    font-weight: $font-w-semibold;
+    font-weight: $font-w-regular;
     color: var(--font-color-primary);
     opacity: 0.5;
     padding: 10px;
+    text-align: center;
   }
 
-  #servicios-chks {
+  label {
+    font-family: $font-primary;
+    font-size: 16px;
+    font-weight: $font-w-semibold;
+    color: var(--font-color-primary);
+    opacity: 0.5;
+    transition: opacity 0.3s ease, background-color 0.3s ease,
+      font-weight 0.3s ease;
+
+    padding: 10px 15px;
+  }
+
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  input[type="checkbox"]:checked + label {
+    border-radius: 10px;
+    background-color: var(--bg-checked-tematica);
+    opacity: 1;
+    font-weight: $font-w-bold;
+  }
+
+  #servicios-chks,
+  #dias-chks {
     width: 90%;
     height: auto;
     display: grid;
@@ -701,42 +727,10 @@
   height: auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  gap: 30px;
   place-content: center;
-}
-
-.registros-chk {
-  width: 100%;
-  max-height: 30px;
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-
-  label {
-    font-family: $font-primary;
-    font-size: 16px;
-    font-weight: $font-w-semibold;
-    color: var(--font-color-primary);
-    opacity: 0.5;
-    transition: opacity 0.3s ease, background-color 0.3s ease,
-      font-weight 0.3s ease;
-
-    padding: 10px 15px;
-  }
-
-  input[type="checkbox"] {
-    display: none;
-  }
-
-  input[type="checkbox"]:checked + label {
-    border-radius: 10px;
-    background-color: var(--bg-checked-tematica);
-    opacity: 1;
-    font-weight: $font-w-bold;
-  }
+  justify-items: center;
 }
 
 .registros-frm-select {
@@ -844,20 +838,24 @@
 .registros-field-foto {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: space-around;
   gap: 20px;
 
   .registros-field-foto-input {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 14px;
 
     h2 {
       color: var(--font-color-primary);
+      font-family: $font-tertiary;
+      font-size: 2rem;
     }
 
     .foto-input {
@@ -869,9 +867,19 @@
       gap: 20px;
 
       span {
+        width: fit-content;
+        max-width: 300px;
+        height: 45px;
         font-size: 18px;
         font-weight: $font-w-light;
         color: var(--font-color-primary);
+        background-color: rgba(0, 0, 0, 0.082);
+        border-radius: 10px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 10px 20px;
+        overflow: hidden;
       }
     }
   }

@@ -5,19 +5,7 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import { useUserLocation } from "../../context/UserLocationProvider";
 
 import Icons from "../../components/Other/IconProvider";
-const {
-  FaQuestion,
-  FaCar,
-  FaBicycle,
-  FaPersonWalking,
-  FaBus,
-  IoIosArrowDown,
-  FaRoad,
-  FaSatellite,
-  MdTerrain,
-  IoMapSharp,
-  LiaSearchLocationSolid,
-} = Icons;
+const { FaQuestion, IoIosArrowDown, LiaSearchLocationSolid } = Icons;
 
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -29,13 +17,7 @@ import PopupPortal from "../../components/Other/PopupPortal";
 
 // Dependiendo del titulo se muestra el radio de busqueda
 // En Ver Todos y en Populares no se muestra el radio
-function MuseosMapView({
-  titulo,
-  MuseosMostrados,
-  tipo,
-  isMapView,
-  tituloSearch,
-}) {
+function MuseosMapView({ MuseosMostrados, tipo, loading }) {
   // Estados
   const [apiKey, setApiKey] = useState(null);
   const [isApiLoaded, setIsApiLoaded] = useState(false);
@@ -51,8 +33,6 @@ function MuseosMapView({
     useState("roadmap");
   const [isOpenMapType, setIsOpenMapType] = useState(false);
   const { obtenerUbicacion, location } = useUserLocation();
-
-  console.log(location);
 
   const toggleTravelMode = () => {
     setIsOpenTravelMode((prev) => !prev);
@@ -345,6 +325,7 @@ function MuseosMapView({
               tipo={tipo}
               travelMode={selectedTravelMode}
               mapType={selectedMapTypeNormalized}
+              loadingMuseos={loading}
             />
           </APIProvider>
         </section>

@@ -633,4 +633,62 @@ export default class Museo {
       connection.release();
     }
   }
+
+  static async addByDia({ id, dia }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      const query = `
+        INSERT INTO horarios_precios_museo (
+          mh_mus_id,
+          mh_dia,
+          mh_hora_inicio,
+          mh_hora_fin,
+          mh_precio_ad,
+          mh_precio_ni,
+          mh_precio_ter,
+          mh_precio_est
+        )
+        VALUES (?,?,?,?,?,?,?,?)
+      `;
+
+      const queryParams = [id, dia, "00:00:00", "00:00:00", "0", "0", "0", "0"];
+
+      await connection.query(query, queryParams);
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error adding dia:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async deleteByDia({ id, dia }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      const query = `
+        DELETE FROM horarios_precios_museo
+        WHERE mh_mus_id = ?
+        AND mh_dia = ?
+      `;
+
+      const queryParams = [id, dia];
+
+      await connection.query(query, queryParams);
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error deleting dia:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
 }

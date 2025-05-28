@@ -42,10 +42,11 @@
   --box-shadow-2: 0 5px 25px rgba(79, 79, 79, 0.2);
 
   // FiltroMenu
-  --bg-filtro: #a7a7a79f;
+  --bg-filtro: #ffffffaf;
 
   // Popup
-  --bg-popup: rgba(255, 255, 255, 0.713);
+  --bg-popup: rgba(255, 255, 255, 0.608);
+  --filter-font-color: #000000;
 
   // ErrorMessage
   // PopUps Colors (LoginError, Toasts, etc)
@@ -64,4 +65,65 @@
 
   // Fotos
   --bg-row-fotos: rgba(79, 79, 79, 0.2);
+
+  // Scrollbar
+  --scrollbar-thumb: rgba(200, 255, 254, 0.651);
+  --scrollbar-bg: inherit;
+
+  // No Results
+  --no-results-bg: #ffffffb2;
+
+  // Tabla Input
+  --bg-input: #8f88883b;
+
+  --bg-menu-sort: #ffffffd0;
+
+  // Boton ayuda
+  --btn-ayuda-bg: rgba(255, 255, 255, 0.493);
+  --btn-ayuda-border: rgba(144, 144, 144, 0.454);
+  --btn-ayuda-color: rgb(0, 0, 0);
+
+  --bg-map-info: rgba(255, 255, 255, 0.8);
+
+  --bg-museo-list-item: #d8d8d8;
+  --museo-list-scrollbar-thumb: #87878777;
+
+  --tooltip-bg-color: #000;
+  --tooltip-text-color: #fff;
+
+  --select-popup-bg: #ffffff8d;
+
+  --cerrado-bg: #ff8f8f;
+  --pagination-active-bg: #dcdcdc;
+  --horario-card-bg: #ffffff7d;
+  --horario-gratis-bg: #d8ffce86;
+  --horario-hoy-bg: #d1ffc69f;
+  --horario-precio-bg: #8dafff7c;
+
+  --museo-form-add-button-bg: #ffffff58;
+
+  --textarea-bg: #ffffff7f;
+
+  --navbarmenu-scroll-1: rgb(33, 33, 33);
+  --navbarmenu-scroll-2: rgba(93, 93, 93, 0.759);
+  --navbarmenu-scroll-3: rgba(0, 0, 0, 0);
+
+  --filter-bg: #ffffff7f;
+
+  --toast-bg-color: #ffffff71;
+  --toast-text-color: #000000;
+
+  --toast-error-bg-color: #ff7c7ca2;
+  --toast-error-text-color: #3d0d0dd4;
+
+  --toast-success-bg-color: #94fd949a;
+  --toast-success-text-color: #0a2c0a;
+
+  --toast-warning-bg-color: #ffe282c2;
+  --toast-warning-text-color: #5d4500e8;
+
+  --toast-info-bg-color: #aad4e99f;
+  --toast-info-text-color: #09354e;
+
+  --tr-border-color: rgba(0, 0, 0, 0.3);
 }

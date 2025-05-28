@@ -1,7 +1,7 @@
 export function formatMuseoImageName(nombre) {
   return nombre
-    .replace(/ /g, "_")
+    .toLowerCase()
     .replace(/:/g, "")
-    .replace(/\by\b/g, "Y") // opcional: reemplaza " y " por " Y "
-    .replace(/\b\w/g, (l) => l.toUpperCase()); // capitaliza cada palabra
+    .replace(/\b\w/g, (l) => l.toUpperCase()) // Capitaliza primero
+    .replace(/ /g, "_"); // Luego reemplaza espacios
 }

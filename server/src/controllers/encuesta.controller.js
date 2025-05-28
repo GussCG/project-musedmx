@@ -50,9 +50,11 @@ export const getRespuestasTotales = async (req, res) => {
       encuestaId,
       museoId,
     });
+
     res.json({
       success: true,
-      ...data,
+      respuestas: data.respuestas,
+      servicios: data.servicios,
     });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_ENCUESTA", error);

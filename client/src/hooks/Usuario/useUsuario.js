@@ -1,58 +1,107 @@
 import { useState } from "react";
-import UsuarioService from "../../services/UsuarioService";
+import { useAuth } from "../../context/AuthProvider";
+import { BACKEND_URL } from "../../constants/api";
+import axios from "axios";
 
 export const useUsuario = () => {
+  const { user, setUser } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Registrar Usuario
   const registrarUsuario = async (usuario) => {
-    setError(null);
     try {
-      return await UsuarioService.registrarUsuario(usuario);
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/auth/signup`;
+      const response = await axios.post(endpoint, usuario, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setUser(response.data.usuario.usuario);
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.usuario.usuario)
+      );
+      return response.data;
     } catch (error) {
+      console.error("Error al registrar usuario:", error);
       setError(error);
-      return null;
     } finally {
-      setError(null);
+      setLoading(false);
     }
   };
 
   // Editar Usuario
   const editarUsuario = async (usuario, usr_correo) => {
-    // console.log(usuario);
-    setError(null);
     try {
-      return await UsuarioService.editarUsuario(usuario, usr_correo);
+      setLoading(true);
+      const encodedCorreo = encodeURIComponent(usr_correo);
+      const endpoint = `${BACKEND_URL}/api/auth/update/${encodedCorreo}`;
+
+      const response = await axios.post(endpoint, usuario, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setUser(response.data.usuario.usuario);
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.usuario.usuario)
+      );
+      return response.data;
     } catch (error) {
+      console.error("Error al editar usuario:", error);
       setError(error);
-      return null;
     } finally {
-      setError(null);
+      setLoading(false);
     }
   };
 
   // Recuperar contraseña
   const recuperarContrasena = async (usuario) => {
-    setError(null);
     try {
-      return await UsuarioService.recuperarContrasena(usuario);
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/auth/recuperarContrasena`;
+      const response = await axios.post(endpoint, usuario, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Recuperar contraseña:", response.data);
+      return response.data;
     } catch (error) {
+      console.error("Error al recuperar contraseña:", error);
       setError(error);
       return null;
     } finally {
-      setError(null);
+      setLoading(false);
     }
   };
 
   const obtenerUsuarioByCorreo = async (usr_correo) => {
-    setError(null);
     try {
-      return await UsuarioService.obtenerUsuarioPorCorreo(usr_correo);
+      setLoading(true);
+      const encodedCorreo = encodeURIComponent(usr_correo);
+      const endpoint = `${BACKEND_URL}/api/auth/usuario/${encodedCorreo}`;
+      const response = await axios.get(endpoint, {
+        withCredentials: true,
+      });
+
+      if (response.data.usuario.usuario) {
+        const userVerified = response.data.usuario.usuario;
+        setUser(userVerified);
+        localStorage.setItem("user", JSON.stringify(userVerified));
+      }
+
+      return response.data;
     } catch (error) {
+      console.error("Error al obtener usuario por correo:", error);
       setError(error);
       return null;
     } finally {
-      setError(null);
+      setLoading(false);
     }
   };
 

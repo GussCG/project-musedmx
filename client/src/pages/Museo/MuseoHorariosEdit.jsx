@@ -6,8 +6,12 @@ import {
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import useMuseoHorario from "../../hooks/Museo/useMuseoHorarios";
-
 import { motion } from "framer-motion";
+import AddDia from "../../components/Museo/AddDia";
+import PopupPortal from "../../components/Other/PopupPortal";
+import Icons from "../../components/Other/IconProvider";
+import ToastMessage from "../../components/Other/ToastMessage";
+const { MdDelete } = Icons;
 
 function MuseoHorariosEdit() {
   const { museoId } = useParams();
@@ -18,22 +22,33 @@ function MuseoHorariosEdit() {
     fetchHorarios,
     setHorarios,
     updateHorarioByDia,
+    deleteHorarioByDia,
   } = useMuseoHorario(museoId);
   const [originalHorarios, setOriginalHorarios] = useState(horarios);
+
+  const [showAgregarPop, setShowAgregarPop] = useState(false);
 
   const [editingRow, setEditingRow] = useState(null);
   const [focusedField, setFocusedField] = useState(null);
 
+  const [tempEditData, setTempEditData] = useState(null);
+
   const handleEdit = (rowIndex) => {
     setOriginalHorarios([...horarios]);
     setEditingRow(rowIndex);
-    setFocusedField(null);
-  };
 
-  const handleSave = (rowIndex) => {
-    setEditingRow(null);
-    // Aquí puedes agregar la lógica para guardar los cambios en el horario
-    updateHorarioByDia(horarios[rowIndex].mh_dia, horarios[rowIndex]);
+    const rowData = horarios[rowIndex] || {};
+    setTempEditData({
+      mh_dia: rowData.mh_dia || "",
+      mh_hora_inicio: rowData.mh_hora_inicio || "",
+      mh_hora_fin: rowData.mh_hora_fin || "",
+      mh_precio_ad: rowData.mh_precio_ad || "",
+      mh_precio_ni: rowData.mh_precio_ni || "",
+      mh_precio_est: rowData.mh_precio_est || "",
+      mh_precio_ter: rowData.mh_precio_ter || "",
+    });
+
+    setFocusedField(null);
   };
 
   const handleCancel = () => {
@@ -41,12 +56,65 @@ function MuseoHorariosEdit() {
     setEditingRow(null);
   };
 
-  const handleChange = (rowIndex, field, value) => {
-    setHorarios((prev) =>
-      prev.map((row, index) =>
-        index === rowIndex ? { ...row, [field]: value } : row
-      )
-    );
+  const handleChange = (field, value) => {
+    setTempEditData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSave = (rowIndex) => {
+    if (!tempEditData.mh_hora_inicio || !tempEditData.mh_hora_fin) {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "Por favor, completa todos los campos",
+        position: "top-right",
+      });
+      return;
+    }
+
+    if (tempEditData.mh_hora_inicio >= tempEditData.mh_hora_fin) {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "La hora de inicio debe ser menor que la hora de cierre",
+        position: "top-right",
+      });
+      return;
+    }
+
+    const updated = [...horarios];
+    updated[rowIndex] = { ...tempEditData };
+    setHorarios(updated);
+    setEditingRow(null);
+    setTempEditData(null);
+
+    updateHorarioByDia(updated[rowIndex].mh_dia, updated[rowIndex]);
+
+    ToastMessage({
+      tipo: "success",
+      mensaje: `Horario de ${updated[rowIndex].mh_dia} actualizado correctamente`,
+      position: "top-right",
+    });
+  };
+
+  const handleDelete = async (rowIndex) => {
+    const dia = horarios[rowIndex].mh_dia;
+    const response = await deleteHorarioByDia(dia, museoId);
+
+    if (response.success) {
+      ToastMessage({
+        tipo: "success",
+        mensaje: `Horario de ${dia} eliminado correctamente`,
+        position: "top-right",
+      });
+      fetchHorarios(museoId);
+    } else {
+      ToastMessage({
+        tipo: "error",
+        mensaje: `Error al eliminar día`,
+        position: "top-right",
+      });
+    }
   };
 
   const columns = useMemo(
@@ -66,16 +134,11 @@ function MuseoHorariosEdit() {
             <input
               key={`hora_fin-${rowIndex}`}
               type="time"
-              value={horarios[rowIndex].mh_hora_inicio}
+              step={1}
+              min="00:00"
+              value={tempEditData?.mh_hora_inicio ?? ""}
               onChange={(e) => {
-                const newValue = e.target.value;
-                setHorarios((prev) =>
-                  prev.map((row, idx) =>
-                    idx === rowIndex
-                      ? { ...row, mh_hora_inicio: newValue }
-                      : row
-                  )
-                );
+                handleChange("mh_hora_inicio", e.target.value);
               }}
               onFocus={() => setFocusedField(`${rowIndex}-hora_fin`)}
               autoFocus={focusedField === `${rowIndex}-hora_fin`}
@@ -95,14 +158,11 @@ function MuseoHorariosEdit() {
             <input
               key={`hora_fin-${rowIndex}`}
               type="time"
-              value={horarios[rowIndex].mh_hora_fin}
+              step={1}
+              min="00:00"
+              value={tempEditData?.mh_hora_fin ?? ""}
               onChange={(e) => {
-                const newValue = e.target.value;
-                setHorarios((prev) =>
-                  prev.map((row, idx) =>
-                    idx === rowIndex ? { ...row, mh_hora_fin: newValue } : row
-                  )
-                );
+                handleChange("mh_hora_fin", e.target.value);
               }}
               onFocus={(e) => e.target.select()}
             />
@@ -121,14 +181,9 @@ function MuseoHorariosEdit() {
             <input
               key={`precio-ad-${rowIndex}`}
               type="number"
-              value={horarios[rowIndex].mh_precio_ad}
+              value={tempEditData?.mh_precio_ad ?? ""}
               onChange={(e) => {
-                const newValue = e.target.value;
-                setHorarios((prev) =>
-                  prev.map((row, idx) =>
-                    idx === rowIndex ? { ...row, mh_precio_ad: newValue } : row
-                  )
-                );
+                handleChange("mh_precio_ad", e.target.value);
               }}
               onFocus={() => setFocusedField(`${rowIndex}-precio-ad`)}
               autoFocus={focusedField === `${rowIndex}-precio-ad`}
@@ -149,14 +204,9 @@ function MuseoHorariosEdit() {
             <input
               key={`precio-ni-${rowIndex}`}
               type="number"
-              value={horarios[rowIndex].mh_precio_ni}
+              value={tempEditData?.mh_precio_ni ?? ""}
               onChange={(e) => {
-                const newValue = e.target.value;
-                setHorarios((prev) =>
-                  prev.map((row, idx) =>
-                    idx === rowIndex ? { ...row, mh_precio_ni: newValue } : row
-                  )
-                );
+                handleChange("mh_precio_ni", e.target.value);
               }}
               onFocus={() => setFocusedField(`${rowIndex}-precio-ni`)}
               autoFocus={focusedField === `${rowIndex}-precio-ni`}
@@ -177,14 +227,9 @@ function MuseoHorariosEdit() {
             <input
               key={`precio-est-${rowIndex}`}
               type="number"
-              value={horarios[rowIndex].mh_precio_est}
+              value={tempEditData?.mh_precio_est ?? ""}
               onChange={(e) => {
-                const newValue = e.target.value;
-                setHorarios((prev) =>
-                  prev.map((row, idx) =>
-                    idx === rowIndex ? { ...row, mh_precio_est: newValue } : row
-                  )
-                );
+                handleChange("mh_precio_est", e.target.value);
               }}
               onFocus={() => setFocusedField(`${rowIndex}-precio-est`)}
               autoFocus={focusedField === `${rowIndex}-precio-est`}
@@ -205,14 +250,9 @@ function MuseoHorariosEdit() {
             <input
               key={`precio-ter-${rowIndex}`}
               type="number"
-              value={horarios[rowIndex].mh_precio_ter}
+              value={tempEditData?.mh_precio_ter ?? ""}
               onChange={(e) => {
-                const newValue = e.target.value;
-                setHorarios((prev) =>
-                  prev.map((row, idx) =>
-                    idx === rowIndex ? { ...row, mh_precio_ter: newValue } : row
-                  )
-                );
+                handleChange("mh_precio_ter", e.target.value);
               }}
               onFocus={() => setFocusedField(`${rowIndex}-precio-ter`)}
               autoFocus={focusedField === `${rowIndex}-precio-ter`}
@@ -247,8 +287,22 @@ function MuseoHorariosEdit() {
           ),
         enableSorting: false,
       },
+      {
+        accessorKey: "eliminar",
+        header: "Eliminar",
+        cell: (info) => (
+          <button
+            onClick={() => {
+              handleDelete(info.row.index);
+              setEditingRow(null);
+            }}
+          >
+            <MdDelete />
+          </button>
+        ),
+      },
     ],
-    [editingRow, focusedField, horarios]
+    [editingRow, focusedField, horarios, tempEditData]
   );
 
   const table = useReactTable({
@@ -268,6 +322,9 @@ function MuseoHorariosEdit() {
       <main id="tabla-main">
         <div className="tabla-header">
           <h1>Editar Horarios</h1>
+          <button className="button" onClick={() => setShowAgregarPop(true)}>
+            Agregar Días
+          </button>
         </div>
         <motion.div
           className="tabla-container"
@@ -310,6 +367,19 @@ function MuseoHorariosEdit() {
           </table>
         </motion.div>
       </main>
+
+      {showAgregarPop && (
+        <PopupPortal>
+          <AddDia
+            onClose={() => setShowAgregarPop(false)}
+            horario={horarios}
+            onAdded={() => {
+              fetchHorarios(museoId);
+              setShowAgregarPop(false);
+            }}
+          />
+        </PopupPortal>
+      )}
     </motion.div>
   );
 }

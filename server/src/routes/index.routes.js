@@ -1,11 +1,13 @@
 import { Router } from "express";
 import museoRoutes from "./museo.routes.js";
 import authRoutes from "./auth.routes.js";
-import userRoutes from "./usuarios.routes.js";
 
 import resenaRoutes from "./resena.routes.js";
 import encuestaRoutes from "./encuesta.routes.js";
 import favoritoRoutes from "./favorito.routes.js";
+import qvRoutes from "./quierovisitar.routes.js";
+import visitasRoutes from "./visitas.routes.js";
+import reviewsRoutes from "./reviews.routes.js";
 
 const router = Router();
 
@@ -21,6 +23,8 @@ router.get("/", (req, res) => {
       resenas: "/api/resena",
       encuestas: "/api/encuesta",
       favoritos: "/api/favoritos",
+      qv: "/api/qv",
+      visitas: "/api/visitas",
     },
   });
 });
@@ -31,5 +35,8 @@ router.use("/api/auth", authRoutes);
 router.use("/api/resena", resenaRoutes);
 router.use("/api/encuesta", encuestaRoutes);
 router.use("/api/favoritos", favoritoRoutes);
+router.use("/api/qv", qvRoutes);
+router.use("/api/visitas", visitasRoutes);
+router.use("/api/reviews", reviewsRoutes);
 
 export default router;

@@ -161,7 +161,29 @@ export const createMuseo = async (req, res) => {
       redes_sociales,
     } = req.body;
 
-    const mus_foto = req.file ? req.file.buffer : null;
+    console.log("req.body", req.body);
+
+    let mus_foto = null;
+    if (req.file) {
+      const nombreMuseoFormateado = formatMuseoImageName(mus_nombre);
+      console.log(mus_nombre);
+      console.log("Nombre museo formateado:", nombreMuseoFormateado);
+      const blobName = `${nombreMuseoFormateado}/${nombreMuseoFormateado}_Main.jpg`;
+
+      const bufferJpg = await sharp(req.file.buffer)
+        .jpeg({ quality: 85 })
+        .toBuffer();
+
+      const urlBlob = await uploadToAzure(
+        "imagenes-museos",
+        bufferJpg,
+        blobName,
+        "image/jpeg"
+      );
+
+      console.log("URL Blob:", urlBlob);
+      mus_foto = urlBlob;
+    }
 
     const museo = await Museo.create({
       mus_nombre,
@@ -234,7 +256,26 @@ export const updateMuseo = async (req, res) => {
     }
 
     if (req.file) {
-      camposActualizados.mus_foto = req.file.buffer;
+      const nombreMuseoFormateado = formatMuseoImageName(
+        museoExistente.mus_nombre
+      );
+      console.log(museoExistente.mus_nombre);
+      console.log("Nombre museo formateado:", nombreMuseoFormateado);
+      const blobName = `${nombreMuseoFormateado}/${nombreMuseoFormateado}_Main.jpg`;
+
+      const bufferJpg = await sharp(req.file.buffer)
+        .jpeg({ quality: 85 })
+        .toBuffer();
+
+      const urlBlob = await uploadToAzure(
+        "imagenes-museos",
+        bufferJpg,
+        blobName,
+        "image/jpeg"
+      );
+
+      console.log("URL Blob:", urlBlob);
+      camposActualizados.mus_foto = urlBlob;
     }
 
     // Si no se han proporcionado campos para actualizar, devolver un error
@@ -373,6 +414,62 @@ export const updateHorarioByDia = async (req, res) => {
     });
   } catch (error) {
     handleHttpError(res, "ERROR_UPDATE_HORARIO_BY_DIA", error);
+  }
+};
+
+export const addByDia = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { dia } = req.body;
+
+    console.log("DIA", dia);
+    console.log("ID", id);
+
+    if (!dia) {
+      return res.status(400).json({
+        success: false,
+        message: "Faltan datos para agregar el día",
+      });
+    }
+
+    // Agregar el día
+    const addedDia = await Museo.addByDia({ id, dia });
+
+    res.json({
+      success: true,
+      message: "Día agregado correctamente",
+      addedDia,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_ADD_BY_DIA", error);
+  }
+};
+
+export const deleteByDia = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { dia } = req.body;
+
+    console.log("DIA", dia);
+    console.log("ID", id);
+
+    if (!dia) {
+      return res.status(400).json({
+        success: false,
+        message: "Faltan datos para eliminar el día",
+      });
+    }
+
+    // Eliminar el día
+    const deletedDia = await Museo.deleteByDia({ id, dia });
+
+    res.json({
+      success: true,
+      message: "Día eliminado correctamente",
+      deletedDia,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_DELETE_BY_DIA", error);
   }
 };
 

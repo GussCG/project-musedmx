@@ -7,11 +7,7 @@ import { es } from "react-day-picker/locale";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { motion } from "framer-motion";
-
-// Toastify
-import { toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
+import ToastMessage from "../../components/Other/ToastMessage";
 import { SERVICIOS, PREGUNTAS_RESPUESTAS } from "../../constants/catalog";
 import useServicio from "../../hooks/Encuesta/useServicio";
 import usePreguntas from "../../hooks/Encuesta/usePreguntas";
@@ -93,16 +89,10 @@ function RegistroVisita() {
     const uploadedFiles = Array.from(files);
 
     if (uploadedFiles.length + currentFiles.length > 5) {
-      toast.error(`Máximo 5 fotos`, {
+      ToastMessage({
+        tipo: "error",
+        mensaje: `Máximo 5 fotos`,
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
       });
       return;
     }
@@ -123,16 +113,10 @@ function RegistroVisita() {
       // Agregar la nueva imagen a la lista de imagenes
       setFieldValue("regresfrmfotos", [...uploadedFiles, file]);
     } else {
-      toast.error(`Máximo 5 fotos`, {
+      ToastMessage({
+        tipo: "error",
+        mensaje: `Máximo 5 fotos`,
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
       });
     }
   };
@@ -178,30 +162,18 @@ function RegistroVisita() {
     if (encuestaContestada) {
       // Actualizamos la encuesta
       console.log(values);
-      toast.success(`Se actualizaron tus respuestas`, {
+      ToastMessage({
+        tipo: "success",
+        mensaje: `Se actualizaron tus respuestas`,
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
       });
     } else {
       // Guardamos la encuesta
       console.log(values);
-      toast.success(`Se guardaron tus respuestas`, {
+      ToastMessage({
+        tipo: "success",
+        mensaje: `Se guardaron tus respuestas`,
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
       });
     }
   };

@@ -4,6 +4,7 @@ import Icons from "../Other/IconProvider";
 const { CgClose, FaInfo, TbRouteSquare } = Icons;
 import { motion, AnimatePresence } from "framer-motion";
 import { TEMATICAS } from "../../constants/catalog";
+import ToastMessage from "../Other/ToastMessage";
 
 function Directions({ userLocation, museosMostrados, travelMode }) {
   const museo = museosMostrados[0]; // Solo se usa el primer museo para la ruta
@@ -50,6 +51,14 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
   }, [map, routesLib]);
 
   const calculateRoute = () => {
+    if (!userLocation) {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "No tienes una ubicación establecida.",
+        position: "top-right",
+      });
+    }
+
     if (!directionsService || !directionsRenderer) return;
 
     setIsCalculating(true); // Iniciar el cálculo de la ruta
@@ -80,10 +89,11 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
   };
 
   useEffect(() => {
+    if (!userLocation) return;
     if (hasCalculatedRoute && directionsRenderer && directionsService) {
       calculateRoute(); // Calcular la ruta al abrir la información
     }
-  }, [travelMode]);
+  }, [travelMode, userLocation]);
 
   // Limpiar ruta al cambiar de museo
   useEffect(() => {
@@ -190,37 +200,39 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
               <b>Duración: </b> {leg.duration.text}
             </p>
 
-            {routes.length > 1 && (
-              <div className="routes-alt">
-                <h4>Otras Rutas</h4>
-                <ul className="routes-list">
-                  {routes.map((route, index) => (
-                    <motion.li
-                      key={index}
-                      className="route-item"
-                      initial={{ opacity: 0, x: 100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 100 }}
-                      transition={{
-                        duration: 0.2,
-                        ease: "easeInOut",
-                        type: "spring",
-                        stiffness: 50,
-                      }}
-                    >
-                      <button
-                        className={`route-button ${
-                          index === routeIndex ? "active" : ""
-                        }`}
-                        onClick={() => setRouteIndex(index)}
+            {routes.length > 1 &&
+              routes.some((r, i) => i !== routeIndex) &&
+              travelMode !== "TRANSIT" && (
+                <div className="routes-alt">
+                  <h4>Otras Rutas</h4>
+                  <ul className="routes-list">
+                    {routes.map((route, index) => (
+                      <motion.li
+                        key={index}
+                        className="route-item"
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 100 }}
+                        transition={{
+                          duration: 0.2,
+                          ease: "easeInOut",
+                          type: "spring",
+                          stiffness: 50,
+                        }}
                       >
-                        {route.summary}
-                      </button>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                        <button
+                          className={`route-button ${
+                            index === routeIndex ? "active" : ""
+                          }`}
+                          onClick={() => setRouteIndex(index)}
+                        >
+                          {route.summary}
+                        </button>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              )}
           </motion.div>
         )}
       </AnimatePresence>

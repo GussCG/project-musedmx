@@ -3,7 +3,7 @@ import { CALIFICACIONES_RUBROS } from "../constants/catalog";
 export const getCalificaciones = (config) => {
   let data = { icono: null, titulo: "" };
 
-  // Se asume que el último rubro es el de menor calificación
+  // Se ordenan de mayor a menor para encontrar el título e ícono más adecuado
   const rubricasOrdenadas = [...config.rubricas].sort(
     (a, b) => b.valor - a.valor
   );
@@ -16,7 +16,7 @@ export const getCalificaciones = (config) => {
     }
   }
 
-  // Si no se cumple ningún valor, se devuelve el de menor rubro
+  // Si ningún valor coincide, usar el menor
   const rubroMin = rubricasOrdenadas[rubricasOrdenadas.length - 1];
   if (rubroMin) {
     data.icono = rubroMin.icono;
@@ -29,39 +29,32 @@ export const getCalificaciones = (config) => {
 export const procesarCalificaciones = (promediosMuseo) => {
   const config = {};
 
-  // Si es un array vacío o no es un objeto válido, se usa objeto vacío como fallback
-  const esArrayVacio =
-    Array.isArray(promediosMuseo) && promediosMuseo.length === 0;
-  const promedios =
-    esArrayVacio || typeof promediosMuseo !== "object" ? {} : promediosMuseo;
+  if (!Array.isArray(promediosMuseo) || promediosMuseo.length === 0) {
+    return config;
+  }
 
-  Object.keys(CALIFICACIONES_RUBROS).forEach((clave) => {
-    const promedio = promedios[clave] || 0;
-    const rubricas = CALIFICACIONES_RUBROS[clave];
+  promediosMuseo.forEach((promedio) => {
+    const { preg_id, promedio_respuesta } = promedio;
+    const rubricas = CALIFICACIONES_RUBROS[preg_id];
 
-    if (!rubricas || rubricas.length === 0) {
-      config[clave] = {
-        promedio: 0,
-        rubricas: [],
-        icono: null,
-        titulo: "",
-        width: 0,
+    if (rubricas) {
+      const promedioNum = parseFloat(promedio_respuesta) || 0;
+      const { icono, titulo } = getCalificaciones({
+        promedio: promedioNum,
+        rubricas,
+      });
+
+      const maxValor = Math.max(...rubricas.map((r) => r.valor));
+
+      config[preg_id] = {
+        id: preg_id,
+        icono,
+        titulo,
+        promedio: promedioNum,
+        rubricas,
+        width: Math.min((promedioNum / maxValor) * 100, 100).toFixed(2),
       };
-      return;
     }
-
-    const datos = getCalificaciones({
-      promedio,
-      rubricas,
-    });
-
-    config[clave] = {
-      promedio,
-      rubricas,
-      icono: datos.icono,
-      titulo: datos.titulo,
-      width: ((promedio / rubricas[0].valor) * 100).toFixed(2),
-    };
   });
 
   return config;
@@ -74,15 +67,18 @@ export const procesarServicios = (servicios = []) => {
     return config;
   }
 
-  const maxVeces = Math.max(...servicios.map((s) => s.veces || 0)) || 1;
+  const maxVeces =
+    Math.max(...servicios.map((s) => parseFloat(s.veces_seleccionado) || 0)) ||
+    1;
 
   servicios.forEach((servicio) => {
-    const { ser_id, ser_nombre, veces } = servicio;
+    const { ser_id, ser_nombre, veces_seleccionado } = servicio;
+    const veces = parseFloat(veces_seleccionado);
 
     config[ser_id] = {
       nombre: ser_nombre,
       veces,
-      opacidad: (veces / maxVeces).toFixed(2), // normaliza de 0 a 1
+      opacidad: (veces / maxVeces).toFixed(2),
     };
   });
 

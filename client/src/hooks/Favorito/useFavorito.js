@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { BACKEND_URL } from "../../constants/api";
 import Museo from "../../models/Museo/Museo";
 
@@ -9,12 +9,11 @@ export const useFavorito = ({ museoId } = {}) => {
   const [error, setError] = useState(null);
   const [count, setCount] = useState(0);
 
-  const fetchMuseosFavoritosUsuario = async (correo) => {
+  const fetchMuseosFavoritosUsuario = useCallback(async (correo) => {
     try {
       setLoading(true);
       const endpoint = `${BACKEND_URL}/api/favoritos/museosfavoritos/${correo}`;
       const response = await axios.get(endpoint);
-
       setMuseosFavoritos(response.data.museos.map((museo) => new Museo(museo)));
     } catch (error) {
       console.error("Error al obtener los museos favoritos:", error);
@@ -22,31 +21,25 @@ export const useFavorito = ({ museoId } = {}) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const agregarFavorito = async (correo, museoId) => {
+  const agregarFavorito = useCallback(async (correo, museoId) => {
     try {
       const endpoint = `${BACKEND_URL}/api/favoritos/agregar`;
-      const response = await axios.post(endpoint, {
-        correo,
-        museoId,
-      });
+      const response = await axios.post(endpoint, { correo, museoId });
       await getFavoritosCountByMuseoId(museoId);
       return response.data;
     } catch (error) {
       console.error("Error al agregar favorito:", error);
       throw error;
     }
-  };
+  }, []);
 
-  const eliminarFavorito = async (correo, museoId) => {
+  const eliminarFavorito = useCallback(async (correo, museoId) => {
     try {
       const endpoint = `${BACKEND_URL}/api/favoritos/eliminar`;
       const response = await axios.delete(endpoint, {
-        data: {
-          correo,
-          museoId,
-        },
+        data: { correo, museoId },
       });
       await getFavoritosCountByMuseoId(museoId);
       return response.data;
@@ -54,25 +47,22 @@ export const useFavorito = ({ museoId } = {}) => {
       console.error("Error al eliminar favorito:", error);
       throw error;
     }
-  };
+  }, []);
 
-  const verificarFavorito = async (correo, museoId) => {
+  const verificarFavorito = useCallback(async (correo, museoId) => {
     try {
       const endpoint = `${BACKEND_URL}/api/favoritos/`;
       const response = await axios.get(endpoint, {
-        params: {
-          correo,
-          museoId,
-        },
+        params: { correo, museoId },
       });
       return response.data.isFavorite;
     } catch (error) {
       console.error("Error al verificar favorito:", error);
       throw error;
     }
-  };
+  }, []);
 
-  const getFavoritosCountByMuseoId = async (museoId) => {
+  const getFavoritosCountByMuseoId = useCallback(async (museoId) => {
     try {
       const endpoint = `${BACKEND_URL}/api/favoritos/numero/${museoId}`;
       const response = await axios.get(endpoint);
@@ -82,11 +72,11 @@ export const useFavorito = ({ museoId } = {}) => {
       console.error("Error al obtener el conteo de favoritos:", error);
       throw error;
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (museoId) getFavoritosCountByMuseoId(museoId);
-  }, [museoId]);
+  }, [museoId, getFavoritosCountByMuseoId]);
 
   return {
     museosFavoritos,

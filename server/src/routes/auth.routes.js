@@ -13,6 +13,14 @@ import {
   // recuperarContrasena
 } from "../controllers/auth.controller.js";
 
+import {
+  createMod,
+  updateMod,
+  deleteMod,
+  obtenerModeradores,
+  verifyMod,
+} from "../controllers/mod.controller.js";
+
 const router = Router();
 
 // Definir las rutas para los usuarios
@@ -30,5 +38,12 @@ router.delete("/", deleteUser);
 router.get("/", verEmail); // Verificar correo electrónico
 router.get("/usuario/:usr_correo", authMiddleware, obtenerUsuarioByCorreo); // Obtener usuario por correo
 // router.post("/recuperarContrasena", recuperarContrasena); // Recuperar contraseña
+
+// Moderadores
+router.get("/mod/verify/:usr_correo", verifyMod); // Verificar moderador
+router.post("/mod/create", upload.none(), createMod); // Registrarse como moderador
+router.post("/mod/update/:usr_correo", upload.none(), updateMod); // Actualizar moderador
+router.delete("/mod/delete/:usr_correo", authMiddleware, deleteMod); // Eliminar moderador
+router.get("/mod", authMiddleware, obtenerModeradores); // Obtener moderadores
 
 export default router;

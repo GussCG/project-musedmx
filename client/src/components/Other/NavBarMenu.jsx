@@ -9,6 +9,7 @@ const { logo, IoMenu } = Icons;
 import MenuContainer from "./MenuContainer";
 import { useAuth } from "../../context/AuthProvider";
 import MenuUsuario from "../User/MenuUsuario";
+import UserImage from "../User/UserImage";
 
 function NavBarMenu() {
   const { user } = useAuth();
@@ -104,7 +105,7 @@ function NavBarMenu() {
                 onClick={toggleMenuUser}
                 style={{ cursor: "pointer" }}
               >
-                <img
+                <UserImage
                   src={user.usr_foto || userPlaceholder}
                   alt="Avatar"
                   id="nav-user-img"

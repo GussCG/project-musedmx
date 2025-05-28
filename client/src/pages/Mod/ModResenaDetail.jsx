@@ -5,28 +5,47 @@ import ModRechazar from "./ModRechazar";
 import { useState } from "react";
 import PopupPortal from "../../components/Other/PopupPortal";
 import LightBoxPortal from "../../components/Other/LightBoxPortal";
+import { useResena } from "../../hooks/Resena/useResena";
+import { useParams, useNavigate } from "react-router-dom";
+import { formatearFechaSinHora } from "../../utils/formatearFechas";
+import { useResenaMods } from "../../hooks/Resena/useResenaMods";
+import { useAuth } from "../../context/AuthProvider";
+import ToastMessage from "../../components/Other/ToastMessage";
 
 function ModResenaDetail() {
-  const galeria = [
-    {
-      src: "https://th.bing.com/th/id/OIP.XBICrQ8PArULwN_UwchP2gHaE8?cb=iwc1&rs=1&pid=ImgDetMain",
-    },
-    {
-      src: "https://th.bing.com/th/id/OIP.XBICrQ8PArULwN_UwchP2gHaE8?cb=iwc1&rs=1&pid=ImgDetMain",
-    },
-    {
-      src: "https://th.bing.com/th/id/OIP.XBICrQ8PArULwN_UwchP2gHaE8?cb=iwc1&rs=1&pid=ImgDetMain",
-    },
-    {
-      src: "https://th.bing.com/th/id/OIP.XBICrQ8PArULwN_UwchP2gHaE8?cb=iwc1&rs=1&pid=ImgDetMain",
-    },
-    {
-      src: "https://th.bing.com/th/id/OIP.XBICrQ8PArULwN_UwchP2gHaE8?cb=iwc1&rs=1&pid=ImgDetMain",
-    },
-  ];
+  const { user } = useAuth();
+  const modCorreo = user?.usr_correo || "";
+  const { resId } = useParams();
+  const navigate = useNavigate();
 
-  const lightbox = useLightBox(galeria);
+  const { resena, loading, error } = useResena({ resId });
+  const { aprobarResena } = useResenaMods();
+
+  console.log("Reseña:", resena);
+
+  const lightbox = useLightBox(resena?.fotos || []);
   const [showRechazarPop, setShowRechazarPop] = useState(false);
+
+  const handleAprobarResena = (resId, modCorreo) => async () => {
+    try {
+      const response = await aprobarResena(resId, modCorreo);
+      if (response.success) {
+        ToastMessage({
+          tipo: "success",
+          mensaje: "Reseña aprobada exitosamente.",
+          position: "top-right",
+        });
+        navigate(`/Mod/VerResenas/${resena.mus_id}`);
+      }
+    } catch (error) {
+      console.error("Error al aprobar la reseña:", error);
+      ToastMessage({
+        tipo: "error",
+        mensaje: "Error al aprobar la reseña. Inténtalo de nuevo.",
+        position: "top-right",
+      });
+    }
+  };
 
   return (
     <motion.div
@@ -35,59 +54,81 @@ function ModResenaDetail() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <LightBoxPortal>
-        <LightBox
-          images={galeria}
-          isOpen={lightbox.isOpen}
-          currentIndex={lightbox.currentIndex}
-          closeLightBox={lightbox.closeLightBox}
-          goToPrev={lightbox.goToPrev}
-          goToNext={lightbox.goToNext}
-        />
-      </LightBoxPortal>
+      {resena?.fotos && (
+        <LightBoxPortal>
+          <LightBox
+            images={resena?.fotos}
+            isOpen={lightbox.isOpen}
+            currentIndex={lightbox.currentIndex}
+            closeLightBox={lightbox.closeLightBox}
+            goToPrev={lightbox.goToPrev}
+            goToNext={lightbox.goToNext}
+          />
+        </LightBoxPortal>
+      )}
       <main id="aprobar-res-main">
-        <h1>Aprobar Reseña</h1>
+        <h1>
+          {resena?.res_aprobado === 1 ? "Detalles de reseña" : "Aprobar Reseña"}
+        </h1>
         <div className="aprobar-res-container">
           <section className="user-info">
             <p>
-              <b>Usuario</b>: correo@ejemplo.com
+              <b>Usuario</b>: {resena?.visitas_vi_usr_correo}
             </p>
             <p>
-              <b>Fecha de Publicación</b>: 30-04-2004
+              <b>Fecha de Publicación</b>:{" "}
+              {formatearFechaSinHora(resena?.visitas_vi_fechahora)}
             </p>
             <p>
-              <b>Calificación</b>: 5
+              <b>Calificación</b>: {resena?.res_calif_estrellas}
             </p>
           </section>
           <section className="user-resena-container">
             <p className="user-resena">
-              <b>Comentario</b>: Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Quisquam voluptatibus, quisquam laudantium.
-              Quisquam voluptatibus, quisquam laudantium.
+              <b>Comentario</b>:{" "}
+              {resena?.res_comentario || "No hay comentario."}
             </p>
-            <div className="user-resena-imgs-container">
-              {galeria.map((img, index) => (
-                <div className="user-resena-img" key={index}>
-                  <img
-                    src={img.src}
-                    alt={`Imagen ${index + 1}`}
-                    onClick={() => lightbox.openLightBox(index)}
-                  />
-                </div>
-              ))}
-            </div>
+            {resena?.fotos && resena.fotos.length > 0 && (
+              <div className="user-resena-imgs-container">
+                {galeria.map((img, index) => (
+                  <div className="user-resena-img" key={index}>
+                    <img
+                      src={img.src}
+                      alt={`Imagen ${index + 1}`}
+                      onClick={() => lightbox.openLightBox(index)}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
           <section className="aprobar-res-buttons">
-            <button type="button" className="button">
-              Aprobar
-            </button>
-            <button
-              type="button"
-              className="button"
-              onClick={() => setShowRechazarPop(true)}
-            >
-              Rechazar
-            </button>
+            {resena?.res_aprobado === 1 ? (
+              <button
+                type="button"
+                className="button"
+                onClick={() => navigate(`/Mod/VerResenas/${resena.mus_id}`)}
+              >
+                Volver a Reseñas
+              </button>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className="button"
+                  onClick={handleAprobarResena(resId, modCorreo)}
+                >
+                  Aprobar
+                </button>
+                <button
+                  type="button"
+                  className="button"
+                  onClick={() => setShowRechazarPop(true)}
+                >
+                  Rechazar
+                </button>
+              </>
+            )}
           </section>
         </div>
       </main>

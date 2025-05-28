@@ -1,6 +1,6 @@
 import Usuario from "../models/auth.model.js";
 import { handleHttpError } from "../helpers/httpError.js";
-import { hash, compare } from "bcrypt";
+import bcrypt from "bcrypt";
 import sharp from "sharp";
 // import { sendEmail } from "../services/emailService";
 import jwt from "jsonwebtoken";
@@ -17,6 +17,8 @@ export const logIn = async (req, res) => {
   try {
     let { usr_correo, usr_contrasenia } = req.body;
 
+    console.log("Datos de inicio de sesión:", req.body);
+
     if (!usr_correo || !usr_contrasenia) {
       return res.status(400).json({
         success: false,
@@ -24,7 +26,7 @@ export const logIn = async (req, res) => {
       });
     }
 
-    const usuario = await Usuario.findById(usr_correo);
+    const usuario = await Usuario.findOne({ usr_correo });
 
     if (!usuario) {
       return res.status(404).json({
@@ -33,7 +35,7 @@ export const logIn = async (req, res) => {
       });
     }
 
-    if (!(await compare(usr_contrasenia, usuario.usr_contrasenia))) {
+    if (!(await bcrypt.compare(usr_contrasenia, usuario.usr_contrasenia))) {
       return res.status(401).json({
         success: false,
         message: "Contraseña incorrecta",
@@ -80,6 +82,7 @@ export const signUp = async (req, res) => {
       usr_telefono,
       usr_tipo,
       usr_tematicas,
+      usr_foto,
     } = req.body;
 
     if (
@@ -96,13 +99,45 @@ export const signUp = async (req, res) => {
       });
     }
 
-    // Subida de imagen a Azure Blob Storage
-    let usr_foto = null;
     if (req.file) {
       const sanitizedEmail = usr_correo.replace(/[^a-zA-Z0-9]/g, "-");
-      const blobName = `${sanitizedEmail}-imagenes/perfil/perfil.jpg`;
       const containerName = "imagenes-usuarios";
-      usr_foto = await uploadToAzure(containerName, req.file.path, blobName);
+      const tempJpgPath = path.join(
+        __dirname,
+        "..",
+        "temp",
+        `${sanitizedEmail}-imagenes`,
+        "perfil.jpg"
+      );
+
+      const tempDir = path.dirname(tempJpgPath);
+      if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir, { recursive: true });
+      }
+
+      await sharp(req.file.path).jpeg({ quality: 80 }).toFile(tempJpgPath);
+
+      const bufferJpg = fs.readFileSync(tempJpgPath); // Leer el archivo como buffer
+
+      const blobName = `${sanitizedEmail}-imagenes/perfil/perfil.jpg`;
+
+      const nuevaFotoUrl = await uploadToAzure(
+        containerName,
+        bufferJpg,
+        blobName,
+        "image/jpeg"
+      );
+
+      // Eliminar el archivo temporal y la carpeta
+      if (fs.existsSync(tempJpgPath)) {
+        fs.unlinkSync(tempJpgPath);
+      }
+      // Eliminar la carpeta temporal
+      if (fs.existsSync(tempDir)) {
+        fs.rmdirSync(tempDir, { recursive: true });
+      }
+
+      usr_foto = nuevaFotoUrl;
     }
 
     if (usr_tematicas) {
@@ -111,20 +146,7 @@ export const signUp = async (req, res) => {
       usr_tematicas = [];
     }
 
-    usr_contrasenia = await hash(usr_contrasenia, 10);
-
-    console.log("Datos del usuario:", {
-      usr_correo,
-      usr_nombre,
-      usr_ap_paterno,
-      usr_ap_materno,
-      usr_contrasenia,
-      usr_fecha_nac,
-      usr_telefono,
-      usr_foto,
-      usr_tipo,
-      usr_tematicas,
-    });
+    usr_contrasenia = await bcrypt.hash(usr_contrasenia, 10);
 
     const usuario = await Usuario.create({
       usr_correo,
@@ -183,7 +205,7 @@ export const verifyUser = async (req, res) => {
   try {
     const { correo } = req.usuario; // Viene del token decodificado en el middleware
 
-    const usuario = await Usuario.findById(correo);
+    const usuario = await Usuario.findOne({ usr_correo: correo });
     if (!usuario) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
@@ -201,6 +223,7 @@ export const updateUser = async (req, res) => {
   try {
     const correoParam = req.params.usr_correo; // Correo del usuario a editar
     const correoToken = req.usuario.correo; // viene del token decodificado
+
     // Evita que editen a otro usuario
     if (correoToken !== correoParam) {
       return res
@@ -209,7 +232,7 @@ export const updateUser = async (req, res) => {
     }
 
     // Obtener el usuario actual de la BD
-    const usuarioActual = await Usuario.findById(correoParam);
+    const usuarioActual = await Usuario.findOne({ usr_correo: correoParam });
     if (!usuarioActual) {
       return res.status(404).json({
         success: false,
@@ -222,7 +245,6 @@ export const updateUser = async (req, res) => {
     if (req.body.usr_contrasenia) {
       req.body.usr_contrasenia = await hash(req.body.usr_contrasenia, 10);
     }
-
     if (req.body.usr_nombre) datosActualizar.usr_nombre = req.body.usr_nombre;
     if (req.body.usr_ap_paterno)
       datosActualizar.usr_ap_paterno = req.body.usr_ap_paterno;
@@ -255,16 +277,24 @@ export const updateUser = async (req, res) => {
 
       await sharp(req.file.path).jpeg({ quality: 80 }).toFile(tempJpgPath);
 
+      const bufferJpg = fs.readFileSync(tempJpgPath); // Leer el archivo como buffer
+
       const blobName = `${sanitizedEmail}-imagenes/perfil/perfil.jpg`;
 
       const nuevaFotoUrl = await uploadToAzure(
         containerName,
-        tempJpgPath,
-        blobName
+        bufferJpg,
+        blobName,
+        "image/jpeg"
       );
 
+      // Eliminar el archivo temporal y la carpeta
       if (fs.existsSync(tempJpgPath)) {
         fs.unlinkSync(tempJpgPath);
+      }
+      // Eliminar la carpeta temporal
+      if (fs.existsSync(tempDir)) {
+        fs.rmdirSync(tempDir, { recursive: true });
       }
 
       datosActualizar.usr_foto = nuevaFotoUrl;
@@ -273,8 +303,6 @@ export const updateUser = async (req, res) => {
     const usuario = await Usuario.updateUser(correoParam, datosActualizar);
 
     res.status(200).json({
-      success: true,
-      message: "Usuario actualizado",
       usuario,
     });
   } catch (error) {
@@ -289,7 +317,7 @@ export const verEmail = async (req, res) => {
 export const obtenerUsuarioByCorreo = async (req, res) => {
   try {
     const { usr_correo } = req.params;
-    const usuario = await Usuario.findById(usr_correo);
+    const usuario = await Usuario.findOne({ usr_correo });
     if (!usuario) {
       return res.status(404).json({
         success: false,

@@ -12,6 +12,14 @@ export const TEMATICAS = {
       text: "#198e2b",
       backgroundImage: "#004700",
     },
+    museoDetailBGColors: {
+      background_1: "#dcffd4",
+      background_2: "#b3e6b3",
+    },
+    museoDetailBGColorsDM: {
+      background_1: "#1d211d",
+      background_2: "#2b312b",
+    },
   },
   2: {
     id: 2,
@@ -22,6 +30,14 @@ export const TEMATICAS = {
       header: "#3548a7",
       text: "#3548a7",
       backgroundImage: "#000d47",
+    },
+    museoDetailBGColors: {
+      background_1: "#b6c3ff",
+      background_2: "#a0b0ff",
+    },
+    museoDetailBGColorsDM: {
+      background_1: "#1d1f2d",
+      background_2: "#2b2d3b",
     },
   },
   3: {
@@ -34,6 +50,14 @@ export const TEMATICAS = {
       text: "#74269e",
       backgroundImage: "#44027d",
     },
+    museoDetailBGColors: {
+      background_1: "#e3c6ff",
+      background_2: "#d0b0ff",
+    },
+    museoDetailBGColorsDM: {
+      background_1: "#2d1d2b",
+      background_2: "#3b2b3b",
+    },
   },
   4: {
     id: 4,
@@ -44,6 +68,14 @@ export const TEMATICAS = {
       header: "#7d4f05",
       text: "#754e00",
       backgroundImage: "#7d5002",
+    },
+    museoDetailBGColors: {
+      background_1: "#e5c1a0",
+      background_2: "#d0b08c",
+    },
+    museoDetailBGColorsDM: {
+      background_1: "#2e281e",
+      background_2: "#382d1b",
     },
   },
   5: {
@@ -56,6 +88,14 @@ export const TEMATICAS = {
       text: "#731313",
       backgroundImage: "#580101",
     },
+    museoDetailBGColors: {
+      background_1: "#ffb6b6",
+      background_2: "#ff9f9f",
+    },
+    museoDetailBGColorsDM: {
+      background_1: "#2d1d1d",
+      background_2: "#3b2b2b",
+    },
   },
   6: {
     id: 6,
@@ -66,6 +106,14 @@ export const TEMATICAS = {
       header: "#2a4d3e",
       text: "#1d4832",
       backgroundImage: "#223633",
+    },
+    museoDetailBGColors: {
+      background_1: "#97cab2",
+      background_2: "#7fbfa6",
+    },
+    museoDetailBGColorsDM: {
+      background_1: "#1d2b2b",
+      background_2: "#2b3b3b",
     },
   },
   7: {
@@ -78,6 +126,14 @@ export const TEMATICAS = {
       text: "#8d7e2b",
       backgroundImage: "#928900",
     },
+    museoDetailBGColors: {
+      background_1: "#fff7d2",
+      background_2: "#ffe6b3",
+    },
+    museoDetailBGColorsDM: {
+      background_1: "#2b2d1d",
+      background_2: "#3b3b2b",
+    },
   },
   8: {
     id: 8,
@@ -88,6 +144,14 @@ export const TEMATICAS = {
       header: "#545454",
       text: "#434343",
       backgroundImage: "#2f2f2f",
+    },
+    museoDetailBGColors: {
+      background_1: "#ebebeb",
+      background_2: "#d0d0d0",
+    },
+    museoDetailBGColorsDM: {
+      background_1: "#2b2b2b",
+      background_2: "#3b3b3b",
     },
   },
 };
@@ -260,24 +324,24 @@ export const CALIFICACIONES_RUBROS = {
     { valor: 1, titulo: "Niños", icono: Icons.ninoIcon },
   ],
   1: [
-    { valor: 5, titulo: "Muy Interesante", icono: Icons.dormirIcon },
-    { valor: 4, titulo: "Interesante", icono: Icons.dormirIcon },
+    { valor: 5, titulo: "Muy Interesante", icono: Icons.interesanteIcon },
+    { valor: 4, titulo: "Interesante", icono: Icons.interesanteIcon },
     { valor: 3, titulo: "Poco Interesante", icono: Icons.dormirIcon },
     { valor: 2, titulo: "Aburrido", icono: Icons.dormirIcon },
   ],
   2: [
     { valor: 1, titulo: "Limpio", icono: Icons.limpioIcon },
-    { valor: 0.5, titulo: "Sucio", icono: Icons.limpioIcon },
+    { valor: 0.5, titulo: "Sucio", icono: Icons.sucioIcon },
   ],
   3: [
     { valor: 1, titulo: "Entendible", icono: Icons.entendibleIcon },
-    { valor: 0.5, titulo: "Difícil", icono: Icons.entendibleIcon },
+    { valor: 0.5, titulo: "Difícil", icono: Icons.dificilIcon },
   ],
   4: [
-    { valor: 4, titulo: "Muy Caro", icono: Icons.moneyIcon },
-    { valor: 3, titulo: "Caro", icono: Icons.moneyIcon },
-    { valor: 2, titulo: "Barato", icono: Icons.moneyIcon },
-    { valor: 1, titulo: "Gratis", icono: Icons.moneyIcon },
+    { valor: 4, titulo: "Muy Caro", icono: Icons.muyCaroIcon },
+    { valor: 3, titulo: "Caro", icono: Icons.caroIcon },
+    { valor: 2, titulo: "Barato", icono: Icons.baratoIcon },
+    { valor: 1, titulo: "Gratis", icono: Icons.gratisIcon },
   ],
 };
 
@@ -406,7 +470,7 @@ export const TIPOS_USUARIO = {
   },
   0: {
     id: 0,
-    nombre: "No registrado",
+    nombre: "",
     redirectPath: "/",
   },
 };

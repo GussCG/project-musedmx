@@ -8,13 +8,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import HeaderMuseoButtons from "../../components/Museo/HeaderMuseoButtons";
 import "../../styles/pages/MuseoDetails.scss";
 import Icons from "../../components/Other/IconProvider";
-const { FaFilter, estrellaIcon, FaStar, FaHeart } = Icons;
+const { FaFilter, estrellaIcon, FaHeart, IoIosArrowBack, IoIosArrowForward } =
+  Icons;
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
 import MenuFiltroResena from "../../components/Resena/MenuFiltroResena";
 import MapMuseoDetail from "../../components/Maps/MapMuseoDetail";
 import MuseoSlider from "../../components/Museo/MuseoSlider";
 import MuseoGallery from "../../components/Museo/MuseoGallery";
-import { buildImage } from "../../utils/buildImage";
 import {
   TEMATICAS,
   REDES_SOCIALES,
@@ -32,15 +32,18 @@ import { useMuseo } from "../../hooks/Museo/useMuseo";
 import useMuseoGaleria from "../../hooks/Museo/useMuseoGaleria";
 import useMuseoHorarios from "../../hooks/Museo/useMuseoHorarios";
 import useMuseoRedesSociales from "../../hooks/Museo/useMuseoRedesSociales";
-import useMuseoResenas from "../../hooks/Museo/useMuseoResenas";
 import HorarioSlider from "../../components/Museo/HorarioSlider";
 import LoadingIndicator from "../../components/Other/LoadingIndicator";
 import ResenaCard from "../../components/Resena/ResenaCard";
-import LoadingMessage from "../../components/Maps/LoadingMessage";
 import useRespuestasTotales from "../../hooks/Encuesta/useRespuestasTotales";
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
 import { useMuseosSimilares } from "../../hooks/Museo/useMuseosSimilares";
 import { useMuseosCercanos } from "../../hooks/Museo/useMuseosCercanos";
+import { useMuseosAsociados } from "../../hooks/Museo/useMuseosAsociados";
+import useResenaMuseo from "../../hooks/Resena/useResenaMuseo";
+import { useMemo } from "react";
+import ReactPaginate from "react-paginate";
+import useDeepMemo from "../../hooks/Other/useDeepMemo";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
@@ -48,7 +51,6 @@ function MuseoDetail() {
   const { isDarkMode } = useTheme();
 
   const navigate = useNavigate();
-  const [contentLoaded, setContentLoaded] = useState(false);
 
   // Estado para controlar la visibilidad del menu de filtro
   const [menuVisible, setMenuVisible] = useState(false);
@@ -67,7 +69,6 @@ function MuseoDetail() {
     loading: isLoading,
     error,
   } = useMuseo(museoIdNumber);
-  // Para obtener la galeria de imagenees del museo
   const {
     galeria: galeria,
     loading: galeriaLoading,
@@ -83,13 +84,6 @@ function MuseoDetail() {
     loading: redesSocialesLoading,
     error: redesSocialesError,
   } = useMuseoRedesSociales(museoIdNumber);
-  const {
-    resenas,
-    loading: resenasLoading,
-    error: resenasError,
-    calificacionPromedio,
-    calificacionesDistribucion,
-  } = useMuseoResenas(museoIdNumber);
   const {
     respuestas: respuestasTotales,
     servicios: serviciosTotales,
@@ -127,9 +121,27 @@ function MuseoDetail() {
     museoId: museoIdNumber,
     top_n: 10,
   });
+  const {
+    museos: museosAsociados,
+    loading: museosAsociadosLoading,
+    error: museosAsociadosError,
+  } = useMuseosAsociados({
+    museoId: museoIdNumber,
+    top_n: 10,
+  });
 
-  const calificaciones = procesarCalificaciones(respuestasTotales);
-  const serviciosOpacidad = procesarServicios(serviciosTotales);
+  const [calificaciones, setCalificaciones] = useState({});
+  const [serviciosOpacidad, setServiciosOpacidad] = useState({});
+
+  useEffect(() => {
+    if (!respuestasLoading && respuestasTotales && serviciosTotales) {
+      const califs = procesarCalificaciones(respuestasTotales);
+      const serv = procesarServicios(serviciosTotales);
+
+      setCalificaciones(califs);
+      setServiciosOpacidad(serv);
+    }
+  }, [respuestasLoading, respuestasTotales, serviciosTotales]);
 
   useEffect(() => {
     const handleBackNavigation = () => {
@@ -149,16 +161,26 @@ function MuseoDetail() {
   useEffect(() => {
     const htmlElement = document.documentElement;
 
-    if (tema && !isDarkMode) {
-      // Aplicar los nuevos colores del gradiente
-      htmlElement.style.setProperty(
-        "--bg-grad-color-1",
-        tema.museoCardColors.backgroundImage
-      );
-      htmlElement.style.setProperty(
-        "--bg-grad-color-2",
-        tema.museoCardColors.background
-      );
+    if (tema) {
+      if (isDarkMode) {
+        htmlElement.style.setProperty(
+          "--bg-grad-color-1",
+          tema.museoDetailBGColorsDM.background_1
+        );
+        htmlElement.style.setProperty(
+          "--bg-grad-color-2",
+          tema.museoDetailBGColorsDM.background_2
+        );
+      } else {
+        htmlElement.style.setProperty(
+          "--bg-grad-color-1",
+          tema.museoDetailBGColors.background_1
+        );
+        htmlElement.style.setProperty(
+          "--bg-grad-color-2",
+          tema.museoDetailBGColors.background_2
+        );
+      }
     }
 
     return () => {
@@ -171,6 +193,42 @@ function MuseoDetail() {
   const redCorreo = redesSociales.find(
     (redSocial) => redSocial.mhrs_cve_rs === 2
   );
+
+  const [filtrosResena, setFiltrosResena] = useState({
+    rating: null,
+    tieneFotos: null,
+    fecha: null,
+  });
+
+  const filtrosMemo = useMemo(() => {
+    return {
+      rating: filtrosResena.rating || null,
+      tieneFotos: filtrosResena.tieneFotos || null,
+      ordenFecha: filtrosResena.fecha || null,
+    };
+  }, [filtrosResena.rating, filtrosResena.tieneFotos, filtrosResena.fecha]);
+
+  const [paginaResenas, setPaginaResenas] = useState(1);
+
+  const handlePageClick = (event) => {
+    const selectedPage = event.selected + 1; // React Paginate usa 0-indexed
+    setPaginaResenas(selectedPage);
+  };
+
+  const {
+    resenas,
+    calificacionPromedio,
+    calificacionesDistribucion,
+    total,
+    totalPaginas,
+    currentPage,
+    loading: resenasLoading,
+  } = useResenaMuseo({
+    museoId: museoIdNumber,
+    filtros: filtrosMemo,
+    pagina: paginaResenas,
+    porPagina: 5,
+  });
 
   return (
     <>
@@ -188,6 +246,8 @@ function MuseoDetail() {
               <MenuFiltroResena
                 menuVisible={menuVisible}
                 setMenuVisible={setMenuVisible}
+                setFiltros={setFiltrosResena}
+                setPagina={setPaginaResenas}
               />
               <main id="museo-main">
                 <section id="museo-section-1" className="museo-detail-item">
@@ -342,7 +402,10 @@ function MuseoDetail() {
                 <motion.div className="museo-detail-sections">
                   <section id="museo-section-2">
                     <div className="museo-section-2-calificaciones museo-detail-item">
-                      <h1 className="h1-section">Calificaciones</h1>
+                      <div className="museo-section-header">
+                        <h1 className="h1-section">Calificaciones</h1>
+                        <p>De acuerdo con los usuarios el museo es</p>
+                      </div>
                       <div className="museo-section-2-calificaciones-container">
                         {Object.values(calificaciones).map((calificacion) => (
                           <div
@@ -381,30 +444,42 @@ function MuseoDetail() {
                       </div>
                     </div>
                     <div className="museo-section-2-servicios museo-detail-item">
-                      <h1>Servicios</h1>
+                      <div className="museo-section-header">
+                        <h1>Servicios</h1>
+                        <p>De acuerdo con los usuarios el museo cuenta con</p>
+                      </div>
+
                       {serviciosTotales.length === 0 ? (
                         <div className="no-results" style={{ width: "90%" }}>
                           <h2>No se han calificado los servicios</h2>
                         </div>
                       ) : (
                         <div className="servicios-container">
-                          {Object.values(SERVICIOS).map((servicio) => (
-                            <div className="servicio-icon" key={servicio.id}>
-                              <img
-                                src={servicio.icon}
-                                alt={servicio.nombre}
-                                title={servicio.nombre}
-                                style={{
-                                  opacity:
-                                    serviciosOpacidad[servicio.id]?.opacidad ||
-                                    0,
-                                  filter: isDarkMode
-                                    ? "invert(1)"
-                                    : "invert(0)",
-                                }}
-                              />
-                            </div>
-                          ))}
+                          {Object.values(SERVICIOS)
+                            .sort((a, b) => {
+                              const opacidadA =
+                                serviciosOpacidad[a.id]?.opacidad || 0;
+                              const opacidadB =
+                                serviciosOpacidad[b.id]?.opacidad || 0;
+                              return opacidadB - opacidadA; // Orden descendente (mayor a menor)
+                            })
+                            .map((servicio) => (
+                              <div className="servicio-icon" key={servicio.id}>
+                                <img
+                                  src={servicio.icon}
+                                  alt={servicio.nombre}
+                                  title={servicio.nombre}
+                                  style={{
+                                    opacity:
+                                      serviciosOpacidad[servicio.id]
+                                        ?.opacidad || 0,
+                                    filter: isDarkMode
+                                      ? "invert(1)"
+                                      : "invert(0)",
+                                  }}
+                                />
+                              </div>
+                            ))}
                         </div>
                       )}
                     </div>
@@ -450,6 +525,7 @@ function MuseoDetail() {
                         <MuseoSlider
                           listaMuseos={museosSimilares}
                           sliderType="Similares"
+                          loading={museosSimilaresLoading}
                         />
                       )}
                     </div>
@@ -464,8 +540,9 @@ function MuseoDetail() {
                         </div>
                       ) : (
                         <MuseoSlider
-                          listaMuseos={null}
+                          listaMuseos={museosAsociados}
                           sliderType="A otros usuarios les gustaron"
+                          loading={museosAsociadosLoading}
                         />
                       )}
                     </div>
@@ -480,6 +557,7 @@ function MuseoDetail() {
                         <MuseoSlider
                           listaMuseos={museosCercanos}
                           sliderType="Cerca"
+                          loading={museosCercanosLoading}
                         />
                       )}
                     </div>
@@ -505,7 +583,7 @@ function MuseoDetail() {
                             {isLoading ? (
                               <Skeleton width={50} />
                             ) : (
-                              <p>{calificacionPromedio}</p>
+                              <p>{calificacionPromedio.toFixed(2)}</p>
                             )}
                             <img
                               src={estrellaIcon}
@@ -589,23 +667,44 @@ function MuseoDetail() {
                       ) : null}
                     </div>
                     <div className="museo-section-5-resenas">
-                      {resenasLoading ? (
-                        <div className="no-results">
-                          <LoadingIndicator />
-                        </div>
-                      ) : resenas.length > 0 ? (
-                        resenas.map((resena) => (
-                          <ResenaCard
-                            key={resena.res_id_res}
-                            idResena={resena.res_id_res}
-                          />
-                        ))
-                      ) : (
+                      {resenas.map((resena) => (
+                        <ResenaCard
+                          key={resena.res_id_res}
+                          resena={resena}
+                          loadingResena={resenasLoading}
+                        />
+                      ))}
+                      {resenas.length === 0 && !resenasLoading && (
                         <div className="no-results">
                           <p>No hay reseñas disponibles</p>
                         </div>
                       )}
                     </div>
+                    {totalPaginas > 1 && (
+                      <ReactPaginate
+                        breakLabel="..."
+                        breakClassName="break"
+                        nextLabel={<IoIosArrowForward />}
+                        onPageChange={(event) => {
+                          handlePageClick(event);
+                        }}
+                        pageRangeDisplayed={1}
+                        marginPagesDisplayed={1}
+                        pageCount={totalPaginas}
+                        previousLabel={<IoIosArrowBack />}
+                        renderOnZeroPageCount={null}
+                        containerClassName="pagination"
+                        pageClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous"
+                        previousLinkClassName="previous"
+                        nextClassName="next"
+                        nextLinkClassName="next"
+                        breakLinkClassName="page-link"
+                        activeClassName="active"
+                        forcePage={paginaResenas - 1} // React Paginate usa 0-indexed, así que restamos 1
+                      />
+                    )}
                   </section>
                 </motion.div>
               </main>

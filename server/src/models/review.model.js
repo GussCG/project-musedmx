@@ -1,4 +1,3 @@
-import { deleteReview } from "../controllers/review.controller.js";
 import { pool } from "../db.js";
 
 export default class Review {
@@ -21,7 +20,7 @@ export default class Review {
 		return rows;
 	}
 
-	static async createReview(data, fotos) {
+	static async createReviewWithPhotos(data, fotos) {
 		const conn =  await pool.getConnection();
 		try {
 			await conn.beginTransaction();
@@ -29,9 +28,7 @@ export default class Review {
 			// Insertar la reseña
 			const insertReviewQuery = `INSERT INTO resenia (${Object.keys(data).join(", ")}) VALUES (${Object.keys(data).map(() => "?").join(", ")})`;
 			const [reviewResult] = await conn.query(insertReviewQuery, Object.values(data));
-
 			const reviewId = reviewResult.insertId;
-
 			// Insertar fotos asociadas
 			for (const foto of fotos) {
 				const insertFotoQuery = `INSERT INTO foto_resenia (f_res_id_res, f_res_foto) VALUES (?, ?)`;
@@ -57,7 +54,7 @@ export default class Review {
 			)`;
 		const queryParams = Object.values(data);
 		const [res] = await pool.query(query, queryParams);
-
+    console.log("Review created with ID:", res.insertId);
 		return res;
 	}
 
@@ -100,7 +97,7 @@ export default class Review {
   }
 
 	static async findById(id) {
-		const query = "SELECT * FROM reviews WHERE res_id_res = ?";
+		const query = "SELECT * FROM resenia WHERE res_id_res = ?";
 		const [rows] = await pool.query(query, [id]);
 		return rows[0];
 	}
@@ -115,7 +112,7 @@ export default class Review {
 			await conn.query(deleteFotosQuery, [id]);
 
 			// Eliminar la reseña
-			const deleteReviewQuery = "DELETE FROM reviews WHERE res_id_res = ?";
+			const deleteReviewQuery = "DELETE FROM resenia WHERE res_id_res = ?";
 			await conn.query(deleteReviewQuery, [id]);
 
 			await conn.commit();

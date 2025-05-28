@@ -19,6 +19,8 @@ import {
   updateHorarioByDia,
   uploadImages,
   updateGaleria,
+  addByDia,
+  deleteByDia,
 } from "../controllers/museo.controller.js";
 
 const router = Router();
@@ -40,6 +42,8 @@ router.get("/similares/:id", getMuseosSimilaresById);
 router.get("/cercanos/:id", getMuseosCercaById);
 router.get("/asociacion/:id", getMuseosAsociacionById);
 router.post("/horarios/updateByDia/:id", updateHorarioByDia);
+router.post("/horarios/agregarByDia/:id", addByDia);
+router.post("/horarios/eliminarByDia/:id", deleteByDia);
 router.post("/galeria/upload/:id", uploadImages);
 router.post("/galeria/update/:id", updateGaleria);
 

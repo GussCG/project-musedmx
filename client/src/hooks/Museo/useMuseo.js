@@ -18,6 +18,7 @@ export function useMuseo(museoId) {
       const museoData = new Museo(response.data.museo);
       setMuseo(museoData);
       setLoading(false);
+      return museoData;
     } catch (err) {
       console.error("Error fetching museo:", err);
       setError(err);
@@ -51,7 +52,6 @@ export function useMuseo(museoId) {
   const updateMuseo = async (museoId, formData) => {
     try {
       setLoading(true);
-      console.log("Update museo data:", museoId);
       const endpoint = `${BACKEND_URL}/api/museos/editar/${museoId}`;
       const response = await axios.post(endpoint, formData);
 
@@ -61,7 +61,9 @@ export function useMuseo(museoId) {
       setError(err);
       throw err;
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000); // Simulate loading delay
     }
   };
 

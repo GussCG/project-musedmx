@@ -19,7 +19,6 @@ export const useMuseos = ({
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   // Memoize filters object to prevent unnecessary changes
   const stableFilters = useMemo(
     () => filters,
@@ -30,13 +29,12 @@ export const useMuseos = ({
     async (page = 1) => {
       try {
         setLoading(true);
-
         // Preparar parámetros
         const params = new URLSearchParams();
 
         if (searchQuery && searchQuery !== "null")
           params.append("search", searchQuery);
-        if (!tipo && tipo) params.append("tipo", tipo);
+        if (tipo) params.append("tipo", tipo);
         if (stableFilters.tipos.length)
           params.append("tipos", stableFilters.tipos.join(","));
         if (stableFilters.alcaldias.length)
@@ -75,7 +73,6 @@ export const useMuseos = ({
         });
       } catch (error) {
         console.error("Error fetching museos:", error);
-        setError(error.message);
         setMuseos([]);
         setPagination({
           totalItems: 0,
@@ -84,10 +81,12 @@ export const useMuseos = ({
           itemsPerPage: 12,
         });
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000); // Simulate loading delay
       }
     },
-    [tipo, searchQuery, isMapView, stableFilters, sortBy]
+    [tipo, searchQuery, stableFilters, isMapView, sortBy]
   );
 
   useEffect(() => {

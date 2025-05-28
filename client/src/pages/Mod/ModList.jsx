@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Icons from "../../components/Other/IconProvider";
-const { LuArrowUpDown, editarModIcon, eliminarIcon } = Icons;
+const { LuArrowUpDown, FaUserEdit, MdDelete } = Icons;
 import { motion } from "framer-motion";
 import {
   useReactTable,
@@ -9,104 +9,84 @@ import {
   flexRender,
   getSortedRowModel,
 } from "@tanstack/react-table";
-// Toastify
-import { toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import useModeradores from "../../hooks/Usuario/useModeradores";
+import ToastMessage from "../../components/Other/ToastMessage";
 
 function ModList() {
+  const { fetchModeradores, loading, eliminarModerador, error } =
+    useModeradores();
   const [moderadores, setModeradores] = useState([]);
 
-  const moderadoresPrueba = [
-    {
-      id: 1,
-      nombre: "Juan",
-      apPaterno: "Perez",
-      apMaterno: "Gonzalez",
-      email: "mail1@mod.com",
-      tipoUsuario: 3,
-      fecNac: "2002-09-30",
-      tel: "5527167255",
-      foto: "https://a.espncdn.com/i/headshots/nba/players/full/3975.png",
-    },
-    {
-      id: 2,
-      nombre: "Pedro",
-      apPaterno: "Perez",
-      apMaterno: "Gonzalez",
-      email: "mail2@mod.com",
-      tipoUsuario: 3,
-      fecNac: "2002-09-30",
-      tel: "5527167255",
-      foto: "https://a.espncdn.com/i/headshots/nba/players/full/3974.png",
-    },
-  ];
-
   useEffect(() => {
-    setModeradores(moderadoresPrueba);
+    const obtenerModeradores = async () => {
+      try {
+        const data = await fetchModeradores();
+        setModeradores(data);
+      } catch (error) {
+        console.error("Error al obtener moderadores:", error);
+      }
+    };
+    obtenerModeradores();
   }, []);
 
-  const eliminarMod = (id) => {
-    // Logicar para eliminar un moderador
-    toast.success(`Moderador Eliminado`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Bounce,
-    });
+  const handleEliminar = async (mod) => {
+    const confirmDelete = window.confirm(
+      `¿Estás seguro de que deseas eliminar al moderador ${mod.usr_nombre} ${mod.usr_ap_paterno}?`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await eliminarModerador(mod);
+      if (response && response.status === 200) {
+        ToastMessage({
+          tipo: "success",
+          mensaje: "Moderador eliminado correctamente",
+          position: "top-right",
+        });
+        setModeradores((prev) =>
+          prev.filter((moderador) => moderador.usr_correo !== mod.usr_correo)
+        );
+      } else {
+        throw new Error("Respuesta inesperada del servidor");
+      }
+    } catch (error) {
+      console.error("Error al eliminar moderador:", error);
+      ToastMessage({
+        tipo: "error",
+        mensaje: "Error al eliminar moderador",
+        position: "top-right",
+      });
+    }
   };
 
   const columns = useMemo(
     () => [
-      //   {
-      //     accessorKey: "foto",
-      //     header: "Foto",
-      //     cell: (info) => (
-      //       <img
-      //         src={info.getValue()}
-      //         alt="Foto de perfil"
-      //         style={{
-      //           width: "100px",
-      //           height: "100px",
-      //           borderRadius: "50%",
-      //           objectFit: "cover",
-      //           backgroundColor: "white",
-      //           border: "2px solid black",
-      //         }}
-      //       />
-      //     ),
-      //     enableSorting: false,
-      //   },
       {
-        accessorKey: "email",
+        accessorKey: "usr_correo",
         header: "Correo",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "nombre",
+        accessorKey: "usr_nombre",
         header: "Nombre",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "apPaterno",
+        accessorKey: "usr_ap_paterno",
         header: "Apellido Paterno",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "apMaterno",
+        accessorKey: "usr_ap_materno",
         header: "Apellido Materno",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "tel",
+        accessorKey: "usr_telefono",
         header: "Teléfono",
         cell: (info) => info.getValue(),
         enableSorting: true,
@@ -115,8 +95,8 @@ function ModList() {
         id: "editar",
         header: "Editar",
         cell: (info) => (
-          <Link to={`/Admin/VerMods/Editar/${info.row.original.id}`}>
-            <img src={editarModIcon} alt="Ver" />
+          <Link to={`/Admin/VerMods/Editar/${info.row.original.usr_correo}`}>
+            <FaUserEdit />
           </Link>
         ),
         enableSorting: false,
@@ -125,8 +105,8 @@ function ModList() {
         id: "eliminar",
         header: "Borrar",
         cell: (info) => (
-          <button onClick={() => eliminarMod(info.row.original.id)}>
-            <img src={eliminarIcon} alt="Eliminar" />
+          <button onClick={() => handleEliminar(info.row.original)}>
+            <MdDelete />
           </button>
         ),
         enableSorting: false,

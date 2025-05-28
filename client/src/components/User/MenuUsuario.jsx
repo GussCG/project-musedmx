@@ -15,6 +15,7 @@ const {
   MdMuseum,
 } = Icons;
 import { useAuth } from "../../context/AuthProvider";
+import UserImage from "./UserImage";
 
 function MenuUsuario({ className }) {
   const { user, logout, tipoUsuario } = useAuth();
@@ -39,7 +40,7 @@ function MenuUsuario({ className }) {
       transition={{ duration: 0.3 }}
     >
       <div className="menu-usuario-header">
-        <img src={user?.usr_foto || userPlaceholder} alt="Usuario" />
+        <UserImage src={user?.usr_foto} alt="Foto de Usuario" />
         <div className="menu-usuario-header-info">
           <h1>{formatName(user) || "Nombre de Usuario"}</h1>
           <p>{user?.usr_correo || "Correo"}</p>

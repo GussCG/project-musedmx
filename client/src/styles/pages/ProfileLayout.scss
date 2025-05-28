@@ -54,6 +54,52 @@
     p {
       font-size: 16px;
     }
+
+    .header-tematicas-container {
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+
+      p {
+        font-size: 1rem;
+        font-weight: $font-w-semibold;
+        color: var(--font-color-primary);
+        padding: 5px 0;
+      }
+
+      .tematicas-list {
+        width: auto;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+
+        .tematica-item {
+          list-style: none;
+          width: auto;
+          height: 30px;
+          background-color: var(--filter-bg);
+          border-radius: 50px;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 0 10px;
+          font-size: 0.9rem;
+
+          span {
+            font-weight: $font-w-semibold;
+            color: black;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -237,6 +283,10 @@
     #header-user-info {
       align-items: center;
       text-align: center;
+
+      .header-tematicas-container {
+        align-items: center;
+      }
     }
 
     #header-user-buttons {

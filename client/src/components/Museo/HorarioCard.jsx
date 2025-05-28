@@ -2,20 +2,26 @@ import { formatearHora } from "../../utils/formatearFechas";
 import ReactFlipCard from "reactjs-flip-card";
 
 function HorarioCard({ horario, hoy }) {
+  const {
+    mh_hora_inicio,
+    mh_hora_fin,
+    mh_precio_ad,
+    mh_precio_est,
+    mh_precio_ni,
+    mh_precio_ter,
+  } = horario;
+
+  const estaCerrado =
+    mh_hora_inicio === "00:00:00" && mh_hora_fin === "00:00:00";
+
   return (
     <div
       className={`horario-card ${
         horario.mh_dia.toLowerCase() === hoy ? "hoy" : ""
-      } ${
-        horario.mh_hora_inicio === "00:00:00" ||
-        horario.mh_hora_fin === "00:00:00"
-          ? "cerrado"
-          : ""
-      }`}
+      } ${estaCerrado ? "cerrado" : ""}`}
     >
       <h2>{horario.mh_dia}</h2>
-      {horario.mh_hora_inicio === "00:00:00" ||
-      horario.mh_hora_fin === "00:00:00" ? (
+      {estaCerrado ? (
         <p className="cerrado">CERRADO</p>
       ) : (
         <>

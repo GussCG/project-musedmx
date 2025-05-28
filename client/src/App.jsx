@@ -31,6 +31,8 @@ import ModResenaDetail from "./pages/Mod/ModResenaDetail.jsx";
 import { ViewModeProvider } from "./context/ViewModeProvider.jsx";
 import { ThemeProvider } from "./context/ThemeProvider.jsx";
 import { UserLocationProvider } from "./context/UserLocationProvider.jsx";
+import ScrollToTop from "./components/Other/ScrollToTop.jsx";
+import ScrollToTopButton from "./components/Other/ScrollToTopButton.jsx";
 
 function App() {
   const location = useLocation();
@@ -40,6 +42,8 @@ function App() {
         <UserLocationProvider>
           <ViewModeProvider>
             <PopUpLogin />
+            <ScrollToTop />
+            <ScrollToTopButton />
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
                 {/* INDEX */}
@@ -83,7 +87,7 @@ function App() {
                     <Route path="Agregar" element={<ModForm />} />
                     <Route
                       path="VerMods/Editar/:userId"
-                      element={<ProfileEdit />}
+                      element={<ModForm />}
                     />
                     <Route
                       path="Museo/Registrar"
@@ -117,7 +121,7 @@ function App() {
                       path="VerResenas/:museoId"
                       element={<ModHistory />}
                     />
-                    <Route path="Resena/:id" element={<ModResenaDetail />} />
+                    <Route path="Resena/:resId" element={<ModResenaDetail />} />
                     <Route
                       path="Museo/Editar/:museoId"
                       element={<MuseoForm mode="edit" />}
