@@ -10,7 +10,7 @@ import {
   verifyUser,
   verEmail,
   obtenerUsuarioByCorreo,
-  // recuperarContrasena
+  recuperarContrasena
 } from "../controllers/auth.controller.js";
 
 import {
@@ -37,7 +37,8 @@ router.get("/verify", authMiddleware, verifyUser); // Obtener perfil de usuario
 router.delete("/", deleteUser);
 router.get("/", verEmail); // Verificar correo electrónico
 router.get("/usuario/:usr_correo", authMiddleware, obtenerUsuarioByCorreo); // Obtener usuario por correo
-// router.post("/recuperarContrasena", recuperarContrasena); // Recuperar contraseña
+
+router.post("/recuperarContrasena", recuperarContrasena); // Recuperar contraseña
 
 // Moderadores
 router.get("/mod/verify/:usr_correo", verifyMod); // Verificar moderador

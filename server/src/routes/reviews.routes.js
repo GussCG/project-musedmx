@@ -12,8 +12,14 @@ const router = Router();
 
 router.get("/", getReviews);
 router.get("/:id", getReviewByMuseumId);
-router.post("/", upload.array('f_res_foto', 10), createReview);
-router.put("/:id", upload.array('f_res_foto', 10), editReview);
+router.post("/", upload.fields([
+	{ name: 'res_foto_entrada', maxCount: 1 },
+	{ name: 'f_res_foto', maxCount: 10 }
+]), createReview);
+router.put("/:id", upload.fields([
+	{ name: 'res_foto_entrada', maxCount: 1 },
+	{ name: 'f_res_foto', maxCount: 10 }
+]), editReview);
 router.delete("/:id", deleteReview);
 
 export default router;
