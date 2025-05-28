@@ -3,106 +3,101 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import { motion } from "framer-motion";
 import Icons from "../../components/Other/IconProvider";
-const { LuArrowUpDown, LuEye, FaTrash } = Icons;
+const { LuArrowUpDown, LuEye, FaTrash, IoIosArrowBack, IoIosArrowForward } =
+  Icons;
 import ToastMessage from "../../components/Other/ToastMessage";
-
+import { formatearFecha } from "../../utils/formatearFechas";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   getSortedRowModel,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
+import useResenaUsuario from "../../hooks/Resena/useResenaUsuario";
+import ReactPaginate from "react-paginate";
+import axios from "axios";
 
 function ProfileHistory() {
-  // Definimos estado para el historial de visitas
   const [visitas, setVisitas] = useState([]);
+  const { fetchResenasByCorreo, eliminarResena } = useResenaUsuario();
   const { user } = useAuth();
 
-  const resenasPrueba = [
-    {
-      id: 1,
-      museo: "Museo Nacional de Antropología e Historia",
-      usuario: "mail@mail.com",
-      fecHr: "30-04-2024 12:00",
-      comentario: "Excelente museo",
-      moderadorAprobo: "mail@mod.com",
-      status: false,
-      calificacion: 5,
-    },
-    {
-      id: 2,
-      museo: "Museo Perfume",
-      usuario: "mail@mail.com",
-      fecHr: "30-04-2024 12:01",
-      comentario: "Excelente museo 2",
-      moderadorAprobo: "mail@mod.com",
-      status: true,
-      calificacion: 3,
-    },
-  ];
-
   useEffect(() => {
-    setVisitas(resenasPrueba);
-  }, []);
+    const fetchData = async () => {
+      if (user) {
+        const response = await fetchResenasByCorreo(user.usr_correo);
+        console.log("Reseñas del usuario:", response);
+        if (response) {
+          setVisitas(response);
+        } else {
+          ToastMessage({
+            type: "error",
+            message: "Error al cargar las reseñas",
+            duration: 2000,
+          });
+        }
+      }
+    };
+    fetchData();
+  }, [user]);
 
   // Funcion para eliminar una visita del historial
-  const eliminarVisita = (id) => {
-    // Hacemos una petición DELETE al backend para eliminar la visita
-    // De momento no se ha implementado el backend entonces se muestra un mensaje de alerta
-    // axios
-    //   .delete(`/api/usuario/historial/${id}`)
-    //   .then((response) => {
-    //     // Actualizamos el estado de visitas
-    //     setVisitas(visitas.filter((visita) => visita.id !== id));
-    //     alert("Visita eliminada");
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    ToastMessage({
-      type: "success",
-      message: "Visita eliminada",
-      duration: 2000,
-    });
+  const handleEliminar = (resenaId) => {
+    const eliminarVisita = async () => {
+      try {
+        const response = await eliminarResena(resenaId);
+        if (response) {
+          ToastMessage({
+            tipo: "success",
+            mensaje: "Reseña eliminada correctamente",
+            position: "top-right",
+          });
+          // Actualizar el estado de visitas después de eliminar
+          setVisitas((prevVisitas) =>
+            prevVisitas.filter((visita) => visita.res_id_res !== resenaId)
+          );
+        } else {
+          ToastMessage({
+            tipo: "error",
+            mensaje: "Error al eliminar la reseña",
+            position: "top-right",
+          });
+        }
+      } catch (error) {
+        console.error("Error al eliminar la visita:", error);
+        ToastMessage({
+          tipo: "error",
+          mensaje: "Error al eliminar la reseña",
+          position: "top-right",
+        });
+      }
+    };
+    eliminarVisita();
   };
-
-  // Cargamos el historial de visitas del usuario
-  useEffect(() => {
-    // Hacemos una petición GET al backend para obtener el historial de visitas
-    // Para el desarrollo local tenemos datos de prueba
-    // axios
-    //   .get("/api/usuario/historial")
-    //   .then((response) => {
-    //     setVisitas(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    setVisitas(resenasPrueba);
-  }, []);
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "fecHr",
+        accessorKey: "visitas_vi_fechahora",
         header: "Fecha de la visita",
-        cell: (info) => info.getValue(),
+        cell: (info) => formatearFecha(info.getValue()),
         enableSorting: true,
       },
       {
-        accessorKey: "museo",
+        accessorKey: "mus_nombre",
         header: "Museo",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "calificacion",
+        accessorKey: "res_calif_estrellas",
         header: "Calificación",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "status",
+        accessorKey: "res_aprobado",
         header: "Estado",
         cell: (info) => (
           <span className={info.getValue() ? "aprobada" : "pendiente"}>
@@ -115,7 +110,7 @@ function ProfileHistory() {
         id: "ver",
         header: "Ver",
         cell: (info) => (
-          <Link to={`./${info.row.index}`}>
+          <Link to={`./${info.row.original.res_id_res}`}>
             <LuEye />
           </Link>
         ),
@@ -125,7 +120,7 @@ function ProfileHistory() {
         id: "eliminar",
         header: "Borrar",
         cell: (info) => (
-          <button onClick={() => eliminarVisita(info.row.index)}>
+          <button onClick={() => handleEliminar(info.row.original.res_id_res)}>
             <FaTrash />
           </button>
         ),
@@ -136,15 +131,26 @@ function ProfileHistory() {
   );
 
   const [sorting, setSorting] = useState([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 6,
+  });
 
   const table = useReactTable({
     data: visitas,
     columns,
-    state: { sorting },
+    state: { sorting, pagination },
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(), // ← usa este
     onSortingChange: setSorting,
+    onPaginationChange: setPagination,
     getSortedRowModel: getSortedRowModel(),
+    manualPagination: false,
   });
+
+  const pageCount = Math.ceil(
+    visitas.length / table.getState().pagination.pageSize
+  );
 
   return (
     <motion.div
@@ -183,7 +189,7 @@ function ProfileHistory() {
             </thead>
             <tbody>
               {/* Aquí se deberá hacer un map de las visitas del usuario */}
-              {table.getRowModel().rows.map((row) => (
+              {table.getPaginationRowModel().rows.map((row) => (
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id}>
@@ -198,6 +204,35 @@ function ProfileHistory() {
             </tbody>
           </table>
         </div>
+
+        {pageCount > 0 && (
+          <ReactPaginate
+            breakLabel="..."
+            breakClassName="break"
+            nextLabel={<IoIosArrowForward />}
+            onPageChange={(e) =>
+              setPagination((prev) => ({
+                ...prev,
+                pageIndex: e.selected,
+              }))
+            }
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={1}
+            pageCount={pageCount}
+            previousLabel={<IoIosArrowBack />}
+            renderOnZeroPageCount={null}
+            containerClassName="pagination"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="previous"
+            previousLinkClassName="previous"
+            nextClassName="next"
+            nextLinkClassName="next"
+            breakLinkClassName="page-link"
+            activeClassName="active"
+            forcePage={pagination.pageIndex}
+          />
+        )}
       </main>
     </motion.div>
   );

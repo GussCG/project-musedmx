@@ -438,6 +438,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
+  background-color: var(--bg-popup);
 
   h1 {
     font-family: $font-tertiary;

@@ -161,16 +161,26 @@ function MuseoDetail() {
   useEffect(() => {
     const htmlElement = document.documentElement;
 
-    if (tema && !isDarkMode) {
-      // Aplicar los nuevos colores del gradiente
-      htmlElement.style.setProperty(
-        "--bg-grad-color-1",
-        tema.museoCardColors.backgroundImage
-      );
-      htmlElement.style.setProperty(
-        "--bg-grad-color-2",
-        tema.museoCardColors.background
-      );
+    if (tema) {
+      if (isDarkMode) {
+        htmlElement.style.setProperty(
+          "--bg-grad-color-1",
+          tema.museoDetailBGColorsDM.background_1
+        );
+        htmlElement.style.setProperty(
+          "--bg-grad-color-2",
+          tema.museoDetailBGColorsDM.background_2
+        );
+      } else {
+        htmlElement.style.setProperty(
+          "--bg-grad-color-1",
+          tema.museoDetailBGColors.background_1
+        );
+        htmlElement.style.setProperty(
+          "--bg-grad-color-2",
+          tema.museoDetailBGColors.background_2
+        );
+      }
     }
 
     return () => {
@@ -573,7 +583,7 @@ function MuseoDetail() {
                             {isLoading ? (
                               <Skeleton width={50} />
                             ) : (
-                              <p>{calificacionPromedio}</p>
+                              <p>{calificacionPromedio.toFixed(2)}</p>
                             )}
                             <img
                               src={estrellaIcon}

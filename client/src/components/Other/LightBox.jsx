@@ -78,7 +78,7 @@ function LightBox({
           transition={{ duration: 0.5, type: "spring" }}
         >
           <motion.img
-            src={currentImage.src}
+            src={currentImage.src || currentImage}
             alt={`Imagen ${currentIndex + 1}`}
             drag={scale > 1} // Solo permite drag con zoom
             dragConstraints={{

@@ -13,20 +13,14 @@ import { TEMATICAS } from "../../constants/catalog";
 import ReactPaginate from "react-paginate";
 import { useMuseos } from "../../hooks/Museo/useMuseos";
 import { useMuseoFilters } from "../../hooks/Museo/useMuseoFilters";
-import { useScrollToTop } from "../../hooks/Other/useScrollToTop";
 import LoadingIndicator from "../../components/Other/LoadingIndicator";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { useMuseosPopulares } from "../../hooks/Museo/useMuseosPopulares";
 
 const {
-  listButton,
-  mapaButton,
   LuArrowUpDown,
   FaFilter,
   FaMap,
   TbCardsFilled,
-  FaAngleDoubleUp,
   CgClose,
   IoIosArrowForward,
   IoIosArrowBack,
@@ -42,8 +36,11 @@ function MuseosList({ titulo, tipo }) {
     ? `Resultados de búsqueda: ${tituloSearch}`
     : titulo;
 
-  // Vista
+  const prevTipo = useRef(null);
   const { isMapView, setIsMapView } = useViewMode();
+  useEffect(() => {
+    setIsMapView(tipo === "2");
+  }, [tipo]);
 
   // Filtros
   const { filters, sortBy, setSortBy, applyFilters, removeFilter } =
@@ -74,13 +71,26 @@ function MuseosList({ titulo, tipo }) {
     loading: isLoadingNormales,
   } = useMuseos(museosParams);
 
-  const {
-    museos: museosPopulares,
-    loading: isLoadingPopulares,
-    error: errorPopulares,
-  } = useMuseosPopulares({
-    top_n: 10,
-  });
+  const { fetchMuseosPopulares, loading: isLoadingPopulares } =
+    useMuseosPopulares();
+
+  const [museosPopulares, setMuseosPopulares] = useState([]);
+  useEffect(() => {
+    if (isPopulares) {
+      const fetchData = async () => {
+        try {
+          const response = await fetchMuseosPopulares();
+          console.log("Museos populares:", response);
+          setMuseosPopulares(response);
+        } catch (error) {
+          console.error("Error fetching popular museums:", error);
+        }
+      };
+      fetchData();
+    } else {
+      setMuseosPopulares([]);
+    }
+  }, [isPopulares]);
 
   // Decide qué datos usar basado en el tipo
   const museos = isPopulares ? museosPopulares : museosNormales;

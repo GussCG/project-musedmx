@@ -139,3 +139,15 @@ export const userEditSchema = Yup.object({
     .max(30, "El apellido materno no puede tener más de 30 caracteres")
     .required("Campo requerido"),
 });
+
+// Validación del formulario
+export const resenaEditSchema = Yup.object({
+  regresFrmFecVis: Yup.date().required("La fecha de visita es requerida"),
+  regresFrmCalif: Yup.number()
+    .min(1, "La calificación mínima es 1")
+    .max(5, "La calificación máxima es 5")
+    .required("La calificación es requerida"),
+  regresFrmComentario: Yup.string().required("El comentario es requerido"),
+  // Máximo de 5 fotos
+  regresFrmFotos: Yup.array().max(5, "Máximo de 5 fotos").nullable(),
+});

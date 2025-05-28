@@ -2,14 +2,15 @@ import { Router } from "express";
 import {
   getVisitas,
   addVisita,
-  deleteVisita, 
+  deleteVisita,
+  getVisitasCount,
 } from "../controllers/visitas.controller.js";
-
 
 const router = Router();
 
-router.get("/:usr_correo", getVisitas)
-router.post("/", addVisita);
-router.delete("/", deleteVisita);
+router.post("/agregar", addVisita);
+router.delete("/eliminar", deleteVisita);
+router.get("/:correo", getVisitas);
+router.get("/numero/:correo", getVisitasCount);
 
 export default router;

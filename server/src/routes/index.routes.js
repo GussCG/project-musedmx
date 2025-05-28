@@ -24,6 +24,7 @@ router.get("/", (req, res) => {
       encuestas: "/api/encuesta",
       favoritos: "/api/favoritos",
       qv: "/api/qv",
+      visitas: "/api/visitas",
     },
   });
 });

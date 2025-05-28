@@ -18,6 +18,7 @@ export function useMuseo(museoId) {
       const museoData = new Museo(response.data.museo);
       setMuseo(museoData);
       setLoading(false);
+      return museoData;
     } catch (err) {
       console.error("Error fetching museo:", err);
       setError(err);

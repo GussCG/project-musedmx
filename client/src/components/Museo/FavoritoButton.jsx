@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthProvider";
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
+import ToastMessage from "../Other/ToastMessage";
 
 export default function FavoritoButton({
   museoId,
@@ -71,14 +72,20 @@ export default function FavoritoButton({
         name="museo-fav"
         className="fav-button"
         checked={isFavorite}
-        onChange={
-          user
-            ? handleFavoriteChange
-            : () => {
-                localStorage.setItem("redirectPath", window.location.pathname);
-                setIsLogginPopupOpen(true);
-              }
-        }
+        onChange={() => {
+          if (user && user.usr_tipo === 1) {
+            handleFavoriteChange();
+          } else if (user && (user.usr_tipo === 2 || user.usr_tipo === 3)) {
+            ToastMessage({
+              tipo: "error",
+              mensaje: "Tu cuenta no puede registrar favoritos.",
+              position: "top-right",
+            });
+          } else {
+            localStorage.setItem("redirectPath", window.location.pathname);
+            setIsLogginPopupOpen(true);
+          }
+        }}
       />
       <span className="fav-button-span"></span>
     </label>

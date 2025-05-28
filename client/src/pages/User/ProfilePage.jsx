@@ -21,7 +21,7 @@ function ProfilePage() {
 
   useEffect(() => {
     const loadVisitas = async () => {
-      if (user) {
+      if (user && user.usr_tipo === 1) {
         const response = await fetchCountVisitas(user.usr_correo);
         if (response) {
           setCountVisitas(response.count);
@@ -46,7 +46,7 @@ function ProfilePage() {
           <UserImage src={user?.usr_foto || userPlaceholder} alt="Usuario" />
         </div>
         <div id="header-user-info">
-          <h1>{formatName(user)}</h1>
+          <h1>{user && formatName({ user })}</h1>
           {user.usr_tipo === 2 ||
             (user.usr_tipo === 3 && (
               <p id="light">{TIPOS_USUARIO[user?.usr_tipo].nombre}</p>

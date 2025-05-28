@@ -25,10 +25,11 @@ function SearchBar({
     if (input.length > 0 && Array.isArray(suggestions)) {
       const sugerenciasNombres = suggestions.map((museo) => museo.mus_nombre);
       const allSuggestions = [...sugerenciasNombres];
-      const filteredSuggestions = allSuggestions.filter((item) =>
+      const filtered = allSuggestions.filter((item) =>
         item.toLowerCase().includes(input.toLowerCase())
       );
-      setFilteredSuggestions(filteredSuggestions);
+      setFilteredSuggestions(filtered);
+      setShowSuggestions(true); // Mostrar sugerencias automáticamente al escribir
     } else {
       setFilteredSuggestions([]);
       setShowSuggestions(false);

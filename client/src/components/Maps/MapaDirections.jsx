@@ -4,6 +4,7 @@ import Icons from "../Other/IconProvider";
 const { CgClose, FaInfo, TbRouteSquare } = Icons;
 import { motion, AnimatePresence } from "framer-motion";
 import { TEMATICAS } from "../../constants/catalog";
+import ToastMessage from "../Other/ToastMessage";
 
 function Directions({ userLocation, museosMostrados, travelMode }) {
   const museo = museosMostrados[0]; // Solo se usa el primer museo para la ruta
@@ -50,6 +51,14 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
   }, [map, routesLib]);
 
   const calculateRoute = () => {
+    if (!userLocation) {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "No tienes una ubicación establecida.",
+        position: "top-right",
+      });
+    }
+
     if (!directionsService || !directionsRenderer) return;
 
     setIsCalculating(true); // Iniciar el cálculo de la ruta
@@ -80,10 +89,11 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
   };
 
   useEffect(() => {
+    if (!userLocation) return;
     if (hasCalculatedRoute && directionsRenderer && directionsService) {
       calculateRoute(); // Calcular la ruta al abrir la información
     }
-  }, [travelMode]);
+  }, [travelMode, userLocation]);
 
   // Limpiar ruta al cambiar de museo
   useEffect(() => {
