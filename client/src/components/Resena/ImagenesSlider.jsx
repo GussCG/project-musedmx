@@ -10,28 +10,35 @@ import LightBoxPortal from "../Other/LightBoxPortal";
 import useLightBox from "../../hooks/Other/useLightBox";
 const { FaArrowCircleLeft, FaArrowCircleRight } = Icons;
 
-function ImagenesSlider({ listaImagenes }) {
-  const galeria = useMemo(() => {
-    if (!listaImagenes || listaImagenes.length === 0) return [];
-    return listaImagenes.map((image) => ({
-      src: buildImageGaleria(image),
-    }));
-  }, [listaImagenes]);
-
-  const lightbox = useLightBox(galeria);
-
-  useEffect(() => {
-    if (!listaImagenes || listaImagenes.length === 0) {
+function ImagenesSlider({ fotos }) {
+  const fotosMemo = useMemo(() => {
+    if (!fotos || fotos.length === 0) {
       console.log("No hay imágenes para mostrar en la galería.");
+      return [];
     }
-  }, [listaImagenes]);
+    // Obtengo una url
+    return fotos
+      .map((foto) => {
+        if (typeof foto === "string") {
+          return foto; // Si ya es una URL, la retorno directamente
+        } else if (foto && foto.url) {
+          return foto.url; // Si es un objeto con una propiedad url, la retorno
+        } else {
+          console.warn("Foto no válida:", foto);
+          return null; // Retorno null para fotos no válidas
+        }
+      })
+      .filter(Boolean); // Filtra los valores nulos
+  }, [fotos]);
+
+  const lightbox = useLightBox(fotosMemo);
 
   return (
     <>
       <div className="resena-swiper">
         <LightBoxPortal>
           <LightBox
-            images={galeria}
+            images={fotosMemo}
             isOpen={lightbox.isOpen}
             currentIndex={lightbox.currentIndex}
             closeLightBox={lightbox.closeLightBox}
@@ -51,11 +58,11 @@ function ImagenesSlider({ listaImagenes }) {
           initialSlide={0}
           className="swiper"
         >
-          {galeria.map((imagen, index) => (
+          {fotosMemo.map((imagen, index) => (
             <SwiperSlide className="swiper-slide" key={index}>
-              {imagen.src && (
+              {imagen && (
                 <img
-                  src={imagen.src}
+                  src={imagen}
                   alt={`Imagen ${index + 1}`}
                   loading="lazy"
                   className="gallery_image"

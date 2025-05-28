@@ -9,8 +9,26 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const fetchResenasByCorreo = async (correo) => {
+    try {
+      setLoading(true);
+      const encodedCorreo = encodeURIComponent(correo);
+      const endpoint = `${BACKEND_URL}/api/resena/usuario/all/${encodedCorreo}`;
+      const response = await axios.get(endpoint, {
+        withCredentials: true,
+      });
+
+      return response.data.resenas;
+    } catch (error) {
+      console.error("Error al obtener reseñas:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Registrar Reseña
-  const registrarResenia = async (resenia) => {
+  const registrarResena = async (resenia) => {
     try {
       setLoading(true);
       const endpoint = `${BACKEND_URL}/api/reviews/`;
@@ -32,23 +50,18 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
   };
 
   // Editar Reseña
-  const editarResenia = async (resenia) => {
+  const editarResena = async (resenaId, resenaData) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/reviews/`;
-      const response = await axios.put(endpoint, resenia, {
+      const endpoint = `${BACKEND_URL}/api/resena/usuario/editar/${resenaId}`;
+      const response = await axios.post(endpoint, resenaData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
-      const reseniaEditada = new Resenia(response.data.resenia);
-      setResenias((prevResenias) =>
-        prevResenias.map((r) =>
-          r.id === reseniaEditada.id ? reseniaEditada : r
-        )
-      );
-      return reseniaEditada;
+      console.log("Reseña editada:", response.data);
+      return response.data;
     } catch (error) {
       setError(error);
       return null;
@@ -58,30 +71,30 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
   };
 
   // Eliminar Reseña
-  const eliminarResenia = async (usr_correo, resenia) => {
+  const eliminarResena = async (resenaId) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/reviews/`;
-      const response = await axios.delete(endpoint, {
-        data: { usr_correo, resenia },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      });
-      const reseniaEliminada = new Resenia(response.data.resenia);
-      setResenias((prevResenias) =>
-        prevResenias.filter((r) => r.id !== reseniaEliminada.id)
-      );
-      return reseniaEliminada;
+      const endpoint = `${BACKEND_URL}/api/resena/usuario/delete/${resenaId}`;
+      console.log("Endpoint de eliminación:", endpoint);
+      const response = await axios.delete(endpoint);
+      console.log("Reseña eliminada:", response.data);
+      return response.data;
     } catch (error) {
+      console.error("Error al eliminar reseña:", error);
       setError(error);
-      return null;
     } finally {
-      setError(null);
+      setLoading(false);
     }
   };
-  return { registrarResenia, editarResenia, eliminarResenia, error };
+  return {
+    registrarResena,
+    editarResena,
+    eliminarResena,
+    error,
+    loading,
+    resenias,
+    fetchResenasByCorreo,
+  };
 };
 
 export default useResenaUsuario;

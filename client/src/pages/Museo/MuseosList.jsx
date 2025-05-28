@@ -13,20 +13,14 @@ import { TEMATICAS } from "../../constants/catalog";
 import ReactPaginate from "react-paginate";
 import { useMuseos } from "../../hooks/Museo/useMuseos";
 import { useMuseoFilters } from "../../hooks/Museo/useMuseoFilters";
-import { useScrollToTop } from "../../hooks/Other/useScrollToTop";
 import LoadingIndicator from "../../components/Other/LoadingIndicator";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { useMuseosPopulares } from "../../hooks/Museo/useMuseosPopulares";
 
 const {
-  listButton,
-  mapaButton,
   LuArrowUpDown,
   FaFilter,
   FaMap,
   TbCardsFilled,
-  FaAngleDoubleUp,
   CgClose,
   IoIosArrowForward,
   IoIosArrowBack,
@@ -42,8 +36,11 @@ function MuseosList({ titulo, tipo }) {
     ? `Resultados de búsqueda: ${tituloSearch}`
     : titulo;
 
-  // Vista
+  const prevTipo = useRef(null);
   const { isMapView, setIsMapView } = useViewMode();
+  useEffect(() => {
+    setIsMapView(tipo === "2");
+  }, [tipo]);
 
   // Filtros
   const { filters, sortBy, setSortBy, applyFilters, removeFilter } =

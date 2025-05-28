@@ -8,7 +8,6 @@ import favoritoRoutes from "./favorito.routes.js";
 import qvRoutes from "./quierovisitar.routes.js";
 import visitasRoutes from "./visitas.routes.js";
 import reviewsRoutes from "./reviews.routes.js";
-// import userRoutes from "./user.routes.js";
 
 const router = Router();
 
@@ -25,6 +24,7 @@ router.get("/", (req, res) => {
       encuestas: "/api/encuesta",
       favoritos: "/api/favoritos",
       qv: "/api/qv",
+      visitas: "/api/visitas",
     },
   });
 });
@@ -36,7 +36,6 @@ router.use("/api/resena", resenaRoutes);
 router.use("/api/encuesta", encuestaRoutes);
 router.use("/api/favoritos", favoritoRoutes);
 router.use("/api/qv", qvRoutes);
-// router.use("/api/usuarios", userRoutes);
 router.use("/api/visitas", visitasRoutes);
 router.use("/api/reviews", reviewsRoutes);
 

@@ -10,7 +10,7 @@ export const useVisitas = ({ museoId } = {}) => {
   const addVisita = async (correo, museoId) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/usuarios/visitas/agregar`;
+      const endpoint = `${BACKEND_URL}/api/visitas/agregar`;
       const response = await axios.post(endpoint, {
         correo,
         museoId,
@@ -29,7 +29,7 @@ export const useVisitas = ({ museoId } = {}) => {
     try {
       setLoading(true);
       const encodedCorreo = encodeURIComponent(correo);
-      const endpoint = `${BACKEND_URL}/api/usuarios/visitas/${encodedCorreo}`;
+      const endpoint = `${BACKEND_URL}/api/visitas/${encodedCorreo}`;
       const response = await axios.get(endpoint);
 
       setVisitas(response.data.visitas);
@@ -45,7 +45,7 @@ export const useVisitas = ({ museoId } = {}) => {
   const removeVisita = async (correo, museoId) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/usuarios/visitas/eliminar`;
+      const endpoint = `${BACKEND_URL}/api/visitas/eliminar`;
       const response = await axios.delete(endpoint, {
         data: {
           correo,
@@ -64,7 +64,7 @@ export const useVisitas = ({ museoId } = {}) => {
     try {
       setLoading(true);
       const encodedCorreo = encodeURIComponent(correo);
-      const endpoint = `${BACKEND_URL}/api/usuarios/visitas/numero/${encodedCorreo}`;
+      const endpoint = `${BACKEND_URL}/api/visitas/numero/${encodedCorreo}`;
       const response = await axios.get(endpoint);
       return response.data;
     } catch (error) {

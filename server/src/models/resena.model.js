@@ -172,6 +172,47 @@ export default class Resena {
     }
   }
 
+  static async findByCorreo({ correo }) {
+    const connection = await pool.getConnection();
+    try {
+      const query = `
+            SELECT 
+              r.*, 
+              u.usr_nombre, u.usr_ap_paterno, u.usr_ap_materno, u.usr_foto, 
+              m.mus_id,m.mus_nombre,
+              GROUP_CONCAT(DISTINCT fr.f_res_foto) AS fotos, 
+              GROUP_CONCAT(DISTINCT s.ser_id) AS servicios,
+              GROUP_CONCAT(DISTINCT resp.res_respuesta) AS respuestas
+            FROM resenia r
+            JOIN visitas v ON r.visitas_vi_fechahora = v.vi_fechahora 
+                          AND r.visitas_vi_usr_correo = v.vi_usr_correo 
+                          AND r.visitas_vi_mus_id = v.vi_mus_id
+            JOIN usuarios u ON v.vi_usr_correo = u.usr_correo
+            JOIN museos m ON v.vi_mus_id = m.mus_id
+            LEFT JOIN foto_resenia fr ON r.res_id_res = fr.f_res_id_res
+            LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_fechahora = v.vi_fechahora
+                                            AND rs.visitas_vi_usr_correo = v.vi_usr_correo
+                                            AND rs.visitas_vi_mus_id = v.vi_mus_id
+            LEFT JOIN servicios s ON rs.servicios_ser_id = s.ser_id
+            LEFT JOIN calificaciones c ON c.visitas_vi_fechahora = v.vi_fechahora
+                                      AND c.visitas_vi_usr_correo = v.vi_usr_correo
+                                      AND c.visitas_vi_mus_id = v.vi_mus_id
+            LEFT JOIN respuestas resp ON resp.res_id = c.respuestas_res_id
+                                    AND resp.preguntas_preg_id = c.respuestas_preguntas_preg_id
+                                    AND resp.preguntas_encuesta_enc_cve = c.respuestas_preguntas_encuesta_enc_cve
+            WHERE v.vi_usr_correo = ?
+            GROUP BY r.res_id_res
+          `;
+      const [rows] = await connection.query(query, [correo]);
+      return rows;
+    } catch (error) {
+      console.error("Error fetching reseñas by correo:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
   static async findAllMods() {
     const connection = await pool.getConnection();
     try {
@@ -237,5 +278,100 @@ export default class Resena {
       console.error("Error approving resena:", error);
       throw error;
     }
+  }
+
+  static async aprobar({ res_id_res, res_mod_correo, res_aprobado }) {
+    const query = `
+		UPDATE resenia
+		SET res_aprobado = ?, 
+			res_mod_correo = ?
+		WHERE res_id_res = ?
+		`;
+    const queryParams = [];
+    queryParams.push(res_aprobado, res_mod_correo, res_id_res);
+    const [result] = await pool.query(query, queryParams);
+
+    if (result.affectedRows === 0) {
+      throw new Error("No se encontró la reseña para aprobar");
+    }
+
+    return { success: true, id: res_id_res };
+  }
+
+  static async edit({ res_id_res, resenaData, museoId, correo }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      const data = { ...resenaData };
+      const fecha = data.visitas_vi_fechahora;
+      delete data.visitas_vi_fechahora; // Eliminar del objeto para evitar conflictos
+      const fotos = data.fotos;
+      delete data.fotos; // Eliminar del objeto para evitar conflictos
+
+      if (Object.keys(data).length > 0) {
+        const campos = Object.keys(data);
+        const setClauses = campos.map((campo) => `${campo} = ?`).join(", ");
+        const query = `UPDATE resenia SET ${setClauses} WHERE res_id_res = ?`;
+        await connection.query(query, [...Object.values(data), res_id_res]);
+      }
+
+      // Actualizar la fecha de visita
+      if (fecha) {
+        const fechaQuery = `
+          UPDATE visitas
+          SET vi_fechahora = ?
+          WHERE vi_usr_correo = ? AND vi_mus_id = ? 
+          AND vi_fechahora = (SELECT visitas_vi_fechahora FROM resenia WHERE res_id_res = ?)
+        `;
+        await connection.query(fechaQuery, [
+          fecha,
+          correo,
+          museoId,
+          res_id_res,
+        ]);
+      }
+
+      // Actualizar las fotos
+      if (fotos && fotos.length > 0) {
+        const deleteQuery = `
+          DELETE FROM foto_resenia
+          WHERE f_res_id_res = ?
+        `;
+        await connection.query(deleteQuery, [res_id_res]);
+
+        const insertQuery = `
+          INSERT INTO foto_resenia (f_res_id_res, f_res_foto)
+          VALUES (?, ?)
+        `;
+        for (const foto of fotos) {
+          await connection.query(insertQuery, [res_id_res, foto]);
+        }
+      }
+
+      await connection.commit();
+      return { success: true, id: res_id_res };
+    } catch (error) {
+      console.error("Error al editar la reseña:", error);
+      await connection.rollback();
+      throw error; // Preservamos el mensaje real del error
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async deleteById({ id }) {
+    const query = `
+      DELETE FROM resenia
+      WHERE res_id_res = ?
+    `;
+    const queryParams = [];
+    queryParams.push(id);
+    const [result] = await pool.query(query, queryParams);
+
+    if (result.affectedRows === 0) {
+      throw new Error("No se encontró la reseña para eliminar");
+    }
+
+    return { success: true, id };
   }
 }

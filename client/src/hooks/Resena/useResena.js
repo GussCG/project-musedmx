@@ -11,10 +11,12 @@ export const useResena = ({ resId } = {}) => {
     try {
       setLoading(true);
       const endpoint = `${BACKEND_URL}/api/resena/detalle/${resId}`;
+      console.log("Fetching resena by ID:", endpoint);
       const response = await axios.get(endpoint, {
         withCredentials: true,
       });
       setResena(response.data.resena[0]);
+      return response.data.resena[0];
     } catch (error) {
       setError(error);
       console.error("Error fetching resena by ID:", error);

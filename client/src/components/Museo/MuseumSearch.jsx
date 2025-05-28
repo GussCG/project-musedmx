@@ -24,7 +24,10 @@ function MuseumSearch({ swiperRef = null }) {
         const museosResponse = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/museos/nombres`
         );
-        setMuseumSuggestions(museosResponse.data.museos);
+        const museos = Array.isArray(museosResponse.data.museos)
+          ? museosResponse.data.museos
+          : [];
+        setMuseumSuggestions(museos);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError(
@@ -67,8 +70,10 @@ function MuseumSearch({ swiperRef = null }) {
         overscrollBehavior: "contain",
       }}
     >
-      {loading || error ? (
+      {loading ? (
         <Skeleton wrapper={SearchBar} />
+      ) : error ? (
+        <div>{error}</div>
       ) : (
         <SearchBar
           placeholder="Buscar museos..."

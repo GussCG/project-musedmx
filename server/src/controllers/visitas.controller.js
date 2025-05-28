@@ -55,3 +55,19 @@ export const deleteVisita = async (req, res) => {
     handleHttpError(res, "ERROR_DELETE_VI", error);
   }
 };
+
+export const getVisitasCount = async (req, res) => {
+  try {
+    const { correo } = req.params;
+    const count = await Lista.getVisitasCount(correo);
+    const totalMuseos = await Lista.getTotalMuseos();
+
+    res.json({
+      success: true,
+      count,
+      totalMuseos,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_VI_COUNT", error);
+  }
+};

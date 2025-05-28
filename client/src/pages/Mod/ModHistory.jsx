@@ -21,11 +21,6 @@ function ModHistory() {
   const [museoNombre, setMuseoNombre] = useState("");
   const [resenas, setResenas] = useState([]);
 
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 6,
-  });
-
   const { fetchAllResenas, fetchAllResenasByMuseo } = useResenaMods();
   const { fetchMuseo } = useMuseo();
 
@@ -107,6 +102,10 @@ function ModHistory() {
   );
 
   const [sorting, setSorting] = useState([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 6,
+  });
 
   const table = useReactTable({
     data: resenas,
