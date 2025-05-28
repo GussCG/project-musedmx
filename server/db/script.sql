@@ -440,7 +440,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
 --  INDEX `fk_resenia_visitas1_idx` (`visitas_vi_fechahora` ASC, `visitas_vi_usr_correo` ASC, `visitas_vi_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
   
- SELECT * FROM resenia ;
+ SELECT * FROM resenia;
+ UPDATE resenia SET res_aprobado = 0 WHERE res_id_res = 1;
 -- TRUNCATE TABLE resenia;
 
 -- -----------------------------------------------------

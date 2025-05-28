@@ -40,7 +40,6 @@ export const getResenasFoto = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
 export const getResenasByMuseo = async (req, res) => {
   try {
     const { museoId } = req.params;
@@ -61,18 +60,43 @@ export const getResenasByMuseo = async (req, res) => {
     handleHttpError(res, "ERROR_GET_RESENAS_BY_MUSEO", error);
   }
 };
-=======
+
+export const getResenasModAll = async (req, res) => {
+  try {
+    const resenas = await Resena.findAllMods();
+    res.json({
+      success: true,
+      resenas,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_RESENAS_MOD_ALL", error);
+  }
+};
+
+export const getResenasModByMuseo = async (req, res) => {
+  try {
+    const { museoId } = req.params;
+    const resenas = await Resena.findAllModsByMuseo(museoId);
+    res.json({
+      success: true,
+      resenas,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_RESENAS_MOD_BY_MUSEO", error);
+  }
+};
+
 export const aprobarResena = async (req, res) => {
   try {
-	const { id } = req.params;
-	const resena = await Resena.aprobar({ id });
-	res.json({
-	  success: true,
-	  id,
-	  resena,
-	});
+    const { resenaId } = req.params;
+    const { modCorreo } = req.body;
+    const resena = await Resena.aprobarResena({ resenaId, modCorreo });
+    res.json({
+      success: true,
+      resenaId,
+      resena,
+    });
   } catch (error) {
-	handleHttpError(res, "ERROR_APROBAR_RESENA", error);
+    handleHttpError(res, "ERROR_APROBAR_RESENA", error);
   }
-}
->>>>>>> d8a90a34c06e5bc20fe741c22563539c225de6da
+};

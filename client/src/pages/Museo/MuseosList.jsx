@@ -74,13 +74,26 @@ function MuseosList({ titulo, tipo }) {
     loading: isLoadingNormales,
   } = useMuseos(museosParams);
 
-  const {
-    museos: museosPopulares,
-    loading: isLoadingPopulares,
-    error: errorPopulares,
-  } = useMuseosPopulares({
-    top_n: 10,
-  });
+  const { fetchMuseosPopulares, loading: isLoadingPopulares } =
+    useMuseosPopulares();
+
+  const [museosPopulares, setMuseosPopulares] = useState([]);
+  useEffect(() => {
+    if (isPopulares) {
+      const fetchData = async () => {
+        try {
+          const response = await fetchMuseosPopulares();
+          console.log("Museos populares:", response);
+          setMuseosPopulares(response);
+        } catch (error) {
+          console.error("Error fetching popular museums:", error);
+        }
+      };
+      fetchData();
+    } else {
+      setMuseosPopulares([]);
+    }
+  }, [isPopulares]);
 
   // Decide qué datos usar basado en el tipo
   const museos = isPopulares ? museosPopulares : museosNormales;

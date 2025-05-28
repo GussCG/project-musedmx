@@ -8,6 +8,7 @@ import favoritoRoutes from "./favorito.routes.js";
 import qvRoutes from "./quierovisitar.routes.js";
 import visitasRoutes from "./visitas.routes.js";
 import reviewsRoutes from "./reviews.routes.js";
+// import userRoutes from "./user.routes.js";
 
 const router = Router();
 
@@ -35,11 +36,8 @@ router.use("/api/resena", resenaRoutes);
 router.use("/api/encuesta", encuestaRoutes);
 router.use("/api/favoritos", favoritoRoutes);
 router.use("/api/qv", qvRoutes);
-<<<<<<< HEAD
-router.use("/api/usuarios", userRoutes);
-=======
+// router.use("/api/usuarios", userRoutes);
 router.use("/api/visitas", visitasRoutes);
 router.use("/api/reviews", reviewsRoutes);
->>>>>>> d8a90a34c06e5bc20fe741c22563539c225de6da
 
 export default router;

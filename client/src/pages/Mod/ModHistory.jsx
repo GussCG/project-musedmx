@@ -1,123 +1,89 @@
 import { useState, useEffect, useMemo } from "react";
 import Icons from "../../components/Other/IconProvider";
-const { LuArrowUpDown, LuEye } = Icons;
+const { LuArrowUpDown, LuEye, IoIosArrowBack, IoIosArrowForward } = Icons;
 import { motion } from "framer-motion";
 import { Link, useParams } from "react-router-dom";
+import { useResenaMods } from "../../hooks/Resena/useResenaMods";
+import { useMuseo } from "../../hooks/Museo/useMuseo";
+import ReactPaginate from "react-paginate";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   getSortedRowModel,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
+import { formatearFecha } from "../../utils/formatearFechas";
 
 function ModHistory() {
   // Obtener el museoId de la URL
   const { museoId } = useParams();
-  const [museo, setMuseo] = useState({});
-
-  // Buscamos los museos para obtener el nombre del museo y si hay museoId unicamente buscamos el museo con ese id
-  //   useEffect(() => {
-  //     // Hacemos una petición GET al backend para obtener los museos
-  //     axios.get("/api/museos").then((response) => {
-  //       if (museoId) {
-  //         // Buscamos el museo con el id que se encuentra en la URL
-  //         const museo = response.data.find((museo) => museo.id === museoId);
-  //         setMuseo(museo);
-  //       } else {
-  //         setMuseos(response.data);
-  //       }
-  //     });
-  //   }, []);
-
-  // Definimos estado para el historial de visitas
+  const [museoNombre, setMuseoNombre] = useState("");
   const [resenas, setResenas] = useState([]);
 
-  // Visitas de prueba
-  const resenasPrueba = [
-    {
-      id: 1,
-      museo: "Museo Nacional de Antropología e Historia",
-      usuario: "mail@mail.com",
-      fecHr: "30-04-2024 12:00",
-      comentario: "Excelente museo",
-      moderadorAprobo: "",
-      status: false,
-      calificacion: 5,
-    },
-    {
-      id: 2,
-      museo: "Museo Perfume",
-      usuario: "mail@mail.com",
-      fecHr: "30-04-2024 12:01",
-      comentario: "Excelente museo 2",
-      moderadorAprobo: "mail@mod.com",
-      status: true,
-      calificacion: 3,
-    },
-  ];
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 6,
+  });
+
+  const { fetchAllResenas, fetchAllResenasByMuseo } = useResenaMods();
+  const { fetchMuseo } = useMuseo();
 
   useEffect(() => {
-    // Cargamos las reseñas
-    setResenas(resenasPrueba);
-  }, []);
-
-  // Funcion para obtener las reseñas de los museos o de un museo en específico
-  //   const obtenerResenas = async (museoId) => {
-  //     if (museoId) {
-  //       // Hacemos una petición GET al backend para obtener las reseñas de un museo en específico
-  //       // axios
-  //       //   .get(`/api/museo/${museoId}/resenas`)
-  //       //   .then((response) => {
-  //       //     setResenas(response.data);
-  //       //   })
-  //       //   .catch((error) => {
-  //       //     console.log(error);
-  //       //   });
-  //     } else {
-  //       // Hacemos una petición GET al backend para obtener todas las reseñas
-  //       // axios
-  //       //   .get(`/api/resenas`)
-  //       //   .then((response) => {
-  //       //     setResenas(response.data);
-  //       //   })
-  //       //   .catch((error) => {
-  //       //     console.log(error);
-  //       //   });
-  //     }
-  //   };
+    const fetchData = async () => {
+      try {
+        let fetchedResenas;
+        if (museoId) {
+          fetchedResenas = await fetchAllResenasByMuseo(museoId);
+          const response = await fetchMuseo(museoId);
+          setMuseoNombre(response.nombre || "Museo Desconocido");
+        } else {
+          fetchedResenas = await fetchAllResenas();
+        }
+        setResenas(fetchedResenas.resenas);
+      } catch (error) {
+        console.error("Error fetching reseñas:", error);
+      }
+    };
+    fetchData();
+  }, [museoId]);
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "usuario",
+        accessorKey: "visitas_vi_usr_correo",
         header: "Usuario",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "fecHr",
+        accessorKey: "visitas_vi_fechahora",
         header: "Fecha de Reseña",
-        cell: (info) => info.getValue(),
+        cell: (info) => formatearFecha(info.getValue()),
         enableSorting: true,
       },
       ...(museoId
         ? []
         : [
             {
-              accessorKey: "museo",
+              accessorKey: "mus_nombre",
               header: "Museo",
-              cell: (info) => info.getValue(),
+              cell: ({ row }) => (
+                <Link to={`/Museos/${row.original.visitas_vi_mus_id}`}>
+                  {row.original.mus_nombre}
+                </Link>
+              ),
               enableSorting: true,
             },
           ]),
       {
-        accessorKey: "calificacion",
+        accessorKey: "res_calif_estrellas",
         header: "Calificación",
         cell: (info) => info.getValue(),
         enableSorting: true,
       },
       {
-        accessorKey: "status",
+        accessorKey: "res_aprobado",
         header: "Estado",
         cell: ({ getValue }) => (
           <span className={getValue() ? "aprobada" : "pendiente"}>
@@ -130,7 +96,7 @@ function ModHistory() {
         id: "acciones",
         header: "Ver Detalles",
         cell: ({ row }) => (
-          <Link to={`/Mod/Resena/${row.original.id}`}>
+          <Link to={`/Mod/Resena/${row.original.res_id_res}`}>
             <LuEye />
           </Link>
         ),
@@ -145,11 +111,16 @@ function ModHistory() {
   const table = useReactTable({
     data: resenas,
     columns,
-    state: { sorting },
+    state: { sorting, pagination },
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(), // ← usa este
     onSortingChange: setSorting,
+    onPaginationChange: setPagination,
     getSortedRowModel: getSortedRowModel(),
+    manualPagination: false,
   });
+
+  const pageCount = Math.ceil(resenas.length / pagination.pageSize);
 
   return (
     <motion.div
@@ -162,7 +133,7 @@ function ModHistory() {
         <div className="tabla-header">
           <h1>
             {museoId
-              ? `Reseñas no aprobadas de ${museoId}`
+              ? `Reseñas no aprobadas de ${museoNombre}`
               : `Reseñas no aprobadas`}
           </h1>
         </div>
@@ -192,7 +163,7 @@ function ModHistory() {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map((row) => (
+              {table.getPaginationRowModel().rows.map((row) => (
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id}>
@@ -207,6 +178,35 @@ function ModHistory() {
             </tbody>
           </table>
         </div>
+
+        {pageCount > 0 && (
+          <ReactPaginate
+            breakLabel="..."
+            breakClassName="break"
+            nextLabel={<IoIosArrowForward />}
+            onPageChange={(e) =>
+              setPagination((prev) => ({
+                ...prev,
+                pageIndex: e.selected,
+              }))
+            }
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={1}
+            pageCount={pageCount}
+            previousLabel={<IoIosArrowBack />}
+            renderOnZeroPageCount={null}
+            containerClassName="pagination"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="previous"
+            previousLinkClassName="previous"
+            nextClassName="next"
+            nextLinkClassName="next"
+            breakLinkClassName="page-link"
+            activeClassName="active"
+            forcePage={pagination.pageIndex}
+          />
+        )}
       </main>
     </motion.div>
   );

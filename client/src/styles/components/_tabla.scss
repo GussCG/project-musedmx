@@ -130,7 +130,22 @@
         color: var(--font-color-primary);
       }
 
-      a,
+      a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: var(--font-color-primary);
+        font-size: 0.9rem;
+        font-weight: $font-w-semibold;
+        font-family: $font-primary;
+        transition: opacity 0.3s ease-in-out;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+
       button {
         border: none;
         background-color: transparent;

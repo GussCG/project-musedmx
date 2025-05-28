@@ -4,10 +4,10 @@ import Resenia from "../../models/Usuario/Review";
 
 import { BACKEND_URL } from "../../constants/api";
 
-export const useResenias = ({ usr_correo } = {}) => {
-	const [resenias, setResenias] = useState([]);
+export const useResenaUsuario = ({ usr_correo } = {}) => {
+  const [resenias, setResenias] = useState([]);
   const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
+  const [error, setError] = useState(null);
 
   // Registrar Reseña
   const registrarResenia = async (resenia) => {
@@ -16,7 +16,7 @@ export const useResenias = ({ usr_correo } = {}) => {
       const endpoint = `${BACKEND_URL}/api/reviews/`;
       const response = await axios.post(endpoint, resenia, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
@@ -38,13 +38,15 @@ export const useResenias = ({ usr_correo } = {}) => {
       const endpoint = `${BACKEND_URL}/api/reviews/`;
       const response = await axios.put(endpoint, resenia, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
       const reseniaEditada = new Resenia(response.data.resenia);
       setResenias((prevResenias) =>
-        prevResenias.map((r) => (r.id === reseniaEditada.id ? reseniaEditada : r))
+        prevResenias.map((r) =>
+          r.id === reseniaEditada.id ? reseniaEditada : r
+        )
       );
       return reseniaEditada;
     } catch (error) {
@@ -63,7 +65,7 @@ export const useResenias = ({ usr_correo } = {}) => {
       const response = await axios.delete(endpoint, {
         data: { usr_correo, resenia },
         headers: {
-          'Content-Type': 'multipart/form-data'
+          "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
@@ -78,8 +80,8 @@ export const useResenias = ({ usr_correo } = {}) => {
     } finally {
       setError(null);
     }
-    };
-    return { registrarResenia, editarResenia, eliminarResenia, error };
+  };
+  return { registrarResenia, editarResenia, eliminarResenia, error };
 };
 
-export default useResenias;
+export default useResenaUsuario;
