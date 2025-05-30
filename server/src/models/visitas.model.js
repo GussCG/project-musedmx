@@ -67,6 +67,47 @@ export default class Visitas {
     }
   }
 
+  // Obtiene cuantos museos ha visitado un usuario
+  static async getVisitasCount(correo) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      const query = `
+        SELECT COUNT(DISTINCT vi_mus_id) AS museos_visitados
+        FROM visitas
+        WHERE vi_usr_correo = ?
+			`;
+      const [result] = await connection.query(query, [correo]);
+      await connection.commit();
+      return result[0].museos_visitados;
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  // Obtiene el total de museos
+  static async getTotalMuseos() {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      const query = `
+        SELECT COUNT(*) AS total_museos
+        FROM museos
+			`;
+      const [result] = await connection.query(query);
+      await connection.commit();
+      return result[0].total_museos;
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
   static async verifyVisita({ vi_usr_correo, vi_mus_id }) {
     const connection = await pool.getConnection();
     await connection.beginTransaction();

@@ -408,8 +408,9 @@ SELECT * FROM visitas;
 CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
   `res_id_res` INT(11) NOT NULL AUTO_INCREMENT,
   `res_comentario` TEXT NOT NULL,
+  `res_foto_entrada` VARCHAR(256) NULL DEFAULT NULL,
   `res_mod_correo` VARCHAR(75) NULL DEFAULT NULL,
-  `res_aprobado` TINYINT(1) NOT NULL,
+  `res_aprobado` TINYINT(1) NOT NULL DEFAULT '0',
   `res_calif_estrellas` INT(1) NOT NULL,
   `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,
   `visitas_vi_mus_id` INT(11) NOT NULL,

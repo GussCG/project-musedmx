@@ -2,11 +2,12 @@ import Usuario from "../models/auth.model.js";
 import { handleHttpError } from "../helpers/httpError.js";
 import bcrypt from "bcrypt";
 import sharp from "sharp";
-// import { sendEmail } from "../services/emailService";
+import { sendRecoveryEmail } from "../services/emailService.js";
 import jwt from "jsonwebtoken";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { generateOTP } from "../utils/generateOTP.js"; 
 
 import { uploadToAzure } from "../utils/azureUpload.js";
 
@@ -289,18 +290,47 @@ export const obtenerUsuarioByCorreo = async (req, res) => {
   }
 };
 
-/* export const recuperarContrasena = (req, res) => {
-	//Usar el servicio de envio de correos
-	//El OTP se genera en el frontend
+export const recuperarContrasena = async (req, res) => {
+	try {
+		const { usr_correo } = req.body;
+    if (!usr_correo) {
+      return res.status(400).json({
+        success: false,
+        message: "Correo electrónico es requerido",
+      });
+    }
 
-	sendEmail(req.body)
+    // Verificar si el usuario existe
+    const usuario = Usuario.findOne({ usr_correo });
+    if (!usuario) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuario no encontrado",
+      });
+    }
+
+    // Podemos implementar un sistema de verificación de usuarios
+    // Si se implementa, la recuperación de contraseña solo se enviará si el usuario está verificado
+    // if (!usuario.usr_verificado) {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: "Usuario no verificado",  
+    //   });
+    // }
+
+    const OTP = await generateOTP(); // Generar un OTP
+    console.log("Recuperación de contraseña para:", usr_correo);
+    console.log("OTP generado:", OTP);
+    sendRecoveryEmail({ recipient_email: usr_correo, OTP })
 		.then((response) => res.send(response.message))
 		.catch((error) => {
 			handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
 		});
-
-	return res.status(200).json({
-		success: true,
-		message: "Email sent successfully"
-	});	
-} */
+    /* return res.status(200).json({
+        success: true,
+        message: "Email sent successfully"
+      }); */
+	} catch (error) {
+		handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
+	}
+}
