@@ -66,4 +66,33 @@ export default class Visitas {
       connection.release();
     }
   }
+
+  static async verifyVisita({ vi_usr_correo, vi_mus_id }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      const query = `
+        SELECT * FROM visitas
+        WHERE vi_usr_correo = ? AND vi_mus_id = ?
+      `;
+      const queryParams = [vi_usr_correo, vi_mus_id];
+      const [result] = await connection.query(query, queryParams);
+
+      if (result.length > 0) {
+        await connection.commit();
+        return {
+          vi_fechahora: result[0].vi_fechahora,
+          vi_usr_correo: result[0].vi_usr_correo,
+          vi_mus_id: result[0].vi_mus_id,
+        }; // Visita ya existe
+      } else {
+        await connection.rollback();
+        return false; // Visita no existe
+      }
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error al verificar visita:", error);
+      throw new Error("Error al verificar visita");
+    }
+  }
 }

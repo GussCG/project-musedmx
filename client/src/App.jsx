@@ -33,6 +33,7 @@ import { ThemeProvider } from "./context/ThemeProvider.jsx";
 import { UserLocationProvider } from "./context/UserLocationProvider.jsx";
 import ScrollToTop from "./components/Other/ScrollToTop.jsx";
 import ScrollToTopButton from "./components/Other/ScrollToTopButton.jsx";
+import PassForm from "./pages/Auth/PassForm.jsx";
 
 function App() {
   const location = useLocation();
@@ -54,6 +55,7 @@ function App() {
                   <Route path="Iniciar" element={<LoginForm />} />
                   <Route path="Registrarse" element={<SignInForm />} />
                   <Route path="Recuperar" element={<RecuperarPass />} />
+                  <Route path="CambiarContraseña" element={<PassForm />} />
                 </Route>
 
                 {/* Sección de Museos */}

@@ -102,22 +102,9 @@ export const signUp = async (req, res) => {
     if (req.file) {
       const sanitizedEmail = usr_correo.replace(/[^a-zA-Z0-9]/g, "-");
       const containerName = "imagenes-usuarios";
-      const tempJpgPath = path.join(
-        __dirname,
-        "..",
-        "temp",
-        `${sanitizedEmail}-imagenes`,
-        "perfil.jpg"
-      );
-
-      const tempDir = path.dirname(tempJpgPath);
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true });
-      }
-
-      await sharp(req.file.path).jpeg({ quality: 80 }).toFile(tempJpgPath);
-
-      const bufferJpg = fs.readFileSync(tempJpgPath); // Leer el archivo como buffer
+      const bufferJpg = await sharp(req.file.buffer)
+        .jpeg({ quality: 80 })
+        .toBuffer();
 
       const blobName = `${sanitizedEmail}-imagenes/perfil/perfil.jpg`;
 
@@ -127,15 +114,6 @@ export const signUp = async (req, res) => {
         blobName,
         "image/jpeg"
       );
-
-      // Eliminar el archivo temporal y la carpeta
-      if (fs.existsSync(tempJpgPath)) {
-        fs.unlinkSync(tempJpgPath);
-      }
-      // Eliminar la carpeta temporal
-      if (fs.existsSync(tempDir)) {
-        fs.rmdirSync(tempDir, { recursive: true });
-      }
 
       usr_foto = nuevaFotoUrl;
     }
@@ -262,22 +240,9 @@ export const updateUser = async (req, res) => {
     if (req.file) {
       const sanitizedEmail = correoParam.replace(/[^a-zA-Z0-9]/g, "-");
       const containerName = "imagenes-usuarios";
-      const tempJpgPath = path.join(
-        __dirname,
-        "..",
-        "temp",
-        `${sanitizedEmail}-imagenes`,
-        "perfil.jpg"
-      );
-
-      const tempDir = path.dirname(tempJpgPath);
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true });
-      }
-
-      await sharp(req.file.path).jpeg({ quality: 80 }).toFile(tempJpgPath);
-
-      const bufferJpg = fs.readFileSync(tempJpgPath); // Leer el archivo como buffer
+      const bufferJpg = await sharp(req.file.buffer)
+        .jpeg({ quality: 80 })
+        .toBuffer();
 
       const blobName = `${sanitizedEmail}-imagenes/perfil/perfil.jpg`;
 
@@ -287,15 +252,6 @@ export const updateUser = async (req, res) => {
         blobName,
         "image/jpeg"
       );
-
-      // Eliminar el archivo temporal y la carpeta
-      if (fs.existsSync(tempJpgPath)) {
-        fs.unlinkSync(tempJpgPath);
-      }
-      // Eliminar la carpeta temporal
-      if (fs.existsSync(tempDir)) {
-        fs.rmdirSync(tempDir, { recursive: true });
-      }
 
       datosActualizar.usr_foto = nuevaFotoUrl;
     }

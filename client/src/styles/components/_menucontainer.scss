@@ -58,8 +58,7 @@
     width: 100%;
     height: 200px;
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     align-items: center;
     justify-content: center;
 
@@ -70,18 +69,14 @@
       text-align: center;
     }
 
-    .menu-header-logo {
-      width: 200px;
-      margin: 0 auto;
+    img {
+      width: 100px;
+      height: auto;
 
-      img {
-        width: 100%;
+      transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
 
-        transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
-
-        &:hover {
-          transform: scale(1.1);
-        }
+      &:hover {
+        transform: scale(1.1);
       }
     }
   }
@@ -120,6 +115,16 @@
             font-weight: $font-w-semibold;
           }
         }
+      }
+
+      hr {
+        width: 50%;
+        height: 4px;
+        background-color: white;
+        border: none;
+        margin: 0 auto;
+        opacity: 0.1;
+        border-radius: 2px;
       }
     }
   }

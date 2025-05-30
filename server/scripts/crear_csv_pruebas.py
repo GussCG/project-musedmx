@@ -20,18 +20,17 @@ def obtener_foto_nba():
     player_id = random.choice(nba_player_ids)
     return f"https://cdn.nba.com/headshots/nba/latest/1040x760/{player_id}.png"
 
-# URLs de fotos de estadios NBA (ejemplo con algunos estadios reales)
 nba_stadium_photos = [
-    "https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg",  # Warriors logo (puedes cambiar por fotos reales de estadios)
-    "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg",  # Celtics logo
-    "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg",  # Hawks logo
-    "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg",  # Nets logo
-    "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg",  # Hornets logo
-    "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg",  # Bulls logo
-    "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",  # Cavaliers logo
-    "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg",  # Mavericks logo
-    "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg",  # Nuggets logo
-    "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg"   # Pistons logo
+    "https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg"
 ]
 
 def obtener_foto_estadio():
@@ -131,17 +130,15 @@ for museo in random.sample(museos, 30):
         for idx in serv_indices:
             respuestas_serv.append([fecha, usuario, mus_id, idx + 1])
 
-        # Crear reseña
         resenias.append([
             resenia_id_counter, fake.sentence(nb_words=8),
             mod_correo, 1, random.randint(1, 5),
             usuario, mus_id, fecha
         ])
 
-        # Asociar fotos a la reseña (de 1 a 3 fotos por reseña)
         for _ in range(random.randint(1, 3)):
             foto_resenia.append([
-                None,  # f_res_id (AUTO_INCREMENT, no se incluye en CSV)
+                None,
                 resenia_id_counter,
                 obtener_foto_estadio()
             ])
@@ -152,7 +149,6 @@ for museo in random.sample(museos, 30):
             quiero_visitar.add((usuario, mus_id))
         if random.choice([True, False]):
             favoritos.add((usuario, mus_id))
-
 
 def guardar_csv(nombre, cabeceras, datos):
     os.makedirs(os.path.dirname(nombre), exist_ok=True)
@@ -172,17 +168,21 @@ guardar_csv("./csvpruebas/usuarios_has_tematicas.csv", [
 
 guardar_csv("./csvpruebas/visitas.csv", ["vi_fechahora", "vi_usr_correo", "vi_mus_id"], visitas)
 guardar_csv("./csvpruebas/respuestas.csv", ["res_id", "res_respuesta", "preguntas_preg_id", "preguntas_encuesta_enc_cve"], respuestas)
+# Reescribir solo el guardado de calificaciones sin la fecha
 guardar_csv("./csvpruebas/calificaciones.csv", [
-    "visitas_vi_fechahora", "visitas_vi_usr_correo", "visitas_vi_mus_id",
+    "visitas_vi_usr_correo", "visitas_vi_mus_id",
     "respuestas_res_id", "respuestas_preguntas_preg_id", "respuestas_preguntas_encuesta_enc_cve"
-], calificaciones)
+], [
+    [correo, mus_id, res_id, preg_id, encuesta_cve]
+    for (_, correo, mus_id, res_id, preg_id, encuesta_cve) in calificaciones
+])
+
 guardar_csv("./csvpruebas/respuestas_servicios.csv", ["visitas_vi_fechahora", "visitas_vi_usr_correo", "visitas_vi_mus_id", "servicios_ser_id"], respuestas_serv)
 guardar_csv("./csvpruebas/resenia.csv", [
     "res_id_res", "res_comentario", "res_mod_correo", "res_aprobado",
     "res_calif_estrellas", "visitas_vi_usr_correo", "visitas_vi_mus_id", "visitas_vi_fechahora"
 ], resenias)
 guardar_csv("./csvpruebas/foto_resenia.csv", [
-    # No guardamos f_res_id porque es autoincremental en BD
     "f_res_id_res", "f_res_foto"
 ], [(r[1], r[2]) for r in foto_resenia])
 

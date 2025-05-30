@@ -1,6 +1,12 @@
 import { Link } from "react-router";
 import Icons from "./IconProvider";
-const { logo, FaSquareFacebook, FaSquareXTwitter, FaSquareInstagram } = Icons;
+const {
+  MuseDMXIcon,
+  MuseDMXLogo,
+  FaSquareFacebook,
+  FaSquareXTwitter,
+  FaSquareInstagram,
+} = Icons;
 
 function Footer() {
   return (
@@ -8,7 +14,7 @@ function Footer() {
       <div className="footer-info-container">
         <div id="footer-logo" className="footer-div">
           <Link to="/">
-            <img src={logo} alt="Logo®" />
+            <img src={MuseDMXIcon} alt="Logo®" />
           </Link>
         </div>
         <div id="footer-museos-menu" className="footer-div">

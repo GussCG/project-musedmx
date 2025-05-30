@@ -2,35 +2,25 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import usePreguntas from "./usePreguntas";
 import useServicios from "./useServicio";
-
 import { BACKEND_URL } from "../../constants/api";
-import { use } from "react";
 
-export default function useEncuesta({ encuestaId, museoId, correo, fecha }) {
+export default function useEncuesta({ encuestaId, museoId, correo } = {}) {
   const [contestada, setContestada] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const {
-    preguntas,
-    loading: loadingPreguntas,
-    error: errorPreguntas,
-  } = usePreguntas({ encuestaId });
-  const {
-    servicios,
-    loading: loadingServicios,
-    error: errorServicios,
-  } = useServicios();
   const [respuestas, setRespuestas] = useState([]);
   const [respuestasServicios, setRespuestasServicios] = useState([]);
 
-  const fetchEncuesta = async () => {
+  const fetchEncuesta = async ({ encuestaId, correo, museoId }) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/encuesta/detalle/${encuestaId}/${museoId}/${correo}`;
+      const encodedCorreo = encodeURIComponent(correo);
+      const endpoint = `${BACKEND_URL}/api/encuesta/detalle/${encuestaId}/${museoId}/${encodedCorreo}`;
       const response = await axios.get(endpoint);
       setContestada(response.data.contestada);
-      setRespuestas(response.data.preguntas.respuestas);
+      setRespuestas(response.data.respuestas);
       setRespuestasServicios(response.data.servicios);
+      return response.data;
     } catch (error) {
       console.error("Error fetching encuesta:", error);
       setError(error);
@@ -39,22 +29,44 @@ export default function useEncuesta({ encuestaId, museoId, correo, fecha }) {
     }
   };
 
-  useEffect(() => {
-    if (encuestaId) {
-      fetchEncuesta();
-    } else {
-      setContestada(false);
-      setRespuestas([]);
-      setRespuestasServicios([]);
+  const registrarEncuesta = async ({ encuestaId, correo, museoId, data }) => {
+    try {
+      setLoading(true);
+      const encodedCorreo = encodeURIComponent(correo);
+      const endpoint = `${BACKEND_URL}/api/encuesta/registrar/${encuestaId}/${museoId}/${encodedCorreo}`;
+      const response = await axios.post(endpoint, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error registering encuesta:", error);
+      setError(error);
+    } finally {
       setLoading(false);
     }
-  }, [encuestaId]);
+  };
+
+  const updateEncuesta = async ({ encuestaId, correo, museoId, data }) => {
+    try {
+      setLoading(true);
+      const encodedCorreo = encodeURIComponent(correo);
+      const endpoint = `${BACKEND_URL}/api/encuesta/actualizar/${encuestaId}/${museoId}/${encodedCorreo}`;
+      const response = await axios.post(endpoint, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating encuesta:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
     contestada,
-    loading: loading || loadingPreguntas || loadingServicios,
-    error: error || errorPreguntas || errorServicios,
     respuestas,
     respuestasServicios,
+    loading,
+    error,
+    fetchEncuesta,
+    registrarEncuesta,
+    updateEncuesta,
   };
 }

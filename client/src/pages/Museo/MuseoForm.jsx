@@ -39,23 +39,6 @@ function MuseoForm({ mode }) {
     updateMuseo,
   } = useMuseo(mode === "edit" ? museoId : null);
 
-  // // Para la imagen inicial
-  // useEffect(() => {
-  //   if (mode === "edit" && museoEdit?.img) {
-  //     const image = buildImage(museoEdit);
-  //     setImagePreview(image);
-  //     if (fileNameRef.current) {
-  //       fileNameRef.current.textContent = museoEdit.img.name;
-  //     }
-  //   } else {
-  //     setImagePreview(null);
-  //     if (fileNameRef.current) {
-  //       fileNameRef.current.textContent =
-  //         "No se ha seleccionado ninguna imagen";
-  //     }
-  //   }
-  // }, [museoEdit, mode]);
-
   // TextArea
   const [comment, setComment] = useState("");
 

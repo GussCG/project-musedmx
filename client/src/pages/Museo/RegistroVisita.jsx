@@ -28,27 +28,161 @@ function RegistroVisita() {
     encuestaId: 1,
   });
 
-  const {
-    contestada,
-    respuestas: respuestasPreguntas,
-    respuestasServicios: serviciosSeleccionados,
-  } = useEncuesta({
-    encuestaId: 1,
-    museoId: museoId,
-    correo: user.email,
-  });
+  const { fetchEncuesta, registrarEncuesta, updateEncuesta } = useEncuesta();
+  const [contestada, setContestada] = useState(false);
+  const [initialValues, setInitialValues] = useState({});
+  const [loadingRespuestas, setLoadingRespuestas] = useState(true);
+  const [respuestasAnteriores, setRespuestasAnteriores] = useState([]);
+  const [serviciosAnteriores, setServiciosAnteriores] = useState([]);
 
-  const respuestasEncuesta = {};
-  if (respuestasPreguntas && respuestasPreguntas.length > 0) {
-    respuestasPreguntas.forEach((respuesta) => {
-      respuestasEncuesta[`registrosfrmp${respuesta?.preg_id}`] =
-        respuesta?.res_respuesta;
+  useEffect(() => {
+    if (!user?.usr_correo || !preguntas?.length) return;
+
+    const fetchData = async () => {
+      try {
+        setLoadingRespuestas(true);
+        const response = await fetchEncuesta({
+          encuestaId: 1,
+          correo: user.usr_correo,
+          museoId,
+        });
+
+        const data = response.data; // <-- Aquí extraes la data
+
+        setContestada(data.contestada);
+
+        const valoresIniciales = {};
+
+        if (data.respuestas && data.respuestas.length > 0) {
+          data.respuestas.forEach((respuesta) => {
+            valoresIniciales[`registrosfrmp${respuesta.preg_id}`] =
+              respuesta.res_id || "";
+          });
+
+          // Guardar respuestas originales
+          const anteriores = data.respuestas.map((respuesta) => ({
+            preguntaId: respuesta.preg_id,
+            respuesta: respuesta.res_id,
+          }));
+          setRespuestasAnteriores(anteriores);
+        } else {
+          preguntas.forEach((pregunta) => {
+            valoresIniciales[`registrosfrmp${pregunta.preg_id}`] = "";
+          });
+          setRespuestasAnteriores([]);
+        }
+
+        // Guardar servicios originales
+        valoresIniciales["registrosfrmservicios"] = Array.isArray(
+          data.servicios
+        )
+          ? data.servicios.map((servicio) => servicio.ser_id)
+          : [];
+
+        setServiciosAnteriores(valoresIniciales["registrosfrmservicios"]);
+
+        setInitialValues(valoresIniciales);
+      } catch (error) {
+        console.error("Error fetching encuesta:", error);
+      } finally {
+        setLoadingRespuestas(false);
+      }
+    };
+
+    fetchData();
+  }, [user, museoId, preguntas]);
+
+  // Para la encuesta
+  const handleEncuestaSubmit = async (values) => {
+    const respuestas = [];
+    const servicios = values.registrosfrmservicios || [];
+
+    // Extraer respuestas del formulario
+    Object.entries(values).forEach(([key, value]) => {
+      if (key.startsWith("registrosfrmp") && key !== "registrosfrmservicios") {
+        const preguntaId = parseInt(key.replace("registrosfrmp", ""));
+        respuestas.push({
+          preguntaId,
+          respuesta: parseInt(value),
+        });
+      }
     });
-  } else if (preguntas && preguntas.length > 0) {
-    preguntas.forEach((pregunta) => {
-      respuestasEncuesta[`registrosfrmp${pregunta.preg_id}`] = "";
-    });
-  }
+
+    // Si ya contestó, solo enviar lo que cambió
+    if (contestada) {
+      // Opcional: verificar si hay cambios reales para evitar llamada
+      const respuestasIguales =
+        respuestas.length === respuestasAnteriores.length &&
+        respuestas.every((r) => {
+          const original = respuestasAnteriores.find(
+            (o) => o.preguntaId === r.preguntaId
+          );
+          return original && original.respuesta === r.respuesta;
+        });
+
+      const serviciosIguales =
+        servicios.length === serviciosAnteriores.length &&
+        servicios.every((id) => serviciosAnteriores.includes(id));
+
+      if (respuestasIguales && serviciosIguales) {
+        ToastMessage({
+          tipo: "info",
+          mensaje: "No se realizaron cambios en tus respuestas.",
+          position: "top-right",
+        });
+        return;
+      }
+
+      try {
+        await updateEncuesta({
+          encuestaId: 1,
+          correo: user.usr_correo,
+          museoId,
+          data: {
+            respuestas, // envías todo
+            servicios, // envías todo
+          },
+        });
+
+        ToastMessage({
+          tipo: "success",
+          mensaje: "Se actualizaron tus respuestas",
+          position: "top-right",
+        });
+      } catch (error) {
+        console.error("Error al actualizar encuesta:", error);
+        ToastMessage({
+          tipo: "error",
+          mensaje: "Error al actualizar la encuesta",
+        });
+      }
+    } else {
+      // Primera vez: enviar todo igual
+      try {
+        await registrarEncuesta({
+          encuestaId: 1,
+          correo: user.usr_correo,
+          museoId,
+          data: {
+            respuestas,
+            servicios,
+          },
+        });
+
+        ToastMessage({
+          tipo: "success",
+          mensaje: "Se guardaron tus respuestas",
+          position: "top-right",
+        });
+      } catch (error) {
+        console.error("Error al enviar encuesta:", error);
+        ToastMessage({
+          tipo: "error",
+          mensaje: "Error al enviar la encuesta",
+        });
+      }
+    }
+  };
 
   // Variables para la reseña
   const [rating, setRating] = useState(null);
@@ -155,27 +289,6 @@ function RegistroVisita() {
         setProgress(null);
       }
     }, 500);
-  };
-
-  // Para la encuesta
-  const handleEncuestaSubmit = (values) => {
-    if (encuestaContestada) {
-      // Actualizamos la encuesta
-      console.log(values);
-      ToastMessage({
-        tipo: "success",
-        mensaje: `Se actualizaron tus respuestas`,
-        position: "top-right",
-      });
-    } else {
-      // Guardamos la encuesta
-      console.log(values);
-      ToastMessage({
-        tipo: "success",
-        mensaje: `Se guardaron tus respuestas`,
-        position: "top-right",
-      });
-    }
   };
 
   return (
@@ -365,114 +478,117 @@ function RegistroVisita() {
         </div>
         <div id="registros-linea-encuesta"></div>
         <div id="registros-encuesta">
-          <h1>Encuesta</h1>
-          <Formik
-            initialValues={{
-              ...respuestasEncuesta,
-              registrosfrmservicios: serviciosSeleccionados || [],
-            }}
-            enableReinitialize
-            onSubmit={(values) => {
-              handleEncuestaSubmit(values);
-            }}
-          >
-            {({ setFieldValue, values }) => (
-              <Form id="registros-encuesta-form">
-                <p id="encuesta-contestada">
-                  {contestada
-                    ? "Ya has contestado la encuesta. Puedes hacer cambios en tus respuestas"
-                    : "Responde la encuesta para ayudar a otros visitantes"}
-                </p>
-                {preguntas.map((pregunta) => (
-                  <div className="registros-field" key={pregunta.preg_id}>
-                    <Field
-                      as="select"
-                      name={`registrosfrmp${pregunta.preg_id}`}
-                      className="registros-frm-select"
-                      value={values[`registrosfrmp${pregunta.preg_id}`]}
-                      onChange={(e) =>
-                        setFieldValue(
-                          `registrosfrmp${pregunta.preg_id}`,
-                          e.target.value
-                        )
-                      }
-                      required
-                    >
-                      <option value="" disabled>
-                        {pregunta.pregunta}
-                      </option>
-                      {PREGUNTAS_RESPUESTAS[pregunta.preg_id]?.respuestas.map(
-                        (respuesta) => (
-                          <option
-                            key={respuesta.respuesta}
-                            value={respuesta.valor}
-                          >
-                            {respuesta.respuesta}
-                          </option>
-                        )
-                      )}
-                    </Field>
-                  </div>
-                ))}
-                <div className="registros-chks">
-                  <fieldset>
-                    <legend>
-                      Selecciona los servicios con los que cuenta el museo
-                    </legend>
-                    <div id="servicios-chks">
-                      {servicios.map((servicio) => (
-                        <label
-                          title={servicio.ser_nombre}
-                          className="registros-chk-serv"
-                          key={servicio.ser_id}
+          {!loadingRespuestas && (
+            <>
+              <h1>Encuesta</h1>
+              <Formik
+                initialValues={initialValues}
+                enableReinitialize
+                onSubmit={(values) => {
+                  handleEncuestaSubmit(values);
+                }}
+              >
+                {({ setFieldValue, values }) => (
+                  <Form id="registros-encuesta-form">
+                    <p id="encuesta-contestada">
+                      {contestada
+                        ? "Ya has contestado la encuesta. Puedes hacer cambios en tus respuestas"
+                        : "Responde la encuesta para ayudar a otros visitantes"}
+                    </p>
+                    {preguntas.map((pregunta) => (
+                      <div className="registros-field" key={pregunta.preg_id}>
+                        <Field
+                          as="select"
+                          name={`registrosfrmp${pregunta.preg_id}`}
+                          className="registros-frm-select"
+                          value={values[`registrosfrmp${pregunta.preg_id}`]}
+                          onChange={(e) =>
+                            setFieldValue(
+                              `registrosfrmp${pregunta.preg_id}`,
+                              e.target.value
+                            )
+                          }
+                          required
                         >
-                          <Field
-                            type="checkbox"
-                            name="registrosfrmservicios"
-                            value={servicio.ser_id}
-                            checked={values.registrosfrmservicios.includes(
-                              servicio.ser_id
-                            )}
-                            onChange={(e) => {
-                              const selectedServices = [
-                                ...values.registrosfrmservicios,
-                              ];
-                              if (e.target.checked) {
-                                selectedServices.push(servicio.ser_id);
-                              } else {
-                                const index = selectedServices.indexOf(
-                                  servicio.ser_id
-                                );
-                                if (index > -1) {
-                                  selectedServices.splice(index, 1);
-                                }
-                              }
-                              setFieldValue(
-                                "registrosfrmservicios",
-                                selectedServices
-                              );
-                            }}
-                          />
-                          <span>
-                            <img
-                              src={SERVICIOS[servicio.ser_id].icon}
-                              alt={servicio.ser_nombre}
-                            />
-                          </span>
-                        </label>
-                      ))}
+                          <option value="" disabled>
+                            {pregunta.pregunta}
+                          </option>
+                          {PREGUNTAS_RESPUESTAS[
+                            pregunta.preg_id
+                          ]?.respuestas.map((respuesta) => (
+                            <option
+                              key={respuesta.respuesta}
+                              value={respuesta.valor}
+                            >
+                              {respuesta.respuesta}
+                            </option>
+                          ))}
+                        </Field>
+                      </div>
+                    ))}
+                    <div className="registros-chks">
+                      <fieldset>
+                        <legend>
+                          Selecciona los servicios con los que cuenta el museo
+                        </legend>
+                        <div id="servicios-chks">
+                          {servicios.map((servicio) => (
+                            <label
+                              title={servicio.ser_nombre}
+                              className="registros-chk-serv"
+                              key={servicio.ser_id}
+                            >
+                              <Field
+                                type="checkbox"
+                                name="registrosfrmservicios"
+                                value={servicio.ser_id}
+                                checked={(
+                                  values.registrosfrmservicios || []
+                                ).includes(servicio.ser_id)}
+                                onChange={(e) => {
+                                  const selectedServices = [
+                                    ...values.registrosfrmservicios,
+                                  ];
+                                  if (e.target.checked) {
+                                    selectedServices.push(servicio.ser_id);
+                                  } else {
+                                    const index = selectedServices.indexOf(
+                                      servicio.ser_id
+                                    );
+                                    if (index > -1) {
+                                      selectedServices.splice(index, 1);
+                                    }
+                                  }
+                                  setFieldValue(
+                                    "registrosfrmservicios",
+                                    selectedServices
+                                  );
+                                }}
+                              />
+                              <span>
+                                <img
+                                  src={SERVICIOS[servicio.ser_id].icon}
+                                  alt={servicio.ser_nombre}
+                                />
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      </fieldset>
                     </div>
-                  </fieldset>
-                </div>
-                <Field
-                  className="button"
-                  type="submit"
-                  id="registros-button"
-                  value={contestada ? "Actualizar Encuesta" : "Enviar Encuesta"}
-                />
-              </Form>
-            )}
-          </Formik>
+                    <Field
+                      className="button"
+                      type="submit"
+                      id="registros-button"
+                      value={
+                        contestada ? "Actualizar Encuesta" : "Enviar Encuesta"
+                      }
+                    />
+                  </Form>
+                )}
+              </Formik>
+            </>
+          )}
         </div>
       </main>
     </motion.div>

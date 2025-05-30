@@ -131,6 +131,7 @@ dist
 
 # museos-imagenes carpeta
 scripts/images
+scripts/csvpruebas
 # pruebas de carga de imagenes
 /uploads
 src/uploads

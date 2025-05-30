@@ -119,8 +119,6 @@ export default class Usuario {
       const data = { ...userData };
       delete data.usr_tematicas;
 
-      console.log("Data a actualizar:", data);
-
       if (Object.keys(data).length > 0) {
         const campos = Object.keys(data);
         const setClauses = campos.map((campo) => `${campo} = ?`).join(", ");

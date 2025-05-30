@@ -1,3 +1,7 @@
+import MuseDMXLogo from "../../assets/icons/SVG/musedmx-logo.svg";
+import MuseDMXIcon from "../../assets/icons/SVG/musedmx-icon.svg";
+import MuseDMXLogoVertical from "../../assets/icons/SVG/musedmx-logo-vertical.svg";
+
 // Museo Card
 import estrellaIcon from "../../assets/icons/estrella-icon.png";
 import moneyIcon from "../../assets/icons/money-icon.png";
@@ -183,6 +187,9 @@ import { FaUserEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 const Icons = {
+  MuseDMXLogo,
+  MuseDMXIcon,
+  MuseDMXLogoVertical,
   estrellaIcon,
   moneyIcon,
   freeIcon,

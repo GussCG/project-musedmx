@@ -460,6 +460,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`foto_resenia` (
 --  INDEX `id_Historial` (`f_res_id_res` ASC) VISIBLE
   ) ENGINE=InnoDB;
 
+SELECT * FROM foto_resenia;
+
 -- -----------------------------------------------------
 -- Table `musedmx`.`encuesta`
 -- -----------------------------------------------------
@@ -545,6 +547,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas` (
 --  INDEX `fk_respuestas_preguntas1_idx` (`preguntas_preg_id` ASC, `preguntas_encuesta_enc_cve` ASC) VISIBLE
 ) ENGINE=InnoDB ;
 
+SELECT * FROM respuestas;
+
 CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas_servicios` (
   `visitas_vi_fechahora` DATETIME NOT NULL,
   `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,
@@ -588,24 +592,28 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`museos_has_servicios` (
 -- Table `musedmx`.`calificaciones`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `musedmx`.`calificaciones` (
-  `visitas_vi_fechahora` DATETIME NOT NULL,
   `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,
   `visitas_vi_mus_id` INT(11) NOT NULL,
   `respuestas_res_id` INT NOT NULL,
   `respuestas_preguntas_preg_id` INT NOT NULL,
   `respuestas_preguntas_encuesta_enc_cve` INT NOT NULL,
-  PRIMARY KEY (`visitas_vi_fechahora`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`, `respuestas_res_id`, `respuestas_preguntas_preg_id`, `respuestas_preguntas_encuesta_enc_cve`),
-  CONSTRAINT `fk_calificaciones_visitas1`
-	  FOREIGN KEY (`visitas_vi_fechahora`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`)
-	  REFERENCES `musedmx`.`visitas` (`vi_fechahora`, `vi_usr_correo`, `vi_mus_id`)
-	  ON DELETE CASCADE
-	  ON UPDATE CASCADE,
+  PRIMARY KEY (
+    `visitas_vi_usr_correo`, 
+    `visitas_vi_mus_id`, 
+    `respuestas_res_id`, 
+    `respuestas_preguntas_preg_id`, 
+    `respuestas_preguntas_encuesta_enc_cve`
+  ),
   CONSTRAINT `fk_calificaciones_respuesta1`
-	  FOREIGN KEY (`respuestas_res_id`, `respuestas_preguntas_preg_id`, `respuestas_preguntas_encuesta_enc_cve`)
-	  REFERENCES `musedmx`.`respuestas` (`res_id`, `preguntas_preg_id`, `preguntas_encuesta_enc_cve`)
-	  ON DELETE CASCADE
-	  ON UPDATE CASCADE
-  ) ENGINE=InnoDB;
+    FOREIGN KEY (`respuestas_res_id`, `respuestas_preguntas_preg_id`, `respuestas_preguntas_encuesta_enc_cve`)
+    REFERENCES `musedmx`.`respuestas` (`res_id`, `preguntas_preg_id`, `preguntas_encuesta_enc_cve`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+
+  
+  SELECT * FROM calificaciones;
   
   -- -----------------------------------------------------
 -- Table `musedmx`.`tematicas`

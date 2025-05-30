@@ -483,7 +483,7 @@ function SignInForm() {
                     <div className="registros-chks">
                       <fieldset>
                         <legend>
-                          Dale click a tus temáticas favoritas (3 máx)
+                          Dale click a tus temáticas favoritas (3 mínimo):
                         </legend>
                         <div className="registros-chk-container">
                           {Object.values(TEMATICAS).map((tematica) => (

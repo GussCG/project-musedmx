@@ -61,14 +61,14 @@ cargar_csv_a_tabla(
     ["res_id", "res_respuesta", "preguntas_preg_id", "preguntas_encuesta_enc_cve"]
 )
 
-# Calificaciones
+# Calificaciones (CORREGIDO: SIN vi_fechahora)
 cargar_csv_a_tabla(
     "./csvpruebas/calificaciones.csv",
     """INSERT INTO calificaciones (
-        visitas_vi_fechahora, visitas_vi_usr_correo, visitas_vi_mus_id,
+        visitas_vi_usr_correo, visitas_vi_mus_id,
         respuestas_res_id, respuestas_preguntas_preg_id, respuestas_preguntas_encuesta_enc_cve
-    ) VALUES (%s, %s, %s, %s, %s, %s)""",
-    ["visitas_vi_fechahora", "visitas_vi_usr_correo", "visitas_vi_mus_id",
+    ) VALUES (%s, %s, %s, %s, %s)""",
+    ["visitas_vi_usr_correo", "visitas_vi_mus_id",
      "respuestas_res_id", "respuestas_preguntas_preg_id", "respuestas_preguntas_encuesta_enc_cve"]
 )
 

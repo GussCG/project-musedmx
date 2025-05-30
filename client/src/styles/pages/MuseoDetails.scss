@@ -1188,7 +1188,7 @@
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 725px) {
   #museo-section-1 {
     min-width: 90vw;
     display: flex;
@@ -1210,6 +1210,10 @@
         width: 100%;
         justify-content: center;
         align-items: center;
+
+        .museo-section-1-info-title {
+          text-align: center;
+        }
 
         .museo-section-1-info-tematica,
         .museo-section-1-info-horarios,

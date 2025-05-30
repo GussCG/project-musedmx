@@ -332,7 +332,7 @@ function MuseoDetail() {
                             {isLoading ? (
                               <Skeleton width={50} />
                             ) : (
-                              <p>{calificacionPromedio}</p>
+                              <p>{calificacionPromedio.toFixed(2)}</p>
                             )}
 
                             <img

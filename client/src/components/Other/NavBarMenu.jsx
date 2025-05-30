@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 
 import Icons from "./IconProvider";
-const { logo, IoMenu } = Icons;
+const { MuseDMXLogo, IoMenu } = Icons;
 
 import MenuContainer from "./MenuContainer";
 import { useAuth } from "../../context/AuthProvider";
@@ -78,8 +78,7 @@ function NavBarMenu() {
         <ul id="nav-menu">
           <li>
             <Link className="navbarmenu-link" to="/">
-              <p id="nav-logo">Inicio</p>
-              <img src={logo} alt="Logo®" id="nav-logo-img" />
+              <img src={MuseDMXLogo} alt="Logo®" id="nav-logo-img" />
             </Link>
           </li>
           <li className="nav-a">

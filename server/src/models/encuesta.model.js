@@ -20,7 +20,7 @@ export default class Encuesta {
     return rows;
   }
 
-  static async findEncuesta({ encuestaId, museoId, correo, fecha }) {
+  static async findEncuesta({ encuestaId, museoId, correo }) {
     const [preguntas] = await pool.query(
       `
             SELECT 
@@ -39,14 +39,16 @@ export default class Encuesta {
       `
             SELECT
                 c.respuestas_preguntas_preg_id AS preg_id,
-                c.respuestas_res_id AS res_id
+                c.respuestas_res_id AS res_id,
+                r.res_respuesta
             FROM calificaciones c
+            JOIN respuestas r ON c.respuestas_res_id = r.res_id
             WHERE 
-                c.respuestas_preguntas_encuesta_enc_cve = ? 
+                c.visitas_vi_usr_correo = ?
                 AND c.visitas_vi_mus_id = ?
-                AND c.visitas_vi_usr_correo = ?
+                AND c.respuestas_preguntas_encuesta_enc_cve = ?
             `,
-      [encuestaId, museoId, correo, fecha]
+      [correo, museoId, encuestaId]
     );
 
     const [serviciosSeleccionados] = await pool.query(
@@ -60,7 +62,7 @@ export default class Encuesta {
                 rs.visitas_vi_usr_correo = ?
                 AND rs.visitas_vi_mus_id = ?
         `,
-      [correo, museoId, fecha]
+      [correo, museoId]
     );
 
     const preguntasMap = {};
@@ -70,6 +72,7 @@ export default class Encuesta {
         preguntasMap[row.preg_id] = {
           preg_id: row.preg_id,
           pregunta: row.pregunta,
+          respuestas: [],
           respuestaSeleccionada: null,
         };
       }
@@ -98,7 +101,8 @@ export default class Encuesta {
       })),
       respuestas: respuestasSeleccionadas.map((respuesta) => ({
         preg_id: respuesta.preg_id,
-        res_respuesta: respuesta.res_id,
+        res_id: respuesta.res_id,
+        res_respuesta: respuesta.res_respuesta,
       })),
     };
   }
@@ -145,5 +149,138 @@ export default class Encuesta {
       respuestas,
       servicios,
     };
+  }
+
+  static async registrarEncuesta({
+    encuestaId,
+    museoId,
+    correo,
+    resenaData,
+    fechahora,
+  }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      // Registrar respuestas
+      for (const respuesta of resenaData.respuestas) {
+        const query = `
+          INSERT INTO calificaciones (
+            visitas_vi_usr_correo,
+            visitas_vi_mus_id,
+            visitas_vi_fechahora,
+            respuestas_preguntas_preg_id,
+            respuestas_res_id,
+            respuestas_preguntas_encuesta_enc_cve
+          ) VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        const queryParams = [
+          correo,
+          museoId,
+          fechahora,
+          respuesta.preg_id,
+          respuesta.res_id,
+          encuestaId,
+        ];
+        await connection.query(query, queryParams);
+      }
+
+      // Registrar servicios
+      for (const servicio of resenaData.servicios) {
+        const query = `
+          INSERT INTO respuestas_servicios (
+            visitas_vi_fechahora,
+            visitas_vi_usr_correo,
+            visitas_vi_mus_id,
+            servicios_ser_id
+          ) VALUES (?, ?, ?, ?)
+        `;
+        const queryParams = [fechahora, correo, museoId, servicio.ser_id];
+        await connection.query(query, queryParams);
+      }
+
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error al registrar encuesta:", error);
+      throw new Error("Error al registrar encuesta");
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async updateEncuesta({ encuestaId, museoId, correo, data }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    console.log("Actualizando encuesta:", {
+      encuestaId,
+      museoId,
+      correo,
+      data,
+    });
+    try {
+      // Eliminar respuestas existentes
+      const deleteQuery1 = `
+          DELETE FROM calificaciones
+          WHERE visitas_vi_usr_correo = ?
+            AND visitas_vi_mus_id = ?
+            AND respuestas_preguntas_encuesta_enc_cve = ?
+        `;
+
+      const deleteParams1 = [correo, museoId, encuestaId];
+
+      await connection.query(deleteQuery1, deleteParams1);
+      // Registrar nuevas respuestas
+      for (const respuesta of data.respuestas) {
+        const insertQuery = `
+              INSERT INTO calificaciones (
+                visitas_vi_usr_correo,
+                visitas_vi_mus_id,
+                respuestas_preguntas_preg_id,
+                respuestas_res_id,
+                respuestas_preguntas_encuesta_enc_cve
+              ) VALUES (?, ?, ?, ?, ?)
+            `;
+        const insertParams = [
+          correo,
+          museoId,
+          respuesta.preguntaId,
+          respuesta.respuesta,
+          encuestaId,
+        ];
+        await connection.query(insertQuery, insertParams);
+      }
+
+      // Eliminar respuestas de servicios existentes
+      const deleteQuery2 = `
+          DELETE FROM respuestas_servicios
+          WHERE visitas_vi_usr_correo = ?
+            AND visitas_vi_mus_id = ?
+        `;
+      const deleteParams2 = [correo, museoId];
+      await connection.query(deleteQuery2, deleteParams2);
+
+      // Registrar nuevos servicios
+      for (const servicio of data.servicios) {
+        const insertQuery = `
+              INSERT INTO respuestas_servicios (
+                visitas_vi_usr_correo,
+                visitas_vi_mus_id,
+                servicios_ser_id
+              ) VALUES (?, ?, ?)
+            `;
+        const insertParams = [correo, museoId, servicio]; // <-- aquí
+        await connection.query(insertQuery, insertParams);
+      }
+      // Confirmar transacción
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error al actualizar encuesta:", error);
+      throw new Error("Error al actualizar encuesta");
+    } finally {
+      connection.release();
+    }
   }
 }

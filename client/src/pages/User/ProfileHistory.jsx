@@ -87,7 +87,11 @@ function ProfileHistory() {
       {
         accessorKey: "mus_nombre",
         header: "Museo",
-        cell: (info) => info.getValue(),
+        cell: ({ row }) => (
+          <Link to={`/Museos/${row.original.visitas_vi_mus_id}`}>
+            {row.original.mus_nombre}
+          </Link>
+        ),
         enableSorting: true,
       },
       {

@@ -374,7 +374,7 @@ function ProfileEdit() {
                           <div className="registros-chks">
                             <fieldset>
                               <legend>
-                                Selecciona tus temáticas favoritas (3 máx)
+                                Selecciona tus temáticas favoritas (3 mínimo)
                               </legend>
                               <div className="registros-chk-container">
                                 {Object.values(TEMATICAS).map((tematica) => (

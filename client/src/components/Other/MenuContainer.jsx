@@ -4,7 +4,7 @@ import { forwardRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "../../context/ThemeProvider";
 import Icons from "./IconProvider";
-const { CgClose, IoSunny, FaMoon, SiRetroarch } = Icons;
+const { CgClose, IoSunny, FaMoon, SiRetroarch, MuseDMXIcon } = Icons;
 import { TIPOS_USUARIO } from "../../constants/catalog";
 
 const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
@@ -63,7 +63,17 @@ const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
                 <CgClose />
               </button>
             </div>
-            <div className="menu-header"></div>
+            <div className="menu-header">
+              <motion.h1
+                key={"MenuContainerHeader"}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ delay: 0.4 }}
+              >
+                Menú
+              </motion.h1>
+            </div>
             <div className="menu-body">
               <ul>
                 <motion.li
@@ -110,6 +120,113 @@ const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
                     Populares
                   </Link>
                 </motion.li>
+                {user && (
+                  <>
+                    <motion.hr
+                      key={"hrmenu"}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 0.3 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ delay: 0.4 }}
+                    />
+                    <motion.li
+                      key={"editarPerfilUsuario"}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ delay: 0.4 }}
+                    >
+                      <Link
+                        to={`/${TIPOS_USUARIO[user.usr_tipo].nombre}/Editar`}
+                        onClick={toggleMenu}
+                      >
+                        Editar Perfil
+                      </Link>
+                    </motion.li>
+                    {tipoUsuario === 1 && (
+                      <>
+                        <motion.li
+                          key={"perfilUsuario"}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ delay: 0.4 }}
+                        >
+                          <Link
+                            to={`/${TIPOS_USUARIO[user.usr_tipo].nombre}`}
+                            onClick={toggleMenu}
+                          >
+                            Ver Mi Perfil
+                          </Link>
+                        </motion.li>
+                        <motion.li
+                          key={"historialUsuario"}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ delay: 0.4 }}
+                        >
+                          <Link
+                            to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/Historial`}
+                            onClick={toggleMenu}
+                          >
+                            Historial de visitas
+                          </Link>
+                        </motion.li>
+                      </>
+                    )}
+                    {tipoUsuario === 2 && (
+                      <>
+                        <motion.li
+                          key={"verMods"}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ delay: 0.4 }}
+                        >
+                          <Link
+                            to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/VerMods`}
+                            onClick={toggleMenu}
+                          >
+                            Ver Mods
+                          </Link>
+                        </motion.li>
+                        <motion.li
+                          key={"registrarMuseo"}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ delay: 0.4 }}
+                        >
+                          <Link
+                            to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/Museo/Registrar`}
+                            onClick={toggleMenu}
+                          >
+                            Registrar Museo
+                          </Link>
+                        </motion.li>
+                      </>
+                    )}
+                    {tipoUsuario === 3 && (
+                      <>
+                        <motion.li
+                          key={"verResenas"}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{ delay: 0.4 }}
+                        >
+                          <Link
+                            to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/VerResenas`}
+                            onClick={toggleMenu}
+                          >
+                            Ver Reseñas
+                          </Link>
+                        </motion.li>
+                      </>
+                    )}
+                  </>
+                )}
               </ul>
             </div>
             <div className="menu-footer">
@@ -160,20 +277,6 @@ const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
                         )}
                       </motion.div>
                     </div>
-                  </motion.div>
-                  <motion.div
-                    key={"MenuContainerPerfil"}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    <Link
-                      to={`/${TIPOS_USUARIO[user.usr_tipo].nombre}`}
-                      onClick={toggleMenu}
-                    >
-                      Ver Mi Perfil
-                    </Link>
                   </motion.div>
 
                   <motion.div
