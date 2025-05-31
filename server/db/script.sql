@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios` (
   `usr_telefono` VARCHAR(15) NULL DEFAULT NULL,
   `usr_foto` VARCHAR(300) NULL DEFAULT NULL,
   `usr_tipo` TINYINT(1) NOT NULL,
+  `usr_verificado` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`usr_correo`)
 -- UNIQUE INDEX `correo` (`usr_correo` ASC) VISIBLE
   ) ENGINE=InnoDB;
@@ -408,7 +409,7 @@ SELECT * FROM visitas;
 CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
   `res_id_res` INT(11) NOT NULL AUTO_INCREMENT,
   `res_comentario` TEXT NOT NULL,
-  `res_foto_entrada` VARCHAR(256) NULL DEFAULT NULL,
+  `res_foto_entrada` VARCHAR(300) NULL DEFAULT NULL,
   `res_mod_correo` VARCHAR(75) NULL DEFAULT NULL,
   `res_aprobado` TINYINT(1) NOT NULL DEFAULT '0',
   `res_calif_estrellas` INT(1) NOT NULL,
@@ -570,25 +571,6 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas_servicios` (
 
 SELECT * FROM respuestas_servicios;
 
--- -----------------------------------------------------
--- Table `musedmx`.`museos_has_servicios`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `musedmx`.`museos_has_servicios` (
-  `museos_mus_id` INT(11) NOT NULL,
-  `servicios_ser_id` INT NOT NULL,
-  PRIMARY KEY (`museos_mus_id`, `servicios_ser_id`),
-  CONSTRAINT `fk_museos_has_servicios_museos1`
-	  FOREIGN KEY (`museos_mus_id`)
-	  REFERENCES `musedmx`.`museos` (`mus_id`)
-	  ON DELETE CASCADE
-	  ON UPDATE CASCADE,
-  CONSTRAINT `fk_museos_has_servicios_servicios1`
-	  FOREIGN KEY (`servicios_ser_id`)
-	  REFERENCES `musedmx`.`servicios` (`ser_id`)
-	  ON DELETE CASCADE
-	  ON UPDATE CASCADE
-	) ENGINE=InnoDB;
-    
 -- -----------------------------------------------------
 -- Table `musedmx`.`calificaciones`
 -- -----------------------------------------------------
