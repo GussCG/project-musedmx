@@ -62,7 +62,7 @@ with open(csv_path, "r", encoding="utf-8") as f:
     museos = [row for row in reader]
 
 def generar_telefono():
-    return f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}"
+    return f"+52 {random.randint(1000,9999)} {random.randint(1000,9999)}"
 
 def bcrypt_hash(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')

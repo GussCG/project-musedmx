@@ -2,7 +2,7 @@ from typing import Dict, Optional, Any
 from ..database import db
 
 def get_usuario(correo: str) -> Optional[Dict[str, Any]]:
-    cursor = db.get_cursor()
+    cursor, conn = db.get_cursor()
     try:
         cursor.execute("""
             SELECT 
@@ -17,4 +17,4 @@ def get_usuario(correo: str) -> Optional[Dict[str, Any]]:
         return None
     finally:
         cursor.close()
-        db.close()
+        db.close(conn)

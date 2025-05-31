@@ -21,8 +21,6 @@ function ModResenaDetail() {
   const { resena, loading, error } = useResena({ resId });
   const { aprobarResena } = useResenaMods();
 
-  console.log("Reseña:", resena);
-
   const lightbox = useLightBox(resena?.fotos || []);
   const [showRechazarPop, setShowRechazarPop] = useState(false);
 
@@ -73,14 +71,16 @@ function ModResenaDetail() {
         <div className="aprobar-res-container">
           <section className="user-info">
             <p>
-              <b>Usuario</b>: {resena?.visitas_vi_usr_correo}
+              <b>Usuario</b>
+              {resena?.visitas_vi_usr_correo}
             </p>
             <p>
-              <b>Fecha de Publicación</b>:{" "}
+              <b>Fecha de Publicación</b>
               {formatearFechaSinHora(resena?.visitas_vi_fechahora)}
             </p>
             <p>
-              <b>Calificación</b>: {resena?.res_calif_estrellas}
+              <b>Calificación</b>
+              {resena?.res_calif_estrellas}
             </p>
           </section>
           <section className="user-resena-container">
@@ -90,10 +90,10 @@ function ModResenaDetail() {
             </p>
             {resena?.fotos && resena.fotos.length > 0 && (
               <div className="user-resena-imgs-container">
-                {galeria.map((img, index) => (
+                {resena?.fotos.map((img, index) => (
                   <div className="user-resena-img" key={index}>
                     <img
-                      src={img.src}
+                      src={img.foto}
                       alt={`Imagen ${index + 1}`}
                       onClick={() => lightbox.openLightBox(index)}
                     />

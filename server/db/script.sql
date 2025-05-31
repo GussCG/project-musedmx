@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`horarios_precios_museo` (
   ) ENGINE=InnoDB;
 
 -- DROP TABLE horarios_precios_museo;
-select * from horarios_precios_museo where mh_mus_id = 2311;
+select * from horarios_precios_museo where mh_mus_id = 375;
   
 -- -----------------------------------------------------
 -- Table `musedmx`.`red_soc`
@@ -461,6 +461,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`foto_resenia` (
 --  INDEX `id_Historial` (`f_res_id_res` ASC) VISIBLE
   ) ENGINE=InnoDB;
 
+-- TRUNCATE TABLE foto_resenia;
 SELECT * FROM foto_resenia;
 
 -- -----------------------------------------------------

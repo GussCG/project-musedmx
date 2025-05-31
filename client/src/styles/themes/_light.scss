@@ -65,7 +65,8 @@
   --bg-valid-password: #ffffff;
 
   // Fotos
-  --bg-row-fotos: #cbcbcb;
+  --bg-row-fotos: #e4e4e4;
+  --bg-row-fotos-hover: #cecece;
 
   // Scrollbar
   --scrollbar-thumb: #cbcbcb;
@@ -126,4 +127,7 @@
   --toast-info-text-color: #00639c;
 
   --tr-border-color: rgba(0, 0, 0, 0.3);
+
+  --bg-scroll-indicator: #ffffff;
+  --boxshadow-scroll-indicator: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

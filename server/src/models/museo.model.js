@@ -18,22 +18,14 @@ export default class Museo {
     const currentPage = page ? Math.max(1, parseInt(page)) : 1;
 
     let query = `
-      SELECT m.*,
-      (
-        SELECT AVG(r.res_calif_estrellas)
-        FROM resenia r
-        WHERE r.visitas_vi_mus_id = m.mus_id
-        AND r.res_aprobado = 1
-      ) as mus_calificacion,
-      (
-        SELECT COUNT(r.res_id_res)
-        FROM resenia r
-        WHERE r.visitas_vi_mus_id = m.mus_id
-        AND r.res_aprobado = 1
-      ) as total_resenias
-      FROM museos m
-      WHERE 1=1
-    `;
+          SELECT 
+            m.*,
+            AVG(r.res_calif_estrellas) AS mus_calificacion,
+            COUNT(r.res_id_res) AS total_resenias
+          FROM museos m
+          LEFT JOIN resenia r ON r.visitas_vi_mus_id = m.mus_id AND r.res_aprobado = 1
+          WHERE 1=1
+      `;
     const queryParams = [];
 
     if (search) {
@@ -50,6 +42,9 @@ export default class Museo {
       query += ` AND mus_alcaldia IN (${alcaldias.map(() => "?").join(",")}) `;
       queryParams.push(...alcaldias);
     }
+
+    // Aquí agregas el GROUP BY, justo después del WHERE y antes del ORDER BY
+    query += ` GROUP BY m.mus_id `;
 
     if (sort) {
       switch (sort) {
@@ -137,6 +132,72 @@ export default class Museo {
 
     const [rows] = await pool.query(query, queryParams);
     return rows;
+  }
+
+  static async findFotoGaleriaById({ id }) {
+    const query = `
+          SELECT * FROM galeria
+          WHERE gal_foto_id = ?
+    `;
+    const queryParams = [];
+    queryParams.push(id);
+    const [rows] = await pool.query(query, queryParams);
+    return {
+      success: true,
+      galeria: rows.length > 0 ? rows[0] : null,
+    };
+  }
+
+  static async addFotosGaleria({ id, galeria }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      const query = `
+        INSERT INTO galeria (gal_mus_id, gal_foto)
+        VALUES (?, ?)
+      `;
+
+      for (const foto of galeria) {
+        const queryParams = [id, foto];
+        await connection.query(query, queryParams);
+      }
+
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error adding fotos galeria:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async deleteFotoGaleriaById({ id, galFotoId }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      const query = `
+        DELETE FROM galeria
+        WHERE gal_foto_id = ? AND gal_mus_id = ?
+      `;
+      const queryParams = [galFotoId, id];
+      await connection.query(query, queryParams);
+
+      if (connection.affectedRows === 0) {
+        throw new Error("No se encontró la foto de galería para eliminar.");
+      }
+
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error deleting foto galeria:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
   }
 
   static async deleteGaleriaById(id) {
@@ -445,9 +506,7 @@ export default class Museo {
         return { museos: [] };
       }
 
-      const museosIds = museos.map((museo) => museo.mus_id);
-
-      const museosMap = new Map(museos.map((m) => [m.mus_id, m]));
+      const museosIds = museos.map((id) => Number(id));
 
       const placeholders = museosIds.map(() => "?").join(",");
       const query = `SELECT * FROM museos WHERE mus_id IN (${placeholders})`;

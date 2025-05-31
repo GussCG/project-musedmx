@@ -5,39 +5,39 @@ export default class Usuario {
     const connection = await pool.getConnection();
     try {
       const query = `
-      SELECT 
-        u.usr_correo,
-        u.usr_nombre,
-        u.usr_ap_paterno,
-        u.usr_ap_materno,
-        u.usr_contrasenia,
-        u.usr_fecha_nac,
-        u.usr_telefono,
-        u.usr_foto,
-        u.usr_tipo,
-        t.tm_nombre AS tematica
-      FROM usuarios u
-      LEFT JOIN usuarios_has_tematicas ut ON u.usr_correo = ut.usuarios_usr_correo
-      LEFT JOIN tematicas t ON ut.tematicas_tm_nombre = t.tm_nombre
-      WHERE u.usr_correo = ?
-    `;
+              SELECT 
+                u.usr_correo,
+                u.usr_nombre,
+                u.usr_ap_paterno,
+                u.usr_ap_materno,
+                u.usr_contrasenia,
+                u.usr_fecha_nac,
+                u.usr_telefono,
+                u.usr_foto,
+                u.usr_tipo,
+                GROUP_CONCAT(t.tm_nombre) AS tematicas -- Devuelve temáticas como lista separada por coma
+              FROM usuarios u
+              LEFT JOIN usuarios_has_tematicas ut ON u.usr_correo = ut.usuarios_usr_correo
+              LEFT JOIN tematicas t ON ut.tematicas_tm_nombre = t.tm_nombre
+              WHERE u.usr_correo = ?
+              GROUP BY u.usr_correo;
+          `;
       const [rows] = await connection.query(query, [usr_correo]);
       if (rows.length === 0) return null;
 
-      const userInfo = {
-        usr_correo: rows[0].usr_correo,
-        usr_nombre: rows[0].usr_nombre,
-        usr_ap_paterno: rows[0].usr_ap_paterno,
-        usr_ap_materno: rows[0].usr_ap_materno,
-        usr_contrasenia: rows[0].usr_contrasenia,
-        usr_fecha_nac: rows[0].usr_fecha_nac,
-        usr_telefono: rows[0].usr_telefono,
-        usr_foto: rows[0].usr_foto,
-        usr_tipo: rows[0].usr_tipo,
-        usr_tematicas: rows.map((row) => row.tematica).filter(Boolean), // Array de temáticas
+      const userInfo = rows[0];
+      return {
+        usr_correo: userInfo.usr_correo,
+        usr_nombre: userInfo.usr_nombre,
+        usr_ap_paterno: userInfo.usr_ap_paterno,
+        usr_ap_materno: userInfo.usr_ap_materno,
+        usr_contrasenia: userInfo.usr_contrasenia,
+        usr_fecha_nac: userInfo.usr_fecha_nac,
+        usr_telefono: userInfo.usr_telefono,
+        usr_foto: userInfo.usr_foto,
+        usr_tipo: userInfo.usr_tipo,
+        usr_tematicas: userInfo.tematicas ? userInfo.tematicas.split(",") : [],
       };
-
-      return userInfo;
     } catch (error) {
       throw new Error("Error al buscar el usuario");
     } finally {

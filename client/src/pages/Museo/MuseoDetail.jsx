@@ -230,6 +230,8 @@ function MuseoDetail() {
     porPagina: 5,
   });
 
+  console.log("Reseñas:", resenas);
+
   return (
     <>
       <AnimatePresence mode="wait">

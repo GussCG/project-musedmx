@@ -1232,126 +1232,15 @@
   }
 }
 
-#editar-fotos-museo-main {
+#museo-img-edit {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 20px;
-
-  padding: 50px 0;
-  min-height: 80vh;
-
-  h1 {
-    font-size: 2rem;
-    color: var(--font-color-primary);
-    margin-bottom: 2rem;
-  }
-
-  .dnd-container {
-    width: 80%;
-    height: auto;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-
-    .registros-field-fotos {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-
-      #registros-fotos-container {
-        height: 120px;
-        width: 80%;
-
-        transition: background-color 0.3s ease-in-out;
-
-        &:hover {
-          background-color: var(--bg-row-fotos);
-        }
-      }
-
-      .progress-area {
-        width: 100%;
-      }
-
-      .uploaded-area {
-        width: 100%;
-        max-height: 300px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        margin-top: 2rem;
-        gap: 20px;
-
-        .row {
-          width: 100%;
-          min-width: 350px;
-          height: auto;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          position: relative;
-
-          .content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-
-            .image-file {
-              width: 100%;
-              height: 200px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              overflow: hidden;
-
-              img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-              }
-            }
-
-            .details {
-              width: 100%;
-              display: flex;
-              flex-direction: column;
-
-              .name {
-                width: 100%;
-                max-width: 200px;
-                font-family: $font-primary;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                color: var(--font-color-primary);
-              }
-            }
-          }
-        }
-      }
-    }
-
-    #registros-button {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-    }
-  }
+  justify-content: center;
 }
 
 #aprobar-res-main {
-  width: 80%;
+  width: 90%;
   height: 100%;
   min-height: $main-height;
   background-color: var(--bg-main);
@@ -1369,6 +1258,7 @@
   h1 {
     font-size: 2rem;
     color: var(--font-color-primary);
+    font-family: $font-tertiary;
   }
 
   .aprobar-res-container {
@@ -1382,14 +1272,21 @@
 
     .user-info {
       width: 100%;
-      height: 100px;
-      display: flex;
-      flex-direction: row;
+      height: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       align-items: center;
+      justify-items: center;
       justify-content: center;
       gap: 30px;
 
       p {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
         font-family: $font-primary;
         font-size: 1rem;
         color: var(--font-color-primary);
@@ -1406,11 +1303,16 @@
       gap: 20px;
 
       .user-resena {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
         text-align: justify;
         font-family: $font-primary;
         font-size: 1rem;
         color: var(--font-color-primary);
         padding: 20px;
+        background-color: var(--bg-row-fotos);
+        border-radius: 20px;
       }
 
       .user-resena-imgs-container {

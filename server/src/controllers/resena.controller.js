@@ -3,6 +3,7 @@ import { handleHttpError } from "../helpers/httpError.js";
 import Visitas from "../models/visitas.model.js";
 import path from "path";
 import { uploadToAzure } from "../utils/azureUpload.js";
+import { deleteFromAzure } from "../utils/azureDelete.js";
 import sharp from "sharp";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -179,8 +180,17 @@ export const editarResena = async (req, res) => {
     if (req.body.res_comentario) {
       datosActualizar.res_comentario = req.body.res_comentario;
     }
-    if (req.body.visitas_vi_fechahora) {
-      datosActualizar.visitas_vi_fechahora = req.body.visitas_vi_fechahora;
+    let ultimoIndex = 0;
+    const fotos = await Resena.findFotosByResId({ resenaId });
+    console.log("Fotos encontradas:", fotos);
+
+    if (fotos && fotos.length > 0) {
+      const indices = fotos.map((foto) => {
+        const match = foto.f_res_foto.match(/resena-\d+-(\d+)\.jpg$/);
+        return match ? parseInt(match[1]) : 0;
+      });
+
+      ultimoIndex = Math.max(...indices, 0);
     }
 
     if (req.files) {
@@ -192,9 +202,8 @@ export const editarResena = async (req, res) => {
         const bufferJpg = await sharp(file.buffer)
           .jpeg({ quality: 80 })
           .toBuffer();
-        const blobName = `${sanitizedEmail}-imagenes/resenas/resena-${resenaId}/resena-${resenaId}-${
-          index + 1
-        }.jpg`;
+        const nuevoIndex = ultimoIndex + index + 1; // Incrementar el índice basado en las fotos existentes
+        const blobName = `${sanitizedEmail}-imagenes/resenas/resena-${resenaId}/resena-${resenaId}-${nuevoIndex}.jpg`;
         const url = await uploadToAzure(
           containerName,
           bufferJpg,
@@ -219,5 +228,59 @@ export const editarResena = async (req, res) => {
     });
   } catch (error) {
     handleHttpError(res, "ERROR_EDIT_RESENA", error);
+  }
+};
+
+export const eliminarFotoResena = async (req, res) => {
+  try {
+    const { resenaId, fotoId } = req.params;
+
+    // Verificar si la reseña existe
+    const resena = await Resena.findById({ id: resenaId });
+    if (!resena) {
+      return res.status(404).json({
+        success: false,
+        message: "Reseña no encontrada",
+      });
+    }
+
+    // Verificar si la foto existe en la reseña
+    const fotoResena = await Resena.findFotoById({
+      resenaId,
+      fotoId,
+    });
+
+    if (!fotoResena) {
+      return res.status(404).json({
+        success: false,
+        message: "Foto de reseña no encontrada",
+      });
+    }
+
+    // Eliminar la foto de Azure
+    const containerName = "imagenes-usuarios";
+    const fotoUrl = fotoResena.foto.f_res_foto;
+
+    const blobName = new URL(fotoUrl).pathname.replace(/^\/[^\/]+\//, ""); // Extrae el path interno del blob
+
+    const eliminado = deleteFromAzure(containerName, blobName);
+    if (eliminado) {
+      await Resena.deleteFotoById({
+        resenaId,
+        fotoId,
+      });
+
+      res.json({
+        success: true,
+        message: "Foto de reseña eliminada correctamente",
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Error al eliminar la foto de reseña",
+      });
+    }
+  } catch (error) {
+    handleHttpError(res, "ERROR_DELETE_FOTO_RESENA", error);
   }
 };

@@ -49,6 +49,7 @@ export default function useResenaMuseo({
             signal: controller.signal,
           }
         );
+        console.log("Response data:", response.data);
         const data = response.data.resenas;
         setResenas(data.resenas || []);
         setTotal(data.total || 0);

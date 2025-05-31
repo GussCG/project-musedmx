@@ -12,6 +12,7 @@ import {
   getResenasByCorreo,
   eliminarResena,
   editarResena,
+  eliminarFotoResena,
 } from "../controllers/resena.controller.js";
 
 const router = Router();
@@ -29,6 +30,7 @@ router.post(
   upload.array("fotos", 10),
   editarResena
 ); // Asumiendo que esta ruta es para editar una reseña
+router.delete("/usuario/eliminar-foto/:resenaId/:fotoId", eliminarFotoResena);
 
 // Para obtener reseñas por museo
 router.get("/museo/:museoId", getResenasByMuseo);

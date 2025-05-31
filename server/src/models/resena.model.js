@@ -3,35 +3,41 @@ import { pool } from "../db.js";
 export default class Resena {
   static async findById({ id, aprobada = true }) {
     let query = `
-          SELECT 
+            SELECT 
             r.*, 
             u.usr_nombre, u.usr_ap_paterno, u.usr_ap_materno, u.usr_foto, 
             m.mus_id,
-            GROUP_CONCAT(DISTINCT fr.f_res_foto) AS fotos, 
+            f.fotos,
             GROUP_CONCAT(DISTINCT s.ser_id) AS servicios,
             GROUP_CONCAT(DISTINCT resp.res_respuesta) AS respuestas
           FROM resenia r
-          JOIN visitas v ON r.visitas_vi_fechahora = v.vi_fechahora 
-                        AND r.visitas_vi_usr_correo = v.vi_usr_correo 
+          JOIN visitas v ON r.visitas_vi_usr_correo = v.vi_usr_correo 
                         AND r.visitas_vi_mus_id = v.vi_mus_id
           JOIN usuarios u ON v.vi_usr_correo = u.usr_correo
           JOIN museos m ON v.vi_mus_id = m.mus_id
-          LEFT JOIN foto_resenia fr ON r.res_id_res = fr.f_res_id_res
-          LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_fechahora = v.vi_fechahora
-                                          AND rs.visitas_vi_usr_correo = v.vi_usr_correo
+
+          LEFT JOIN (
+            SELECT 
+              f_res_id_res, 
+              JSON_ARRAYAGG(JSON_OBJECT('id', f_res_id, 'foto', f_res_foto)) AS fotos
+            FROM foto_resenia
+            GROUP BY f_res_id_res
+          ) f ON f.f_res_id_res = r.res_id_res
+
+          LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_usr_correo = v.vi_usr_correo
                                           AND rs.visitas_vi_mus_id = v.vi_mus_id
           LEFT JOIN servicios s ON rs.servicios_ser_id = s.ser_id
-          LEFT JOIN calificaciones c ON c.visitas_vi_fechahora = v.vi_fechahora
-                                    AND c.visitas_vi_usr_correo = v.vi_usr_correo
+          LEFT JOIN calificaciones c ON c.visitas_vi_usr_correo = v.vi_usr_correo
                                     AND c.visitas_vi_mus_id = v.vi_mus_id
           LEFT JOIN respuestas resp ON resp.res_id = c.respuestas_res_id
-                                  AND resp.preguntas_preg_id = c.respuestas_preguntas_preg_id
-                                  AND resp.preguntas_encuesta_enc_cve = c.respuestas_preguntas_encuesta_enc_cve
+                                    AND resp.preguntas_preg_id = c.respuestas_preguntas_preg_id
+                                    AND resp.preguntas_encuesta_enc_cve = c.respuestas_preguntas_encuesta_enc_cve
           WHERE r.res_id_res = ?
-          `;
+          GROUP BY r.res_id_res
 
-    const queryParams = [];
-    queryParams.push(id);
+  `;
+
+    const queryParams = [id];
     const [rows] = await pool.query(query, queryParams);
     return rows;
   }
@@ -52,13 +58,13 @@ export default class Resena {
     return rows;
   }
 
-  static async findFoto({ id }) {
+  static async findFotosByResId({ resenaId }) {
     const query = `
         SELECT * FROM foto_resenia
         WHERE f_res_id_res = ?
         `;
     const queryParams = [];
-    queryParams.push(id);
+    queryParams.push(resenaId);
     const [rows] = await pool.query(query, queryParams);
     return rows;
   }
@@ -104,8 +110,7 @@ export default class Resena {
       let countQuery = `
       SELECT COUNT(DISTINCT r.res_id_res) AS total
       FROM resenia r
-      JOIN visitas v ON r.visitas_vi_fechahora = v.vi_fechahora
-                    AND r.visitas_vi_usr_correo = v.vi_usr_correo
+      JOIN visitas v ON r.visitas_vi_usr_correo = v.vi_usr_correo
                     AND r.visitas_vi_mus_id = v.vi_mus_id
       LEFT JOIN foto_resenia fr ON r.res_id_res = fr.f_res_id_res
       WHERE ${whereClause}
@@ -126,18 +131,15 @@ export default class Resena {
         GROUP_CONCAT(DISTINCT s.ser_id) AS servicios,
         GROUP_CONCAT(DISTINCT resp.res_respuesta) AS respuestas
       FROM resenia r
-      JOIN visitas v ON r.visitas_vi_fechahora = v.vi_fechahora 
-                    AND r.visitas_vi_usr_correo = v.vi_usr_correo 
+      JOIN visitas v ON r.visitas_vi_usr_correo = v.vi_usr_correo 
                     AND r.visitas_vi_mus_id = v.vi_mus_id
       JOIN usuarios u ON v.vi_usr_correo = u.usr_correo
       JOIN museos m ON v.vi_mus_id = m.mus_id
       LEFT JOIN foto_resenia fr ON r.res_id_res = fr.f_res_id_res
-      LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_fechahora = v.vi_fechahora
-                                      AND rs.visitas_vi_usr_correo = v.vi_usr_correo
+      LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_usr_correo = v.vi_usr_correo
                                       AND rs.visitas_vi_mus_id = v.vi_mus_id
       LEFT JOIN servicios s ON rs.servicios_ser_id = s.ser_id
-      LEFT JOIN calificaciones c ON c.visitas_vi_fechahora = v.vi_fechahora
-                                AND c.visitas_vi_usr_correo = v.vi_usr_correo
+      LEFT JOIN calificaciones c ON c.visitas_vi_usr_correo = v.vi_usr_correo
                                 AND c.visitas_vi_mus_id = v.vi_mus_id
       LEFT JOIN respuestas resp ON resp.res_id = c.respuestas_res_id
                               AND resp.preguntas_preg_id = c.respuestas_preguntas_preg_id
@@ -184,18 +186,15 @@ export default class Resena {
               GROUP_CONCAT(DISTINCT s.ser_id) AS servicios,
               GROUP_CONCAT(DISTINCT resp.res_respuesta) AS respuestas
             FROM resenia r
-            JOIN visitas v ON r.visitas_vi_fechahora = v.vi_fechahora 
-                          AND r.visitas_vi_usr_correo = v.vi_usr_correo 
+            JOIN visitas v ON r.visitas_vi_usr_correo = v.vi_usr_correo 
                           AND r.visitas_vi_mus_id = v.vi_mus_id
             JOIN usuarios u ON v.vi_usr_correo = u.usr_correo
             JOIN museos m ON v.vi_mus_id = m.mus_id
             LEFT JOIN foto_resenia fr ON r.res_id_res = fr.f_res_id_res
-            LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_fechahora = v.vi_fechahora
-                                            AND rs.visitas_vi_usr_correo = v.vi_usr_correo
+            LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_usr_correo = v.vi_usr_correo
                                             AND rs.visitas_vi_mus_id = v.vi_mus_id
             LEFT JOIN servicios s ON rs.servicios_ser_id = s.ser_id
-            LEFT JOIN calificaciones c ON c.visitas_vi_fechahora = v.vi_fechahora
-                                      AND c.visitas_vi_usr_correo = v.vi_usr_correo
+            LEFT JOIN calificaciones c ON c.visitas_vi_usr_correo = v.vi_usr_correo
                                       AND c.visitas_vi_mus_id = v.vi_mus_id
             LEFT JOIN respuestas resp ON resp.res_id = c.respuestas_res_id
                                     AND resp.preguntas_preg_id = c.respuestas_preguntas_preg_id
@@ -303,10 +302,9 @@ export default class Resena {
     await connection.beginTransaction();
     try {
       const data = { ...resenaData };
-      const fecha = data.visitas_vi_fechahora;
-      delete data.visitas_vi_fechahora; // Eliminar del objeto para evitar conflictos
       const fotos = data.fotos;
-      delete data.fotos; // Eliminar del objeto para evitar conflictos
+      const fecha = data.visitas_vi_fechahora; // <--- ESTE CAMPO SÍ EXISTE
+      delete data.fotos;
 
       if (Object.keys(data).length > 0) {
         const campos = Object.keys(data);
@@ -315,34 +313,19 @@ export default class Resena {
         await connection.query(query, [...Object.values(data), res_id_res]);
       }
 
-      // Actualizar la fecha de visita
+      // ⚠️ Solo permitir actualizar la fecha si no hay reseña que dependa
+      // o si es seguro hacerlo (bajo tu lógica)
       if (fecha) {
         const fechaQuery = `
-          UPDATE visitas
-          SET vi_fechahora = ?
-          WHERE vi_usr_correo = ? AND vi_mus_id = ? 
-          AND vi_fechahora = (SELECT visitas_vi_fechahora FROM resenia WHERE res_id_res = ?)
-        `;
-        await connection.query(fechaQuery, [
-          fecha,
-          correo,
-          museoId,
-          res_id_res,
-        ]);
+        UPDATE visitas
+        SET vi_fechahora = ?
+        WHERE vi_usr_correo = ? AND vi_mus_id = ? 
+      `;
+        await connection.query(fechaQuery, [fecha, correo, museoId]);
       }
 
-      // Actualizar las fotos
       if (fotos && fotos.length > 0) {
-        const deleteQuery = `
-          DELETE FROM foto_resenia
-          WHERE f_res_id_res = ?
-        `;
-        await connection.query(deleteQuery, [res_id_res]);
-
-        const insertQuery = `
-          INSERT INTO foto_resenia (f_res_id_res, f_res_foto)
-          VALUES (?, ?)
-        `;
+        const insertQuery = `INSERT INTO foto_resenia (f_res_id_res, f_res_foto) VALUES (?, ?)`;
         for (const foto of fotos) {
           await connection.query(insertQuery, [res_id_res, foto]);
         }
@@ -353,7 +336,7 @@ export default class Resena {
     } catch (error) {
       console.error("Error al editar la reseña:", error);
       await connection.rollback();
-      throw error; // Preservamos el mensaje real del error
+      throw error;
     } finally {
       connection.release();
     }
@@ -373,5 +356,45 @@ export default class Resena {
     }
 
     return { success: true, id };
+  }
+
+  static async findFotoById({ resenaId, fotoId }) {
+    try {
+      const query = `
+        SELECT * FROM foto_resenia
+        WHERE f_res_id_res = ? AND f_res_id = ?
+      `;
+      const queryParams = [resenaId, fotoId];
+      const [rows] = await pool.query(query, queryParams);
+
+      // Mandar la foto si existe
+      return {
+        success: true,
+        foto: rows.length > 0 ? rows[0] : null,
+      };
+    } catch (error) {
+      console.error("Error fetching foto by resenaId and fotoId:", error);
+      throw error;
+    }
+  }
+
+  static async deleteFotoById({ resenaId, fotoId }) {
+    try {
+      const query = `
+        DELETE FROM foto_resenia
+        WHERE f_res_id_res = ? AND f_res_id = ?
+      `;
+      const queryParams = [resenaId, fotoId];
+      const [result] = await pool.query(query, queryParams);
+
+      if (result.affectedRows === 0) {
+        throw new Error("No se encontró la foto de reseña para eliminar");
+      }
+
+      return { success: true, id: fotoId };
+    } catch (error) {
+      console.error("Error deleting foto by resenaId and fotoId:", error);
+      throw error;
+    }
   }
 }

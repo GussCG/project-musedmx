@@ -86,6 +86,24 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
       setLoading(false);
     }
   };
+
+  const eliminarFotoResena = async (resenaId, fotoId) => {
+    try {
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/resena/usuario/eliminar-foto/${resenaId}/${fotoId}`;
+      const response = await axios.delete(endpoint, {
+        withCredentials: true,
+      });
+      console.log("Foto de reseña eliminada:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error al eliminar foto de reseña:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     registrarResena,
     editarResena,
@@ -94,6 +112,7 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
     loading,
     resenias,
     fetchResenasByCorreo,
+    eliminarFotoResena,
   };
 };
 

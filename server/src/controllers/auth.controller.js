@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { generateOTP } from "../utils/generateOTP.js"; 
+import { generateOTP } from "../utils/generateOTP.js";
 
 import { uploadToAzure } from "../utils/azureUpload.js";
 
@@ -17,8 +17,6 @@ const __dirname = path.dirname(__filename);
 export const logIn = async (req, res) => {
   try {
     let { usr_correo, usr_contrasenia } = req.body;
-
-    console.log("Datos de inicio de sesión:", req.body);
 
     if (!usr_correo || !usr_contrasenia) {
       return res.status(400).json({
@@ -291,8 +289,8 @@ export const obtenerUsuarioByCorreo = async (req, res) => {
 };
 
 export const recuperarContrasena = async (req, res) => {
-	try {
-		const { usr_correo } = req.body;
+  try {
+    const { usr_correo } = req.body;
     if (!usr_correo) {
       return res.status(400).json({
         success: false,
@@ -314,7 +312,7 @@ export const recuperarContrasena = async (req, res) => {
     // if (!usuario.usr_verificado) {
     //   return res.status(403).json({
     //     success: false,
-    //     message: "Usuario no verificado",  
+    //     message: "Usuario no verificado",
     //   });
     // }
 
@@ -322,15 +320,15 @@ export const recuperarContrasena = async (req, res) => {
     console.log("Recuperación de contraseña para:", usr_correo);
     console.log("OTP generado:", OTP);
     sendRecoveryEmail({ recipient_email: usr_correo, OTP })
-		.then((response) => res.send(response.message))
-		.catch((error) => {
-			handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
-		});
+      .then((response) => res.send(response.message))
+      .catch((error) => {
+        handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
+      });
     /* return res.status(200).json({
         success: true,
         message: "Email sent successfully"
       }); */
-	} catch (error) {
-		handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
-	}
-}
+  } catch (error) {
+    handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
+  }
+};

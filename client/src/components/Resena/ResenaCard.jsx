@@ -1,4 +1,5 @@
 import placeholderUserImage from "../../assets/images/placeholders/user_placeholder.png";
+import { Link } from "react-router-dom";
 import ImagenesSlider from "../../components/Resena/ImagenesSlider";
 import Icons from "../Other/IconProvider";
 const { FaStar } = Icons;
@@ -11,9 +12,11 @@ import {
 import { SERVICIOS } from "../../constants/catalog";
 import { useTheme } from "../../context/ThemeProvider";
 import Skeleton from "react-loading-skeleton";
+import { useAuth } from "../../context/AuthProvider";
 
 function ResenaCard({ resena = {}, loadingResena = true }) {
   loadingResena = false;
+  const { user } = useAuth();
   const { isDarkMode } = useTheme();
   return (
     <>
@@ -50,6 +53,14 @@ function ResenaCard({ resena = {}, loadingResena = true }) {
                     )
                   )}
                 </div>
+                {user.usr_correo === resena.visitas_vi_usr_correo && (
+                  <Link
+                    className="button-link"
+                    to={`/Usuario/Historial/${resena.res_id_res}`}
+                  >
+                    Editar
+                  </Link>
+                )}
               </div>
 
               <div
