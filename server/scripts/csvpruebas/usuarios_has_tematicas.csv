@@ -1,61 +1,301 @@
 usuarios_usr_correo,tematicas_tm_nombre
-rsalas@example.com,Arte Alternativo
-rsalas@example.com,Arqueología
-rsalas@example.com,Historia
-romeroamador@example.com,Historia
-romeroamador@example.com,Antropología
-romeroamador@example.com,Otro
-evelio66@example.org,Antropología
-evelio66@example.org,Ciencia y Tecnología
-evelio66@example.org,Arqueología
-carmen94@example.org,Arte Alternativo
-carmen94@example.org,Otro
-carmen94@example.org,Ciencia y Tecnología
-marcelavelasco@example.net,Historia
-marcelavelasco@example.net,Arte
-marcelavelasco@example.net,Otro
-maria-josemiranda@example.net,Arqueología
-maria-josemiranda@example.net,Arte Alternativo
-maria-josemiranda@example.net,Antropología
-parrajacinto@example.com,Ciencia y Tecnología
-parrajacinto@example.com,Historia
-parrajacinto@example.com,Antropología
-normapalomo@example.net,Historia
-normapalomo@example.net,Antropología
-normapalomo@example.net,Ciencia y Tecnología
-aguileraemilio@example.com,Arte Alternativo
-aguileraemilio@example.com,Especializado
-aguileraemilio@example.com,Antropología
-luis47@example.org,Arqueología
-luis47@example.org,Historia
-luis47@example.org,Otro
-hhuerta@example.org,Otro
-hhuerta@example.org,Especializado
-hhuerta@example.org,Arte
-deboracruz@example.com,Ciencia y Tecnología
-deboracruz@example.com,Especializado
-deboracruz@example.com,Historia
-israelrincon@example.net,Arte Alternativo
-israelrincon@example.net,Arqueología
-israelrincon@example.net,Otro
-quinteroreina@example.org,Antropología
-quinteroreina@example.org,Arqueología
-quinteroreina@example.org,Otro
-saiztimoteo@example.com,Arqueología
-saiztimoteo@example.com,Otro
-saiztimoteo@example.com,Ciencia y Tecnología
-leonorcabrera@example.net,Otro
-leonorcabrera@example.net,Arte Alternativo
-leonorcabrera@example.net,Especializado
-xvallejo@example.net,Arte Alternativo
-xvallejo@example.net,Especializado
-xvallejo@example.net,Ciencia y Tecnología
-jesusulibarri@example.org,Historia
-jesusulibarri@example.org,Arte
-jesusulibarri@example.org,Arqueología
-psuarez@example.com,Antropología
-psuarez@example.com,Historia
-psuarez@example.com,Otro
-bernalgonzalo@example.com,Arqueología
-bernalgonzalo@example.com,Arte Alternativo
-bernalgonzalo@example.com,Historia
+blancabaez@example.com,Arte Alternativo
+blancabaez@example.com,Arqueología
+blancabaez@example.com,Historia
+lermahernan@example.com,Historia
+lermahernan@example.com,Antropología
+lermahernan@example.com,Otro
+lorenzo10@example.net,Antropología
+lorenzo10@example.net,Ciencia y Tecnología
+lorenzo10@example.net,Arqueología
+german27@example.org,Arte Alternativo
+german27@example.org,Otro
+german27@example.org,Ciencia y Tecnología
+robertozuniga@example.net,Historia
+robertozuniga@example.net,Arte
+robertozuniga@example.net,Otro
+delgadoporfirio@example.org,Arqueología
+delgadoporfirio@example.org,Arte Alternativo
+delgadoporfirio@example.org,Antropología
+tsarabia@example.com,Ciencia y Tecnología
+tsarabia@example.com,Historia
+tsarabia@example.com,Antropología
+jacintonegron@example.com,Historia
+jacintonegron@example.com,Antropología
+jacintonegron@example.com,Ciencia y Tecnología
+ode-la-garza@example.net,Arte Alternativo
+ode-la-garza@example.net,Especializado
+ode-la-garza@example.net,Antropología
+rosa60@example.com,Arqueología
+rosa60@example.com,Historia
+rosa60@example.com,Otro
+florencia16@example.com,Otro
+florencia16@example.com,Especializado
+florencia16@example.com,Arte
+wcamacho@example.org,Ciencia y Tecnología
+wcamacho@example.org,Especializado
+wcamacho@example.org,Historia
+cejaricardo@example.net,Arte Alternativo
+cejaricardo@example.net,Arqueología
+cejaricardo@example.net,Otro
+cazaresgloria@example.net,Antropología
+cazaresgloria@example.net,Arqueología
+cazaresgloria@example.net,Otro
+muromayte@example.com,Arqueología
+muromayte@example.com,Otro
+muromayte@example.com,Ciencia y Tecnología
+qescamilla@example.net,Otro
+qescamilla@example.net,Arte Alternativo
+qescamilla@example.net,Especializado
+lucas10@example.net,Arte Alternativo
+lucas10@example.net,Especializado
+lucas10@example.net,Ciencia y Tecnología
+villagomeznadia@example.net,Historia
+villagomeznadia@example.net,Arte
+villagomeznadia@example.net,Arqueología
+fernando69@example.net,Antropología
+fernando69@example.net,Historia
+fernando69@example.net,Otro
+ihernandez@example.com,Arqueología
+ihernandez@example.com,Arte Alternativo
+ihernandez@example.com,Historia
+raul69@example.com,Antropología
+raul69@example.com,Especializado
+raul69@example.com,Historia
+carolina34@example.net,Especializado
+carolina34@example.net,Antropología
+carolina34@example.net,Arte
+joseyanez@example.net,Ciencia y Tecnología
+joseyanez@example.net,Otro
+joseyanez@example.net,Arqueología
+arturosotelo@example.org,Arte Alternativo
+arturosotelo@example.org,Arqueología
+arturosotelo@example.org,Arte
+rmontenegro@example.org,Antropología
+rmontenegro@example.org,Ciencia y Tecnología
+rmontenegro@example.org,Arte
+kcarrasco@example.net,Ciencia y Tecnología
+kcarrasco@example.net,Arqueología
+kcarrasco@example.net,Antropología
+emilianotellez@example.org,Otro
+emilianotellez@example.org,Historia
+emilianotellez@example.org,Antropología
+abrilsaavedra@example.net,Otro
+abrilsaavedra@example.net,Ciencia y Tecnología
+abrilsaavedra@example.net,Arqueología
+ursula43@example.org,Arte Alternativo
+ursula43@example.org,Especializado
+ursula43@example.org,Arte
+perlaquiroz@example.com,Otro
+perlaquiroz@example.com,Antropología
+perlaquiroz@example.com,Arqueología
+lermajose-maria@example.org,Arte Alternativo
+lermajose-maria@example.org,Ciencia y Tecnología
+lermajose-maria@example.org,Arqueología
+oscar25@example.com,Arqueología
+oscar25@example.com,Antropología
+oscar25@example.com,Arte
+ernesto22@example.com,Otro
+ernesto22@example.com,Arqueología
+ernesto22@example.com,Ciencia y Tecnología
+victor51@example.com,Otro
+victor51@example.com,Historia
+victor51@example.com,Arte Alternativo
+porrashelena@example.org,Especializado
+porrashelena@example.org,Arte Alternativo
+porrashelena@example.org,Historia
+bernardo44@example.com,Antropología
+bernardo44@example.com,Arte Alternativo
+bernardo44@example.com,Especializado
+guillermoarroyo@example.com,Arte Alternativo
+guillermoarroyo@example.com,Arqueología
+guillermoarroyo@example.com,Ciencia y Tecnología
+andreacorrea@example.com,Ciencia y Tecnología
+andreacorrea@example.com,Arte Alternativo
+andreacorrea@example.com,Arqueología
+isabel91@example.org,Arqueología
+isabel91@example.org,Antropología
+isabel91@example.org,Especializado
+aurora18@example.org,Arte Alternativo
+aurora18@example.org,Arqueología
+aurora18@example.org,Otro
+fridaarredondo@example.org,Antropología
+fridaarredondo@example.org,Arqueología
+fridaarredondo@example.org,Arte Alternativo
+trevinoeric@example.net,Ciencia y Tecnología
+trevinoeric@example.net,Arte Alternativo
+trevinoeric@example.net,Especializado
+salvador44@example.com,Arte Alternativo
+salvador44@example.com,Arte
+salvador44@example.com,Arqueología
+almarazilse@example.net,Especializado
+almarazilse@example.net,Antropología
+almarazilse@example.net,Historia
+hbeltran@example.org,Arte
+hbeltran@example.org,Antropología
+hbeltran@example.org,Ciencia y Tecnología
+aragoncarmen@example.net,Arqueología
+aragoncarmen@example.net,Especializado
+aragoncarmen@example.net,Otro
+violetamalave@example.org,Antropología
+violetamalave@example.org,Ciencia y Tecnología
+violetamalave@example.org,Otro
+gustavo68@example.net,Ciencia y Tecnología
+gustavo68@example.net,Arqueología
+gustavo68@example.net,Especializado
+jeronimo38@example.org,Historia
+jeronimo38@example.org,Arqueología
+jeronimo38@example.org,Especializado
+linda60@example.com,Arqueología
+linda60@example.com,Antropología
+linda60@example.com,Arte Alternativo
+csalinas@example.org,Arte Alternativo
+csalinas@example.org,Ciencia y Tecnología
+csalinas@example.org,Arte
+vurrutia@example.org,Especializado
+vurrutia@example.org,Arte
+vurrutia@example.org,Arqueología
+aponteanabel@example.net,Antropología
+aponteanabel@example.net,Especializado
+aponteanabel@example.net,Ciencia y Tecnología
+biancaraya@example.net,Ciencia y Tecnología
+biancaraya@example.net,Antropología
+biancaraya@example.net,Historia
+oswaldopichardo@example.org,Ciencia y Tecnología
+oswaldopichardo@example.org,Otro
+oswaldopichardo@example.org,Arqueología
+luz23@example.com,Otro
+luz23@example.com,Arte
+luz23@example.com,Antropología
+abigailosorio@example.net,Antropología
+abigailosorio@example.net,Otro
+abigailosorio@example.net,Arte
+rosariomeraz@example.net,Otro
+rosariomeraz@example.net,Ciencia y Tecnología
+rosariomeraz@example.net,Especializado
+anelreynoso@example.net,Arqueología
+anelreynoso@example.net,Especializado
+anelreynoso@example.net,Otro
+barrientosespartaco@example.com,Arte
+barrientosespartaco@example.com,Arte Alternativo
+barrientosespartaco@example.com,Arqueología
+josaguayo@example.net,Especializado
+josaguayo@example.net,Arqueología
+josaguayo@example.net,Otro
+adalbertoquesada@example.net,Historia
+adalbertoquesada@example.net,Ciencia y Tecnología
+adalbertoquesada@example.net,Especializado
+elisaballesteros@example.com,Historia
+elisaballesteros@example.com,Antropología
+elisaballesteros@example.com,Arqueología
+cornejogabino@example.net,Ciencia y Tecnología
+cornejogabino@example.net,Arqueología
+cornejogabino@example.net,Especializado
+coronajaime@example.com,Arte Alternativo
+coronajaime@example.com,Arqueología
+coronajaime@example.com,Otro
+castilloesparta@example.org,Antropología
+castilloesparta@example.org,Especializado
+castilloesparta@example.org,Arqueología
+nbernal@example.net,Ciencia y Tecnología
+nbernal@example.net,Arte
+nbernal@example.net,Especializado
+gpabon@example.net,Antropología
+gpabon@example.net,Otro
+gpabon@example.net,Arte
+raquel33@example.net,Arqueología
+raquel33@example.net,Ciencia y Tecnología
+raquel33@example.net,Arte Alternativo
+virginia74@example.com,Arqueología
+virginia74@example.com,Arte Alternativo
+virginia74@example.com,Ciencia y Tecnología
+adamedolores@example.com,Antropología
+adamedolores@example.com,Ciencia y Tecnología
+adamedolores@example.com,Historia
+pedrazaeduardo@example.com,Historia
+pedrazaeduardo@example.com,Antropología
+pedrazaeduardo@example.com,Especializado
+vtorrez@example.net,Ciencia y Tecnología
+vtorrez@example.net,Otro
+vtorrez@example.net,Arte
+omar67@example.org,Ciencia y Tecnología
+omar67@example.org,Otro
+omar67@example.org,Arqueología
+javier35@example.org,Ciencia y Tecnología
+javier35@example.org,Arte Alternativo
+javier35@example.org,Otro
+rmenendez@example.org,Arte Alternativo
+rmenendez@example.org,Otro
+rmenendez@example.org,Ciencia y Tecnología
+castellanosmaria-luisa@example.com,Otro
+castellanosmaria-luisa@example.com,Arte Alternativo
+castellanosmaria-luisa@example.com,Especializado
+solisangel@example.com,Arqueología
+solisangel@example.com,Arte
+solisangel@example.com,Ciencia y Tecnología
+isaldivar@example.com,Arte Alternativo
+isaldivar@example.com,Especializado
+isaldivar@example.com,Arte
+olivoeugenio@example.net,Antropología
+olivoeugenio@example.net,Otro
+olivoeugenio@example.net,Arqueología
+estelaamador@example.com,Historia
+estelaamador@example.com,Especializado
+estelaamador@example.com,Ciencia y Tecnología
+ines95@example.com,Historia
+ines95@example.com,Arqueología
+ines95@example.com,Otro
+rodrigomaestas@example.com,Historia
+rodrigomaestas@example.com,Arqueología
+rodrigomaestas@example.com,Otro
+garciarodrigo@example.net,Antropología
+garciarodrigo@example.net,Ciencia y Tecnología
+garciarodrigo@example.net,Arqueología
+reyesisabel@example.org,Otro
+reyesisabel@example.org,Especializado
+reyesisabel@example.org,Ciencia y Tecnología
+salvador04@example.org,Historia
+salvador04@example.org,Otro
+salvador04@example.org,Ciencia y Tecnología
+mateonevarez@example.net,Ciencia y Tecnología
+mateonevarez@example.net,Historia
+mateonevarez@example.net,Arqueología
+marisol97@example.org,Otro
+marisol97@example.org,Especializado
+marisol97@example.org,Arqueología
+estebangalindo@example.com,Arte Alternativo
+estebangalindo@example.com,Arte
+estebangalindo@example.com,Historia
+saldanavicente@example.com,Arte
+saldanavicente@example.com,Arqueología
+saldanavicente@example.com,Arte Alternativo
+munguiamario@example.net,Historia
+munguiamario@example.net,Arte Alternativo
+munguiamario@example.net,Arte
+oswaldodiaz@example.org,Arte Alternativo
+oswaldodiaz@example.org,Historia
+oswaldodiaz@example.org,Otro
+ocastillo@example.net,Historia
+ocastillo@example.net,Arte Alternativo
+ocastillo@example.net,Antropología
+ghernandez@example.org,Arte Alternativo
+ghernandez@example.org,Otro
+ghernandez@example.org,Arqueología
+francisco-javier89@example.net,Historia
+francisco-javier89@example.net,Arte
+francisco-javier89@example.net,Especializado
+leonorvillagomez@example.org,Otro
+leonorvillagomez@example.org,Arqueología
+leonorvillagomez@example.org,Ciencia y Tecnología
+valenzuelasandra@example.com,Antropología
+valenzuelasandra@example.com,Otro
+valenzuelasandra@example.com,Especializado
+hserna@example.com,Antropología
+hserna@example.com,Arte
+hserna@example.com,Arte Alternativo
+dnieves@example.com,Especializado
+dnieves@example.com,Historia
+dnieves@example.com,Arte Alternativo
+xiglesias@example.net,Arqueología
+xiglesias@example.net,Arte Alternativo
+xiglesias@example.net,Antropología

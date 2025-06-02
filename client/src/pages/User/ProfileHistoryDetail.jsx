@@ -132,8 +132,6 @@ function ProfileHistoryDetail() {
     }
   };
 
-  console.log(uploadedFiles);
-
   // Función para el tamaño de la imagen
   const formatBytes = (bytes) => {
     if (bytes === 0) {
@@ -225,26 +223,26 @@ function ProfileHistoryDetail() {
         console.log(`${key}: ${value}`);
       });
 
-      // resenaData.append("mus_id", resena.visitas_vi_mus_id);
+      resenaData.append("mus_id", resena.visitas_vi_mus_id);
 
-      // const response = await editarResena(resena.res_id_res, resenaData);
+      const response = await editarResena(resena.res_id_res, resenaData);
 
-      // if (response) {
-      //   ToastMessage({
-      //     tipo: "success",
-      //     mensaje: "Reseña editada correctamente.",
-      //     position: "top-right",
-      //   });
-      //   navigate("/Usuario/Historial", {
-      //     state: { updated: true },
-      //   });
-      // } else {
-      //   ToastMessage({
-      //     tipo: "error",
-      //     mensaje: "Error al editar la reseña.",
-      //     position: "top-right",
-      //   });
-      // }
+      if (response) {
+        ToastMessage({
+          tipo: "success",
+          mensaje: "Reseña editada correctamente.",
+          position: "top-right",
+        });
+        navigate("/Usuario/Historial", {
+          state: { updated: true },
+        });
+      } else {
+        ToastMessage({
+          tipo: "error",
+          mensaje: "Error al editar la reseña.",
+          position: "top-right",
+        });
+      }
     } catch (error) {
       console.error("Error al editar la reseña:", error);
       ToastMessage({
