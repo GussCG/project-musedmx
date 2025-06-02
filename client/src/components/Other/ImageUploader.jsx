@@ -26,8 +26,6 @@ export default function ImageUploader({
   const [progress, setProgress] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  console.log("ImageUploader mounted with initialImages:", initialImages);
-
   const hasInitialized = useRef(false);
   const lightbox = useLightBox(uploadedFiles.map((file) => file.url));
 
@@ -49,32 +47,6 @@ export default function ImageUploader({
     hasInitialized.current = true;
   }, [initialImages]);
 
-  useEffect(() => {
-    if (!setFieldValue || !name) return;
-
-    const newValue = uploadedFiles.map((img) => {
-      if (img.fileObject instanceof File) {
-        return { url: img.url, fileObject: img.fileObject };
-      }
-      return { ...img, fileObject: null };
-    });
-
-    // Solo sincronizar si syncWithFormik está activo
-    if (syncWithFormik) {
-      setFieldValue((prevState) => {
-        const prevValue = prevState?.[name];
-        const isEqual = JSON.stringify(prevValue) === JSON.stringify(newValue);
-        if (!isEqual) {
-          return { ...prevState, [name]: newValue };
-        }
-        return prevState;
-      });
-    } else {
-      // Si no está en modo Formik, llamar como callback simple (como en MuseoImgEdit)
-      setFieldValue(name, newValue);
-    }
-  }, [uploadedFiles, setFieldValue, name, syncWithFormik]);
-
   const handleFileClick = () => fileInputRef.current?.click();
 
   const formatBytes = (bytes) => {
@@ -84,42 +56,68 @@ export default function ImageUploader({
     return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const simulateUpload = (file) => {
-    const imageUrl = URL.createObjectURL(file);
-    const newFile = {
-      id: crypto.randomUUID(),
-      name: file.name,
-      size: formatBytes(file.size),
-      url: imageUrl,
-      fileObject: file,
-    };
-
-    setProgress((prev) => [...prev, { name: file.name, percent: 0, file }]);
-
+  const simulateUpload = (files) => {
     let percent = 0;
-    const interval = setInterval(() => {
-      percent += 20;
-      setProgress((prev) =>
-        prev.map((p) => (p.name === file.name ? { ...p, percent } : p))
-      );
+    const newFiles = [];
 
-      if (percent >= 100) {
-        clearInterval(interval);
-        setProgress((prev) => prev.filter((p) => p.name !== file.name));
-        setUploadedFiles((prev) => [newFile, ...prev]);
-      }
-    }, 200);
+    files.forEach((file, index) => {
+      const imageUrl = URL.createObjectURL(file);
+      const newFile = {
+        id: crypto.randomUUID(),
+        name: file.name,
+        size: formatBytes(file.size),
+        url: imageUrl,
+        fileObject: file,
+      };
+
+      newFiles.push(newFile);
+      setProgress((prev) => [...prev, { name: file.name, percent: 0, file }]);
+
+      const interval = setInterval(() => {
+        percent += 20;
+        setProgress((prev) =>
+          prev.map((p) =>
+            p.name === file.name ? { ...p, percent: Math.min(percent, 100) } : p
+          )
+        );
+
+        if (percent >= 100) {
+          clearInterval(interval);
+          setProgress((prev) => prev.filter((p) => p.name !== file.name));
+          // Al llegar al final del forEach, hacemos el update final.
+          if (index === files.length - 1) {
+            setUploadedFiles((prev) => {
+              const updated = [...newFiles, ...prev];
+
+              // Actualiza Formik directamente
+              if (setFieldValue && name) {
+                const newValue = updated.map((img) => ({
+                  url: img.url,
+                  fileObject:
+                    img.fileObject instanceof File ? img.fileObject : null,
+                }));
+                setFieldValue(name, newValue);
+              }
+
+              return updated;
+            });
+          }
+        }
+      }, 200);
+    });
   };
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files).filter((f) =>
       f.type.startsWith("image/")
     );
+
     if (uploadedFiles.length + files.length > maxFiles) {
       ToastMessage({ tipo: "error", mensaje: `Máximo ${maxFiles}` });
       return;
     }
-    files.forEach(simulateUpload);
+
+    simulateUpload(files);
     e.target.value = null;
   };
 
@@ -132,7 +130,9 @@ export default function ImageUploader({
       ToastMessage({ tipo: "error", mensaje: `Máximo ${maxFiles}` });
       return;
     }
-    files.forEach(simulateUpload);
+    simulateUpload(files);
+    e.dataTransfer.clearData();
+    fileInputRef.current.value = null; // Limpiar el input para permitir re-subir el mismo archivo
   };
 
   const handleDelete = async (file) => {
@@ -234,7 +234,7 @@ export default function ImageUploader({
 
         <section className="uploaded-area">
           {uploadedFiles.map((file, index) => (
-            <li className="row" key={file.id}>
+            <li className="row" key={file.url}>
               <img
                 src={
                   file.url.startsWith("blob:") ? file.url : bustCache(file.url)

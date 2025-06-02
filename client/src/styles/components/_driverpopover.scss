@@ -1,0 +1,81 @@
+@use "../variables" as *;
+
+.driver-popover.map-tour-popover {
+  width: 400px;
+  height: auto;
+  font-family: $font-primary;
+  background-color: var(--popover-bg);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  padding: 60px 10px;
+
+  .driver-popover-close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    font-size: 2rem;
+    font-family: $font-primary;
+    color: var(--font-color-primary);
+    cursor: pointer;
+  }
+
+  .driver-popover-title {
+    font-family: $font-tertiary;
+    font-size: 1.1rem;
+    font-weight: $font-w-bold;
+    color: var(--font-color-primary);
+    padding: 10px;
+    text-align: center;
+  }
+
+  .driver-popover-description {
+    font-family: $font-primary;
+    font-size: 0.9rem;
+    color: var(--font-color-primary);
+    padding: 0 10px 10px;
+    text-align: center;
+  }
+
+  .driver-popover-footer {
+    width: 100px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: inherit;
+
+    .driver-popover-progress-text {
+      font-family: $font-primary;
+      font-size: 0.9rem;
+      color: var(--font-color-primary);
+      text-align: center;
+    }
+
+    .driver-popover-navigation-btns {
+      height: auto;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+
+      .driver-popover-prev-btn,
+      .driver-popover-next-btn {
+        width: auto;
+        height: auto;
+        background-color: var(--popover-button-bg);
+        border: none;
+        border-radius: 50px;
+        color: transparent;
+        font-family: $font-primary;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        padding: 10px 20px;
+      }
+    }
+  }
+}

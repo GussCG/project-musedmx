@@ -84,10 +84,22 @@ function ModResenaDetail() {
             </p>
           </section>
           <section className="user-resena-container">
-            <p className="user-resena">
-              <b>Comentario</b>:{" "}
-              {resena?.res_comentario || "No hay comentario."}
-            </p>
+            <div className="user-resena-cf">
+              <p className="user-resena">
+                <b>Comentario</b>:{" "}
+                {resena?.res_comentario || "No hay comentario."}
+              </p>
+              {resena?.res_foto_entrada && (
+                <div className="user-resena-entrada">
+                  <h2>Entrada/Boleto</h2>
+                  <img
+                    src={resena.res_foto_entrada}
+                    alt="Foto de entrada"
+                    onClick={() => lightbox.openLightBox(resena.fotos.length)}
+                  />
+                </div>
+              )}
+            </div>
             {resena?.fotos && resena.fotos.length > 0 && (
               <div className="user-resena-imgs-container">
                 {resena?.fotos.map((img, index) => (

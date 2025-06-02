@@ -58,7 +58,7 @@ function ResenaCard({ resena = {}, loadingResena = true }) {
                     className="button-link"
                     to={`/Usuario/Historial/${resena.res_id_res}`}
                   >
-                    Editar
+                    <label>Editar</label>
                   </Link>
                 )}
               </div>

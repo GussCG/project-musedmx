@@ -5,14 +5,12 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import { useUserLocation } from "../../context/UserLocationProvider";
 import Icons from "../../components/Other/IconProvider";
 const { FaQuestion, IoIosArrowUp, LiaSearchLocationSolid, LuRadius } = Icons;
-
 import { AnimatePresence, motion } from "framer-motion";
-
 // Para obtener la API de Google Maps
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
 import { TRAVEL_MODES, MAP_TYPES } from "../../constants/catalog";
 import PopupPortal from "../../components/Other/PopupPortal";
+import { useMapTour } from "../../context/MapTourProvider";
 
 // Dependiendo del titulo se muestra el radio de busqueda
 // En Ver Todos y en Populares no se muestra el radio
@@ -108,12 +106,14 @@ function MuseosMapView({
 
   return (
     <>
-      <PopupPortal>
-        <MapIndicaciones
-          isOpen={showIndicaciones}
-          onClose={() => setShowIndicaciones(false)}
-        />
-      </PopupPortal>
+      {
+        <PopupPortal>
+          <MapIndicaciones
+            isOpen={showIndicaciones}
+            onClose={() => setShowIndicaciones(false)}
+          />
+        </PopupPortal>
+      }
 
       <motion.div
         id="museos-map-view"
@@ -150,7 +150,7 @@ function MuseosMapView({
             ) : null}
           </div>
         </section>
-        <section className="museos-map-container">
+        <section className="museos-map-container" id="map-museos">
           {apiKey && (
             <APIProvider apiKey={apiKey} libraries={["places"]}>
               <div className="btn-map-container">

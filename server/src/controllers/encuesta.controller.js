@@ -67,32 +67,17 @@ export const registrarEncuesta = async (req, res) => {
     const { encuestaId, museoId, correo } = req.params;
     const resenaData = req.body;
 
-    // Verificar que el usuario tenga al menos una visita en el museo
-    const visita = await Visitas.verifyVisita({
-      vi_usr_correo: correo,
-      vi_mus_id: museoId,
+    await Encuesta.registrarEncuesta({
+      encuestaId,
+      museoId,
+      correo,
+      resenaData,
     });
 
-    // if (!visita) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "El usuario no tiene visitas registradas en este museo",
-    //   });
-    // }
-
-    // const result = await Encuesta.registrarEncuesta({
-    //   encuestaId,
-    //   museoId,
-    //   correo,
-    //   resenaData,
-    //   fechahora: visita.vi_fechahora,
-    // });
-
-    // res.json({
-    //   success: true,
-    //   message: "Encuesta registrada exitosamente",
-    //   result,
-    // });
+    res.json({
+      success: true,
+      message: "Encuesta registrada exitosamente",
+    });
   } catch (error) {
     handleHttpError(res, "ERROR_REGISTRAR_ENCUESTA", error);
   }

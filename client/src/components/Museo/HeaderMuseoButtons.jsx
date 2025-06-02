@@ -11,19 +11,19 @@ function HeaderMuseoButtons({ museoId }) {
         className="button-link"
         to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/Museo/Editar/${museoId}`}
       >
-        Editar Información
+        <label>Editar Información</label>
       </Link>
       <Link
         className="button-link"
         to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/Museo/EditarHorario/${museoId}`}
       >
-        Editar Horarios
+        <label>Editar Horario</label>
       </Link>
       <Link
         className="button-link"
         to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/Museo/EditarImagenes/${museoId}`}
       >
-        Editar Imágenes
+        <label>Editar Imágenes</label>
       </Link>
     </div>
   );

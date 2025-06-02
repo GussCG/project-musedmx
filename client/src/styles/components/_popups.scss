@@ -149,7 +149,7 @@
   width: 95%;
   height: 50%;
   max-width: 600px;
-  min-height: 700px;
+  min-height: 750px;
 
   position: fixed;
   top: 50%;
@@ -355,6 +355,17 @@
         justify-content: flex-start;
       }
     }
+  }
+
+  .map-indicaciones-botones {
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
   }
 }
 

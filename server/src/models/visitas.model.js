@@ -15,26 +15,28 @@ export default class Visitas {
   }
 
   static async add({ vi_fechahora, vi_usr_correo, vi_mus_id }) {
-    let query = `
-      INSERT INTO visitas
-      (
-        vi_fechahora,
-        vi_usr_correo,
-        vi_mus_id
-      )
-      VALUES
-      (
-        ?,
-        ?,
-        ?
-      )
-    `;
-    const queryParams = [vi_fechahora, vi_usr_correo, vi_mus_id];
-    const [result] = await pool.query(query, queryParams);
-    if (result.affectedRows === 0) {
-      throw new Error("Error al agregar la visita");
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      let query = `
+        INSERT INTO visitas (vi_fechahora, vi_usr_correo, vi_mus_id)
+        VALUES (?, ?, ?)
+      `;
+      const queryParams = [vi_fechahora, vi_usr_correo, vi_mus_id];
+      const [result] = await connection.query(query, queryParams);
+
+      if (result.affectedRows === 0) {
+        throw new Error("Error al registrar la visita");
+      }
+      await connection.commit();
+      return result;
+    } catch (error) {
+      await connection.rollback();
+      console.error("Error al registrar visita:", error);
+      throw new Error("Error al registrar visita");
+    } finally {
+      connection.release();
     }
-    return result;
   }
 
   static async delete({ vi_usr_correo, vi_mus_id, vi_fechahora }) {

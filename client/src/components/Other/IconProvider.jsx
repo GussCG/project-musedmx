@@ -188,6 +188,9 @@ import { MdDelete } from "react-icons/md";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
 import { IoIosArrowUp } from "react-icons/io";
 import { LuRadius } from "react-icons/lu";
+import { RiSurveyFill } from "react-icons/ri";
+import { GrFormPrevious } from "react-icons/gr";
+import { GrFormNext } from "react-icons/gr";
 
 const Icons = {
   MuseDMXLogo,
@@ -322,6 +325,9 @@ const Icons = {
   MdKeyboardDoubleArrowDown,
   IoIosArrowUp,
   LuRadius,
+  RiSurveyFill,
+  GrFormPrevious,
+  GrFormNext,
 };
 
 export default Icons;

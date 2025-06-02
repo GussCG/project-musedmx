@@ -56,6 +56,7 @@ function MuseumSearch({ swiperRef = null }) {
 
   return (
     <motion.div
+      id="museum-search"
       className="nav-bar"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

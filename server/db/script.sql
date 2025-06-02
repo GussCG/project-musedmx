@@ -400,8 +400,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`visitas` (
 --  INDEX `id_Museo` (`vi_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
 
-SELECT * FROM visitas;
-
+SELECT * FROM visitas WHERE vi_mus_id = 673 AND vi_usr_correo = "narguello@example.com";
+-- DELETE FROM visitas WHERE vi_mus_id = 606 AND vi_usr_correo = "narguello@example.com";
 -- -----------------------------------------------------
 -- Table `musedmx`.`resenia`
 -- -----------------------------------------------------
@@ -441,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
 --  INDEX `fk_resenia_visitas1_idx` (`visitas_vi_fechahora` ASC, `visitas_vi_usr_correo` ASC, `visitas_vi_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
   
- SELECT * FROM resenia;
+ SELECT * FROM resenia WHERE visitas_vi_mus_id = 606 AND visitas_vi_usr_correo = "narguello@example.com";
  UPDATE resenia SET res_aprobado = 0 WHERE res_id_res = 1;
 -- TRUNCATE TABLE resenia;
 
@@ -462,7 +462,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`foto_resenia` (
   ) ENGINE=InnoDB;
 
 -- TRUNCATE TABLE foto_resenia;
-SELECT * FROM foto_resenia;
+SELECT * FROM foto_resenia WHERE f_res_id_res = 602 ;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`encuesta`

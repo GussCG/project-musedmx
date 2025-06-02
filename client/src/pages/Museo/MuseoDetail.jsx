@@ -8,8 +8,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import HeaderMuseoButtons from "../../components/Museo/HeaderMuseoButtons";
 import "../../styles/pages/MuseoDetails.scss";
 import Icons from "../../components/Other/IconProvider";
-const { FaFilter, estrellaIcon, FaHeart, IoIosArrowBack, IoIosArrowForward } =
-  Icons;
+const {
+  FaFilter,
+  estrellaIcon,
+  FaHeart,
+  IoIosArrowBack,
+  IoIosArrowForward,
+  FaPlus,
+  RiSurveyFill,
+} = Icons;
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
 import MenuFiltroResena from "../../components/Resena/MenuFiltroResena";
 import MuseoSlider from "../../components/Museo/MuseoSlider";
@@ -331,7 +338,7 @@ function MuseoDetail() {
                             {isLoading ? (
                               <Skeleton width={50} />
                             ) : (
-                              <p>{calificacionPromedio.toFixed(2)}</p>
+                              <p>{calificacionPromedio.toFixed(1)}</p>
                             )}
 
                             <img
@@ -593,7 +600,7 @@ function MuseoDetail() {
                             {isLoading ? (
                               <Skeleton width={50} />
                             ) : (
-                              <p>{calificacionPromedio.toFixed(2)}</p>
+                              <p>{calificacionPromedio.toFixed(1)}</p>
                             )}
                             <img
                               src={estrellaIcon}
@@ -644,23 +651,43 @@ function MuseoDetail() {
                       </div>
                       {user?.usr_tipo !== 2 && user?.usr_tipo !== 3 ? (
                         <div className="museo-section-5-registrar">
-                          <h2>¿Fuiste al museo?</h2>
-                          <Link
-                            to={`/Museos/${museoId}/RegistrarVisita`}
-                            className="button-reg-resena"
-                            onClick={(e) => {
-                              if (!user) {
-                                e.preventDefault();
-                                localStorage.setItem(
-                                  "redirectPath",
-                                  `/Museos/${museoId}/RegistrarVisita`
-                                );
-                                setIsLogginPopupOpen(true);
-                              }
-                            }}
-                          >
-                            Registra tu visita aquí
-                          </Link>
+                          <h2>Acciones</h2>
+                          <div className="museo-section-5-botones">
+                            <Link
+                              to={`/Museos/${museoId}/RegistrarVisita`}
+                              className="button-link"
+                              onClick={(e) => {
+                                if (!user) {
+                                  e.preventDefault();
+                                  localStorage.setItem(
+                                    "redirectPath",
+                                    `/Museos/${museoId}/RegistrarVisita`
+                                  );
+                                  setIsLogginPopupOpen(true);
+                                }
+                              }}
+                            >
+                              <label>Registra tu visita aquí</label>
+                              <FaPlus />
+                            </Link>
+                            <Link
+                              className="button-link"
+                              to={`/Museos/${museoId}/ContestarEncuesta`}
+                              onClick={(e) => {
+                                if (!user) {
+                                  e.preventDefault();
+                                  localStorage.setItem(
+                                    "redirectPath",
+                                    `/Museos/${museoId}/RegistrarVisita`
+                                  );
+                                  setIsLogginPopupOpen(true);
+                                }
+                              }}
+                            >
+                              <label>Contestar Encuesta</label>
+                              <RiSurveyFill />
+                            </Link>
+                          </div>
                         </div>
                       ) : null}
 

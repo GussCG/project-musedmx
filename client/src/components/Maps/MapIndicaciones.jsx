@@ -2,8 +2,10 @@ import { useState } from "react";
 import Icons from "../Other/IconProvider";
 const { museoIcon, FaPerson, IoClose } = Icons;
 import { AnimatePresence, motion } from "framer-motion";
+import { useMapTour } from "../../context/MapTourProvider";
 
 function MapIndicaciones({ isOpen, onClose }) {
+  const { startTour } = useMapTour();
   const [dontShowAgain, setDontShowAgain] = useState(
     localStorage.getItem("dontShowMapIndicaciones") === "true"
   );
@@ -150,14 +152,27 @@ function MapIndicaciones({ isOpen, onClose }) {
                 </label>
               </div>
             </div>
-            <button
-              className="button"
-              id="map-indicaciones-close"
-              onClick={handleClose}
-            >
-              {" "}
-              Entendido{" "}
-            </button>
+            <div className="map-indicaciones-botones">
+              <button
+                className="button"
+                id="map-indicaciones-close"
+                onClick={handleClose}
+              >
+                Entendido
+              </button>
+              <button
+                className="button"
+                id="map-indicaciones-close"
+                onClick={() => {
+                  handleClose();
+                  setTimeout(() => {
+                    startTour();
+                  }, 300);
+                }}
+              >
+                Ver Tour
+              </button>
+            </div>
           </main>
         </motion.div>
       )}

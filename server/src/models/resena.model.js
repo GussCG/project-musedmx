@@ -288,6 +288,65 @@ export default class Resena {
     return { success: true, id: res_id_res };
   }
 
+  // Crea una nueva reseña (vacia) y la visita asociada
+  static async createResena({
+    visitas_vi_fechahora,
+    visitas_vi_usr_correo,
+    visitas_vi_mus_id,
+    resenaData,
+  }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      console.log("Datos de la reseña:", resenaData);
+      console.log("Datos de la visita:", {
+        visitas_vi_fechahora,
+        visitas_vi_usr_correo,
+        visitas_vi_mus_id,
+      });
+      // 1. Insertar visita
+      const visitaQuery = `
+      INSERT INTO visitas (vi_fechahora, vi_usr_correo, vi_mus_id)
+      VALUES (?, ?, ?)
+    `;
+      const visitaParams = [
+        visitas_vi_fechahora,
+        visitas_vi_usr_correo,
+        visitas_vi_mus_id,
+      ];
+
+      const [visitaResult] = await connection.query(visitaQuery, visitaParams);
+
+      // 2. Insertar reseña asociada
+      const resenaQuery = `
+      INSERT INTO resenia (visitas_vi_fechahora, visitas_vi_usr_correo, visitas_vi_mus_id, res_calif_estrellas, res_comentario)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+      const resenaParams = [
+        visitas_vi_fechahora,
+        visitas_vi_usr_correo,
+        visitas_vi_mus_id,
+        resenaData.res_calif_estrellas || 0,
+        resenaData.res_comentario || "",
+      ];
+
+      const [resenaResult] = await connection.query(resenaQuery, resenaParams);
+      const res_id_res = resenaResult.insertId;
+
+      await connection.commit();
+      return {
+        success: true,
+        resenaId: res_id_res,
+      };
+    } catch (error) {
+      console.error("Error al crear la reseña:", error);
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
   static async edit({ res_id_res, resenaData, museoId, correo }) {
     const connection = await pool.getConnection();
     await connection.beginTransaction();

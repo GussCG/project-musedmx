@@ -108,6 +108,11 @@ function ProfileHistoryDetail() {
             mensaje: "Reseña editada correctamente",
             position: "top-right",
           });
+          ToastMessage({
+            tipo: "warning",
+            mensaje: "Espera a que un moderador revise tu reseña y la apruebe",
+            position: "top-right",
+          });
           navigate("/Usuario/Historial");
         }
       } else {

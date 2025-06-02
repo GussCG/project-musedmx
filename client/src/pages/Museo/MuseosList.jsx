@@ -184,6 +184,7 @@ function MuseosList({ titulo, tipo }) {
                 className="museos-header-section-right-button"
                 onClick={() => setIsMapView(!isMapView)}
                 title={isMapView ? "Ver lista" : "Ver mapa"}
+                id="ver-lista"
               >
                 {isMapView ? (
                   <>

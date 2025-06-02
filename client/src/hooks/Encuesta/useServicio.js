@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 import { BACKEND_URL } from "../../constants/api";
@@ -11,11 +11,10 @@ export default function useServicio() {
   const fetchServicios = async () => {
     try {
       setLoading(true);
-
       const endpoint = `${BACKEND_URL}/api/encuesta/servicios`;
+      console.log("Fetching servicios from:", endpoint);
       const response = await axios.get(endpoint);
-      setServicios(response.data.servicios);
-      setLoading(false);
+      return response.data;
     } catch (error) {
       console.error("Error fetching servicios:", error);
       setError(error);
@@ -24,13 +23,10 @@ export default function useServicio() {
     }
   };
 
-  useEffect(() => {
-    fetchServicios();
-  }, []);
-
   return {
     servicios,
     loading,
     error,
+    fetchServicios,
   };
 }
