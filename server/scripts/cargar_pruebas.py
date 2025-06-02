@@ -54,29 +54,18 @@ cargar_csv_a_tabla(
     ["vi_fechahora", "vi_usr_correo", "vi_mus_id"]
 )
 
-# Respuestas
+# Respuestas Encuesta (nueva forma sin tabla respuestas ni calificaciones)
 cargar_csv_a_tabla(
-    "./csvpruebas/respuestas.csv",
-    "INSERT INTO respuestas (res_id, res_respuesta, preguntas_preg_id, preguntas_encuesta_enc_cve) VALUES (%s, %s, %s, %s)",
-    ["res_id", "res_respuesta", "preguntas_preg_id", "preguntas_encuesta_enc_cve"]
-)
-
-# Calificaciones
-cargar_csv_a_tabla(
-    "./csvpruebas/calificaciones.csv",
-    """INSERT INTO calificaciones (
-        visitas_vi_fechahora, visitas_vi_usr_correo, visitas_vi_mus_id,
-        respuestas_res_id, respuestas_preguntas_preg_id, respuestas_preguntas_encuesta_enc_cve
-    ) VALUES (%s, %s, %s, %s, %s, %s)""",
-    ["visitas_vi_fechahora", "visitas_vi_usr_correo", "visitas_vi_mus_id",
-     "respuestas_res_id", "respuestas_preguntas_preg_id", "respuestas_preguntas_encuesta_enc_cve"]
+    "./csvpruebas/respuestas_encuesta.csv",
+    "INSERT INTO respuestas_encuesta (res_id, res_respuesta, visitas_vi_usr_correo, visitas_vi_mus_id, preguntas_preg_id, preguntas_encuesta_enc_cve) VALUES (%s, %s, %s, %s, %s, %s)",
+    ["res_id", "res_respuesta", "usr_correo", "mus_id", "preguntas_preg_id", "encuesta_enc_cve"]
 )
 
 # Respuestas_servicios
 cargar_csv_a_tabla(
     "./csvpruebas/respuestas_servicios.csv",
-    "INSERT INTO respuestas_servicios (visitas_vi_fechahora, visitas_vi_usr_correo, visitas_vi_mus_id, servicios_ser_id) VALUES (%s, %s, %s, %s)",
-    ["visitas_vi_fechahora", "visitas_vi_usr_correo", "visitas_vi_mus_id", "servicios_ser_id"]
+    "INSERT INTO respuestas_servicios (visitas_vi_usr_correo, visitas_vi_mus_id, servicios_ser_id) VALUES (%s, %s, %s)",
+    ["visitas_vi_usr_correo", "visitas_vi_mus_id", "servicios_ser_id"]
 )
 
 # Reseña
@@ -88,6 +77,13 @@ cargar_csv_a_tabla(
     ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
     ["res_id_res", "res_comentario", "res_mod_correo", "res_aprobado", "res_calif_estrellas",
      "visitas_vi_usr_correo", "visitas_vi_mus_id", "visitas_vi_fechahora"]
+)
+
+# Foto Reseña
+cargar_csv_a_tabla(
+    "./csvpruebas/foto_resenia.csv",
+    "INSERT INTO foto_resenia (f_res_id_res, f_res_foto) VALUES (%s, %s)",
+    ["f_res_id_res", "f_res_foto"]
 )
 
 # Quiero visitar

@@ -74,6 +74,22 @@ export const useVisitas = ({ museoId } = {}) => {
     }
   };
 
+  const yaVisitoMuseo = async (correo, museoId) => {
+    try {
+      setLoading(true);
+      const encodedCorreo = encodeURIComponent(correo);
+      const endpoint = `${BACKEND_URL}/api/visitas/usuario/visito-museo/${encodedCorreo}/${museoId}`;
+      const response = await axios.get(endpoint);
+      return response.data;
+    } catch (error) {
+      console.error("Error checking if user visited museum:", error);
+      setError(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     visitas,
     loading,
@@ -83,5 +99,6 @@ export const useVisitas = ({ museoId } = {}) => {
     removeVisita,
     fetchCountVisitas,
     fetchVisitas,
+    yaVisitoMuseo,
   };
 };

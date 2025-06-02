@@ -39,23 +39,6 @@ function MuseoForm({ mode }) {
     updateMuseo,
   } = useMuseo(mode === "edit" ? museoId : null);
 
-  // // Para la imagen inicial
-  // useEffect(() => {
-  //   if (mode === "edit" && museoEdit?.img) {
-  //     const image = buildImage(museoEdit);
-  //     setImagePreview(image);
-  //     if (fileNameRef.current) {
-  //       fileNameRef.current.textContent = museoEdit.img.name;
-  //     }
-  //   } else {
-  //     setImagePreview(null);
-  //     if (fileNameRef.current) {
-  //       fileNameRef.current.textContent =
-  //         "No se ha seleccionado ninguna imagen";
-  //     }
-  //   }
-  // }, [museoEdit, mode]);
-
   // TextArea
   const [comment, setComment] = useState("");
 
@@ -345,8 +328,6 @@ function MuseoForm({ mode }) {
       }
     }
 
-    console.log("Response:", response);
-
     if (response.museo.success) {
       if (mode === "edit") {
         navigate(`/Museos/${response.museo.mus_id}`);
@@ -398,8 +379,6 @@ function MuseoForm({ mode }) {
               validationSchema={museoSchema}
               validateOnMount={true}
               onSubmit={(values) => {
-                // Aquí puedes manejar el envío del formulario
-                console.log("Valores del formulario:", values);
                 handleRegistroMuseo(values);
               }}
             >

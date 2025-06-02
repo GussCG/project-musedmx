@@ -13,7 +13,7 @@ tematicas_a_id = {
 }
 
 def get_preferencias_by_usuario(correo: str) -> List[int]:
-    cursor = db.get_cursor()
+    cursor, conn = db.get_cursor()
     try:
         cursor.execute("""
             SELECT
@@ -30,4 +30,4 @@ def get_preferencias_by_usuario(correo: str) -> List[int]:
         return []
     finally:
         cursor.close()
-        db.close()
+        db.close(conn)

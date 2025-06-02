@@ -79,6 +79,37 @@ export const modSchema = Yup.object({
     .required("Campo requerido"),
 });
 
+export const modEditSchema = Yup.object({
+  signinfrmnombre: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El nombre solo puede contener letras"
+    )
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(20, "El nombre no puede tener más de 20 caracteres")
+    .required("Campo requerido"),
+  signinfrmappaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido paterno solo puede contener letras"
+    )
+    .min(2, "El apellido paterno debe tener al menos 2 caracteres")
+    .max(30, "El apellido paterno no puede tener más de 30 caracteres")
+    .required("Campo requerido"),
+  signinfrmapmaterno: Yup.string()
+    .matches(
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido materno solo puede contener letras"
+    )
+    .min(2, "El apellido materno debe tener al menos 2 caracteres")
+    .max(30, "El apellido materno no puede tener más de 30 caracteres")
+    .required("Campo requerido"),
+  signinfrmtelefono: Yup.string()
+    .matches(/^\+?[1-9]\d{1,14}$/, "Número de teléfono inválido")
+    .required("Campo requerido")
+    .min(10, "Número de teléfono inválido"),
+});
+
 export const userRegistroSchema = Yup.object({
   signinfrmnombre: Yup.string()
     .matches(
@@ -142,7 +173,6 @@ export const userEditSchema = Yup.object({
 
 // Validación del formulario
 export const resenaEditSchema = Yup.object({
-  regresFrmFecVis: Yup.date().required("La fecha de visita es requerida"),
   regresFrmCalif: Yup.number()
     .min(1, "La calificación mínima es 1")
     .max(5, "La calificación máxima es 5")

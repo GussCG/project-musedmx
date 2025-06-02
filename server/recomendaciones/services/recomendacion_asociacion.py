@@ -8,6 +8,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Recomendación por asociación
+# Brief: Recomienda museos basados en reglas de asociación generadas a partir de visitas.
+# Params: museo_id (int): ID del museo de referencia.
+#         top_n (int): Número máximo de recomendaciones a retornar (default 10).
 def recomendar_por_asociacion(museo_id: int, top_n: int = 10) -> List[Dict]:
     try:
         # 1. Obtener y preparar datos
@@ -59,14 +63,18 @@ def recomendar_por_asociacion(museo_id: int, top_n: int = 10) -> List[Dict]:
                     if museo:
                         museo.pop('mus_foto', None)  # Eliminar binarios
                         recomendaciones.append({
-                            **museo,
+                            'mus_id': museo['mus_id'],
                             'confianza': round(float(row['confidence']), 4),
                             'soporte': round(float(row['support']), 4),
                             'lift': round(float(row['lift']), 4)
                         })
         
-        # Ordenar y limitar resultados
-        return sorted(recomendaciones, key=lambda x: (-x['confianza'], -x['lift']))[:top_n]
+        # Ordenar y limitar resultados (mandar unicamente el mus_id)
+        return sorted(
+            recomendaciones, 
+            key=lambda x: x['confianza'], 
+            reverse=True
+        )[:top_n]
     
     except Exception as e:
         logger.error(f"Error en recomendación por asociación: {str(e)}", exc_info=True)

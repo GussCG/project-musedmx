@@ -1,6 +1,5 @@
 import os
-import mysql.connector
-from mysql.connector import Error
+from mysql.connector import Error, pooling
 from dotenv import load_dotenv
 
 # Carga .env desde el directorio padre
@@ -12,34 +11,39 @@ class Database:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.connection = None
+            cls._instance.pool = None
             cls._instance._connect()  # Conexión inmediata al crear instancia
         return cls._instance
     
     def _connect(self):
         try:
-            self.connection = mysql.connector.connect(
-                host=os.getenv("DB_HOST", "localhost"),
-                port=int(os.getenv("DB_PORT", 3306)),
-                user=os.getenv("DB_USER", "root"),
-                password=os.getenv("DB_PASSWORD", ""),  # Maneja contraseña vacía
-                database=os.getenv("DB_NAME", "musedmx"),
-                autocommit=True
+            self.pool = pooling.MySQLConnectionPool(
+                pool_name="musedmx_pool",
+                pool_size=int(os.getenv("DB_POOL_SIZE", 10)),
+                pool_reset_session=True,
+                host=os.getenv('DB_HOST', 'localhost'),
+                database=os.getenv('DB_NAME', 'musedmx'),
+                user=os.getenv('DB_USER', 'root'),
+                password=os.getenv('DB_PASSWORD', ''),
+                port=int(os.getenv('DB_PORT', 3306))
             )
-            print("✅ Conexión a MySQL exitosa")
+            print("✅ Pool de conexiones MySQL exitosa")
         except Error as e:
-            print(f"❌ Error al conectar a MySQL: {e}")
+            print(f"❌ Error al crear el pool: {e}")
             raise
     
     def get_cursor(self):
-        if not self.connection.is_connected():
-            self._connect()
-        return self.connection.cursor(dictionary=True)
+        try:
+            conn = self.pool.get_connection()
+            return conn.cursor(dictionary=True), conn
+        except Error as e:
+            print(f"❌ Error al obtener conexión del pool: {e}")
+            raise
     
-    def close(self):
-        if self.connection and self.connection.is_connected():
-            self.connection.close()
-            print("🔌 Conexión cerrada")
+    def close(self, conn):
+        """ Cierra solo la conexión individual (devuelta al pool) """
+        if conn.is_connected():
+            conn.close()
 
 # Instancia global (singleton)
 db = Database()

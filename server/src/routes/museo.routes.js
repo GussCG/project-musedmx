@@ -4,6 +4,7 @@ import multer from "multer";
 import {
   getMuseos,
   getMuseosNombres,
+  getMuseosNombresDescripciones,
   getMuseoById,
   getGaleriaById,
   getHorariosById,
@@ -17,10 +18,10 @@ import {
   getMuseosCercaById,
   getMuseosAsociacionById,
   updateHorarioByDia,
-  uploadImages,
-  updateGaleria,
   addByDia,
   deleteByDia,
+  uploadFotosGaleria,
+  eliminarFotoGaleria,
 } from "../controllers/museo.controller.js";
 
 const router = Router();
@@ -28,6 +29,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.get("/", getMuseos);
+router.get("/nombres-descripciones", getMuseosNombresDescripciones);
 router.get("/nombres", getMuseosNombres);
 router.get("/detalle/:id", getMuseoById);
 router.get("/galeria/:id", getGaleriaById);
@@ -44,7 +46,11 @@ router.get("/asociacion/:id", getMuseosAsociacionById);
 router.post("/horarios/updateByDia/:id", updateHorarioByDia);
 router.post("/horarios/agregarByDia/:id", addByDia);
 router.post("/horarios/eliminarByDia/:id", deleteByDia);
-router.post("/galeria/upload/:id", uploadImages);
-router.post("/galeria/update/:id", updateGaleria);
+router.post(
+  "/galeria/agregar-fotos/:id",
+  upload.array("fotos"),
+  uploadFotosGaleria
+);
+router.delete("/galeria/eliminar-foto/:id/:galFotoId", eliminarFotoGaleria);
 
 export default router;

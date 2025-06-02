@@ -590,31 +590,55 @@
     background-color: var(--bg-main);
     width: 100%;
     height: 100%;
+    min-height: 600px;
     border-radius: 25px;
     box-shadow: var(--box-shadow-2);
-    object-fit: cover;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+
+    position: relative;
+    overflow: hidden;
 
     grid-area: 1 / 4 / 3 / 6;
 
-    img {
-      width: 100%;
-      height: 100%;
-      border-radius: 25px;
-    }
-
     .museo-section-2-direccion {
       width: 100%;
-      height: fit-content;
+      height: auto;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
-      padding: 20px;
+      flex-direction: column;
+
+      h1 {
+        width: 100%;
+        text-align: center;
+        padding-top: 20px;
+        font-size: $museo-detail-h1-size;
+        font-weight: $font-w-bold;
+      }
+
+      p {
+        width: 90%;
+        font-size: 1rem;
+        font-weight: $font-w-light;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+    }
+
+    #museos-map-view {
+      width: 100%;
+      height: 90%;
+
+      .museos-map-container {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
     }
   }
 }
@@ -973,12 +997,13 @@
     .museo-section-5-registrar {
       background-color: var(--color-resena-bg);
       width: 100%;
+      min-width: 500px;
       height: 100%;
       border-radius: 25px;
 
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       gap: 20px;
       padding: 30px;
@@ -986,14 +1011,18 @@
       grid-area: 1 / 3 / 2 / 4;
 
       h2 {
-        font-size: 48px;
+        font-size: 1.8rem;
         font-weight: $font-w-bold;
       }
 
-      a {
+      .museo-section-5-botones {
         width: 100%;
-        min-width: 200px;
-        text-align: center;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: 20px;
       }
     }
   }
@@ -1012,6 +1041,7 @@
 /* Responsive */
 @media screen and (max-width: 1500px) {
   #museo-section-1 {
+    width: 106%;
     .header-buttons-container {
       margin-right: 10px;
       display: flex;
@@ -1019,6 +1049,10 @@
       justify-content: center;
       align-items: center;
     }
+  }
+
+  #museo-section-horario {
+    width: 106%;
   }
 
   #museo-section-2 {
@@ -1188,7 +1222,7 @@
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 725px) {
   #museo-section-1 {
     min-width: 90vw;
     display: flex;
@@ -1210,6 +1244,10 @@
         width: 100%;
         justify-content: center;
         align-items: center;
+
+        .museo-section-1-info-title {
+          text-align: center;
+        }
 
         .museo-section-1-info-tematica,
         .museo-section-1-info-horarios,

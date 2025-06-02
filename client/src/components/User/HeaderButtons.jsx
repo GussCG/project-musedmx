@@ -6,7 +6,7 @@ function HeaderButtons({ tipoUsuario }) {
   return (
     <div id="header-user-buttons">
       <Link className="button-link" to="./Editar" id="header-user-edit-button">
-        Editar Perfil
+        <label>Editar Perfil</label>
       </Link>
 
       {tipoUsuario === 1 ? (
@@ -15,7 +15,7 @@ function HeaderButtons({ tipoUsuario }) {
           to="./Historial"
           id="header-user-resenias-button"
         >
-          Mis Reseñas
+          <label>Mis Reseñas</label>
         </Link>
       ) : null}
 
@@ -25,7 +25,7 @@ function HeaderButtons({ tipoUsuario }) {
           to="./VerMods"
           id="header-user-resenias-button"
         >
-          Moderadores
+          <label>Moderadores</label>
         </Link>
       ) : null}
 
@@ -35,7 +35,7 @@ function HeaderButtons({ tipoUsuario }) {
           to="./VerResenas"
           id="header-user-resenias-button"
         >
-          Reseñas
+          <label>Reseñas</label>
         </Link>
       ) : null}
 
@@ -44,7 +44,7 @@ function HeaderButtons({ tipoUsuario }) {
         onClick={logout}
         id="header-user-logout-button"
       >
-        Cerrar Sesión
+        <label>Cerrar Sesión</label>
       </button>
     </div>
   );

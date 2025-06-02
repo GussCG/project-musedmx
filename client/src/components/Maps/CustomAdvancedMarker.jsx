@@ -6,14 +6,10 @@ import museoImagen from "../../assets/images/others/museo-main-1.jpg";
 import Icons from "../Other/IconProvider";
 const { museoIcon } = Icons;
 
-function CustomAdvancedMarker({ lat, lng, nombre, imagen, idMuseo }) {
+function CustomAdvancedMarker({ lat, lng, nombre, idMuseo }) {
   const [hovered, setHovered] = useState(false);
   const position = { lat, lng };
   const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/Museos/${idMuseo}`);
-  };
 
   return (
     <AdvancedMarker
@@ -21,7 +17,6 @@ function CustomAdvancedMarker({ lat, lng, nombre, imagen, idMuseo }) {
       title={nombre}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={handleClick}
     >
       <div className={`custom-marker ${hovered ? "hovered" : ""}`}>
         <div className="marker-container">

@@ -34,7 +34,6 @@
   --museo-card-bg-image: #000000;
   // Fonts
   --font-color-primary: black;
-
   //BoxShadow
   --box-shadow: 1px 1px 26px -5px rgba(195, 195, 195, 0);
   --box-shadow-2: 0 5px 25px rgba(0, 0, 0, 0.2);
@@ -65,7 +64,10 @@
   --bg-valid-password: #ffffff;
 
   // Fotos
-  --bg-row-fotos: #cbcbcb;
+  --bg-row-fotos: #e4e4e4;
+  --bg-row-fotos-hover: #cecece;
+  --bg-progress-bar: #a9a9a9;
+  --bg-progress-bar-fill: #ade6b6;
 
   // Scrollbar
   --scrollbar-thumb: #cbcbcb;
@@ -126,4 +128,10 @@
   --toast-info-text-color: #00639c;
 
   --tr-border-color: rgba(0, 0, 0, 0.3);
+
+  --bg-scroll-indicator: #ffffff;
+  --boxshadow-scroll-indicator: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  --popover-bg: #f7f7f7;
+  --popover-button-bg: #000000;
 }

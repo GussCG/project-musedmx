@@ -130,8 +130,8 @@ dist
 .pnp.*
 
 # museos-imagenes carpeta
-scripts/images
+/scripts/images
 # pruebas de carga de imagenes
 /uploads
-src/uploads
+/src/uploads
 /temp

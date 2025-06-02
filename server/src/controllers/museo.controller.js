@@ -1,10 +1,9 @@
 import Museo from "../models/museo.model.js";
 import { handleHttpError } from "../helpers/httpError.js";
 import { formatMuseoImageName } from "../utils/formatNombreArchivos.js";
-import path from "path";
-import fs from "fs";
 import { uploadToAzure } from "../utils/azureUpload.js";
 import sharp from "sharp";
+import { deleteFromAzure } from "../utils/azureDelete.js";
 
 export const getMuseos = async (req, res) => {
   try {
@@ -65,6 +64,19 @@ export const getMuseosNombres = async (req, res) => {
     });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_MUSEOS_NOMBRES", error);
+  }
+};
+
+export const getMuseosNombresDescripciones = async (req, res) => {
+  try {
+    const museos = await Museo.findAllNamesAndDescriptions({});
+    res.json({
+      success: true,
+      count: museos.length,
+      museos,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEOS_NOMBRES_DESCRIPCIONES", error);
   }
 };
 
@@ -473,77 +485,6 @@ export const deleteByDia = async (req, res) => {
   }
 };
 
-export const uploadImages = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const files = req.files;
-
-    if (!files || files.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No se proporcionaron imágenes para subir",
-      });
-    }
-
-    // Verificar si el museo existe
-    const museoExistente = await Museo.findById({ id });
-    if (!museoExistente) {
-      return res.status(404).json({
-        success: false,
-        message: "Museo no encontrado",
-      });
-    }
-
-    // Borra solo los registros de imágenes antiguas en la base de datos,
-    // pero NO las imágenes del Blob Storage (porque se van a sobrescribir)
-    await Museo.deleteGaleriaById(id); // limpia solo BD
-
-    const nombreMuseoFormateado = formatMuseoImageName(
-      museoExistente.mus_nombre
-    );
-    const containerName = "imagenes-museos"; // Cambia según tu contenedor real
-
-    // Carpeta temporal para imágenes JPG convertidas
-    const tempDir = path.join(__dirname, "..", "temp", nombreMuseoFormateado);
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
-
-    const urls = await Promise.all(
-      files.map(async (file, index) => {
-        const jpgFileName = `${nombreMuseoFormateado}_${index + 1}.jpg`;
-        const tempJpgPath = path.join(tempDir, jpgFileName);
-        const blobName = `${nombreMuseoFormateado}/${jpgFileName}`;
-
-        // Convertir a JPG y guardar temporalmente
-        await sharp(file.path).jpeg({ quality: 80 }).toFile(tempJpgPath);
-
-        // Subir al blob
-        const url = await uploadToAzure(containerName, tempJpgPath, blobName);
-
-        // Eliminar archivos temporales
-        if (fs.existsSync(tempJpgPath)) fs.unlinkSync(tempJpgPath);
-        if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
-
-        return url;
-      })
-    );
-
-    // Guardar las URLs en la base de datos
-    await Museo.guardarGaleria(id, urls);
-
-    return res.status(200).json({
-      success: true,
-      message: "Imágenes subidas correctamente",
-      urls,
-    });
-  } catch (error) {
-    handleHttpError(res, "ERROR_UPLOAD_IMAGES", error);
-  }
-};
-
-export const updateGaleria = async (req, res) => {};
-
 export const deleteMuseo = async (req, res) => {
   try {
     const museo = await Museo.deleteMuseo(req.body.mus_id);
@@ -560,5 +501,119 @@ export const deleteMuseo = async (req, res) => {
     });
   } catch (error) {
     handleHttpError(res, "ERROR_DELETE_MUSEO", error);
+  }
+};
+
+export const uploadFotosGaleria = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { galeria } = req.body;
+
+    // Verificar si el museo existe
+    const museo = await Museo.findById({ id });
+    if (!museo) {
+      return res.status(404).json({
+        success: false,
+        message: "Museo no encontrado",
+      });
+    }
+
+    let ultimoIndex = 0;
+    const fotos = await Museo.findGaleriaById({ id });
+
+    if (fotos && fotos.length > 0) {
+      const indices = fotos.map((foto) => {
+        const url = foto.gal_foto;
+        const nombreArchivo = decodeURIComponent(
+          new URL(url).pathname.split("/").pop()
+        );
+        // Extraer el último número antes de la extensión
+        const match = nombreArchivo.match(/_(\d+)(?=\.\w+$)/);
+        return match ? parseInt(match[1]) : 0;
+      });
+
+      ultimoIndex = Math.max(...indices);
+    }
+
+    const urlFotos = [];
+    if (req.files) {
+      const nombreMuseoFormateado = formatMuseoImageName(museo.mus_nombre);
+      const containerName = "imagenes-museos";
+
+      for (const [index, file] of req.files.entries()) {
+        const bufferJpg = await sharp(file.buffer)
+          .jpeg({ quality: 80 })
+          .toBuffer();
+        const nuevoIndex = ultimoIndex + index + 1; // Incrementar el índice
+        const blobName = `${nombreMuseoFormateado}/${nombreMuseoFormateado}_${nuevoIndex}.jpg`;
+
+        const url = await uploadToAzure(
+          containerName,
+          bufferJpg,
+          blobName,
+          "image/jpeg"
+        );
+        urlFotos.push(url);
+      }
+    }
+
+    const galeriaActualizada = await Museo.addFotosGaleria({
+      id,
+      galeria: urlFotos,
+    });
+    res.json({
+      success: true,
+      message: "Fotos de galería subidas correctamente",
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_UPLOAD_FOTOS_GALERIA", error);
+  }
+};
+
+export const eliminarFotoGaleria = async (req, res) => {
+  try {
+    const { id, galFotoId } = req.params;
+
+    // Verificar si el museo existe
+    const museo = await Museo.findById({ id });
+    if (!museo) {
+      return res.status(404).json({
+        success: false,
+        message: "Museo no encontrado",
+      });
+    }
+
+    // Verificar que la foto de galería existe
+    const fotoGaleria = await Museo.findFotoGaleriaById({ id: galFotoId });
+    if (!fotoGaleria || fotoGaleria.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Galería no encontrada",
+      });
+    }
+
+    const containerName = "imagenes-museos";
+    const fotoUrl = fotoGaleria.galeria.gal_foto;
+    const blobNameEncoded = new URL(fotoUrl).pathname.replace(
+      /^\/[^\/]+\//,
+      ""
+    );
+    const blobName = decodeURIComponent(blobNameEncoded);
+
+    const eliminado = deleteFromAzure(containerName, blobName);
+    if (eliminado) {
+      await Museo.deleteFotoGaleriaById({ id, galFotoId });
+      res.json({
+        success: true,
+        message: "Foto de galería eliminada correctamente",
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        message: "Error al eliminar la foto de galería",
+      });
+    }
+  } catch (error) {
+    handleHttpError(res, "ERROR_ELIMINAR_FOTO_GALERIA", error);
   }
 };

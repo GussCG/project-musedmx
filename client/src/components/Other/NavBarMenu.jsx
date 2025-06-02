@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 
 import Icons from "./IconProvider";
-const { logo, IoMenu } = Icons;
+const { MuseDMXLogo, IoMenu } = Icons;
 
 import MenuContainer from "./MenuContainer";
 import { useAuth } from "../../context/AuthProvider";
@@ -78,21 +78,20 @@ function NavBarMenu() {
         <ul id="nav-menu">
           <li>
             <Link className="navbarmenu-link" to="/">
-              <p id="nav-logo">Inicio</p>
-              <img src={logo} alt="Logo®" id="nav-logo-img" />
+              <img src={MuseDMXLogo} alt="Logo®" id="nav-logo-img" />
             </Link>
           </li>
-          <li className="nav-a">
+          <li className="nav-a" id="ver-museos">
             <Link className="navbarmenu-link" to="/Museos">
               Ver Museos
             </Link>
           </li>
-          <li className="nav-a">
+          <li className="nav-a" id="ver-cerca-de-mi">
             <Link className="navbarmenu-link" to="/Museos/CercaDeMi">
               Cerca de mi
             </Link>
           </li>
-          <li className="nav-a">
+          <li className="nav-a" id="ver-populares">
             <Link className="navbarmenu-link" to="/Museos/Populares">
               Populares
             </Link>
@@ -115,8 +114,13 @@ function NavBarMenu() {
             </li>
           ) : (
             <li className="nav-a">
-              <Link to="/Auth/Iniciar" className="button" id="nav-button">
-                Iniciar Sesión
+              <Link
+                to="/Auth/Iniciar"
+                className="button-link"
+                id="nav-button"
+                style={{ minWidth: "150px" }}
+              >
+                <label>Iniciar Sesión</label>
               </Link>
             </li>
           )}

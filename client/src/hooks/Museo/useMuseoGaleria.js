@@ -8,32 +8,41 @@ export default function useMuseoGaleria(museoId, limit) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const updateGaleria = (newGaleria) => {
+  const uploadImagesGaleria = async (museoId, files) => {
     try {
-      const endpoint = `${BACKEND_URL}/api/museos/galeria/update/${museoId}`;
-      const response = axios.put(endpoint, {
-        galeria: newGaleria,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error updating galeria:", error);
-      setError(error);
-    }
-  };
-
-  const uploadImages = async (files) => {
-    try {
-      const endpoint = `${BACKEND_URL}/api/museos/galeria/upload/${museoId}`;
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/museos/galeria/agregar-fotos/${museoId}`;
       const response = await axios.post(endpoint, files, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error uploading images to galeria:", error);
+      setError(error);
+      throw error; // Re-throw the error for further handling if needed
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const eliminarImagenGaleria = async (museoId, galFotoId) => {
+    try {
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/museos/galeria/eliminar-foto/${museoId}/${galFotoId}`;
+      console.log("Endpoint de eliminación:", endpoint);
+      const response = await axios.delete(endpoint, {
+        withCredentials: true,
       });
 
-      return response.data.urls;
+      return response.data;
     } catch (error) {
-      console.error("Error uploading images:", error);
+      console.error("Error deleting image from galeria:", error);
       setError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,7 +78,7 @@ export default function useMuseoGaleria(museoId, limit) {
     loading,
     error,
     fetchGaleria,
-    uploadImages,
-    updateGaleria,
+    eliminarImagenGaleria,
+    uploadImagesGaleria,
   };
 }

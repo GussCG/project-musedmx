@@ -1,4 +1,5 @@
 import { Formik, Form, Field } from "formik";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 function RecuperarPass() {
@@ -41,6 +42,9 @@ function RecuperarPass() {
                 </label>
               </div>
               <Field type="submit" value="Recuperar" className="button" />
+              <Link to="/Auth/CambiarContraseña" className="link">
+                Cambiar Contraseña
+              </Link>
             </Form>
           )}
         </Formik>

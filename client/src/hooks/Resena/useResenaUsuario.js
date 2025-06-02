@@ -28,21 +28,19 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
   };
 
   // Registrar Reseña
-  const registrarResena = async (resenia) => {
+  const registrarResena = async (museoId, resenaData) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/reviews/`;
-      const response = await axios.post(endpoint, resenia, {
+      const endpoint = `${BACKEND_URL}/api/resena/usuario/registrar/${museoId}`;
+      console.log("Endpoint de registro de reseña:", endpoint);
+      const response = await axios.post(endpoint, resenaData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
 
-      const nuevaResenia = new Resenia(response.data.resenia);
-      setResenias((prevResenias) => [nuevaResenia, ...prevResenias]);
-
-      return nuevaResenia;
+      return response.data;
     } catch (error) {
       console.error("Error al registrar reseña:", error);
       throw error;
@@ -87,6 +85,24 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
       setLoading(false);
     }
   };
+
+  const eliminarFotoResena = async (resenaId, fotoId) => {
+    try {
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/resena/usuario/eliminar-foto/${resenaId}/${fotoId}`;
+      const response = await axios.delete(endpoint, {
+        withCredentials: true,
+      });
+      console.log("Foto de reseña eliminada:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error al eliminar foto de reseña:", error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     registrarResena,
     editarResena,
@@ -95,6 +111,7 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
     loading,
     resenias,
     fetchResenasByCorreo,
+    eliminarFotoResena,
   };
 };
 

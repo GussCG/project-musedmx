@@ -8,11 +8,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import HeaderMuseoButtons from "../../components/Museo/HeaderMuseoButtons";
 import "../../styles/pages/MuseoDetails.scss";
 import Icons from "../../components/Other/IconProvider";
-const { FaFilter, estrellaIcon, FaHeart, IoIosArrowBack, IoIosArrowForward } =
-  Icons;
+const {
+  FaFilter,
+  estrellaIcon,
+  FaHeart,
+  IoIosArrowBack,
+  IoIosArrowForward,
+  FaPlus,
+  RiSurveyFill,
+} = Icons;
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
 import MenuFiltroResena from "../../components/Resena/MenuFiltroResena";
-import MapMuseoDetail from "../../components/Maps/MapMuseoDetail";
 import MuseoSlider from "../../components/Museo/MuseoSlider";
 import MuseoGallery from "../../components/Museo/MuseoGallery";
 import {
@@ -43,7 +49,7 @@ import { useMuseosAsociados } from "../../hooks/Museo/useMuseosAsociados";
 import useResenaMuseo from "../../hooks/Resena/useResenaMuseo";
 import { useMemo } from "react";
 import ReactPaginate from "react-paginate";
-import useDeepMemo from "../../hooks/Other/useDeepMemo";
+import MuseosMapView from "./MuseosMapView";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
@@ -332,7 +338,7 @@ function MuseoDetail() {
                             {isLoading ? (
                               <Skeleton width={50} />
                             ) : (
-                              <p>{calificacionPromedio}</p>
+                              <p>{calificacionPromedio.toFixed(1)}</p>
                             )}
 
                             <img
@@ -406,42 +412,48 @@ function MuseoDetail() {
                         <h1 className="h1-section">Calificaciones</h1>
                         <p>De acuerdo con los usuarios el museo es</p>
                       </div>
-                      <div className="museo-section-2-calificaciones-container">
-                        {Object.values(calificaciones).map((calificacion) => (
-                          <div
-                            className="calificacion-container"
-                            key={calificacion.titulo}
-                          >
-                            <div className="calificacion-icon">
-                              {calificacion.icono && (
-                                <img
-                                  src={calificacion.icono}
-                                  alt={calificacion}
-                                  style={
-                                    isDarkMode
-                                      ? { filter: "invert(1)" }
-                                      : { filter: "invert(0)" }
-                                  }
-                                />
-                              )}
-                            </div>
+                      {Object.values(calificaciones).length === 0 ? (
+                        <div className="no-results" style={{ width: "90%" }}>
+                          <h2>No hay calificaciones aun</h2>
+                        </div>
+                      ) : (
+                        <div className="museo-section-2-calificaciones-container">
+                          {Object.values(calificaciones).map((calificacion) => (
                             <div
-                              className="calificacion-graph-bar"
-                              title={`${calificacion.width}%`}
+                              className="calificacion-container"
+                              key={calificacion.titulo}
                             >
+                              <div className="calificacion-icon">
+                                {calificacion.icono && (
+                                  <img
+                                    src={calificacion.icono}
+                                    alt={calificacion}
+                                    style={
+                                      isDarkMode
+                                        ? { filter: "invert(1)" }
+                                        : { filter: "invert(0)" }
+                                    }
+                                  />
+                                )}
+                              </div>
                               <div
-                                className="calificacion-graph-bar-fill"
-                                style={{
-                                  width: `${calificacion.width}%`,
-                                }}
-                              ></div>
+                                className="calificacion-graph-bar"
+                                title={`${calificacion.width}%`}
+                              >
+                                <div
+                                  className="calificacion-graph-bar-fill"
+                                  style={{
+                                    width: `${calificacion.width}%`,
+                                  }}
+                                ></div>
+                              </div>
+                              <div className="calificacion-title">
+                                <h2>{calificacion.titulo}</h2>
+                              </div>
                             </div>
-                            <div className="calificacion-title">
-                              <h2>{calificacion.titulo}</h2>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div className="museo-section-2-servicios museo-detail-item">
                       <div className="museo-section-header">
@@ -495,7 +507,7 @@ function MuseoDetail() {
                     </div>
                     <div className="museo-section-2-ubicacion museo-detail-item">
                       <div className="museo-section-2-direccion">
-                        <h1>Dirección:</h1>
+                        <h1>Dirección</h1>
                         {isLoading ? (
                           <Skeleton width={300} />
                         ) : (
@@ -507,7 +519,12 @@ function MuseoDetail() {
                           <LoadingIndicator />
                         </div>
                       ) : (
-                        <MapMuseoDetail museo={museoInfo} />
+                        <MuseosMapView
+                          MuseosMostrados={[museoInfo]}
+                          MuseosCercanos={museosCercanos}
+                          zoom={15}
+                          tipo={5}
+                        />
                       )}
                     </div>
                   </section>
@@ -583,7 +600,7 @@ function MuseoDetail() {
                             {isLoading ? (
                               <Skeleton width={50} />
                             ) : (
-                              <p>{calificacionPromedio.toFixed(2)}</p>
+                              <p>{calificacionPromedio.toFixed(1)}</p>
                             )}
                             <img
                               src={estrellaIcon}
@@ -634,23 +651,43 @@ function MuseoDetail() {
                       </div>
                       {user?.usr_tipo !== 2 && user?.usr_tipo !== 3 ? (
                         <div className="museo-section-5-registrar">
-                          <h2>¿Fuiste al museo?</h2>
-                          <Link
-                            to={`/Museos/${museoId}/RegistrarVisita`}
-                            className="button-reg-resena"
-                            onClick={(e) => {
-                              if (!user) {
-                                e.preventDefault();
-                                localStorage.setItem(
-                                  "redirectPath",
-                                  `/Museos/${museoId}/RegistrarVisita`
-                                );
-                                setIsLogginPopupOpen(true);
-                              }
-                            }}
-                          >
-                            Registra tu visita aquí
-                          </Link>
+                          <h2>Acciones</h2>
+                          <div className="museo-section-5-botones">
+                            <Link
+                              to={`/Museos/${museoId}/RegistrarVisita`}
+                              className="button-link"
+                              onClick={(e) => {
+                                if (!user) {
+                                  e.preventDefault();
+                                  localStorage.setItem(
+                                    "redirectPath",
+                                    `/Museos/${museoId}/RegistrarVisita`
+                                  );
+                                  setIsLogginPopupOpen(true);
+                                }
+                              }}
+                            >
+                              <label>Registra tu visita aquí</label>
+                              <FaPlus />
+                            </Link>
+                            <Link
+                              className="button-link"
+                              to={`/Museos/${museoId}/ContestarEncuesta`}
+                              onClick={(e) => {
+                                if (!user) {
+                                  e.preventDefault();
+                                  localStorage.setItem(
+                                    "redirectPath",
+                                    `/Museos/${museoId}/RegistrarVisita`
+                                  );
+                                  setIsLogginPopupOpen(true);
+                                }
+                              }}
+                            >
+                              <label>Contestar Encuesta</label>
+                              <RiSurveyFill />
+                            </Link>
+                          </div>
                         </div>
                       ) : null}
 

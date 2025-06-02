@@ -27,11 +27,12 @@
     position: relative;
 
     img {
-      max-width: 90%;
-      max-height: 90vh;
+      width: 90%;
+      height: 90vh;
       object-fit: contain;
       object-position: center;
       touch-action: none;
+      aspect-ratio: 1 / 1;
     }
   }
 

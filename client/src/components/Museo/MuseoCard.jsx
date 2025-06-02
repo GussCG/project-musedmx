@@ -54,7 +54,9 @@ const MuseoCard = memo(function MuseoCard({
   } = useMuseoHorarios(museo.id);
 
   const horariosAgrupados = agruparHorarios(horarios);
-  const { calificacionPromedio } = useResenaMuseo(museo.id);
+  const { calificacionPromedio } = useResenaMuseo({
+    museoId: museo.id,
+  });
 
   return (
     <>

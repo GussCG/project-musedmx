@@ -1,0 +1,41 @@
+@use "../variables" as *;
+
+.scroll-indicator {
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+
+  .scroll-indicator-icon {
+    width: 60px;
+    height: 60px;
+    background-color: var(--bg-scroll-indicator);
+    filter: drop-shadow(var(--boxshadow-scroll-indicator));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg {
+      width: 50px;
+      height: auto;
+      fill: var(--font-color-primary);
+      transition: fill 0.3s ease-in-out;
+    }
+
+    animation: scroll-indicator-animation 1.5s infinite ease-in-out;
+    @keyframes scroll-indicator-animation {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+  }
+}

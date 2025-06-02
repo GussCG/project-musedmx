@@ -11,10 +11,17 @@ import {
   getResenasModByMuseo,
   getResenasByCorreo,
   eliminarResena,
+  registrarResena,
   editarResena,
+  eliminarFotoResena,
 } from "../controllers/resena.controller.js";
 
 const router = Router();
+
+const resenaUploads = upload.fields([
+  { name: "entradaBoleto", maxCount: 1 },
+  { name: "fotos", maxCount: 5 },
+]);
 
 router.get("/detalle/:id", getResenasById);
 router.get("/pendientes", getResenasPendientes);
@@ -24,11 +31,18 @@ router.get("/detalle/:id/fotos", getResenasFoto);
 router.get("/usuario/all/:correo", getResenasByCorreo);
 router.delete("/usuario/delete/:id", eliminarResena);
 router.post(
+  "/usuario/registrar/:museoId",
+  resenaUploads,
+  authMiddleware,
+  registrarResena
+);
+router.post(
   "/usuario/editar/:resenaId",
   authMiddleware,
   upload.array("fotos", 10),
   editarResena
 ); // Asumiendo que esta ruta es para editar una reseña
+router.delete("/usuario/eliminar-foto/:resenaId/:fotoId", eliminarFotoResena);
 
 // Para obtener reseñas por museo
 router.get("/museo/:museoId", getResenasByMuseo);

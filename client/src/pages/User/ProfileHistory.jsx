@@ -16,7 +16,6 @@ import {
 } from "@tanstack/react-table";
 import useResenaUsuario from "../../hooks/Resena/useResenaUsuario";
 import ReactPaginate from "react-paginate";
-import axios from "axios";
 
 function ProfileHistory() {
   const [visitas, setVisitas] = useState([]);
@@ -27,7 +26,6 @@ function ProfileHistory() {
     const fetchData = async () => {
       if (user) {
         const response = await fetchResenasByCorreo(user.usr_correo);
-        console.log("Reseñas del usuario:", response);
         if (response) {
           setVisitas(response);
         } else {
@@ -87,7 +85,11 @@ function ProfileHistory() {
       {
         accessorKey: "mus_nombre",
         header: "Museo",
-        cell: (info) => info.getValue(),
+        cell: ({ row }) => (
+          <Link to={`/Museos/${row.original.visitas_vi_mus_id}`}>
+            {row.original.mus_nombre}
+          </Link>
+        ),
         enableSorting: true,
       },
       {

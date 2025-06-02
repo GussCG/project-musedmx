@@ -2,11 +2,12 @@ import Usuario from "../models/auth.model.js";
 import { handleHttpError } from "../helpers/httpError.js";
 import bcrypt from "bcrypt";
 import sharp from "sharp";
-// import { sendEmail } from "../services/emailService";
+import { sendRecoveryEmail } from "../services/emailService.js";
 import jwt from "jsonwebtoken";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { generateOTP } from "../utils/generateOTP.js";
 
 import { uploadToAzure } from "../utils/azureUpload.js";
 
@@ -16,8 +17,6 @@ const __dirname = path.dirname(__filename);
 export const logIn = async (req, res) => {
   try {
     let { usr_correo, usr_contrasenia } = req.body;
-
-    console.log("Datos de inicio de sesión:", req.body);
 
     if (!usr_correo || !usr_contrasenia) {
       return res.status(400).json({
@@ -102,22 +101,9 @@ export const signUp = async (req, res) => {
     if (req.file) {
       const sanitizedEmail = usr_correo.replace(/[^a-zA-Z0-9]/g, "-");
       const containerName = "imagenes-usuarios";
-      const tempJpgPath = path.join(
-        __dirname,
-        "..",
-        "temp",
-        `${sanitizedEmail}-imagenes`,
-        "perfil.jpg"
-      );
-
-      const tempDir = path.dirname(tempJpgPath);
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true });
-      }
-
-      await sharp(req.file.path).jpeg({ quality: 80 }).toFile(tempJpgPath);
-
-      const bufferJpg = fs.readFileSync(tempJpgPath); // Leer el archivo como buffer
+      const bufferJpg = await sharp(req.file.buffer)
+        .jpeg({ quality: 80 })
+        .toBuffer();
 
       const blobName = `${sanitizedEmail}-imagenes/perfil/perfil.jpg`;
 
@@ -127,15 +113,6 @@ export const signUp = async (req, res) => {
         blobName,
         "image/jpeg"
       );
-
-      // Eliminar el archivo temporal y la carpeta
-      if (fs.existsSync(tempJpgPath)) {
-        fs.unlinkSync(tempJpgPath);
-      }
-      // Eliminar la carpeta temporal
-      if (fs.existsSync(tempDir)) {
-        fs.rmdirSync(tempDir, { recursive: true });
-      }
 
       usr_foto = nuevaFotoUrl;
     }
@@ -262,22 +239,9 @@ export const updateUser = async (req, res) => {
     if (req.file) {
       const sanitizedEmail = correoParam.replace(/[^a-zA-Z0-9]/g, "-");
       const containerName = "imagenes-usuarios";
-      const tempJpgPath = path.join(
-        __dirname,
-        "..",
-        "temp",
-        `${sanitizedEmail}-imagenes`,
-        "perfil.jpg"
-      );
-
-      const tempDir = path.dirname(tempJpgPath);
-      if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true });
-      }
-
-      await sharp(req.file.path).jpeg({ quality: 80 }).toFile(tempJpgPath);
-
-      const bufferJpg = fs.readFileSync(tempJpgPath); // Leer el archivo como buffer
+      const bufferJpg = await sharp(req.file.buffer)
+        .jpeg({ quality: 80 })
+        .toBuffer();
 
       const blobName = `${sanitizedEmail}-imagenes/perfil/perfil.jpg`;
 
@@ -287,15 +251,6 @@ export const updateUser = async (req, res) => {
         blobName,
         "image/jpeg"
       );
-
-      // Eliminar el archivo temporal y la carpeta
-      if (fs.existsSync(tempJpgPath)) {
-        fs.unlinkSync(tempJpgPath);
-      }
-      // Eliminar la carpeta temporal
-      if (fs.existsSync(tempDir)) {
-        fs.rmdirSync(tempDir, { recursive: true });
-      }
 
       datosActualizar.usr_foto = nuevaFotoUrl;
     }
@@ -333,18 +288,47 @@ export const obtenerUsuarioByCorreo = async (req, res) => {
   }
 };
 
-/* export const recuperarContrasena = (req, res) => {
-	//Usar el servicio de envio de correos
-	//El OTP se genera en el frontend
+export const recuperarContrasena = async (req, res) => {
+  try {
+    const { usr_correo } = req.body;
+    if (!usr_correo) {
+      return res.status(400).json({
+        success: false,
+        message: "Correo electrónico es requerido",
+      });
+    }
 
-	sendEmail(req.body)
-		.then((response) => res.send(response.message))
-		.catch((error) => {
-			handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
-		});
+    // Verificar si el usuario existe
+    const usuario = Usuario.findOne({ usr_correo });
+    if (!usuario) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuario no encontrado",
+      });
+    }
 
-	return res.status(200).json({
-		success: true,
-		message: "Email sent successfully"
-	});	
-} */
+    // Podemos implementar un sistema de verificación de usuarios
+    // Si se implementa, la recuperación de contraseña solo se enviará si el usuario está verificado
+    // if (!usuario.usr_verificado) {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: "Usuario no verificado",
+    //   });
+    // }
+
+    const OTP = await generateOTP(); // Generar un OTP
+    console.log("Recuperación de contraseña para:", usr_correo);
+    console.log("OTP generado:", OTP);
+    sendRecoveryEmail({ recipient_email: usr_correo, OTP })
+      .then((response) => res.send(response.message))
+      .catch((error) => {
+        handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
+      });
+    /* return res.status(200).json({
+        success: true,
+        message: "Email sent successfully"
+      }); */
+  } catch (error) {
+    handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
+  }
+};

@@ -5,6 +5,7 @@ import MuseosList from "../pages/Museo/MuseosList";
 import MuseoDetail from "../pages/Museo/MuseoDetail";
 import RegistroVisita from "../pages/Museo/RegistroVisita";
 import "../styles/pages/VerMuseosLayout.scss";
+import MuseoEncuesta from "../pages/Museo/MuseoEncuesta";
 
 function VerMuseosLayout() {
   return (
@@ -41,6 +42,7 @@ function VerMuseosRoutes() {
         <Route path=":museoId" element={<MuseoDetail />} />
 
         <Route path=":museoId/RegistrarVisita" element={<RegistroVisita />} />
+        <Route path=":museoId/ContestarEncuesta" element={<MuseoEncuesta />} />
       </Route>
     </Routes>
   );

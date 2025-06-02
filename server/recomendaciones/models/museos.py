@@ -2,7 +2,7 @@ from typing import List, Dict, Optional, Any
 from ..database import db
 
 def get_museos_data() -> List[Dict[str, Any]]:
-    cursor = db.get_cursor()
+    cursor, conn = db.get_cursor()
     try: 
         cursor.execute("""
             SELECT 
@@ -19,10 +19,10 @@ def get_museos_data() -> List[Dict[str, Any]]:
         return []
     finally:
         cursor.close()
-        db.close()
+        db.close(conn)
 
 def get_museo_by_id(museo_id: str) -> Optional[Dict[str, Any]]:
-    cursor = db.get_cursor()
+    cursor, conn = db.get_cursor()
     try:
         cursor.execute("""
             SELECT 
@@ -37,4 +37,4 @@ def get_museo_by_id(museo_id: str) -> Optional[Dict[str, Any]]:
         return None
     finally:
         cursor.close()
-        db.close()
+        db.close(conn)

@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import Icons from "../../components/Other/IconProvider";
 const { LuEye, LuEyeClosed } = Icons;
 import ErrorCampo from "../../components/Forms/ErrorCampo";
-import { modSchema } from "../../constants/validationSchemas";
+import { modEditSchema, modSchema } from "../../constants/validationSchemas";
 import useModeradores from "../../hooks/Usuario/useModeradores";
 import { useAuth } from "../../context/AuthProvider";
 import ToastMessage from "../../components/Other/ToastMessage";
@@ -304,7 +304,7 @@ function ModForm() {
                 signinfrmpassword: "",
                 signinfrmrepassword: "",
               }}
-              validationSchema={modSchema}
+              validationSchema={moderadorEditar ? modEditSchema : modSchema}
               onSubmit={(values) => {
                 handleSubmit(values);
               }}

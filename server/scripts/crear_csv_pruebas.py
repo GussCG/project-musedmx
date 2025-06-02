@@ -8,7 +8,6 @@ import os
 fake = Faker('es_MX')
 random.seed(42)
 
-# IDs reales de algunos jugadores de la NBA (actualizado 2024)
 nba_player_ids = [
     "1630618", "1630163", "1629627", "1629029", "1627759",
     "1630162", "1629028", "1629630", "203076", "201939",
@@ -20,18 +19,17 @@ def obtener_foto_nba():
     player_id = random.choice(nba_player_ids)
     return f"https://cdn.nba.com/headshots/nba/latest/1040x760/{player_id}.png"
 
-# URLs de fotos de estadios NBA (ejemplo con algunos estadios reales)
 nba_stadium_photos = [
-    "https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg",  # Warriors logo (puedes cambiar por fotos reales de estadios)
-    "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg",  # Celtics logo
-    "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg",  # Hawks logo
-    "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg",  # Nets logo
-    "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg",  # Hornets logo
-    "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg",  # Bulls logo
-    "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",  # Cavaliers logo
-    "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg",  # Mavericks logo
-    "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg",  # Nuggets logo
-    "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg"   # Pistons logo
+    "https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg",
+    "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg"
 ]
 
 def obtener_foto_estadio():
@@ -63,7 +61,7 @@ with open(csv_path, "r", encoding="utf-8") as f:
     museos = [row for row in reader]
 
 def generar_telefono():
-    return f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}"
+    return f"+52 {random.randint(1000,9999)} {random.randint(1000,9999)}"
 
 def bcrypt_hash(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -95,8 +93,7 @@ for _ in range(100):
         usuarios_tematicas.append([correo, tema])
 
 visitas = []
-respuestas = []
-calificaciones = []
+respuestas_encuesta = []
 respuestas_serv = []
 resenias = []
 quiero_visitar = set()
@@ -106,7 +103,6 @@ foto_resenia = []
 res_id_counter = 1
 resenia_id_counter = 1
 encuesta_cve = 1
-
 mod_correo = "mod@musedmx.com"
 
 for museo in random.sample(museos, 30):
@@ -117,34 +113,24 @@ for museo in random.sample(museos, 30):
 
         for preg_id in range(1, 6):
             opciones = CALIFICACIONES_RUBROS[preg_id]
-            valores_validos = [str(op["valor"]) for op in opciones]
-            valor = random.choice(valores_validos)
-
-            respuestas.append([res_id_counter, valor, preg_id, encuesta_cve])
-            calificaciones.append([
-                fecha, usuario, mus_id,
-                res_id_counter, preg_id, encuesta_cve
+            valor = str(random.choice(opciones)["valor"])
+            respuestas_encuesta.append([
+                res_id_counter, valor, usuario, mus_id, preg_id, encuesta_cve
             ])
             res_id_counter += 1
 
         serv_indices = random.sample(range(len(servicios)), k=3)
         for idx in serv_indices:
-            respuestas_serv.append([fecha, usuario, mus_id, idx + 1])
+            respuestas_serv.append([usuario, mus_id, idx + 1])
 
-        # Crear reseña
         resenias.append([
             resenia_id_counter, fake.sentence(nb_words=8),
             mod_correo, 1, random.randint(1, 5),
             usuario, mus_id, fecha
         ])
 
-        # Asociar fotos a la reseña (de 1 a 3 fotos por reseña)
         for _ in range(random.randint(1, 3)):
-            foto_resenia.append([
-                None,  # f_res_id (AUTO_INCREMENT, no se incluye en CSV)
-                resenia_id_counter,
-                obtener_foto_estadio()
-            ])
+            foto_resenia.append([resenia_id_counter, obtener_foto_estadio()])
 
         resenia_id_counter += 1
 
@@ -152,7 +138,6 @@ for museo in random.sample(museos, 30):
             quiero_visitar.add((usuario, mus_id))
         if random.choice([True, False]):
             favoritos.add((usuario, mus_id))
-
 
 def guardar_csv(nombre, cabeceras, datos):
     os.makedirs(os.path.dirname(nombre), exist_ok=True)
@@ -171,22 +156,25 @@ guardar_csv("./csvpruebas/usuarios_has_tematicas.csv", [
 ], usuarios_tematicas)
 
 guardar_csv("./csvpruebas/visitas.csv", ["vi_fechahora", "vi_usr_correo", "vi_mus_id"], visitas)
-guardar_csv("./csvpruebas/respuestas.csv", ["res_id", "res_respuesta", "preguntas_preg_id", "preguntas_encuesta_enc_cve"], respuestas)
-guardar_csv("./csvpruebas/calificaciones.csv", [
-    "visitas_vi_fechahora", "visitas_vi_usr_correo", "visitas_vi_mus_id",
-    "respuestas_res_id", "respuestas_preguntas_preg_id", "respuestas_preguntas_encuesta_enc_cve"
-], calificaciones)
-guardar_csv("./csvpruebas/respuestas_servicios.csv", ["visitas_vi_fechahora", "visitas_vi_usr_correo", "visitas_vi_mus_id", "servicios_ser_id"], respuestas_serv)
+
+guardar_csv("./csvpruebas/respuestas_encuesta.csv", [
+    "res_id", "res_respuesta", "usr_correo", "mus_id", "preguntas_preg_id", "encuesta_enc_cve"
+], respuestas_encuesta)
+
+guardar_csv("./csvpruebas/respuestas_servicios.csv", [
+    "visitas_vi_usr_correo", "visitas_vi_mus_id", "servicios_ser_id"
+], respuestas_serv)
+
 guardar_csv("./csvpruebas/resenia.csv", [
     "res_id_res", "res_comentario", "res_mod_correo", "res_aprobado",
     "res_calif_estrellas", "visitas_vi_usr_correo", "visitas_vi_mus_id", "visitas_vi_fechahora"
 ], resenias)
+
 guardar_csv("./csvpruebas/foto_resenia.csv", [
-    # No guardamos f_res_id porque es autoincremental en BD
     "f_res_id_res", "f_res_foto"
-], [(r[1], r[2]) for r in foto_resenia])
+], foto_resenia)
 
 guardar_csv("./csvpruebas/quiero_visitar.csv", ["qv_usr_correo", "qv_mus_id"], list(quiero_visitar))
 guardar_csv("./csvpruebas/favoritos.csv", ["fav_usr_correo", "fav_mus_id"], list(favoritos))
 
-print("✅ Archivos generados correctamente con contraseñas encriptadas, fotos de jugadores NBA y fotos de estadios para reseñas.")
+print("✅ Archivos generados correctamente con estructura adaptada sin tabla calificaciones.")

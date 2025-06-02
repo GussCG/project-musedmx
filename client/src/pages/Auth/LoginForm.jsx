@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import loginImage from "../../assets/images/others/museo-login-image.png";
 import Icons from "../../components/Other/IconProvider";
-const { LuEye, LuEyeClosed } = Icons;
+const { LuEye, LuEyeClosed, MuseDMXIcon, MuseDMXLogoVertical } = Icons;
 import LoginErrorMessage from "../../components/Forms/LoginErrorMessage";
 
 function LoginForm() {
@@ -144,7 +144,7 @@ function LoginForm() {
         </motion.div>
         <div id="login-linea"></div>
         <div id="login-imagen">
-          <img src={loginImage} alt="Login" />
+          <img src={MuseDMXLogoVertical} alt="Login" />
         </div>
       </main>
     </motion.div>

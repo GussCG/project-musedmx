@@ -3,17 +3,18 @@ import axios from "axios";
 
 import { BACKEND_URL } from "../../constants/api";
 
-export default function usePreguntas({ encuestaId }) {
+export default function usePreguntas({ encuestaId } = {}) {
   const [preguntas, setPreguntas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchPreguntas = async () => {
+  const fetchPreguntas = async ({ encuestaId }) => {
     try {
       setLoading(true);
       const endpoint = `${BACKEND_URL}/api/encuesta/preguntas/${encuestaId}`;
+      console.log("Fetching preguntas from:", endpoint);
       const response = await axios.get(endpoint);
-      setPreguntas(response.data.preguntas);
+      return response.data.preguntas;
     } catch (error) {
       console.error("Error fetching preguntas:", error);
       setError(error);
@@ -22,18 +23,10 @@ export default function usePreguntas({ encuestaId }) {
     }
   };
 
-  useEffect(() => {
-    if (encuestaId) {
-      fetchPreguntas();
-    } else {
-      setPreguntas([]);
-      setLoading(false);
-    }
-  }, [encuestaId]);
-
   return {
     preguntas,
     loading,
     error,
+    fetchPreguntas,
   };
 }

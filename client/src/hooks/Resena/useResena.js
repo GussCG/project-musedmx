@@ -11,7 +11,6 @@ export const useResena = ({ resId } = {}) => {
     try {
       setLoading(true);
       const endpoint = `${BACKEND_URL}/api/resena/detalle/${resId}`;
-      console.log("Fetching resena by ID:", endpoint);
       const response = await axios.get(endpoint, {
         withCredentials: true,
       });

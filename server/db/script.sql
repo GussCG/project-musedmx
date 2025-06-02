@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios` (
   `usr_telefono` VARCHAR(15) NULL DEFAULT NULL,
   `usr_foto` VARCHAR(300) NULL DEFAULT NULL,
   `usr_tipo` TINYINT(1) NOT NULL,
+  `usr_verificado` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`usr_correo`)
 -- UNIQUE INDEX `correo` (`usr_correo` ASC) VISIBLE
   ) ENGINE=InnoDB;
@@ -28,7 +29,6 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios` (
 -- (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo)
 -- VALUES
 -- ('mod@musedmx.com', 'Mod', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2000-04-02', "+525531933874", NULL, 3);
-
 
 SELECT * FROM usuarios;
 -- DELETE FROM usuarios WHERE usr_correo = "admin@musedmx.com";
@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`horarios_precios_museo` (
   ) ENGINE=InnoDB;
 
 -- DROP TABLE horarios_precios_museo;
-select * from horarios_precios_museo where mh_mus_id = 2311;
+select * from horarios_precios_museo where mh_mus_id = 375;
   
 -- -----------------------------------------------------
 -- Table `musedmx`.`red_soc`
@@ -400,16 +400,17 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`visitas` (
 --  INDEX `id_Museo` (`vi_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
 
-SELECT * FROM visitas;
-
+SELECT * FROM visitas WHERE vi_mus_id = 673 AND vi_usr_correo = "narguello@example.com";
+-- DELETE FROM visitas WHERE vi_mus_id = 606 AND vi_usr_correo = "narguello@example.com";
 -- -----------------------------------------------------
 -- Table `musedmx`.`resenia`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
   `res_id_res` INT(11) NOT NULL AUTO_INCREMENT,
   `res_comentario` TEXT NOT NULL,
+  `res_foto_entrada` VARCHAR(300) NULL DEFAULT NULL,
   `res_mod_correo` VARCHAR(75) NULL DEFAULT NULL,
-  `res_aprobado` TINYINT(1) NOT NULL,
+  `res_aprobado` TINYINT(1) NOT NULL DEFAULT '0',
   `res_calif_estrellas` INT(1) NOT NULL,
   `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,
   `visitas_vi_mus_id` INT(11) NOT NULL,
@@ -440,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
 --  INDEX `fk_resenia_visitas1_idx` (`visitas_vi_fechahora` ASC, `visitas_vi_usr_correo` ASC, `visitas_vi_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
   
- SELECT * FROM resenia;
+ SELECT * FROM resenia WHERE visitas_vi_mus_id = 606 AND visitas_vi_usr_correo = "narguello@example.com";
  UPDATE resenia SET res_aprobado = 0 WHERE res_id_res = 1;
 -- TRUNCATE TABLE resenia;
 
@@ -460,6 +461,9 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`foto_resenia` (
 --  INDEX `id_Historial` (`f_res_id_res` ASC) VISIBLE
   ) ENGINE=InnoDB;
 
+-- TRUNCATE TABLE foto_resenia;
+SELECT * FROM foto_resenia WHERE f_res_id_res = 602 ;
+
 -- -----------------------------------------------------
 -- Table `musedmx`.`encuesta`
 -- -----------------------------------------------------
@@ -473,28 +477,28 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`encuesta` (
 SELECT * FROM encuesta;
 
 -- -----------------------------------------------------
--- Table `musedmx`.`museos_has_encuesta`
+-- Table `musedmx`.`museos_have_encuesta`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `musedmx`.`museos_has_encuesta` (
+CREATE TABLE IF NOT EXISTS `musedmx`.`museos_have_encuesta` (
   `museos_mus_id` INT(11) NOT NULL,
   `encuesta_enc_cve` INT NOT NULL,
   PRIMARY KEY (`museos_mus_id`, `encuesta_enc_cve`),
-  CONSTRAINT `fk_museos_has_encuesta_museos1`
+  CONSTRAINT `fk_museos_have_encuesta_museos1`
 	  FOREIGN KEY (`museos_mus_id`)
 	  REFERENCES `musedmx`.`museos` (`mus_id`)
 	  ON DELETE CASCADE
 	  ON UPDATE CASCADE,
-  CONSTRAINT `fk_museos_has_encuesta_encuesta1`
+  CONSTRAINT `fk_museos_have_encuesta_encuesta1`
 	  FOREIGN KEY (`encuesta_enc_cve`)
 	  REFERENCES `musedmx`.`encuesta` (`enc_cve`)
 	  ON DELETE CASCADE
 	  ON UPDATE CASCADE
---  INDEX `fk_museos_has_servicios_servicios1_idx` (`servicios_ser_cve` ASC) VISIBLE,
---  INDEX `fk_museos_has_servicios_museos1_idx` (`museos_mus_id` ASC) VISIBLE
+--  INDEX `fk_museos_have_servicios_servicios1_idx` (`servicios_ser_cve` ASC) VISIBLE,
+--  INDEX `fk_museos_have_servicios_museos1_idx` (`museos_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
   
-  -- DROP TABLE museos_has_encuesta;
-SELECT * FROM museos_has_encuesta;
+  -- DROP TABLE museos_have_encuesta;
+SELECT * FROM museos_have_encuesta;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`preguntas`
@@ -531,31 +535,28 @@ SELECT * FROM servicios;
 -- -----------------------------------------------------
 -- Table `musedmx`.`respuestas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas` (
+CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas_encuesta` (
   `res_id` INT NOT NULL AUTO_INCREMENT,
   `res_respuesta` ENUM('0', '1', '2', '3', '4', '5') NOT NULL,
   `preguntas_preg_id` INT NOT NULL,
   `preguntas_encuesta_enc_cve` INT NOT NULL,
-  PRIMARY KEY (`res_id`, `preguntas_preg_id`, `preguntas_encuesta_enc_cve`),
+  `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,
+  `visitas_vi_mus_id` INT(11) NOT NULL,
+  PRIMARY KEY (`res_id`), 
   CONSTRAINT `fk_respuestas_preguntas1`
-	  FOREIGN KEY (`preguntas_preg_id`, `preguntas_encuesta_enc_cve`)
-	  REFERENCES `musedmx`.`preguntas` (`preg_id`, `encuesta_enc_cve`)
-	  ON DELETE CASCADE
-	  ON UPDATE CASCADE
---  INDEX `fk_respuestas_preguntas1_idx` (`preguntas_preg_id` ASC, `preguntas_encuesta_enc_cve` ASC) VISIBLE
-) ENGINE=InnoDB ;
+    FOREIGN KEY (`preguntas_preg_id`, `preguntas_encuesta_enc_cve`)
+    REFERENCES `musedmx`.`preguntas` (`preg_id`, `encuesta_enc_cve`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+SELECT * FROM respuestas_encuesta WHERE visitas_vi_usr_correo = "narguello@example.com" AND visitas_vi_mus_id = 673;
 
 CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas_servicios` (
-  `visitas_vi_fechahora` DATETIME NOT NULL,
   `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,
   `visitas_vi_mus_id` INT(11) NOT NULL,
   `servicios_ser_id` INT NOT NULL,
-  PRIMARY KEY (`visitas_vi_fechahora`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`, `servicios_ser_id`),
-  CONSTRAINT `fk_ers_visitas`
-    FOREIGN KEY (`visitas_vi_fechahora`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`)
-    REFERENCES `musedmx`.`visitas` (`vi_fechahora`, `vi_usr_correo`, `vi_mus_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
+  PRIMARY KEY (`visitas_vi_usr_correo`, `visitas_vi_mus_id`, `servicios_ser_id`),
   CONSTRAINT `fk_ers_servicios`
     FOREIGN KEY (`servicios_ser_id`)
     REFERENCES `musedmx`.`servicios` (`ser_id`)
@@ -564,49 +565,6 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas_servicios` (
 ) ENGINE=InnoDB;
 
 SELECT * FROM respuestas_servicios;
-
--- -----------------------------------------------------
--- Table `musedmx`.`museos_has_servicios`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `musedmx`.`museos_has_servicios` (
-  `museos_mus_id` INT(11) NOT NULL,
-  `servicios_ser_id` INT NOT NULL,
-  PRIMARY KEY (`museos_mus_id`, `servicios_ser_id`),
-  CONSTRAINT `fk_museos_has_servicios_museos1`
-	  FOREIGN KEY (`museos_mus_id`)
-	  REFERENCES `musedmx`.`museos` (`mus_id`)
-	  ON DELETE CASCADE
-	  ON UPDATE CASCADE,
-  CONSTRAINT `fk_museos_has_servicios_servicios1`
-	  FOREIGN KEY (`servicios_ser_id`)
-	  REFERENCES `musedmx`.`servicios` (`ser_id`)
-	  ON DELETE CASCADE
-	  ON UPDATE CASCADE
-	) ENGINE=InnoDB;
-    
--- -----------------------------------------------------
--- Table `musedmx`.`calificaciones`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `musedmx`.`calificaciones` (
-  `visitas_vi_fechahora` DATETIME NOT NULL,
-  `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,
-  `visitas_vi_mus_id` INT(11) NOT NULL,
-  `respuestas_res_id` INT NOT NULL,
-  `respuestas_preguntas_preg_id` INT NOT NULL,
-  `respuestas_preguntas_encuesta_enc_cve` INT NOT NULL,
-  PRIMARY KEY (`visitas_vi_fechahora`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`, `respuestas_res_id`, `respuestas_preguntas_preg_id`, `respuestas_preguntas_encuesta_enc_cve`),
-  CONSTRAINT `fk_calificaciones_visitas1`
-	  FOREIGN KEY (`visitas_vi_fechahora`, `visitas_vi_usr_correo`, `visitas_vi_mus_id`)
-	  REFERENCES `musedmx`.`visitas` (`vi_fechahora`, `vi_usr_correo`, `vi_mus_id`)
-	  ON DELETE CASCADE
-	  ON UPDATE CASCADE,
-  CONSTRAINT `fk_calificaciones_respuesta1`
-	  FOREIGN KEY (`respuestas_res_id`, `respuestas_preguntas_preg_id`, `respuestas_preguntas_encuesta_enc_cve`)
-	  REFERENCES `musedmx`.`respuestas` (`res_id`, `preguntas_preg_id`, `preguntas_encuesta_enc_cve`)
-	  ON DELETE CASCADE
-	  ON UPDATE CASCADE
-  ) ENGINE=InnoDB;
-  
   -- -----------------------------------------------------
 -- Table `musedmx`.`tematicas`
 -- -----------------------------------------------------
@@ -639,29 +597,5 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios_has_tematicas` (
   ) ENGINE=InnoDB;
 
 SELECT * FROM usuarios_has_tematicas;
-    
-SHOW CREATE TABLE musedmx.visitas;
-SHOW CREATE TABLE musedmx.respuestas;
-    
--- DROP TABLE museos_has_servicios;
-
-select * from museos where mus_nombre = "Herbario Medicinal del IMSS";
-
 show VARIABLES LIKE 'max_allowed_packet';
-SELECT * from usuarios;
-select * from administrador;
-select * from moderador;
-SELECT * from usuarios_has_tematicas;
-SELECT * from tematicas;
-
-alter table usuarios modify COLUMN usr_telefono varchar(15);
-describe usuarios;
-
--- drop table auditorias;
--- drop trigger trg_insert_auditoria;
--- drop trigger trg_delete_auditoria;
--- drop trigger trg_update_auditoria;
--- delete from museos;
--- delete from tematicas;
-
 SHOW ENGINE INNODB STATUS;
