@@ -186,6 +186,8 @@ import { FaHeart } from "react-icons/fa";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
+import { IoIosArrowUp } from "react-icons/io";
+import { LuRadius } from "react-icons/lu";
 
 const Icons = {
   MuseDMXLogo,
@@ -318,6 +320,8 @@ const Icons = {
   FaUserEdit,
   MdDelete,
   MdKeyboardDoubleArrowDown,
+  IoIosArrowUp,
+  LuRadius,
 };
 
 export default Icons;

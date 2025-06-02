@@ -1,11 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { Bounce, toast } from "react-toastify";
+import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import Icons from "../../components/Other/IconProvider";
-const { FaTrash, IoIosCheckmarkCircle, LuImageUp, FaImage } = Icons;
 import { useParams, useNavigate } from "react-router-dom";
 import useMuseoGaleria from "../../hooks/Museo/useMuseoGaleria";
-import ScrollIndicator from "../../components/Other/ScrollIndicator";
 import ToastMessage from "../../components/Other/ToastMessage";
 import ImageUploader from "../../components/Other/ImageUploader";
 
@@ -46,6 +42,15 @@ function MuseoImgEdit() {
     }
   };
 
+  const handleSetFieldValue = useCallback((name, value) => {
+    if (name === "imagenes") {
+      setImagenesSubidas((prev) => {
+        const isEqual = JSON.stringify(prev) === JSON.stringify(value);
+        return isEqual ? prev : value;
+      });
+    }
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -63,15 +68,9 @@ function MuseoImgEdit() {
           maxFiles={20}
           redirectTo={`/Museos/${museoId}`}
           navigate={navigate}
-          setFieldValue={(name, value) => {
-            // Use setTimeout to defer the state update
-            setTimeout(() => {
-              if (name === "imagenes") {
-                setImagenesSubidas(value);
-              }
-            }, 0);
-          }}
+          setFieldValue={handleSetFieldValue}
           name="imagenes"
+          syncWithFormik={false}
         />
         <button className="button" onClick={handleGuardarCambios}>
           Guardar Cambios

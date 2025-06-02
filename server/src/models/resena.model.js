@@ -27,11 +27,8 @@ export default class Resena {
           LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_usr_correo = v.vi_usr_correo
                                           AND rs.visitas_vi_mus_id = v.vi_mus_id
           LEFT JOIN servicios s ON rs.servicios_ser_id = s.ser_id
-          LEFT JOIN calificaciones c ON c.visitas_vi_usr_correo = v.vi_usr_correo
-                                    AND c.visitas_vi_mus_id = v.vi_mus_id
-          LEFT JOIN respuestas resp ON resp.res_id = c.respuestas_res_id
-                                    AND resp.preguntas_preg_id = c.respuestas_preguntas_preg_id
-                                    AND resp.preguntas_encuesta_enc_cve = c.respuestas_preguntas_encuesta_enc_cve
+          LEFT JOIN respuestas_encuesta resp ON resp.visitas_vi_usr_correo = v.vi_usr_correo
+                                  AND resp.visitas_vi_mus_id = v.vi_mus_id
           WHERE r.res_id_res = ?
           GROUP BY r.res_id_res
 
@@ -139,11 +136,8 @@ export default class Resena {
       LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_usr_correo = v.vi_usr_correo
                                       AND rs.visitas_vi_mus_id = v.vi_mus_id
       LEFT JOIN servicios s ON rs.servicios_ser_id = s.ser_id
-      LEFT JOIN calificaciones c ON c.visitas_vi_usr_correo = v.vi_usr_correo
-                                AND c.visitas_vi_mus_id = v.vi_mus_id
-      LEFT JOIN respuestas resp ON resp.res_id = c.respuestas_res_id
-                              AND resp.preguntas_preg_id = c.respuestas_preguntas_preg_id
-                              AND resp.preguntas_encuesta_enc_cve = c.respuestas_preguntas_encuesta_enc_cve
+      LEFT JOIN respuestas_encuesta resp ON resp.visitas_vi_usr_correo = v.vi_usr_correo
+                              AND resp.visitas_vi_mus_id = v.vi_mus_id
       WHERE ${whereClause}
       GROUP BY r.res_id_res
       ORDER BY ${orden}
@@ -194,11 +188,8 @@ export default class Resena {
             LEFT JOIN respuestas_servicios rs ON rs.visitas_vi_usr_correo = v.vi_usr_correo
                                             AND rs.visitas_vi_mus_id = v.vi_mus_id
             LEFT JOIN servicios s ON rs.servicios_ser_id = s.ser_id
-            LEFT JOIN calificaciones c ON c.visitas_vi_usr_correo = v.vi_usr_correo
-                                      AND c.visitas_vi_mus_id = v.vi_mus_id
-            LEFT JOIN respuestas resp ON resp.res_id = c.respuestas_res_id
-                                    AND resp.preguntas_preg_id = c.respuestas_preguntas_preg_id
-                                    AND resp.preguntas_encuesta_enc_cve = c.respuestas_preguntas_encuesta_enc_cve
+            LEFT JOIN respuestas_encuesta resp ON resp.visitas_vi_usr_correo = v.vi_usr_correo
+                                    AND resp.visitas_vi_mus_id = v.vi_mus_id
             WHERE v.vi_usr_correo = ?
             GROUP BY r.res_id_res
           `;

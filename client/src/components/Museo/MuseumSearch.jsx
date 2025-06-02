@@ -1,49 +1,58 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import axios from "axios";
 import SearchBar from "../Other/SearchBar";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useMuseos } from "../../hooks/Museo/useMuseos";
 
 function MuseumSearch({ swiperRef = null }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
   const [museumSuggestions, setMuseumSuggestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { getMuseosNombres } = useMuseos({
+    tipo: null,
+    searchQuery: null,
+    isMapView: false,
+    filters: { tipos: [], alcaldias: [] },
+    sortBy: null,
+  });
+
+  const handleSearch = useCallback(
+    (searchTerm) => {
+      navigate(`/Museos/busqueda?search=${encodeURIComponent(searchTerm)}`);
+    },
+    [navigate]
+  );
+
+  // Memoiza las sugerencias
+  const suggestionNames = useMemo(() => {
+    return museumSuggestions.map((museo) => museo.mus_nombre);
+  }, [museumSuggestions]);
 
   const handleWheel = (e) => {
-    if (swiperRef) e.stopPropagation(); // Evitar que el evento de desplazamiento se propague al Swiper
+    if (swiperRef) e.stopPropagation();
   };
 
-  // Sugerencias de museos (nombres de museos)
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const museosResponse = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/museos/nombres`
-        );
-        const museos = Array.isArray(museosResponse.data.museos)
-          ? museosResponse.data.museos
-          : [];
-        setMuseumSuggestions(museos);
+        const response = await getMuseosNombres();
+        setMuseumSuggestions(response);
       } catch (error) {
-        console.error("Error fetching data:", error);
-        setError(
-          "Error al cargar los museos. Por favor, inténtalo de nuevo más tarde."
-        );
+        console.error("Error fetching museum suggestions:", error);
+        setError("Error al cargar las sugerencias de museos.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
-
-  const handleSearch = (searchTerm) => {
-    navigate(`/Museos/busqueda?search=${encodeURIComponent(searchTerm)}`);
-  };
+  }, [getMuseosNombres]);
 
   return (
     <motion.div
@@ -54,18 +63,18 @@ function MuseumSearch({ swiperRef = null }) {
       transition={{ duration: 0.5 }}
       onMouseEnter={() => {
         if (swiperRef?.current) {
-          swiperRef.current.swiper.mousewheel.disable(); // Deshabilitar el desplazamiento del mouse en el Swiper
+          swiperRef.current.swiper.mousewheel.disable();
         }
       }}
       onMouseLeave={() => {
         if (swiperRef?.current) {
-          swiperRef.current.swiper.mousewheel.enable(); // Habilitar el desplazamiento del mouse en el Swiper
+          swiperRef.current.swiper.mousewheel.enable();
         }
       }}
-      onWheel={handleWheel} // Manejar el evento de desplazamiento
+      onWheel={handleWheel}
       onTouchStart={(e) => {
         e.stopPropagation();
-      }} // Evitar que el evento de toque se propague al Swiper
+      }}
       style={{
         overscrollBehavior: "contain",
       }}
@@ -77,9 +86,10 @@ function MuseumSearch({ swiperRef = null }) {
       ) : (
         <SearchBar
           placeholder="Buscar museos..."
-          suggestions={museumSuggestions}
+          suggestions={suggestionNames}
           onSearch={handleSearch}
           onSuggestionSelect={handleSearch}
+          initialValue={searchQuery}
         />
       )}
     </motion.div>

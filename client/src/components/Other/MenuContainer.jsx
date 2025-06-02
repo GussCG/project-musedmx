@@ -4,7 +4,7 @@ import { forwardRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "../../context/ThemeProvider";
 import Icons from "./IconProvider";
-const { CgClose, IoSunny, FaMoon, SiRetroarch, MuseDMXIcon } = Icons;
+const { CgClose, IoSunny, FaMoon, SiRetroarch, MuseDMXLogoVertical } = Icons;
 import { TIPOS_USUARIO } from "../../constants/catalog";
 
 const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
@@ -64,15 +64,17 @@ const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
               </button>
             </div>
             <div className="menu-header">
-              <motion.h1
+              <motion.div
                 key={"MenuContainerHeader"}
+                className="menu-header-icon"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ delay: 0.4 }}
               >
-                Menú
-              </motion.h1>
+                <h1>Menú</h1>
+                {/* <img src={MuseDMXLogoVertical} alt="MuseDMX Icon" /> */}
+              </motion.div>
             </div>
             <div className="menu-body">
               <ul>

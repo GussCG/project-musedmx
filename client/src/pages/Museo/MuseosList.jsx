@@ -12,9 +12,10 @@ import MuseumSearch from "../../components/Museo/MuseumSearch";
 import { TEMATICAS } from "../../constants/catalog";
 import ReactPaginate from "react-paginate";
 import { useMuseos } from "../../hooks/Museo/useMuseos";
-import { useMuseoFilters } from "../../hooks/Museo/useMuseoFilters";
+import { useMuseoFilters } from "../../context/MuseoFilterProvider";
 import LoadingIndicator from "../../components/Other/LoadingIndicator";
 import { useMuseosPopulares } from "../../hooks/Museo/useMuseosPopulares";
+import { scrollToTop } from "../../components/Other/ScrollToTop";
 
 const {
   LuArrowUpDown,
@@ -29,7 +30,9 @@ const {
 function MuseosList({ titulo, tipo }) {
   // Para obtener el input de busqueda
   const [searchParams] = useSearchParams();
-  const tituloSearch = `${searchParams.get("search")}`;
+  const searchParamRaw = searchParams.get("search");
+  const tituloSearch = useMemo(() => searchParamRaw || "", [searchParamRaw]);
+
   const location = useLocation();
   const isBusquedaRoute = location.pathname.includes("/busqueda");
   const tituloBusqueda = isBusquedaRoute

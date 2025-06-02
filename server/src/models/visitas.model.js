@@ -40,11 +40,6 @@ export default class Visitas {
   static async delete({ vi_usr_correo, vi_mus_id, vi_fechahora }) {
     const connection = await pool.getConnection();
     await connection.beginTransaction();
-    console.log("Eliminando visita:", {
-      vi_usr_correo,
-      vi_mus_id,
-      vi_fechahora,
-    });
     try {
       let query = `
         DELETE FROM visitas
@@ -118,14 +113,9 @@ export default class Visitas {
       `;
       const queryParams = [vi_usr_correo, vi_mus_id];
       const [result] = await connection.query(query, queryParams);
-
       if (result.length > 0) {
         await connection.commit();
-        return {
-          vi_fechahora: result[0].vi_fechahora,
-          vi_usr_correo: result[0].vi_usr_correo,
-          vi_mus_id: result[0].vi_mus_id,
-        }; // Visita ya existe
+        return true; // Visita existe
       } else {
         await connection.rollback();
         return false; // Visita no existe

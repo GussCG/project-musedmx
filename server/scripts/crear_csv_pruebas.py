@@ -8,7 +8,6 @@ import os
 fake = Faker('es_MX')
 random.seed(42)
 
-# IDs reales de algunos jugadores de la NBA (actualizado 2024)
 nba_player_ids = [
     "1630618", "1630163", "1629627", "1629029", "1627759",
     "1630162", "1629028", "1629630", "203076", "201939",
@@ -94,8 +93,7 @@ for _ in range(20):
         usuarios_tematicas.append([correo, tema])
 
 visitas = []
-respuestas = []
-calificaciones = []
+respuestas_encuesta = []
 respuestas_serv = []
 resenias = []
 quiero_visitar = set()
@@ -105,7 +103,6 @@ foto_resenia = []
 res_id_counter = 1
 resenia_id_counter = 1
 encuesta_cve = 1
-
 mod_correo = "mod@musedmx.com"
 
 for museo in random.sample(museos, 30):
@@ -116,19 +113,15 @@ for museo in random.sample(museos, 30):
 
         for preg_id in range(1, 6):
             opciones = CALIFICACIONES_RUBROS[preg_id]
-            valores_validos = [str(op["valor"]) for op in opciones]
-            valor = random.choice(valores_validos)
-
-            respuestas.append([res_id_counter, valor, preg_id, encuesta_cve])
-            calificaciones.append([
-                fecha, usuario, mus_id,
-                res_id_counter, preg_id, encuesta_cve
+            valor = str(random.choice(opciones)["valor"])
+            respuestas_encuesta.append([
+                res_id_counter, valor, usuario, mus_id, preg_id, encuesta_cve
             ])
             res_id_counter += 1
 
         serv_indices = random.sample(range(len(servicios)), k=3)
         for idx in serv_indices:
-            respuestas_serv.append([fecha, usuario, mus_id, idx + 1])
+            respuestas_serv.append([usuario, mus_id, idx + 1])
 
         resenias.append([
             resenia_id_counter, fake.sentence(nb_words=8),
@@ -137,11 +130,7 @@ for museo in random.sample(museos, 30):
         ])
 
         for _ in range(random.randint(1, 3)):
-            foto_resenia.append([
-                None,
-                resenia_id_counter,
-                obtener_foto_estadio()
-            ])
+            foto_resenia.append([resenia_id_counter, obtener_foto_estadio()])
 
         resenia_id_counter += 1
 
@@ -167,26 +156,25 @@ guardar_csv("./csvpruebas/usuarios_has_tematicas.csv", [
 ], usuarios_tematicas)
 
 guardar_csv("./csvpruebas/visitas.csv", ["vi_fechahora", "vi_usr_correo", "vi_mus_id"], visitas)
-guardar_csv("./csvpruebas/respuestas.csv", ["res_id", "res_respuesta", "preguntas_preg_id", "preguntas_encuesta_enc_cve"], respuestas)
-# Reescribir solo el guardado de calificaciones sin la fecha
-guardar_csv("./csvpruebas/calificaciones.csv", [
-    "visitas_vi_usr_correo", "visitas_vi_mus_id",
-    "respuestas_res_id", "respuestas_preguntas_preg_id", "respuestas_preguntas_encuesta_enc_cve"
-], [
-    [correo, mus_id, res_id, preg_id, encuesta_cve]
-    for (_, correo, mus_id, res_id, preg_id, encuesta_cve) in calificaciones
-])
 
-guardar_csv("./csvpruebas/respuestas_servicios.csv", ["visitas_vi_fechahora", "visitas_vi_usr_correo", "visitas_vi_mus_id", "servicios_ser_id"], respuestas_serv)
+guardar_csv("./csvpruebas/respuestas_encuesta.csv", [
+    "res_id", "res_respuesta", "usr_correo", "mus_id", "preguntas_preg_id", "encuesta_enc_cve"
+], respuestas_encuesta)
+
+guardar_csv("./csvpruebas/respuestas_servicios.csv", [
+    "visitas_vi_usr_correo", "visitas_vi_mus_id", "servicios_ser_id"
+], respuestas_serv)
+
 guardar_csv("./csvpruebas/resenia.csv", [
     "res_id_res", "res_comentario", "res_mod_correo", "res_aprobado",
     "res_calif_estrellas", "visitas_vi_usr_correo", "visitas_vi_mus_id", "visitas_vi_fechahora"
 ], resenias)
+
 guardar_csv("./csvpruebas/foto_resenia.csv", [
     "f_res_id_res", "f_res_foto"
-], [(r[1], r[2]) for r in foto_resenia])
+], foto_resenia)
 
 guardar_csv("./csvpruebas/quiero_visitar.csv", ["qv_usr_correo", "qv_mus_id"], list(quiero_visitar))
 guardar_csv("./csvpruebas/favoritos.csv", ["fav_usr_correo", "fav_mus_id"], list(favoritos))
 
-print("✅ Archivos generados correctamente con contraseñas encriptadas, fotos de jugadores NBA y fotos de estadios para reseñas.")
+print("✅ Archivos generados correctamente con estructura adaptada sin tabla calificaciones.")

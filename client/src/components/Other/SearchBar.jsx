@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Icons from "./IconProvider";
 const { IoSearch, CgClose, IoMdArrowDropdown } = Icons;
@@ -10,44 +10,69 @@ function SearchBar({
   onSuggestionSelect,
   showNoResults = false,
   searchIcon = true,
+  initialValue = "",
 }) {
-  // Para el input de busqueda
-  const [input, setInput] = useState("");
+  // 1. Estado inicial con lazy initialization
+  const [input, setInput] = useState(() => initialValue);
+
+  // 2. Referencia para el valor inicial anterior
+  const initialValueRef = useRef(initialValue);
+  const inputRef = useRef(input);
+
+  // 3. Efecto para sincronizar initialValue solo cuando cambia realmente
+  useEffect(() => {
+    if (initialValueRef.current !== initialValue) {
+      initialValueRef.current = initialValue;
+      setInput(initialValue);
+      inputRef.current = initialValue;
+    }
+  }, [initialValue]);
+
+  // 4. Efecto para sugerencias (optimizado)
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isInputValid, setIsInputValid] = useState(false);
-  const [error, setError] = useState(null); // Estado para manejar errores
+  const suggestionsRef = useRef(suggestions);
 
-  // Validacion de la busqueda (solo letras, espacios y algunos caracteres especiales, sin numeros ni simbolos ni en blanco)
+  useEffect(() => {
+    suggestionsRef.current = suggestions;
+  }, [suggestions]);
+
+  useEffect(() => {
+    if (input.length > 0 && Array.isArray(suggestionsRef.current)) {
+      const newFiltered = suggestionsRef.current.filter((item) =>
+        item.toLowerCase().includes(input.toLowerCase())
+      );
+
+      setFilteredSuggestions((prev) => {
+        // Comparación profunda optimizada
+        if (JSON.stringify(prev) !== JSON.stringify(newFiltered)) {
+          return newFiltered;
+        }
+        return prev;
+      });
+    } else {
+      setFilteredSuggestions([]);
+    }
+  }, [input]); // Eliminamos suggestions de las dependencias
+
+  // 5. Validación (con chequeo de igualdad)
+  const [isInputValid, setIsInputValid] = useState(false);
+  const [error, setError] = useState(null);
   const searchRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-.,;:¡!¿?'()]+$/;
 
   useEffect(() => {
-    if (input.length > 0 && Array.isArray(suggestions)) {
-      const sugerenciasNombres = suggestions.map((museo) => museo.mus_nombre);
-      const allSuggestions = [...sugerenciasNombres];
-      const filtered = allSuggestions.filter((item) =>
-        item.toLowerCase().includes(input.toLowerCase())
-      );
-      setFilteredSuggestions(filtered);
-      setShowSuggestions(true); // Mostrar sugerencias automáticamente al escribir
-    } else {
-      setFilteredSuggestions([]);
-      setShowSuggestions(false);
-    }
-  }, [input, suggestions]);
+    const isValid = input.trim() !== "" && searchRegex.test(input);
+    const newError =
+      isValid || input.trim() === ""
+        ? null
+        : "Por favor, ingresa un término de búsqueda válido.";
 
-  useEffect(() => {
-    if (input.trim() === "") {
-      setError(null);
-      setIsInputValid(false);
-    } else if (!searchRegex.test(input)) {
-      setError("Por favor, ingresa un término de búsqueda válido.");
-      setIsInputValid(false);
-    } else {
-      setError(null);
-      setIsInputValid(true);
+    // Solo actualizar si hay cambios reales
+    if (isInputValid !== isValid || error !== newError) {
+      setIsInputValid(isValid);
+      setError(newError);
     }
-  }, [input]);
+  }, [input, isInputValid, error]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

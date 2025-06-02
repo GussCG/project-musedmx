@@ -11,7 +11,7 @@ const { FaTrash, LuImageUp, FaImage } = Icons;
 
 export default function ImageUploader({
   initialImages = [],
-  onUpload,
+  onUpload = null,
   onDelete,
   maxFiles = 20,
   redirectTo = null,
@@ -20,13 +20,18 @@ export default function ImageUploader({
   title = "Editar imágenes",
   name,
   setFieldValue,
+  syncWithFormik = false,
 }) {
   const fileInputRef = useRef(null);
   const [progress, setProgress] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
+  console.log("ImageUploader mounted with initialImages:", initialImages);
+
   const hasInitialized = useRef(false);
   const lightbox = useLightBox(uploadedFiles.map((file) => file.url));
+
+  const bustCache = (url) => `${url}?v=${Date.now()}`;
 
   useEffect(() => {
     if (!initialImages || initialImages.length === 0 || hasInitialized.current)
@@ -45,29 +50,30 @@ export default function ImageUploader({
   }, [initialImages]);
 
   useEffect(() => {
-    if (setFieldValue && name && hasInitialized.current) {
-      setTimeout(() => {
-        setFieldValue(
-          name,
-          uploadedFiles.map((img) => {
-            if (typeof img === "string") {
-              return { url: img, fileObject: null };
-            }
-            if (img instanceof File) {
-              return {
-                url: URL.createObjectURL(img),
-                fileObject: img,
-              };
-            }
-            return {
-              ...img,
-              fileObject: img.fileObject || null,
-            };
-          })
-        );
-      }, 0);
+    if (!setFieldValue || !name) return;
+
+    const newValue = uploadedFiles.map((img) => {
+      if (img.fileObject instanceof File) {
+        return { url: img.url, fileObject: img.fileObject };
+      }
+      return { ...img, fileObject: null };
+    });
+
+    // Solo sincronizar si syncWithFormik está activo
+    if (syncWithFormik) {
+      setFieldValue((prevState) => {
+        const prevValue = prevState?.[name];
+        const isEqual = JSON.stringify(prevValue) === JSON.stringify(newValue);
+        if (!isEqual) {
+          return { ...prevState, [name]: newValue };
+        }
+        return prevState;
+      });
+    } else {
+      // Si no está en modo Formik, llamar como callback simple (como en MuseoImgEdit)
+      setFieldValue(name, newValue);
     }
-  }, [uploadedFiles, setFieldValue, name]);
+  }, [uploadedFiles, setFieldValue, name, syncWithFormik]);
 
   const handleFileClick = () => fileInputRef.current?.click();
 
@@ -88,7 +94,7 @@ export default function ImageUploader({
       fileObject: file,
     };
 
-    setProgress((prev) => [...prev, { name: file.name, percent: 0 }]);
+    setProgress((prev) => [...prev, { name: file.name, percent: 0, file }]);
 
     let percent = 0;
     const interval = setInterval(() => {
@@ -100,11 +106,7 @@ export default function ImageUploader({
       if (percent >= 100) {
         clearInterval(interval);
         setProgress((prev) => prev.filter((p) => p.name !== file.name));
-        setUploadedFiles((prev) => {
-          const updated = [...prev, newFile];
-          // Move the setFieldValue outside of this setState callback
-          return updated;
-        });
+        setUploadedFiles((prev) => [newFile, ...prev]);
       }
     }, 200);
   };
@@ -114,7 +116,7 @@ export default function ImageUploader({
       f.type.startsWith("image/")
     );
     if (uploadedFiles.length + files.length > maxFiles) {
-      ToastMessage({ tipo: "error", mensaje: `Máximo ${maxFiles} fotos` });
+      ToastMessage({ tipo: "error", mensaje: `Máximo ${maxFiles}` });
       return;
     }
     files.forEach(simulateUpload);
@@ -127,7 +129,7 @@ export default function ImageUploader({
       f.type.startsWith("image/")
     );
     if (uploadedFiles.length + files.length > maxFiles) {
-      ToastMessage({ tipo: "error", mensaje: `Máximo ${maxFiles} fotos` });
+      ToastMessage({ tipo: "error", mensaje: `Máximo ${maxFiles}` });
       return;
     }
     files.forEach(simulateUpload);
@@ -160,7 +162,9 @@ export default function ImageUploader({
         }
       }
     }
-
+    if (file.url.startsWith("blob:")) {
+      URL.revokeObjectURL(file.url);
+    }
     setUploadedFiles((prev) => prev.filter((f) => f.id !== file.id));
 
     ToastMessage({ tipo: "success", mensaje: "Imagen eliminada" });
@@ -200,21 +204,31 @@ export default function ImageUploader({
 
         {progress.length > 0 && (
           <section className="progress-area">
-            {progress.map((p) => (
-              <li className="row" key={p.name}>
-                <FaImage />
-                <div className="content">
-                  <span>{p.name} • Subiendo</span>
-                  <span>{p.percent}%</span>
-                  <div className="progress-bar-image">
-                    <div
-                      className="progress-image"
-                      style={{ width: `${p.percent}%` }}
-                    />
+            {progress.map((p) => {
+              console.log("Progress item:", p);
+              return (
+                <li className="row" key={p.name}>
+                  <FaImage />
+                  <div className="content">
+                    <div className="file-info">
+                      <span className="name">{p.name}</span>
+                      <span className="size"> {formatBytes(p.file.size)}</span>
+                    </div>
+                    <div className="progress-bar-image">
+                      <div
+                        className="progress-image"
+                        style={{
+                          width: `${p.percent}%`,
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
+                  <div className="progress-text">
+                    <span className="percent">{`${p.percent} %`}</span>
+                  </div>
+                </li>
+              );
+            })}
           </section>
         )}
 
@@ -222,7 +236,9 @@ export default function ImageUploader({
           {uploadedFiles.map((file, index) => (
             <li className="row" key={file.id}>
               <img
-                src={file.url}
+                src={
+                  file.url.startsWith("blob:") ? file.url : bustCache(file.url)
+                }
                 alt={file.name}
                 onClick={() => lightbox.openLightBox(index)}
               />
@@ -233,7 +249,7 @@ export default function ImageUploader({
                   </span>
                   <span>{file.size || "Sin tamaño"}</span>
                 </div>
-                <button onClick={() => handleDelete(file)}>
+                <button type="button" onClick={() => handleDelete(file)}>
                   <FaTrash />
                 </button>
               </div>

@@ -35,7 +35,6 @@ export const getEncuesta = async (req, res) => {
       museoId,
       correo,
     });
-    console.log("Encuesta data:", data);
     res.json({
       success: true,
       data,
@@ -73,8 +72,6 @@ export const registrarEncuesta = async (req, res) => {
       vi_usr_correo: correo,
       vi_mus_id: museoId,
     });
-
-    console.log("Visita encontrada:", visita);
 
     // if (!visita) {
     //   return res.status(400).json({

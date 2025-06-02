@@ -328,8 +328,6 @@ function MuseoForm({ mode }) {
       }
     }
 
-    console.log("Response:", response);
-
     if (response.museo.success) {
       if (mode === "edit") {
         navigate(`/Museos/${response.museo.mus_id}`);
@@ -381,8 +379,6 @@ function MuseoForm({ mode }) {
               validationSchema={museoSchema}
               validateOnMount={true}
               onSubmit={(values) => {
-                // Aquí puedes manejar el envío del formulario
-                console.log("Valores del formulario:", values);
                 handleRegistroMuseo(values);
               }}
             >

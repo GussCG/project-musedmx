@@ -43,7 +43,6 @@ export default class Museo {
       queryParams.push(...alcaldias);
     }
 
-    // Aquí agregas el GROUP BY, justo después del WHERE y antes del ORDER BY
     query += ` GROUP BY m.mus_id `;
 
     if (sort) {
@@ -52,10 +51,10 @@ export default class Museo {
           query += ` ORDER BY mus_nombre DESC`;
           break;
         case "best-rating": // Pero la calificacion es
-          query += ` ORDER BY mus_calificacion ASC`;
+          query += ` ORDER BY AVG(r.res_calif_estrellas) DESC, total_resenias DESC`;
           break;
         case "worst-rating":
-          query += ` ORDER BY mus_calificacion DESC`;
+          query += ` ORDER BY AVG(r.res_calif_estrellas) ASC, total_resenias DESC`;
           break;
         default:
           query += ` ORDER BY mus_nombre ASC`;
@@ -97,6 +96,17 @@ export default class Museo {
     const query = `
       SELECT 
         mus_id, mus_nombre 
+      FROM museos
+      ORDER BY RAND()
+      `;
+    const [rows] = await pool.query(query, []);
+    return rows;
+  }
+
+  static async findAllNamesAndDescriptions() {
+    const query = `
+      SELECT 
+        mus_id, mus_nombre, mus_descripcion 
       FROM museos
       ORDER BY RAND()
       `;

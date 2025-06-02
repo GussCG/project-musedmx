@@ -114,7 +114,7 @@ function NavBarMenu() {
             </li>
           ) : (
             <li className="nav-a">
-              <Link to="/Auth/Iniciar" className="button" id="nav-button">
+              <Link to="/Auth/Iniciar" className="button-link" id="nav-button">
                 Iniciar Sesión
               </Link>
             </li>

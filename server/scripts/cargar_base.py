@@ -386,7 +386,7 @@ def cargar_preguntas_respuestas():
     
     def insertar_museo_encuesta(cursor, museo_id, encuesta_id):
         query = """
-        INSERT INTO museos_has_encuesta
+        INSERT INTO museos_have_encuesta
             (museos_mus_id, encuesta_enc_cve)
         VALUES
             (%s, %s)

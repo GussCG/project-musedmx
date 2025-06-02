@@ -53,7 +53,7 @@ function ResenaCard({ resena = {}, loadingResena = true }) {
                     )
                   )}
                 </div>
-                {user.usr_correo === resena.visitas_vi_usr_correo && (
+                {user?.usr_correo === resena.visitas_vi_usr_correo && (
                   <Link
                     className="button-link"
                     to={`/Usuario/Historial/${resena.res_id_res}`}

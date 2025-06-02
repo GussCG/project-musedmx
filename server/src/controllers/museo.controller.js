@@ -1,8 +1,6 @@
 import Museo from "../models/museo.model.js";
 import { handleHttpError } from "../helpers/httpError.js";
 import { formatMuseoImageName } from "../utils/formatNombreArchivos.js";
-import path from "path";
-import fs from "fs";
 import { uploadToAzure } from "../utils/azureUpload.js";
 import sharp from "sharp";
 import { deleteFromAzure } from "../utils/azureDelete.js";
@@ -66,6 +64,19 @@ export const getMuseosNombres = async (req, res) => {
     });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_MUSEOS_NOMBRES", error);
+  }
+};
+
+export const getMuseosNombresDescripciones = async (req, res) => {
+  try {
+    const museos = await Museo.findAllNamesAndDescriptions({});
+    res.json({
+      success: true,
+      count: museos.length,
+      museos,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEOS_NOMBRES_DESCRIPCIONES", error);
   }
 };
 

@@ -71,7 +71,7 @@ function ProfileHistoryDetail() {
     return {
       regresFrmCalif: resena.res_calif_estrellas || "",
       regresFrmComentario: resena.res_comentario || "",
-      regresFrmFotos: getFormattedImages().map((img) => img.url),
+      regresFrmFotos: getFormattedImages(),
     };
   }, [resena, getFormattedImages]);
 
@@ -93,18 +93,14 @@ function ProfileHistoryDetail() {
         algoCambio = true;
       }
 
-      console.log("Valor completo de regresFrmFotos:", values.regresFrmFotos);
-
       const archivosNuevos = values.regresFrmFotos
         .filter((file) => file?.fileObject instanceof File)
         .map((file) => file.fileObject);
 
-      console.log("Archivos nuevos:", archivosNuevos);
-
       archivosNuevos.forEach((file) => resenaData.append("fotos", file));
       resenaData.append("mus_id", resena.visitas_vi_mus_id);
 
-      if (algoCambio || archivosNuevos.length > 0 || imagenEliminada) {
+      if (algoCambio || archivosNuevos.length > 0) {
         const response = await editarResena(resena.res_id_res, resenaData);
         if (response.success) {
           ToastMessage({
@@ -150,20 +146,6 @@ function ProfileHistoryDetail() {
         >
           {({ setFieldValue, values }) => (
             <Form>
-              {/* Sección Comentario */}
-              <div className="editar-res-p2">
-                <h2>Comentario</h2>
-                <div className="registros-field">
-                  <Field
-                    as="textarea"
-                    id="regres-frm-comentario"
-                    name="regresFrmComentario"
-                    required
-                  />
-                  <ErrorMessage name="regresFrmComentario" component="div" />
-                </div>
-              </div>
-
               {/* Sección Calificación */}
               <div className="editar-res-p1">
                 <div className="registros-field-calif">
@@ -183,7 +165,7 @@ function ProfileHistoryDetail() {
                             }}
                           />
                           <FaStar
-                            size={50}
+                            size={30}
                             color={
                               currentRate <= (hover || rating)
                                 ? "#000"
@@ -197,6 +179,20 @@ function ProfileHistoryDetail() {
                     })}
                   </div>
                   <ErrorMessage name="regresFrmCalif" component="div" />
+                </div>
+              </div>
+
+              {/* Sección Comentario */}
+              <div className="editar-res-p2">
+                <h2>Comentario</h2>
+                <div className="registros-field">
+                  <Field
+                    as="textarea"
+                    id="regres-frm-comentario"
+                    name="regresFrmComentario"
+                    required
+                  />
+                  <ErrorMessage name="regresFrmComentario" component="div" />
                 </div>
               </div>
 

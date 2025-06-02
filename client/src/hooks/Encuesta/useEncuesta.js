@@ -29,12 +29,21 @@ export default function useEncuesta({ encuestaId, museoId, correo } = {}) {
     }
   };
 
-  const registrarEncuesta = async ({ encuestaId, correo, museoId, data }) => {
+  const registrarEncuesta = async (
+    encuestaId,
+    correo,
+    museoId,
+    encuestaData
+  ) => {
     try {
       setLoading(true);
       const encodedCorreo = encodeURIComponent(correo);
       const endpoint = `${BACKEND_URL}/api/encuesta/registrar/${encuestaId}/${museoId}/${encodedCorreo}`;
-      const response = await axios.post(endpoint, data);
+      const response = await axios.post(endpoint, encuestaData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("Error registering encuesta:", error);
@@ -44,12 +53,16 @@ export default function useEncuesta({ encuestaId, museoId, correo } = {}) {
     }
   };
 
-  const updateEncuesta = async ({ encuestaId, correo, museoId, data }) => {
+  const updateEncuesta = async (encuestaId, correo, museoId, encuestaData) => {
     try {
       setLoading(true);
       const encodedCorreo = encodeURIComponent(correo);
       const endpoint = `${BACKEND_URL}/api/encuesta/actualizar/${encuestaId}/${museoId}/${encodedCorreo}`;
-      const response = await axios.post(endpoint, data);
+      const response = await axios.post(endpoint, encuestaData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("Error updating encuesta:", error);

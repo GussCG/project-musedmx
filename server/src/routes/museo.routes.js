@@ -4,6 +4,7 @@ import multer from "multer";
 import {
   getMuseos,
   getMuseosNombres,
+  getMuseosNombresDescripciones,
   getMuseoById,
   getGaleriaById,
   getHorariosById,
@@ -28,6 +29,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.get("/", getMuseos);
+router.get("/nombres-descripciones", getMuseosNombresDescripciones);
 router.get("/nombres", getMuseosNombres);
 router.get("/detalle/:id", getMuseoById);
 router.get("/galeria/:id", getGaleriaById);

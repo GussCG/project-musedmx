@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
+export const scrollToTop = () => {
+  // Función para desplazar la ventana a la parte superior
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
 function ScrollToTop() {
   const { pathname } = useLocation();
 

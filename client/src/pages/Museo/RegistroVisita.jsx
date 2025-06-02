@@ -14,6 +14,9 @@ import usePreguntas from "../../hooks/Encuesta/usePreguntas";
 import useEncuesta from "../../hooks/Encuesta/useEncuesta";
 import { useParams } from "react-router";
 import { useAuth } from "../../context/AuthProvider";
+import { useVisitas } from "../../hooks/Visitas/useVisitas";
+import { formatearFechaBDDATE } from "../../utils/formatearFechas";
+import ImageUploader from "../../components/Other/ImageUploader";
 
 function RegistroVisita() {
   const { servicios, loading, error } = useServicio();
@@ -28,127 +31,155 @@ function RegistroVisita() {
     encuestaId: 1,
   });
 
+  const { yaVisitoMuseo } = useVisitas();
+
   const { fetchEncuesta, registrarEncuesta, updateEncuesta } = useEncuesta();
   const [contestada, setContestada] = useState(false);
   const [initialValues, setInitialValues] = useState({});
   const [loadingRespuestas, setLoadingRespuestas] = useState(true);
   const [respuestasAnteriores, setRespuestasAnteriores] = useState([]);
   const [serviciosAnteriores, setServiciosAnteriores] = useState([]);
+  const [formikKey, setFormikKey] = useState(0);
+
+  const fetchData = async () => {
+    try {
+      setLoadingRespuestas(true);
+      const response = await fetchEncuesta({
+        encuestaId: 1,
+        correo: user.usr_correo,
+        museoId,
+      });
+
+      const data = response.data;
+      setContestada(data.contestada);
+
+      const valoresIniciales = {};
+
+      if (data.respuestas && data.respuestas.length > 0) {
+        data.respuestas.forEach((respuesta) => {
+          valoresIniciales[`registrosfrmp${respuesta.preg_id}`] =
+            respuesta.res_respuesta || "";
+        });
+
+        const anteriores = data.respuestas.map((respuesta) => ({
+          preguntaId: respuesta.preg_id,
+          respuesta: respuesta.res_respuesta || "",
+        }));
+        setRespuestasAnteriores(anteriores);
+      } else {
+        preguntas.forEach((pregunta) => {
+          valoresIniciales[`registrosfrmp${pregunta.preg_id}`] = "";
+        });
+        setRespuestasAnteriores([]);
+      }
+
+      valoresIniciales["registrosfrmservicios"] = Array.isArray(data.servicios)
+        ? data.servicios.map((servicio) => servicio.ser_id)
+        : [];
+
+      setServiciosAnteriores(valoresIniciales["registrosfrmservicios"]);
+      setInitialValues({ ...valoresIniciales }); // Fuerza nueva referencia
+    } catch (error) {
+      console.error("Error fetching encuesta:", error);
+    } finally {
+      setLoadingRespuestas(false);
+    }
+  };
 
   useEffect(() => {
     if (!user?.usr_correo || !preguntas?.length) return;
 
-    const fetchData = async () => {
-      try {
-        setLoadingRespuestas(true);
-        const response = await fetchEncuesta({
-          encuestaId: 1,
-          correo: user.usr_correo,
-          museoId,
-        });
+    fetchData();
+    setFormikKey((prevKey) => prevKey + 1); // Forzar re-render del Formik
+  }, [user, museoId, preguntas]);
 
-        const data = response.data; // <-- Aquí extraes la data
+  const [yaVisito, setYaVisito] = useState(false);
 
-        setContestada(data.contestada);
+  useEffect(() => {
+    if (!user?.usr_correo || !museoId) return;
 
-        const valoresIniciales = {};
-
-        if (data.respuestas && data.respuestas.length > 0) {
-          data.respuestas.forEach((respuesta) => {
-            valoresIniciales[`registrosfrmp${respuesta.preg_id}`] =
-              respuesta.res_id || "";
-          });
-
-          // Guardar respuestas originales
-          const anteriores = data.respuestas.map((respuesta) => ({
-            preguntaId: respuesta.preg_id,
-            respuesta: respuesta.res_id,
-          }));
-          setRespuestasAnteriores(anteriores);
-        } else {
-          preguntas.forEach((pregunta) => {
-            valoresIniciales[`registrosfrmp${pregunta.preg_id}`] = "";
-          });
-          setRespuestasAnteriores([]);
-        }
-
-        // Guardar servicios originales
-        valoresIniciales["registrosfrmservicios"] = Array.isArray(
-          data.servicios
-        )
-          ? data.servicios.map((servicio) => servicio.ser_id)
-          : [];
-
-        setServiciosAnteriores(valoresIniciales["registrosfrmservicios"]);
-
-        setInitialValues(valoresIniciales);
-      } catch (error) {
-        console.error("Error fetching encuesta:", error);
-      } finally {
-        setLoadingRespuestas(false);
-      }
+    const checkVisita = async () => {
+      const visitado = await yaVisitoMuseo(user.usr_correo, museoId);
+      setYaVisito(visitado.usuarioVisitoMuseo);
     };
 
-    fetchData();
-  }, [user, museoId, preguntas]);
+    checkVisita();
+  }, [user, museoId]);
 
   // Para la encuesta
   const handleEncuestaSubmit = async (values) => {
+    if (!yaVisito) {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "No has visitado el museo",
+        position: "top-right",
+      });
+      return;
+    }
+
+    const RESPUESTA_PREFIX = "registrosfrmp";
     const respuestas = [];
-    const servicios = values.registrosfrmservicios || [];
+    const servicios = (values.registrosfrmservicios || [])
+      .map((s) => parseInt(s, 10))
+      .filter(Number.isInteger);
 
     // Extraer respuestas del formulario
     Object.entries(values).forEach(([key, value]) => {
-      if (key.startsWith("registrosfrmp") && key !== "registrosfrmservicios") {
-        const preguntaId = parseInt(key.replace("registrosfrmp", ""));
-        respuestas.push({
-          preguntaId,
-          respuesta: parseInt(value),
-        });
+      if (key.startsWith(RESPUESTA_PREFIX) && key !== "registrosfrmservicios") {
+        const preguntaId = parseInt(key.replace(RESPUESTA_PREFIX, ""), 10);
+        const respuesta = parseInt(value, 10);
+
+        if (Number.isInteger(preguntaId) && Number.isInteger(respuesta)) {
+          respuestas.push({ preguntaId, respuesta });
+        }
       }
     });
 
+    // Filtrar cambios en respuestas (solo respuestas diferentes a las anteriores)
+    const respuestasCambiadas = respuestas.filter((r) => {
+      const original = respuestasAnteriores.find(
+        (o) => o.preguntaId === r.preguntaId
+      );
+      return !original || original.respuesta !== r.respuesta;
+    });
+
+    // Comparar servicios ignorando el orden
+    const serviciosAnterioresOrdenados = [...serviciosAnteriores].sort(
+      (a, b) => a - b
+    );
+    const serviciosActualesOrdenados = [...servicios].sort((a, b) => a - b);
+    const serviciosIguales =
+      serviciosAnterioresOrdenados.length ===
+        serviciosActualesOrdenados.length &&
+      serviciosAnterioresOrdenados.every(
+        (val, idx) => val === serviciosActualesOrdenados[idx]
+      );
+
     // Si ya contestó, solo enviar lo que cambió
     if (contestada) {
-      // Opcional: verificar si hay cambios reales para evitar llamada
-      const respuestasIguales =
-        respuestas.length === respuestasAnteriores.length &&
-        respuestas.every((r) => {
-          const original = respuestasAnteriores.find(
-            (o) => o.preguntaId === r.preguntaId
-          );
-          return original && original.respuesta === r.respuesta;
-        });
-
-      const serviciosIguales =
-        servicios.length === serviciosAnteriores.length &&
-        servicios.every((id) => serviciosAnteriores.includes(id));
-
-      if (respuestasIguales && serviciosIguales) {
+      if (respuestasCambiadas.length === 0 && serviciosIguales) {
         ToastMessage({
           tipo: "info",
-          mensaje: "No se realizaron cambios en tus respuestas.",
+          mensaje: "No se realizaron cambios",
           position: "top-right",
         });
         return;
       }
 
-      try {
-        await updateEncuesta({
-          encuestaId: 1,
-          correo: user.usr_correo,
-          museoId,
-          data: {
-            respuestas, // envías todo
-            servicios, // envías todo
-          },
-        });
+      const encuestaData = new FormData();
+      encuestaData.append("respuestas", JSON.stringify(respuestasCambiadas));
+      if (!serviciosIguales) {
+        encuestaData.append("servicios", JSON.stringify(servicios));
+      }
 
+      try {
+        await updateEncuesta(1, user.usr_correo, museoId, encuestaData);
         ToastMessage({
           tipo: "success",
           mensaje: "Se actualizaron tus respuestas",
           position: "top-right",
         });
+        await fetchData(); // Refrescar datos después de actualizar
       } catch (error) {
         console.error("Error al actualizar encuesta:", error);
         ToastMessage({
@@ -157,23 +188,19 @@ function RegistroVisita() {
         });
       }
     } else {
-      // Primera vez: enviar todo igual
-      try {
-        await registrarEncuesta({
-          encuestaId: 1,
-          correo: user.usr_correo,
-          museoId,
-          data: {
-            respuestas,
-            servicios,
-          },
-        });
+      // Primera vez: enviar todo
+      const encuestaData = new FormData();
+      encuestaData.append("respuestas", JSON.stringify(respuestas));
+      encuestaData.append("servicios", JSON.stringify(servicios));
 
+      try {
+        await registrarEncuesta(1, user.usr_correo, museoId, encuestaData);
         ToastMessage({
           tipo: "success",
           mensaje: "Se guardaron tus respuestas",
           position: "top-right",
         });
+        await fetchData(); // Refrescar datos después de registrar
       } catch (error) {
         console.error("Error al enviar encuesta:", error);
         ToastMessage({
@@ -190,105 +217,32 @@ function RegistroVisita() {
   const [comment, setComment] = useState("");
 
   // Para la fecha de la visita
-  const [diaSelected, setDiaSelected] = useState(new Date());
-  const handleDayPickerSelect = (date) => {
-    if (!date) {
-      setDiaSelected(new Date());
+  const [mes, setMes] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const handleDayPickerSelect = (day) => {
+    if (!day) {
+      setSelectedDate(new Date());
     } else {
-      setDiaSelected(date);
+      setSelectedDate(day);
+      setMes(day);
     }
   };
-
   // Fecha actual en UTC -6
   let today = new Date();
   today.setHours(today.getHours() - 6);
 
-  // Para las imagenes de la reseña
-  const fileInputRef = useRef(null);
-  const [progress, setProgress] = useState(null);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const handleResenaSubmit = async (values) => {
+    try {
+      const resenaData = new FormData();
 
-  // Función para abrir el input de file
-  const handleFileClick = () => {
-    fileInputRef.current.click();
-  };
-
-  // Función para subir las imagenes desde arrastrar y soltar
-  const handleDrop = (e, setFieldValue, values) => {
-    e.preventDefault();
-
-    const currentFiles = values.regresfrmfotos || [];
-
-    const files = e.dataTransfer.files;
-    const uploadedFiles = Array.from(files);
-
-    if (uploadedFiles.length + currentFiles.length > 5) {
+      const parsedDate = selectedDate.toISOString().split("T")[0];
+    } catch (error) {
+      console.error("Error al enviar la reseña:", error);
       ToastMessage({
         tipo: "error",
-        mensaje: `Máximo 5 fotos`,
-        position: "top-right",
-      });
-      return;
-    }
-
-    setFieldValue("regresfrmfotos", [...currentFiles, ...uploadedFiles]);
-
-    uploadedFiles.forEach((file) => {
-      handleFileUpload(file);
-    });
-  };
-
-  // Funcion para subir las imagenes
-  const handleFileChange = ({ target }, setFieldValue) => {
-    const file = target.files[0];
-    if (file && uploadedFiles.length < 5) {
-      handleFileUpload(file);
-
-      // Agregar la nueva imagen a la lista de imagenes
-      setFieldValue("regresfrmfotos", [...uploadedFiles, file]);
-    } else {
-      ToastMessage({
-        tipo: "error",
-        mensaje: `Máximo 5 fotos`,
-        position: "top-right",
+        mensaje: "Error al enviar la reseña",
       });
     }
-  };
-
-  // Funcion para eliminar las imagenes
-  const handleFileDelete = (name) => {
-    const newFiles = uploadedFiles.filter((file) => file.name !== name);
-    setUploadedFiles(newFiles);
-  };
-
-  // Función para el tamaño de la imagen
-  const formatBytes = (bytes) => {
-    if (bytes === 0) {
-      return "0 Bytes";
-    }
-
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
-
-  const handleFileUpload = (file) => {
-    setProgress({ name: file.name, percent: 0 });
-    let uploadPercent = 0;
-    const interval = setInterval(() => {
-      uploadPercent += 10;
-      setProgress({ name: file.name, percent: uploadPercent });
-      if (uploadPercent >= 100) {
-        clearInterval(interval);
-        setUploadedFiles((prevFiles) => [
-          ...prevFiles,
-          { name: file.name, size: formatBytes(file.size) },
-        ]);
-        setProgress(null);
-      }
-    }, 500);
   };
 
   return (
@@ -303,18 +257,13 @@ function RegistroVisita() {
           <h1>Reseña</h1>
           <Formik
             initialValues={{
-              regresfrmfecVis: diaSelected,
+              regresfrmfecVis: "",
               regresfrmcomentario: "",
               regresfrmrating: 0,
-              regresfrmfotos: uploadedFiles.length ? uploadedFiles : [],
+              regresfrmfotos: [],
             }}
             onSubmit={async (values) => {
-              const formValues = {
-                ...values,
-                regresfrmcomentario: comment || "Sin comentario",
-                regresfrmfotos: uploadedFiles.length > 0 ? uploadedFiles : [],
-              };
-              console.log(formValues);
+              handleResenaSubmit(values);
             }}
           >
             {({ setFieldValue, values }) => (
@@ -328,16 +277,16 @@ function RegistroVisita() {
                     timeZone="UTC"
                     captionLayout="dropdown"
                     fixedWeeks
-                    month={diaSelected}
-                    onMonthChange={setDiaSelected}
+                    month={mes}
+                    onMonthChange={setMes}
                     autoFocus
                     mode="single"
-                    selected={diaSelected}
+                    selected={selectedDate}
                     onSelect={handleDayPickerSelect}
                     footer={
-                      diaSelected
-                        ? `Seleccionaste el ${format(
-                            diaSelected,
+                      selectedDate
+                        ? `Seleccionaste el ${formatearFechaBDDATE(
+                            selectedDate,
                             "dd-MM-yyyy"
                           )}`
                         : "Selecciona una fecha"
@@ -392,80 +341,29 @@ function RegistroVisita() {
                     </div>
                   </div>
                 </div>
+                <div className="registros-field-entrada">
+                  <h2>Subir entrada/boleto</h2>
+                  <ImageUploader
+                    initialImages={values.regresfrmfotos || []}
+                    onDelete={null}
+                    name="entradaBoleto"
+                    setFieldValue={setFieldValue}
+                    label="Sube tu entrada o boleto"
+                    maxFiles={1}
+                  />
+                </div>
                 <div className="registros-field-fotos">
                   <h2>Subir fotos</h2>
-                  <div
-                    id="registros-fotos-container"
-                    onClick={handleFileClick}
-                    onDragOver={(e) => e.preventDefault()}
-                    onDragEnter={(e) => e.preventDefault()}
-                    onDrop={(e) => handleDrop(e, setFieldValue, values)}
-                  >
-                    <input
-                      type="file"
-                      id="file-input"
-                      name="regresfrmfotos"
-                      ref={fileInputRef}
-                      onChange={(e) => handleFileChange(e, setFieldValue)}
-                      hidden
-                    />
-                    <LuImageUp />
-                    <label>
-                      Sube aquí tus fotos
-                      <br />
-                      (Haz clic o arrastra la imagen)
-                    </label>
-                  </div>
-                  {progress && (
-                    <section className="progress-area">
-                      <li className="row">
-                        <FaImage />
-                        <div className="content">
-                          <div className="details">
-                            <span className="name">
-                              {progress.name} • Subiendo
-                            </span>
-                            <span className="percent-image">
-                              {progress.percent} %
-                            </span>
-                          </div>
-                          <div className="progress-bar-image">
-                            <div
-                              className="progress-image"
-                              style={{
-                                width: `${progress.percent}%`,
-                                transition: "width 0.3s",
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      </li>
-                    </section>
-                  )}
-                  <section className="uploaded-area">
-                    {uploadedFiles.map((file, index) => (
-                      <li className="row" key={index}>
-                        <div className="content">
-                          <FaImage />
-                          <div className="details">
-                            <span className="name">{file.name} • Subida</span>
-                            <span className="size">{file.size}</span>
-                          </div>
-                        </div>
-                        <div className="icons-file">
-                          <IoIosCheckmarkCircle />
-                          <button
-                            type="button"
-                            className="delete-button"
-                            onClick={() => handleFileDelete(file.name)}
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </li>
-                    ))}
-                  </section>
+                  <ImageUploader
+                    initialImages={values.regresfrmfotos || []}
+                    onDelete={null}
+                    name="fotos"
+                    setFieldValue={setFieldValue}
+                    label="Sube tus fotos del museo"
+                    maxFiles={5}
+                  />
                 </div>
+
                 <Field
                   className="button"
                   id="registros-button"
@@ -482,6 +380,7 @@ function RegistroVisita() {
             <>
               <h1>Encuesta</h1>
               <Formik
+                key={formikKey}
                 initialValues={initialValues}
                 enableReinitialize
                 onSubmit={(values) => {
@@ -501,13 +400,6 @@ function RegistroVisita() {
                           as="select"
                           name={`registrosfrmp${pregunta.preg_id}`}
                           className="registros-frm-select"
-                          value={values[`registrosfrmp${pregunta.preg_id}`]}
-                          onChange={(e) =>
-                            setFieldValue(
-                              `registrosfrmp${pregunta.preg_id}`,
-                              e.target.value
-                            )
-                          }
                           required
                         >
                           <option value="" disabled>
@@ -529,7 +421,7 @@ function RegistroVisita() {
                     <div className="registros-chks">
                       <fieldset>
                         <legend>
-                          Selecciona los servicios con los que cuenta el museo
+                          Selecciona los servicios que viste que ofrece el museo
                         </legend>
                         <div id="servicios-chks">
                           {servicios.map((servicio) => (

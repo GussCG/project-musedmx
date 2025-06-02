@@ -4,11 +4,11 @@ import Museo from "../../models/Museo/Museo";
 import { BACKEND_URL } from "../../constants/api";
 
 export const useMuseos = ({
-  tipo,
-  searchQuery,
-  isMapView,
-  filters,
-  sortBy,
+  tipo = 1,
+  searchQuery = null,
+  isMapView = false,
+  filters = { tipos: [], alcaldias: [] },
+  sortBy = null,
 }) => {
   const [museos, setMuseos] = useState([]);
   const [pagination, setPagination] = useState({
@@ -19,7 +19,7 @@ export const useMuseos = ({
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // Memoize filters object to prevent unnecessary changes
+
   const stableFilters = useMemo(
     () => filters,
     [JSON.stringify(filters.tipos), JSON.stringify(filters.alcaldias)]
@@ -89,6 +89,36 @@ export const useMuseos = ({
     [tipo, searchQuery, stableFilters, isMapView, sortBy]
   );
 
+  const getMuseosNombres = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${BACKEND_URL}/api/museos/nombres`);
+      return response.data.museos || [];
+    } catch (error) {
+      console.error("Error fetching museos nombres:", error);
+      setError(error);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getMuseosNombresDescripciones = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${BACKEND_URL}/api/museos/nombres-descripciones`
+      );
+      return response.data.museos || [];
+    } catch (error) {
+      console.error("Error fetching museos nombres y descripciones:", error);
+      setError(error);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchMuseos(1);
   }, [fetchMuseos]); // Only depend on fetchMuseos which is now stable
@@ -99,5 +129,7 @@ export const useMuseos = ({
     loading,
     error,
     fetchMuseos,
+    getMuseosNombresDescripciones,
+    getMuseosNombres,
   };
 };

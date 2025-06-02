@@ -1,5 +1,5 @@
-import Visitas from '../models/visitas.model.js';
-import { handleHttpError } from '../helpers/httpError.js';
+import Visitas from "../models/visitas.model.js";
+import { handleHttpError } from "../helpers/httpError.js";
 
 export const getVisitas = async (req, res) => {
   try {
@@ -21,7 +21,7 @@ export const addVisita = async (req, res) => {
 
     // console.log(vi_usr_correo, vi_mus_id, vi_fechahora);
 
-    const vi = await Visitas.add({ 
+    const vi = await Visitas.add({
       vi_fechahora,
       vi_usr_correo,
       vi_mus_id,
@@ -40,8 +40,8 @@ export const deleteVisita = async (req, res) => {
     const { vi_usr_correo, vi_mus_id } = req.body;
 
     const vi = await Visitas.delete({
-      vi_usr_correo, 
-      vi_mus_id
+      vi_usr_correo,
+      vi_mus_id,
     });
     if (!vi) {
       return res.status(404).json({ message: "Visita not found" });
@@ -69,5 +69,21 @@ export const getVisitasCount = async (req, res) => {
     });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_VI_COUNT", error);
+  }
+};
+
+export const getUsuarioVisitoMuseo = async (req, res) => {
+  try {
+    const { correo, museoId } = req.params;
+    const usuarioVisitoMuseo = await Visitas.verifyVisita({
+      vi_usr_correo: correo,
+      vi_mus_id: museoId,
+    });
+
+    res.json({
+      usuarioVisitoMuseo,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_USUARIO_VISITO_MUSEO", error);
   }
 };

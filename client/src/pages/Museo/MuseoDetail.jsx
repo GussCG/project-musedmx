@@ -12,7 +12,6 @@ const { FaFilter, estrellaIcon, FaHeart, IoIosArrowBack, IoIosArrowForward } =
   Icons;
 import museoPlaceholder from "../../assets/images/others/museo-main-1.jpg";
 import MenuFiltroResena from "../../components/Resena/MenuFiltroResena";
-import MapMuseoDetail from "../../components/Maps/MapMuseoDetail";
 import MuseoSlider from "../../components/Museo/MuseoSlider";
 import MuseoGallery from "../../components/Museo/MuseoGallery";
 import {
@@ -43,7 +42,7 @@ import { useMuseosAsociados } from "../../hooks/Museo/useMuseosAsociados";
 import useResenaMuseo from "../../hooks/Resena/useResenaMuseo";
 import { useMemo } from "react";
 import ReactPaginate from "react-paginate";
-import useDeepMemo from "../../hooks/Other/useDeepMemo";
+import MuseosMapView from "./MuseosMapView";
 
 function MuseoDetail() {
   // Obtenemos el usuario para saber su tipo
@@ -230,8 +229,6 @@ function MuseoDetail() {
     porPagina: 5,
   });
 
-  console.log("Reseñas:", resenas);
-
   return (
     <>
       <AnimatePresence mode="wait">
@@ -408,42 +405,48 @@ function MuseoDetail() {
                         <h1 className="h1-section">Calificaciones</h1>
                         <p>De acuerdo con los usuarios el museo es</p>
                       </div>
-                      <div className="museo-section-2-calificaciones-container">
-                        {Object.values(calificaciones).map((calificacion) => (
-                          <div
-                            className="calificacion-container"
-                            key={calificacion.titulo}
-                          >
-                            <div className="calificacion-icon">
-                              {calificacion.icono && (
-                                <img
-                                  src={calificacion.icono}
-                                  alt={calificacion}
-                                  style={
-                                    isDarkMode
-                                      ? { filter: "invert(1)" }
-                                      : { filter: "invert(0)" }
-                                  }
-                                />
-                              )}
-                            </div>
+                      {Object.values(calificaciones).length === 0 ? (
+                        <div className="no-results" style={{ width: "90%" }}>
+                          <h2>No hay calificaciones aun</h2>
+                        </div>
+                      ) : (
+                        <div className="museo-section-2-calificaciones-container">
+                          {Object.values(calificaciones).map((calificacion) => (
                             <div
-                              className="calificacion-graph-bar"
-                              title={`${calificacion.width}%`}
+                              className="calificacion-container"
+                              key={calificacion.titulo}
                             >
+                              <div className="calificacion-icon">
+                                {calificacion.icono && (
+                                  <img
+                                    src={calificacion.icono}
+                                    alt={calificacion}
+                                    style={
+                                      isDarkMode
+                                        ? { filter: "invert(1)" }
+                                        : { filter: "invert(0)" }
+                                    }
+                                  />
+                                )}
+                              </div>
                               <div
-                                className="calificacion-graph-bar-fill"
-                                style={{
-                                  width: `${calificacion.width}%`,
-                                }}
-                              ></div>
+                                className="calificacion-graph-bar"
+                                title={`${calificacion.width}%`}
+                              >
+                                <div
+                                  className="calificacion-graph-bar-fill"
+                                  style={{
+                                    width: `${calificacion.width}%`,
+                                  }}
+                                ></div>
+                              </div>
+                              <div className="calificacion-title">
+                                <h2>{calificacion.titulo}</h2>
+                              </div>
                             </div>
-                            <div className="calificacion-title">
-                              <h2>{calificacion.titulo}</h2>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div className="museo-section-2-servicios museo-detail-item">
                       <div className="museo-section-header">
@@ -497,7 +500,7 @@ function MuseoDetail() {
                     </div>
                     <div className="museo-section-2-ubicacion museo-detail-item">
                       <div className="museo-section-2-direccion">
-                        <h1>Dirección:</h1>
+                        <h1>Dirección</h1>
                         {isLoading ? (
                           <Skeleton width={300} />
                         ) : (
@@ -509,7 +512,12 @@ function MuseoDetail() {
                           <LoadingIndicator />
                         </div>
                       ) : (
-                        <MapMuseoDetail museo={museoInfo} />
+                        <MuseosMapView
+                          MuseosMostrados={[museoInfo]}
+                          MuseosCercanos={museosCercanos}
+                          zoom={15}
+                          tipo={5}
+                        />
                       )}
                     </div>
                   </section>
