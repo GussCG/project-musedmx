@@ -52,6 +52,7 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
     try {
       setLoading(true);
       const endpoint = `${BACKEND_URL}/api/resena/usuario/editar/${resenaId}`;
+      console.log("Endpoint de edición:", endpoint);
       const response = await axios.post(endpoint, resenaData, {
         headers: {
           "Content-Type": "multipart/form-data",

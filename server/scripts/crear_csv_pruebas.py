@@ -70,7 +70,7 @@ usuarios = []
 usuarios_tematicas = []
 correos = []
 
-for _ in range(20):
+for _ in range(100):
     correo = fake.email()
     nombre = fake.first_name()
     ap_pat = fake.last_name()
