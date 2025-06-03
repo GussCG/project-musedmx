@@ -4,13 +4,18 @@ import MapIndicaciones from "../../components/Maps/MapIndicaciones";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useUserLocation } from "../../context/UserLocationProvider";
 import Icons from "../../components/Other/IconProvider";
-const { FaQuestion, IoIosArrowUp, LiaSearchLocationSolid, LuRadius } = Icons;
+const {
+  FaQuestion,
+  IoIosArrowUp,
+  LiaSearchLocationSolid,
+  LuRadius,
+  IoIosArrowDown,
+} = Icons;
 import { AnimatePresence, motion } from "framer-motion";
 // Para obtener la API de Google Maps
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import { TRAVEL_MODES, MAP_TYPES } from "../../constants/catalog";
 import PopupPortal from "../../components/Other/PopupPortal";
-import { useMapTour } from "../../context/MapTourProvider";
 
 // Dependiendo del titulo se muestra el radio de busqueda
 // En Ver Todos y en Populares no se muestra el radio
@@ -126,12 +131,38 @@ function MuseosMapView({
           <div id="museos-form-nav">
             {tipo === "2" ? (
               <div className="museos-nav-section range-section">
-                <label
+                <label htmlFor="museos-select-ubicacion">
+                  <b>Tamaño de Radio:</b>
+                </label>
+                <div className="select-wrapper-radius">
+                  <select
+                    id="museos-select-ubicacion"
+                    name="museos-select-ubicacion"
+                    value={rangoRadio}
+                    onChange={handleRangeChange}
+                    required
+                  >
+                    <option value="0.1">100 m</option>
+                    <option value="0.25">250 m</option>
+                    <option value="0.5">500 m</option>
+                    <option value="1">1 km</option>
+                    <option value="2">2 km</option>
+                    <option value="5">5 km</option>
+                    <option value="10">10 km</option>
+                  </select>
+                  <IoIosArrowDown className="select-arrow-icon" />
+                </div>
+                {/* <label
                   htmlFor="museos-range-ubicacion"
                   id="frm-range-ubicacion"
                 >
                   <b>Tamaño de Radio:</b>
-                  <br /> <output>{rangoRadio}</output> km
+                  <br />{" "}
+                  <output>
+                    {rangoRadio < 1
+                      ? `${(rangoRadio * 1000).toFixed(0)} m`
+                      : `${rangoRadio} km`}
+                  </output>
                 </label>
                 <input
                   type="range"
@@ -146,6 +177,14 @@ function MuseosMapView({
                   onChange={handleRangeChange}
                   required
                 />
+                <datalist id="museos-range-ubicacion-list">
+                  <option value="0.1" label="100 m" />
+                  <option value="0.5" label="500 m" />
+                  <option value="1" label="1 km" />
+                  <option value="2" label="2 km" />
+                  <option value="5" label="5 km" />
+                  <option value="10" label="10 km" />
+                </datalist> */}
               </div>
             ) : null}
           </div>

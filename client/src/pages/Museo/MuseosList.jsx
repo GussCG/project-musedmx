@@ -6,7 +6,6 @@ import MuseoCard from "../../components/Museo/MuseoCard";
 import MuseosMapView from "./MuseosMapView";
 import MenuSort from "../../components/Other/MenuSort";
 import MapIndicaciones from "../../components/Maps/MapIndicaciones";
-import { useViewMode } from "../../context/ViewModeProvider";
 import Icons from "../../components/Other/IconProvider";
 import MuseumSearch from "../../components/Museo/MuseumSearch";
 import { TEMATICAS } from "../../constants/catalog";
@@ -40,9 +39,14 @@ function MuseosList({ titulo, tipo }) {
     : titulo;
 
   const prevTipo = useRef(null);
-  const { isMapView, setIsMapView } = useViewMode();
+  const [isMapView, setIsMapView] = useState(tipo === "2");
+
   useEffect(() => {
-    setIsMapView(tipo === "2");
+    if (tipo === "2") {
+      setIsMapView(true);
+    } else {
+      setIsMapView(false); // siempre forzar modo lista en otros tipos
+    }
   }, [tipo]);
 
   // Filtros
@@ -143,12 +147,10 @@ function MuseosList({ titulo, tipo }) {
   };
 
   useEffect(() => {
-    if (tipo === "2") {
-      setIsMapView(true);
+    if (!isPopulares) {
+      fetchMuseos(1); // Siempre regresar a la página 1 al cambiar filtros o tipo
     }
-  }, [tipo, setIsMapView]);
-
-  useEffect(() => {}, [tipo, tituloSearch, filters, sortBy, isMapView]);
+  }, [tipo, tituloSearch, filters, sortBy]);
 
   return (
     <motion.div

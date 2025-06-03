@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, memo } from "react";
+import { useState, useEffect, useMemo, useCallback, memo, useRef } from "react";
 import { Map, AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import Circle from "../Other/Circle";
 import MapMuseoDetailMarker from "./MapMuseoDetailMarker";
@@ -8,12 +8,13 @@ const { FaPerson } = Icons;
 import { useTheme } from "../../context/ThemeProvider";
 import MapaDirections from "./MapaDirections";
 import MapaCercaDeMi from "./MapaCercaDeMi";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, m } from "framer-motion";
 import MapaPopulares from "./MapaPopulares";
 import MapaCambiarCentro from "./MapaCambiarCentro";
 import LoadingMessage from "./LoadingMessage";
 import CustomAdvancedMarker from "./CustomAdvancedMarker";
 import MapaMuseosCercaDeMuseo from "./MapaMuseosCercaDeMuseo";
+import ToastMessage from "../Other/ToastMessage";
 
 function MapMuseo({
   radioKM,
@@ -210,9 +211,103 @@ function MapMuseo({
     }
   }, [map, museosMostrados]);
 
+  const calcularDistancia = useCallback((lat1, lng1, lat2, lng2) => {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distancia en km
+  }, []);
+
+  const museosDentroDelRadio = useMemo(() => {
+    if (tipo !== "2") return museosMostrados || [];
+
+    if (!location?.userLocation) return [];
+
+    return (museosMostrados || []).filter((museo) => {
+      const distancia = calcularDistancia(
+        location.userLocation.lat,
+        location.userLocation.lng,
+        museo.g_latitud,
+        museo.g_longitud
+      );
+      return distancia <= radioKM / 1000;
+    });
+  }, [tipo, location?.userLocation, museosMostrados, radioKM]);
+
+  const haMostradoMensajeUbicacion = useRef(false);
+  const haMostradoMensajeVacio = useRef(false);
+
+  useEffect(() => {
+    if (tipo === "2") {
+      if (!location?.userLocation && !haMostradoMensajeUbicacion.current) {
+        ToastMessage({
+          tipo: "error",
+          mensaje: "No tienes una ubicación definida para calcular distancias.",
+          position: "top-right",
+        });
+        haMostradoMensajeUbicacion.current = true;
+      } else if (
+        location?.userLocation &&
+        museosMostrados?.length &&
+        museosDentroDelRadio.length === 0 &&
+        !haMostradoMensajeVacio.current
+      ) {
+        ToastMessage({
+          tipo: "info",
+          mensaje:
+            "No se encontraron museos en tu área seleccionada. Ajusta el radio o cambia de ubicación.",
+          position: "top-right",
+        });
+        haMostradoMensajeVacio.current = true;
+      }
+    }
+  }, [tipo, location?.userLocation, museosDentroDelRadio, museosMostrados]);
+
+  useEffect(() => {
+    haMostradoMensajeVacio.current = false;
+  }, [radioKM]);
+
   const getSafeKey = useCallback((museo, index) => {
     return museo?.id ? `museo-${museo.id}` : `museo-${index}`;
   }, []);
+
+  useEffect(() => {
+    if (!map || !location?.userLocation) return;
+
+    map.panTo({
+      lat: location.userLocation.lat,
+      lng: location.userLocation.lng,
+    });
+  }, [location?.userLocation]);
+
+  useEffect(() => {
+    if (!map || tipo !== "2" || !location?.userLocation) return;
+
+    // Convertir el radio a grados aproximados (1 grado ~ 111 km)
+    const RADIUS_IN_DEGREES = radioKM / 1000 / 111;
+
+    const { lat, lng } = location.userLocation;
+
+    const bounds = new window.google.maps.LatLngBounds(
+      new window.google.maps.LatLng(
+        lat - RADIUS_IN_DEGREES,
+        lng - RADIUS_IN_DEGREES
+      ),
+      new window.google.maps.LatLng(
+        lat + RADIUS_IN_DEGREES,
+        lng + RADIUS_IN_DEGREES
+      )
+    );
+
+    map.fitBounds(bounds);
+  }, [map, radioKM, location?.userLocation, tipo]);
 
   return (
     <motion.div
@@ -240,13 +335,19 @@ function MapMuseo({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                <LoadingMessage msg="Cargando museos en el mapa y calculando los bounds" />
+                <LoadingMessage
+                  msg={
+                    museosMostrados.length === 0
+                      ? `No se encontraron museos en el mapa`
+                      : "Cargando museos en el mapa y calculando los bounds"
+                  }
+                />
               </motion.div>
             )}
           </AnimatePresence>
 
           {!isLoadingMuseos &&
-            museosMostrados
+            museosDentroDelRadio
               .filter((museo) => museo)
               .map((museo) => (
                 <MapMuseoDetailMarker
@@ -274,19 +375,21 @@ function MapMuseo({
 
               <MapaCercaDeMi
                 userLocation={location.userLocation}
-                museosMostrados={museosMostrados}
+                museosMostrados={museosDentroDelRadio}
                 radioKM={radioKM}
                 travelMode={travelMode}
               />
             </>
           )}
 
-          {tipo === "3" && <MapaPopulares museosMostrados={museosMostrados} />}
+          {tipo === "3" && (
+            <MapaPopulares museosMostrados={museosDentroDelRadio} />
+          )}
 
           {museosMostrados.length === 1 && (
             <MapaDirections
               userLocation={location.userLocation}
-              museosMostrados={museosMostrados}
+              museosMostrados={museosDentroDelRadio}
               travelMode={travelMode}
             />
           )}

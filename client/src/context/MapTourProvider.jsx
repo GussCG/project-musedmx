@@ -27,7 +27,7 @@ const getDriverSteps = () => [
     element: "#btn-map-get-location",
     popover: {
       title: "Ubicación del Usuario",
-      description: "Haz clic aquí para activar tu ubicación",
+      description: "Haz clic aquí para activar tu ubicación y ver donde estás.",
       position: "bottom",
     },
   },

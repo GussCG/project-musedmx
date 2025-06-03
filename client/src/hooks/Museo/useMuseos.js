@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import axios from "axios";
 import Museo from "../../models/Museo/Museo";
 import { BACKEND_URL } from "../../constants/api";
@@ -50,10 +50,13 @@ export const useMuseos = ({
           if (!isMapView) {
             params.append("page", page.toString());
           }
+        } else if (tipo === "2") {
+          // Forzar modo mapa si es tipo 2 (cercanos)
+          params.append("limit", "1000");
+          params.set("isMapView", "true");
         } else {
-          // Comportamiento normal para otros tipos
+          params.append("limit", "12");
           if (!isMapView) {
-            params.append("limit", "12");
             params.append("page", page.toString());
           }
         }
@@ -121,7 +124,7 @@ export const useMuseos = ({
 
   useEffect(() => {
     fetchMuseos(1);
-  }, [fetchMuseos]); // Only depend on fetchMuseos which is now stable
+  }, [fetchMuseos]);
 
   return {
     museos,

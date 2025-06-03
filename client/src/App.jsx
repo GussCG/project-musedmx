@@ -28,7 +28,6 @@ import MuseoForm from "./pages/Museo/MuseoForm.jsx";
 import MuseoHorariosEdit from "./pages/Museo/MuseoHorariosEdit.jsx";
 import MuseoImgEdit from "./pages/Museo/MuseoImgEdit.jsx";
 import ModResenaDetail from "./pages/Mod/ModResenaDetail.jsx";
-import { ViewModeProvider } from "./context/ViewModeProvider.jsx";
 import { ThemeProvider } from "./context/ThemeProvider.jsx";
 import { UserLocationProvider } from "./context/UserLocationProvider.jsx";
 import ScrollToTop from "./components/Other/ScrollToTop.jsx";
@@ -45,114 +44,112 @@ function App() {
         <MuseoFilterProvider>
           <MapTourProvider>
             <UserLocationProvider>
-              <ViewModeProvider>
-                <PopUpLogin />
-                <ScrollToTop />
-                <ScrollToTopButton />
-                <AnimatePresence mode="wait">
-                  <Routes location={location} key={location.pathname}>
-                    {/* INDEX */}
-                    <Route path="/" element={<IndexPage />} />
+              <PopUpLogin />
+              <ScrollToTop />
+              <ScrollToTopButton />
+              <AnimatePresence mode="wait">
+                <Routes location={location} key={location.pathname}>
+                  {/* INDEX */}
+                  <Route path="/" element={<IndexPage />} />
 
-                    {/* Autenticación */}
-                    <Route path="Auth" element={<AuthLayout />}>
-                      <Route path="Iniciar" element={<LoginForm />} />
-                      <Route path="Registrarse" element={<SignInForm />} />
-                      <Route path="Recuperar" element={<RecuperarPass />} />
-                      <Route path="CambiarContraseña" element={<PassForm />} />
+                  {/* Autenticación */}
+                  <Route path="Auth" element={<AuthLayout />}>
+                    <Route path="Iniciar" element={<LoginForm />} />
+                    <Route path="Registrarse" element={<SignInForm />} />
+                    <Route path="Recuperar" element={<RecuperarPass />} />
+                    <Route path="CambiarContraseña" element={<PassForm />} />
+                  </Route>
+
+                  {/* Sección de Museos */}
+                  <Route path="Museos/*" element={<VerMuseosLayout />} />
+
+                  {/* Usuario Normal */}
+                  <Route
+                    path="Usuario/*"
+                    element={<ProtectedRoute allowedRoles={[1]} />}
+                  >
+                    <Route element={<ProfileLayout />}>
+                      <Route index element={<ProfilePage />} />
+                      <Route path="Editar" element={<ProfileEdit />} />
+                      <Route path="Historial" element={<ProfileHistory />} />
+                      <Route
+                        path="Historial/:id"
+                        element={<ProfileHistoryDetail />}
+                      />
                     </Route>
+                  </Route>
 
-                    {/* Sección de Museos */}
-                    <Route path="Museos/*" element={<VerMuseosLayout />} />
-
-                    {/* Usuario Normal */}
-                    <Route
-                      path="Usuario/*"
-                      element={<ProtectedRoute allowedRoles={[1]} />}
-                    >
-                      <Route element={<ProfileLayout />}>
-                        <Route index element={<ProfilePage />} />
-                        <Route path="Editar" element={<ProfileEdit />} />
-                        <Route path="Historial" element={<ProfileHistory />} />
-                        <Route
-                          path="Historial/:id"
-                          element={<ProfileHistoryDetail />}
-                        />
-                      </Route>
+                  {/* Para los Adm */}
+                  <Route
+                    path="Admin/*"
+                    element={<ProtectedRoute allowedRoles={[2]} />}
+                  >
+                    <Route element={<ProfileLayout />}>
+                      <Route index element={<ProfilePage />} />
+                      <Route path="Editar" element={<ProfileEdit />} />
+                      <Route path="VerMods" element={<ModList />} />
+                      <Route path="Agregar" element={<ModForm />} />
+                      <Route
+                        path="VerMods/Editar/:userId"
+                        element={<ModForm />}
+                      />
+                      <Route
+                        path="Museo/Registrar"
+                        element={<MuseoForm mode="create" />}
+                      />
+                      <Route
+                        path="Museo/Editar/:museoId"
+                        element={<MuseoForm mode="edit" />}
+                      />
+                      <Route
+                        path="Museo/EditarHorario/:museoId"
+                        element={<MuseoHorariosEdit />}
+                      />
+                      <Route
+                        path="Museo/EditarImagenes/:museoId"
+                        element={<MuseoImgEdit />}
+                      />
                     </Route>
+                  </Route>
 
-                    {/* Para los Adm */}
-                    <Route
-                      path="Admin/*"
-                      element={<ProtectedRoute allowedRoles={[2]} />}
-                    >
-                      <Route element={<ProfileLayout />}>
-                        <Route index element={<ProfilePage />} />
-                        <Route path="Editar" element={<ProfileEdit />} />
-                        <Route path="VerMods" element={<ModList />} />
-                        <Route path="Agregar" element={<ModForm />} />
-                        <Route
-                          path="VerMods/Editar/:userId"
-                          element={<ModForm />}
-                        />
-                        <Route
-                          path="Museo/Registrar"
-                          element={<MuseoForm mode="create" />}
-                        />
-                        <Route
-                          path="Museo/Editar/:museoId"
-                          element={<MuseoForm mode="edit" />}
-                        />
-                        <Route
-                          path="Museo/EditarHorario/:museoId"
-                          element={<MuseoHorariosEdit />}
-                        />
-                        <Route
-                          path="Museo/EditarImagenes/:museoId"
-                          element={<MuseoImgEdit />}
-                        />
-                      </Route>
+                  {/* Para los Mod */}
+                  <Route
+                    path="Mod/*"
+                    element={<ProtectedRoute allowedRoles={[3]} />}
+                  >
+                    <Route element={<ProfileLayout />}>
+                      <Route index element={<ProfilePage />} />
+                      <Route path="Editar" element={<ProfileEdit />} />
+                      <Route path="VerResenas" element={<ModHistory />} />
+                      <Route
+                        path="VerResenas/:museoId"
+                        element={<ModHistory />}
+                      />
+                      <Route
+                        path="Resena/:resId"
+                        element={<ModResenaDetail />}
+                      />
+                      <Route
+                        path="Museo/Editar/:museoId"
+                        element={<MuseoForm mode="edit" />}
+                      />
+                      <Route
+                        path="Museo/EditarHorario/:museoId"
+                        element={<MuseoHorariosEdit />}
+                      />
+                      <Route
+                        path="Museo/EditarImagenes/:museoId"
+                        element={<MuseoImgEdit />}
+                      />
                     </Route>
+                  </Route>
 
-                    {/* Para los Mod */}
-                    <Route
-                      path="Mod/*"
-                      element={<ProtectedRoute allowedRoles={[3]} />}
-                    >
-                      <Route element={<ProfileLayout />}>
-                        <Route index element={<ProfilePage />} />
-                        <Route path="Editar" element={<ProfileEdit />} />
-                        <Route path="VerResenas" element={<ModHistory />} />
-                        <Route
-                          path="VerResenas/:museoId"
-                          element={<ModHistory />}
-                        />
-                        <Route
-                          path="Resena/:resId"
-                          element={<ModResenaDetail />}
-                        />
-                        <Route
-                          path="Museo/Editar/:museoId"
-                          element={<MuseoForm mode="edit" />}
-                        />
-                        <Route
-                          path="Museo/EditarHorario/:museoId"
-                          element={<MuseoHorariosEdit />}
-                        />
-                        <Route
-                          path="Museo/EditarImagenes/:museoId"
-                          element={<MuseoImgEdit />}
-                        />
-                      </Route>
-                    </Route>
+                  {/* Página de Error 404 */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AnimatePresence>
 
-                    {/* Página de Error 404 */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </AnimatePresence>
-
-                <ToastContainer />
-              </ViewModeProvider>
+              <ToastContainer />
             </UserLocationProvider>
           </MapTourProvider>
         </MuseoFilterProvider>
