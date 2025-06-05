@@ -61,26 +61,27 @@ function ProfilePage() {
               <div className="header-tematicas-container">
                 <p>Temáticas</p>
                 <ul className="tematicas-list">
-                  {user.usr_tematicas.map((tematicaNombre, index) => {
-                    // Buscar la entrada de TEMATICAS cuyo nombre coincida
-                    const tematica = Object.values(TEMATICAS).find(
-                      (t) => t.nombre === tematicaNombre
-                    );
+                  {Array.isArray(user?.usr_tematicas) &&
+                    user.usr_tematicas.map((tematicaNombre, index) => {
+                      const tematica = Object.values(TEMATICAS).find(
+                        (t) => t.nombre === tematicaNombre
+                      );
 
-                    if (!tematica) return null;
+                      if (!tematica) return null;
 
-                    return (
-                      <li
-                        key={index}
-                        className="tematica-item"
-                        style={{
-                          backgroundColor: tematica.museoCardColors.background,
-                        }}
-                      >
-                        <span>{tematica.nombre}</span>
-                      </li>
-                    );
-                  })}
+                      return (
+                        <li
+                          key={index}
+                          className="tematica-item"
+                          style={{
+                            backgroundColor:
+                              tematica.museoCardColors.background,
+                          }}
+                        >
+                          <span>{tematica.nombre}</span>
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
             </>

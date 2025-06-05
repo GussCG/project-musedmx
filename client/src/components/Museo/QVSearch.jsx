@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import SearchBar from "../Other/SearchBar";
 import axios from "axios";
+import { useMuseos } from "../../hooks/Museo/useMuseos";
+import Skeleton from "react-loading-skeleton";
 
 function QVSearch({ correo, agregarQV, refreshQV, museosQV }) {
   const [museumSuggestions, setMuseumSuggestions] = useState([]);
@@ -9,33 +11,35 @@ function QVSearch({ correo, agregarQV, refreshQV, museosQV }) {
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [selectedMuseum, setSelectedMuseum] = useState(null);
 
-  const handleWheel = (e) => {
-    if (swiperRef) e.stopPropagation(); // Evitar que el evento de desplazamiento se propague al Swiper
-  };
+  const { getMuseosNombres } = useMuseos({
+    tipo: null,
+    searchQuery: null,
+    isMapView: false,
+    filters: { tipos: [], alcaldias: [] },
+    sortBy: null,
+  });
+
+  const suggestionNames = useMemo(() => {
+    return museumSuggestions.map((museo) => museo.mus_nombre);
+  }, [museumSuggestions]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const museosResponse = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/museos/nombres`
-        );
-        setMuseumSuggestions(museosResponse.data.museos || []);
+        const response = await getMuseosNombres();
+        setMuseumSuggestions(response);
       } catch (error) {
-        console.error("Error fetching data:", error);
-        setError(
-          "Error al cargar los museos. Por favor, inténtalo de nuevo más tarde."
-        );
+        console.error("Error fetching museum suggestions:", error);
+        setError("Error al cargar las sugerencias de museos.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [getMuseosNombres]);
 
-  // Logica para pasar al back
-  // Por el momento solo se hace un console log
   const registerMuseum = async (museumId) => {
     try {
       // Verificar si ya está en la lista
@@ -103,13 +107,17 @@ function QVSearch({ correo, agregarQV, refreshQV, museosQV }) {
       onTouchStart={(e) => e.stopPropagation()}
       style={{ overscrollBehavior: "contain" }}
     >
-      <SearchBar
-        placeholder="Busca un museo para agregarlo"
-        suggestions={museumSuggestions}
-        onSearch={handleSearch}
-        onSuggestionSelect={handleSuggestionSelect}
-        showNoResults={searchPerformed && museumSuggestions.length === 0}
-      />
+      {loading ? (
+        <Skeleton wrapper={SearchBar} />
+      ) : (
+        <SearchBar
+          placeholder="Busca un museo para agregarlo"
+          suggestions={suggestionNames}
+          onSearch={handleSearch}
+          onSuggestionSelect={handleSuggestionSelect}
+          showNoResults={searchPerformed && suggestionNames.length === 0}
+        />
+      )}
     </div>
   );
 }

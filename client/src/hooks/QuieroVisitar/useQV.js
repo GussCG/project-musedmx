@@ -42,8 +42,6 @@ export const useQV = ({ correo } = {}) => {
   const eliminarQV = async (correo, museoId) => {
     try {
       const endpoint = `${BACKEND_URL}/api/qv/eliminar`;
-      console.log("Eliminando museo con ID:", museoId);
-      console.log("Correo del usuario:", correo);
       const response = await axios.delete(endpoint, {
         data: {
           correo,

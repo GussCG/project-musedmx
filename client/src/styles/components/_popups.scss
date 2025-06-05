@@ -672,3 +672,98 @@
     flex-wrap: wrap;
   }
 }
+
+.otp-main {
+  z-index: $z-popups;
+
+  background-color: var(--bg-popup);
+  width: 90%;
+  height: fit-content;
+  max-width: 600px;
+  min-height: 600px;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+
+  padding: 30px;
+
+  .otp-header {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+
+    h1 {
+      font-size: 2rem;
+      margin: 0;
+      color: var(--font-color-primary);
+      font-family: $font-tertiary;
+    }
+
+    p {
+      font-size: 1rem;
+      color: var(--font-color-primary);
+      font-family: $font-primary;
+      font-weight: $font-w-regular;
+      margin: 0;
+    }
+  }
+
+  .registros-field {
+    width: 80%;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .otp-buttons {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+}
+
+.close-modal-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}

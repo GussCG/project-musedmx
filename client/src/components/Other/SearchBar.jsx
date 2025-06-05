@@ -78,11 +78,19 @@ function SearchBar({
     e.preventDefault();
     if (isInputValid) {
       onSearch?.(input);
+      setShowSuggestions(false);
     }
   };
 
   const handleInputChange = (e) => {
-    setInput(e.target.value);
+    const value = e.target.value;
+    setInput(value);
+
+    if (value.trim().length > 0) {
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
   };
 
   const highlightMatchedText = (text) => {
@@ -157,7 +165,7 @@ function SearchBar({
           value={input}
           placeholder={placeholder}
           onChange={handleInputChange}
-          onFocus={() => setShowSuggestions(input.length > 0)}
+          onFocus={() => setShowSuggestions(true)}
           onBlur={handleInputBlur}
           autoComplete="off"
         />

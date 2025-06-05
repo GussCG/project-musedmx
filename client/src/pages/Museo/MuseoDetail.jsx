@@ -1,4 +1,4 @@
-import { useEffect, useState, createElement } from "react";
+import { useEffect, useState, createElement, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -235,6 +235,8 @@ function MuseoDetail() {
     pagina: paginaResenas,
     porPagina: 5,
   });
+
+  const resenasRef = useRef(null);
 
   return (
     <>
@@ -579,7 +581,11 @@ function MuseoDetail() {
                       )}
                     </div>
                   </section>
-                  <section id="museo-section-5" className="museo-detail-item">
+                  <section
+                    id="museo-section-5"
+                    className="museo-detail-item"
+                    ref={resenasRef}
+                  >
                     <div className="museo-section-5-header">
                       <h1 className="h1-section">Reseñas y Comentarios</h1>
                       <button
@@ -724,6 +730,10 @@ function MuseoDetail() {
                         nextLabel={<IoIosArrowForward />}
                         onPageChange={(event) => {
                           handlePageClick(event);
+                          resenasRef.current?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          });
                         }}
                         pageRangeDisplayed={1}
                         marginPagesDisplayed={1}

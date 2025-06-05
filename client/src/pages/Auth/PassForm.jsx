@@ -4,8 +4,14 @@ import { motion } from "framer-motion";
 import ValidPassword from "../../components/Forms/ValidPassword";
 import Icons from "../../components/Other/IconProvider";
 const { LuEye, LuEyeClosed } = Icons;
+import { useLocation, useNavigate } from "react-router-dom";
+import { useUsuario } from "../../hooks/Usuario/useUsuario";
+import ToastMessage from "../../components/Other/ToastMessage";
 
 function PassForm() {
+  const location = useLocation();
+  const correo = location.state?.correo;
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [isValidPass, setIsValidPass] = useState(true);
@@ -83,6 +89,19 @@ function PassForm() {
     setIsFormValid(isValidPass && isPasswordMatch);
   }, [isValidPass, isPasswordMatch]);
 
+  const { updateContrasena } = useUsuario();
+
+  useEffect(() => {
+    if (!correo) {
+      ToastMessage({
+        tipo: "error",
+        mensaje: "No se proporcionó un correo electrónico.",
+        position: "top-right",
+      });
+      navigate("/Auth/Recuperar");
+    }
+  }, [correo]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -106,7 +125,23 @@ function PassForm() {
           }}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              console.log(values);
+              const response = await updateContrasena(correo, password);
+              if (response?.success) {
+                ToastMessage({
+                  tipo: "success",
+                  mensaje: "Contraseña cambiada exitosamente.",
+                  position: "top-right",
+                });
+                navigate("/Auth/Iniciar");
+              } else {
+                ToastMessage({
+                  tipo: "error",
+                  mensaje:
+                    response.response.data.message ||
+                    "Error al cambiar la contraseña.",
+                  position: "top-right",
+                });
+              }
             } catch (error) {
               console.error(error);
             } finally {

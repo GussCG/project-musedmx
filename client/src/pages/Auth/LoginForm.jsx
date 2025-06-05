@@ -7,6 +7,7 @@ import loginImage from "../../assets/images/others/museo-login-image.png";
 import Icons from "../../components/Other/IconProvider";
 const { LuEye, LuEyeClosed, MuseDMXIcon, MuseDMXLogoVertical } = Icons;
 import LoginErrorMessage from "../../components/Forms/LoginErrorMessage";
+import AuthOTPModal from "../../components/Forms/AuthOTPModal";
 
 function LoginForm() {
   // Usar el hook useAuth para obtener las funciones y estados de autenticación
@@ -14,6 +15,7 @@ function LoginForm() {
   const [shown, setShown] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [showOtpModal, setShowOtpModal] = useState(false);
 
   const clearError = () => setErrorMessage("");
 
@@ -141,12 +143,24 @@ function LoginForm() {
             ¿No tienes una cuenta aún?{" "}
             <Link to="/Auth/Registrarse">Regístrate aquí</Link>
           </p>
+          <p>
+            ¿Tienes una cuenta, pero no estás verificado?{" "}
+            <Link
+              onClick={() => {
+                setShowOtpModal(true);
+              }}
+            >
+              Verifica aquí
+            </Link>
+          </p>
         </motion.div>
         <div id="login-linea"></div>
         <div id="login-imagen">
           <img src={MuseDMXLogoVertical} alt="Login" />
         </div>
       </main>
+
+      {showOtpModal && <AuthOTPModal onClose={() => setShowOtpModal(false)} />}
     </motion.div>
   );
 }

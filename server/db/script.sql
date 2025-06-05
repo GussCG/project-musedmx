@@ -21,17 +21,34 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios` (
   ) ENGINE=InnoDB;
   
 -- INSERT INTO musedmx.usuarios 
--- (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo)
+-- (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo, usr_verificado)
 -- VALUES
--- ('admin@musedmx.com', 'Admin', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2002-09-30', "+525527167255", NULL, 2);
+-- ('admin@musedmx.com', 'Admin', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2002-09-30', "+525527167255", NULL, 2, 1);
 
 -- INSERT INTO musedmx.usuarios 
--- (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo)
+-- (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo, usr_verificado)
 -- VALUES
--- ('mod@musedmx.com', 'Mod', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2000-04-02', "+525531933874", NULL, 3);
+-- ('mod@musedmx.com', 'Mod', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2000-04-02', "+525531933874", NULL, 3,1);
 
 SELECT * FROM usuarios;
--- DELETE FROM usuarios WHERE usr_correo = "admin@musedmx.com";
+DELETE FROM usuarios WHERE usr_correo = "gusester2002@gmail.com";
+
+-- -----------------------------------------------------
+-- Table `musedmx`.`otp`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `musedmx`.`otp` (
+  `otp_usr_correo` VARCHAR(75) NOT NULL,
+  `otp_codigo` VARCHAR(6) NOT NULL,
+  `otp_creado_en` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`otp_usr_correo`),
+  CONSTRAINT `fk_otp_usuarios` 
+	FOREIGN KEY(`otp_usr_correo`)
+	REFERENCES `musedmx`.`usuarios` (`usr_correo`)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+SELECT * FROM otp;
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`administrador`
@@ -441,8 +458,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`resenia` (
 --  INDEX `fk_resenia_visitas1_idx` (`visitas_vi_fechahora` ASC, `visitas_vi_usr_correo` ASC, `visitas_vi_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
   
- SELECT * FROM resenia WHERE visitas_vi_mus_id = 606 AND visitas_vi_usr_correo = "narguello@example.com";
- UPDATE resenia SET res_aprobado = 0 WHERE res_id_res = 1;
+ SELECT * FROM resenia WHERE visitas_vi_usr_correo = "gusester2002@gmail.com";
+ UPDATE resenia SET res_aprobado = 1 WHERE res_id_res = 612;
 -- TRUNCATE TABLE resenia;
 
 -- -----------------------------------------------------

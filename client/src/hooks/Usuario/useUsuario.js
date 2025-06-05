@@ -60,11 +60,11 @@ export const useUsuario = () => {
   };
 
   // Recuperar contraseña
-  const recuperarContrasena = async (usuario) => {
+  const recuperarContrasena = async (usr_correo) => {
     try {
       setLoading(true);
       const endpoint = `${BACKEND_URL}/api/auth/recuperarContrasena`;
-      const response = await axios.post(endpoint, usuario, {
+      const response = await axios.post(endpoint, usr_correo, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -73,6 +73,29 @@ export const useUsuario = () => {
       return response.data;
     } catch (error) {
       console.error("Error al recuperar contraseña:", error);
+      setError(error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateContrasena = async (usr_correo, newPassword) => {
+    try {
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/auth/cambiarContrasena`;
+      const response = await axios.post(
+        endpoint,
+        { usr_correo, usr_contrasenia: newPassword },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error al cambiar contraseña:", error);
       setError(error);
       return null;
     } finally {
@@ -110,6 +133,7 @@ export const useUsuario = () => {
     editarUsuario,
     recuperarContrasena,
     obtenerUsuarioByCorreo,
+    updateContrasena,
     error,
   };
 };

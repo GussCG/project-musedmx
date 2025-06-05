@@ -33,7 +33,7 @@ function PopUpLogin() {
         >
           <main id="main-login-popup">
             <button
-              id="close-login-popup"
+              className="close-modal-button"
               onClick={() => {
                 setIsLogginPopupOpen(false);
                 localStorage.removeItem("redirectPath");

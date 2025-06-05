@@ -332,13 +332,19 @@
 @media screen and (max-width: 600px) {
   .museo-card {
     width: auto;
-    max-width: 200px;
+    // max-width: 200px;
     height: auto;
     max-height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin: 0 auto;
+
+    .museo-card-img-container {
+      .museo-card-img-tematica {
+        display: none;
+      }
+    }
 
     .museo-card-info-container {
       .museo-card-info-header {

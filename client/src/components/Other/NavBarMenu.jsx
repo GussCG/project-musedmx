@@ -88,7 +88,7 @@ function NavBarMenu() {
           </li>
           <li className="nav-a" id="ver-cerca-de-mi">
             <Link className="navbarmenu-link" to="/Museos/CercaDeMi">
-              Cerca de mi
+              Cerca de mí
             </Link>
           </li>
           <li className="nav-a" id="ver-populares">

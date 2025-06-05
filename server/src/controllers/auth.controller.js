@@ -4,12 +4,11 @@ import bcrypt from "bcrypt";
 import sharp from "sharp";
 import { sendRecoveryEmail } from "../services/emailService.js";
 import jwt from "jsonwebtoken";
-import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { generateOTP } from "../utils/generateOTP.js";
-
 import { uploadToAzure } from "../utils/azureUpload.js";
+import OTP from "../models/otp.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +30,14 @@ export const logIn = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: "Usuario no encontrado",
+      });
+    }
+
+    // Verificar si el usuario está verificado
+    if (!usuario.usr_verificado) {
+      return res.status(403).json({
+        success: false,
+        message: "Tu cuenta no ha sido verificada.",
       });
     }
 
@@ -299,7 +306,7 @@ export const recuperarContrasena = async (req, res) => {
     }
 
     // Verificar si el usuario existe
-    const usuario = Usuario.findOne({ usr_correo });
+    const usuario = await Usuario.findOne({ usr_correo });
     if (!usuario) {
       return res.status(404).json({
         success: false,
@@ -307,28 +314,65 @@ export const recuperarContrasena = async (req, res) => {
       });
     }
 
-    // Podemos implementar un sistema de verificación de usuarios
-    // Si se implementa, la recuperación de contraseña solo se enviará si el usuario está verificado
-    // if (!usuario.usr_verificado) {
-    //   return res.status(403).json({
-    //     success: false,
-    //     message: "Usuario no verificado",
-    //   });
-    // }
+    const otpExistente = await OTP.findOneByCorreo({
+      usr_correo,
+    });
 
-    const OTP = await generateOTP(); // Generar un OTP
-    console.log("Recuperación de contraseña para:", usr_correo);
-    console.log("OTP generado:", OTP);
-    sendRecoveryEmail({ recipient_email: usr_correo, OTP })
-      .then((response) => res.send(response.message))
-      .catch((error) => {
-        handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
-      });
-    /* return res.status(200).json({
-        success: true,
-        message: "Email sent successfully"
-      }); */
+    let OTPCode;
+    if (otpExistente) {
+      OTPCode = otpExistente.otp_codigo;
+    } else {
+      // Generar un nuevo OTP
+      OTPCode = await generateOTP();
+      await OTP.create({ usr_correo, otp: OTPCode });
+    }
+
+    console.log("OTP generado:", OTPCode);
+
+    await sendRecoveryEmail({ recipient_email: usr_correo, OTP: OTPCode });
+
+    res.status(200).json({
+      success: true,
+      message: "Correo de recuperación enviado",
+      otp: OTPCode, // Para propósitos de prueba, no enviar en producción
+    });
   } catch (error) {
     handleHttpError(res, "ERROR_RECOVER_PASSWORD", error);
+  }
+};
+
+export const updateContrasena = async (req, res) => {
+  try {
+    const { usr_correo, usr_contrasenia } = req.body;
+
+    if (!usr_correo || !usr_contrasenia) {
+      return res.status(400).json({
+        success: false,
+        message: "Correo y contraseña son requeridos",
+      });
+    }
+
+    // Verificar si el usuario existe
+    const usuario = await Usuario.findOne({ usr_correo });
+    if (!usuario) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuario no encontrado",
+      });
+    }
+
+    // Actualizar la contraseña
+    const hashedPassword = await bcrypt.hash(usr_contrasenia, 10);
+    usuario.usr_contrasenia = hashedPassword;
+    await Usuario.updateUser(usr_correo, {
+      usr_contrasenia: hashedPassword,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Contraseña actualizada exitosamente",
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_UPDATE_PASSWORD", error);
   }
 };

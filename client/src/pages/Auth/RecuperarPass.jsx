@@ -1,8 +1,16 @@
 import { Formik, Form, Field } from "formik";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useOTP } from "../../hooks/Usuario/useOTP";
+import AuthOTPModal from "../../components/Forms/AuthOTPModal";
+import { use, useState } from "react";
+import ToastMessage from "../../components/Other/ToastMessage";
+import useUsuario from "../../hooks/Usuario/useUsuario";
 
 function RecuperarPass() {
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [correo, setCorreo] = useState("");
+  const { recuperarContrasena } = useUsuario();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -18,9 +26,32 @@ function RecuperarPass() {
           }}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              console.log(values);
+              const response = await recuperarContrasena({
+                usr_correo: values.rec_frm_email,
+              });
+              if (response?.success) {
+                ToastMessage({
+                  tipo: "success",
+                  mensaje: "Correo de recuperación enviado exitosamente.",
+                  position: "top-right",
+                });
+                setCorreo(values.rec_frm_email);
+                setShowOtpModal(true);
+              } else {
+                ToastMessage({
+                  tipo: "error",
+                  mensaje: response.response.data.message,
+                  position: "top-right",
+                });
+              }
             } catch (error) {
-              console.error(error);
+              console.error("Error al generar OTP:", error);
+              ToastMessage({
+                tipo: "error",
+                mensaje:
+                  "Ocurrió un error al enviar el correo de recuperación.",
+                position: "top-right",
+              });
             } finally {
               setSubmitting(false);
             }
@@ -42,13 +73,18 @@ function RecuperarPass() {
                 </label>
               </div>
               <Field type="submit" value="Recuperar" className="button" />
-              <Link to="/Auth/CambiarContraseña" className="link">
-                Cambiar Contraseña
-              </Link>
             </Form>
           )}
         </Formik>
       </main>
+
+      {showOtpModal && (
+        <AuthOTPModal
+          correo={correo}
+          onClose={() => setShowOtpModal(false)}
+          redirectTo="/Auth/CambiarContraseña"
+        />
+      )}
     </motion.div>
   );
 }

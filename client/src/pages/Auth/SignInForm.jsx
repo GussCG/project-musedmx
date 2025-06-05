@@ -21,6 +21,8 @@ import { TIPOS_USUARIO, TEMATICAS } from "../../constants/catalog";
 import ToastMessage from "../../components/Other/ToastMessage";
 import UserImage from "../../components/User/UserImage";
 import { formatFileName } from "../../utils/formatFileName";
+import AuthOTPModal from "../../components/Forms/AuthOTPModal";
+import { useOTP } from "../../hooks/Usuario/useOTP";
 
 function SignInForm() {
   // Estados
@@ -171,6 +173,9 @@ function SignInForm() {
 
   const { registrarUsuario } = useUsuario();
   const { login } = useAuth();
+  const [correoPendienteVerificar, setCorreoPendienteVerificar] = useState("");
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const { generarOTP } = useOTP();
   // Función para registrar al usuario
   const handleRegister = async (values) => {
     try {
@@ -212,11 +217,12 @@ function SignInForm() {
           tipo: "success",
           position: "top-right",
         });
-        // Redirigir al perfil del usuario
-        await login({
-          usr_correo: values.signinfrmemail,
-          usr_contrasenia: password,
-        });
+
+        setCorreoPendienteVerificar(values.signinfrmemail);
+        setShowOtpModal(true);
+        await generarOTP(values.signinfrmemail);
+
+        return;
       } else {
         ToastMessage({
           mensaje: "Error al registrar el usuario",
@@ -564,6 +570,13 @@ function SignInForm() {
           </Formik>
         </div>
       </main>
+
+      {showOtpModal && (
+        <AuthOTPModal
+          onClose={() => setShowOtpModal(false)}
+          correo={correoPendienteVerificar}
+        />
+      )}
     </motion.div>
   );
 }

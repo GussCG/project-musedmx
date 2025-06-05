@@ -15,6 +15,7 @@ export default class Usuario {
                 u.usr_telefono,
                 u.usr_foto,
                 u.usr_tipo,
+                u.usr_verificado,
                 GROUP_CONCAT(t.tm_nombre) AS tematicas -- Devuelve temáticas como lista separada por coma
               FROM usuarios u
               LEFT JOIN usuarios_has_tematicas ut ON u.usr_correo = ut.usuarios_usr_correo
@@ -36,6 +37,7 @@ export default class Usuario {
         usr_telefono: userInfo.usr_telefono,
         usr_foto: userInfo.usr_foto,
         usr_tipo: userInfo.usr_tipo,
+        usr_verificado: userInfo.usr_verificado,
         usr_tematicas: userInfo.tematicas ? userInfo.tematicas.split(",") : [],
       };
     } catch (error) {
@@ -172,5 +174,26 @@ export default class Usuario {
       throw new Error("Usuario no encontrado");
     }
     return result;
+  }
+
+  static async markAsVerified({ usr_correo }) {
+    const connection = await pool.getConnection();
+    try {
+      const query = `
+        UPDATE usuarios 
+        SET usr_verificado = 1 
+        WHERE usr_correo = ?
+      `;
+      const [result] = await connection.query(query, [usr_correo]);
+      if (result.affectedRows === 0) {
+        throw new Error("Usuario no encontrado o ya verificado");
+      }
+      return true;
+    } catch (error) {
+      console.error("Error al verificar el usuario:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
   }
 }

@@ -38,7 +38,7 @@
 
     a {
       font-family: $font-primary;
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: $font-w-semibold;
       color: var(--color-a);
       line-height: 23px;
@@ -48,6 +48,13 @@
       &:hover {
         opacity: 0.5;
       }
+    }
+
+    p {
+      width: 100%;
+      text-align: center;
+      color: var(--font-color-primary);
+      font-size: 1rem;
     }
 
     .error-message-container {
@@ -205,8 +212,8 @@
 /* Quitamos la imagen y dejamos unicamente el formulario */
 @media screen and (max-width: 1430px) {
   #login-main {
-    width: 50%;
-    min-width: 400px;
+    width: 70%;
+    min-width: 300px;
     grid-template-columns: 1fr;
 
     #login-linea,

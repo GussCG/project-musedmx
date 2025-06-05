@@ -272,7 +272,7 @@ function MapMuseo({
 
   useEffect(() => {
     haMostradoMensajeVacio.current = false;
-  }, [radioKM]);
+  }, [radioKM, location?.userLocation]);
 
   const getSafeKey = useCallback((museo, index) => {
     return museo?.id ? `museo-${museo.id}` : `museo-${index}`;

@@ -354,18 +354,23 @@ export default class Resena {
     try {
       const data = { ...resenaData };
       const fotos = data.fotos;
-      const fecha = data.visitas_vi_fechahora; // <--- ESTE CAMPO SÍ EXISTE
+      const fecha = data.visitas_vi_fechahora;
       delete data.fotos;
 
-      if (Object.keys(data).length > 0) {
+      const huboCambiosEnCampos = Object.keys(data).length > 0;
+      const seAgregaronFotos = Array.isArray(fotos) && fotos.length > 0;
+
+      if (huboCambiosEnCampos || seAgregaronFotos) {
         const campos = Object.keys(data);
-        const setClauses = campos.map((campo) => `${campo} = ?`).join(", ");
-        const query = `UPDATE resenia SET ${setClauses} WHERE res_id_res = ?`;
+        const setClauses = campos.map((campo) => `${campo} = ?`);
+        setClauses.push("res_aprobado = 0"); // Marcar como no aprobado si hubo cambios
+        const query = `UPDATE resenia SET ${setClauses.join(
+          ", "
+        )} WHERE res_id_res = ?`;
         await connection.query(query, [...Object.values(data), res_id_res]);
       }
 
-      // ⚠️ Solo permitir actualizar la fecha si no hay reseña que dependa
-      // o si es seguro hacerlo (bajo tu lógica)
+      // Actualizar la fecha de visita si viene incluida
       if (fecha) {
         const fechaQuery = `
         UPDATE visitas
@@ -375,8 +380,12 @@ export default class Resena {
         await connection.query(fechaQuery, [fecha, correo, museoId]);
       }
 
-      if (fotos && fotos.length > 0) {
-        const insertQuery = `INSERT INTO foto_resenia (f_res_id_res, f_res_foto) VALUES (?, ?)`;
+      // Insertar nuevas fotos si se proporcionan
+      if (seAgregaronFotos) {
+        const insertQuery = `
+        INSERT INTO foto_resenia (f_res_id_res, f_res_foto)
+        VALUES (?, ?)
+      `;
         for (const foto of fotos) {
           await connection.query(insertQuery, [res_id_res, foto]);
         }

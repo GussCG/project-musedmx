@@ -448,12 +448,12 @@ main {
         padding: 10px 15px;
         margin: 10px;
 
-        background-color: var(--bg-navbar);
+        background-color: var(--bg-select);
         border-radius: 50px;
 
         font-weight: $font-w-regular;
         font-size: 16px;
-        color: rgba(0, 0, 0, 0.6);
+        color: var(--font-color-primary);
 
         #frm-range-ubicacion {
           width: 100%;
@@ -494,7 +494,7 @@ main {
 
         #museos-select-ubicacion {
           width: 100%;
-          background-color: white;
+          background-color: var(--bg-select-options);
           color: var(--font-color-primary);
           font-family: $font-primary;
           font-size: 16px;
