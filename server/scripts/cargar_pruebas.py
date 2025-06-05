@@ -33,11 +33,11 @@ def cargar_csv_a_tabla(nombre_archivo, consulta_sql, columnas):
             except Exception as e:
                 print(f"Error cargando fila {fila}: {e}")
 
-# Usuarios
+# Usuarios (incluye usr_verificado)
 cargar_csv_a_tabla(
     "./csvpruebas/usuarios.csv",
-    "INSERT INTO usuarios (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-    ["usr_correo", "usr_nombre", "usr_ap_paterno", "usr_ap_materno", "usr_contrasenia", "usr_fecha_nac", "usr_telefono", "usr_foto", "usr_tipo"]
+    "INSERT INTO usuarios (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo, usr_verificado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+    ["usr_correo", "usr_nombre", "usr_ap_paterno", "usr_ap_materno", "usr_contrasenia", "usr_fecha_nac", "usr_telefono", "usr_foto", "usr_tipo", "usr_verificado"]
 )
 
 # Usuarios_has_tematicas
@@ -54,7 +54,7 @@ cargar_csv_a_tabla(
     ["vi_fechahora", "vi_usr_correo", "vi_mus_id"]
 )
 
-# Respuestas Encuesta (nueva forma sin tabla respuestas ni calificaciones)
+# Respuestas Encuesta
 cargar_csv_a_tabla(
     "./csvpruebas/respuestas_encuesta.csv",
     "INSERT INTO respuestas_encuesta (res_id, res_respuesta, visitas_vi_usr_correo, visitas_vi_mus_id, preguntas_preg_id, preguntas_encuesta_enc_cve) VALUES (%s, %s, %s, %s, %s, %s)",
@@ -79,12 +79,7 @@ cargar_csv_a_tabla(
      "visitas_vi_usr_correo", "visitas_vi_mus_id", "visitas_vi_fechahora"]
 )
 
-# Foto Reseña
-cargar_csv_a_tabla(
-    "./csvpruebas/foto_resenia.csv",
-    "INSERT INTO foto_resenia (f_res_id_res, f_res_foto) VALUES (%s, %s)",
-    ["f_res_id_res", "f_res_foto"]
-)
+# 🚫 Foto Reseña - Eliminado completamente
 
 # Quiero visitar
 cargar_csv_a_tabla(

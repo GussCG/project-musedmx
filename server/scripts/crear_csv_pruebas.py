@@ -1,4 +1,4 @@
-import csv
+import csv 
 import random
 import datetime
 from faker import Faker
@@ -80,11 +80,12 @@ for _ in range(100):
     telefono = generar_telefono()
     foto = obtener_foto_nba()
     tipo = 1
+    verificado = 1  # ✅ Usuarios verificados
 
     usuarios.append([
         correo, nombre, ap_pat, ap_mat,
         password, fecha_nac, telefono,
-        foto, tipo
+        foto, tipo, verificado
     ])
     correos.append(correo)
 
@@ -98,7 +99,6 @@ respuestas_serv = []
 resenias = []
 quiero_visitar = set()
 favoritos = set()
-foto_resenia = []
 
 res_id_counter = 1
 resenia_id_counter = 1
@@ -129,8 +129,7 @@ for museo in random.sample(museos, 30):
             usuario, mus_id, fecha
         ])
 
-        for _ in range(random.randint(1, 3)):
-            foto_resenia.append([resenia_id_counter, obtener_foto_estadio()])
+        # ✅ Fotos de reseñas eliminadas
 
         resenia_id_counter += 1
 
@@ -148,7 +147,8 @@ def guardar_csv(nombre, cabeceras, datos):
 
 guardar_csv("./csvpruebas/usuarios.csv", [
     "usr_correo", "usr_nombre", "usr_ap_paterno", "usr_ap_materno",
-    "usr_contrasenia", "usr_fecha_nac", "usr_telefono", "usr_foto", "usr_tipo"
+    "usr_contrasenia", "usr_fecha_nac", "usr_telefono",
+    "usr_foto", "usr_tipo", "usr_verificado"  # ✅ Cabecera actualizada
 ], usuarios)
 
 guardar_csv("./csvpruebas/usuarios_has_tematicas.csv", [
@@ -170,11 +170,12 @@ guardar_csv("./csvpruebas/resenia.csv", [
     "res_calif_estrellas", "visitas_vi_usr_correo", "visitas_vi_mus_id", "visitas_vi_fechahora"
 ], resenias)
 
-guardar_csv("./csvpruebas/foto_resenia.csv", [
-    "f_res_id_res", "f_res_foto"
-], foto_resenia)
+# ✅ Eliminado:
+# guardar_csv("./csvpruebas/foto_resenia.csv", [
+#     "f_res_id_res", "f_res_foto"
+# ], foto_resenia)
 
 guardar_csv("./csvpruebas/quiero_visitar.csv", ["qv_usr_correo", "qv_mus_id"], list(quiero_visitar))
 guardar_csv("./csvpruebas/favoritos.csv", ["fav_usr_correo", "fav_mus_id"], list(favoritos))
 
-print("✅ Archivos generados correctamente con estructura adaptada sin tabla calificaciones.")
+print("✅ Archivos generados correctamente. Usuarios verificados y sin fotos de reseñas.")
