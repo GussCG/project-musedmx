@@ -19,8 +19,6 @@ export const addVisita = async (req, res) => {
   try {
     const { vi_fechahora, vi_usr_correo, vi_mus_id } = req.body;
 
-    // console.log(vi_usr_correo, vi_mus_id, vi_fechahora);
-
     const vi = await Visitas.add({
       vi_fechahora,
       vi_usr_correo,

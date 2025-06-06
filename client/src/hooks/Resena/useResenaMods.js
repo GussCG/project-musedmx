@@ -54,6 +54,25 @@ export const useResenaMods = () => {
     }
   };
 
+  const rechazarResena = async (resenaId, motivo, comentario) => {
+    try {
+      setLoading(true);
+      const endpoint = `${BACKEND_URL}/api/resena/mod/rechazar/${resenaId}`;
+
+      const response = await axios.delete(endpoint, {
+        data: { motivo, comentario },
+      });
+
+      console.log("Rechazo de reseña exitoso:", response.data);
+      return response.data;
+    } catch (err) {
+      setError(err);
+      console.error("Error rechazando reseña:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     resenas,
     loading,
@@ -62,5 +81,6 @@ export const useResenaMods = () => {
     fetchAllResenasByMuseo,
     setResenas,
     aprobarResena,
+    rechazarResena,
   };
 };

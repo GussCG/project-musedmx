@@ -35,7 +35,9 @@ function ModHistory() {
         } else {
           fetchedResenas = await fetchAllResenas();
         }
-        setResenas(fetchedResenas.resenas);
+        setResenas(
+          fetchedResenas.resenas.sort((a, b) => a.res_aprobado - b.res_aprobado)
+        );
       } catch (error) {
         console.error("Error fetching reseñas:", error);
       }

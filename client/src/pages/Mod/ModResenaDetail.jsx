@@ -19,9 +19,15 @@ function ModResenaDetail() {
   const navigate = useNavigate();
 
   const { resena, loading, error } = useResena({ resId });
+
   const { aprobarResena } = useResenaMods();
 
-  const lightbox = useLightBox(resena?.fotos || []);
+  const imagenesCompletas = [
+    ...(resena?.fotos || []),
+    ...(resena?.res_foto_entrada ? [resena.res_foto_entrada] : []),
+  ];
+
+  const lightbox = useLightBox(imagenesCompletas || []);
   const [showRechazarPop, setShowRechazarPop] = useState(false);
 
   const handleAprobarResena = (resId, modCorreo) => async () => {
@@ -52,10 +58,10 @@ function ModResenaDetail() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {resena?.fotos && (
+      {imagenesCompletas && (
         <LightBoxPortal>
           <LightBox
-            images={resena?.fotos}
+            images={imagenesCompletas}
             isOpen={lightbox.isOpen}
             currentIndex={lightbox.currentIndex}
             closeLightBox={lightbox.closeLightBox}
@@ -95,7 +101,9 @@ function ModResenaDetail() {
                   <img
                     src={resena.res_foto_entrada}
                     alt="Foto de entrada"
-                    onClick={() => lightbox.openLightBox(resena.fotos.length)}
+                    onClick={() =>
+                      lightbox.openLightBox(imagenesCompletas.length - 1)
+                    }
                   />
                 </div>
               )}

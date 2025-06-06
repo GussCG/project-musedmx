@@ -265,6 +265,7 @@
         align-items: center;
 
         h1 {
+          font-family: $font-tertiary;
           font-size: $museo-detail-h1-size;
           font-weight: $font-w-bold;
           color: var(--font-color-primary);
@@ -1134,6 +1135,7 @@
       width: 90%;
       flex-direction: column;
       padding-bottom: 30px;
+      gap: 10px;
 
       .museo-section-1-info {
         width: 100%;
@@ -1168,7 +1170,7 @@
         position: relative;
         transform: translateX(0);
         flex-direction: row;
-        margin: 20px;
+        margin: 10px;
       }
     }
 
@@ -1183,7 +1185,7 @@
 }
 
 /* En 800 la seccion 1 se hacen 2 filas */
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
   #museo-section-1 {
     .museo-section-1-container {
       .header-buttons-container {

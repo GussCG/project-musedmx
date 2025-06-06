@@ -474,3 +474,18 @@ export const TIPOS_USUARIO = {
     redirectPath: "/",
   },
 };
+
+export const MOTIVOS_RECHAZO = {
+  1: {
+    id: 1,
+    nombre: "Comentario inapropiado",
+  },
+  2: {
+    id: 2,
+    nombre: "Imágenes inapropiadas",
+  },
+  3: {
+    id: 3,
+    nombre: "Otro",
+  },
+};

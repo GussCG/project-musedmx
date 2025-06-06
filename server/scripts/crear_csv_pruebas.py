@@ -54,6 +54,24 @@ servicios = [
     "Elevador", "Braille", "Lenguaje de señas"
 ]
 
+comentarios_resenia = [
+    "Me encantó la experiencia.",
+    "Muy recomendable.",
+    "Estuvo bien, aunque podría mejorar.",
+    "Excelente atención y contenido.",
+    "Un poco aburrido.",
+    "Muy interesante y educativo.",
+    "Volvería sin dudarlo.",
+    "No cumplió mis expectativas.",
+    "Perfecto para ir con la familia.",
+    "Demasiado concurrido.",
+    "Faltó señalización.",
+    "Los niños lo disfrutaron mucho.",
+    "Precios accesibles y buen ambiente.",
+    "Las instalaciones estaban limpias.",
+    "El personal fue muy amable."
+]
+
 # Leer museos
 csv_path = "./data/museo-directorio-cdmx.csv"
 with open(csv_path, "r", encoding="utf-8") as f:
@@ -61,7 +79,7 @@ with open(csv_path, "r", encoding="utf-8") as f:
     museos = [row for row in reader]
 
 def generar_telefono():
-    return f"+52 {random.randint(1000,9999)} {random.randint(1000,9999)}"
+    return f"+52 55{random.randint(10000000, 99999999)}"
 
 def bcrypt_hash(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -70,7 +88,7 @@ usuarios = []
 usuarios_tematicas = []
 correos = []
 
-for _ in range(100):
+for _ in range(30):
     correo = fake.email()
     nombre = fake.first_name()
     ap_pat = fake.last_name()
@@ -80,7 +98,7 @@ for _ in range(100):
     telefono = generar_telefono()
     foto = obtener_foto_nba()
     tipo = 1
-    verificado = 1  # ✅ Usuarios verificados
+    verificado = 1
 
     usuarios.append([
         correo, nombre, ap_pat, ap_mat,
@@ -119,18 +137,17 @@ for museo in random.sample(museos, 30):
             ])
             res_id_counter += 1
 
-        serv_indices = random.sample(range(len(servicios)), k=3)
+        serv_indices = random.sample(range(len(servicios)), k=random.randint(3, 13))
         for idx in serv_indices:
             respuestas_serv.append([usuario, mus_id, idx + 1])
 
+        comentario = random.choice(comentarios_resenia)
+        calificacion = random.randint(1, 5)
         resenias.append([
-            resenia_id_counter, fake.sentence(nb_words=8),
-            mod_correo, 1, random.randint(1, 5),
+            resenia_id_counter, comentario,
+            mod_correo, 1, calificacion,
             usuario, mus_id, fecha
         ])
-
-        # ✅ Fotos de reseñas eliminadas
-
         resenia_id_counter += 1
 
         if random.choice([True, False]):
@@ -148,7 +165,7 @@ def guardar_csv(nombre, cabeceras, datos):
 guardar_csv("./csvpruebas/usuarios.csv", [
     "usr_correo", "usr_nombre", "usr_ap_paterno", "usr_ap_materno",
     "usr_contrasenia", "usr_fecha_nac", "usr_telefono",
-    "usr_foto", "usr_tipo", "usr_verificado"  # ✅ Cabecera actualizada
+    "usr_foto", "usr_tipo", "usr_verificado"
 ], usuarios)
 
 guardar_csv("./csvpruebas/usuarios_has_tematicas.csv", [
@@ -170,12 +187,7 @@ guardar_csv("./csvpruebas/resenia.csv", [
     "res_calif_estrellas", "visitas_vi_usr_correo", "visitas_vi_mus_id", "visitas_vi_fechahora"
 ], resenias)
 
-# ✅ Eliminado:
-# guardar_csv("./csvpruebas/foto_resenia.csv", [
-#     "f_res_id_res", "f_res_foto"
-# ], foto_resenia)
-
 guardar_csv("./csvpruebas/quiero_visitar.csv", ["qv_usr_correo", "qv_mus_id"], list(quiero_visitar))
 guardar_csv("./csvpruebas/favoritos.csv", ["fav_usr_correo", "fav_mus_id"], list(favoritos))
 
-print("✅ Archivos generados correctamente. Usuarios verificados y sin fotos de reseñas.")
+print("✅ Archivos generados correctamente con comentarios realistas, teléfonos válidos y servicios aleatorios.")

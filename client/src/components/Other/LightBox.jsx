@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import Icons from "./IconProvider";
 const {
@@ -22,6 +23,8 @@ function LightBox({
     return null;
   }
 
+  const containerRef = useRef(null);
+
   const [scale, setScale] = useState(1);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -40,11 +43,49 @@ function LightBox({
 
   const currentImage = images[currentIndex];
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!isOpen) return;
+
+      if (e.key === "ArrowRight") {
+        goToNext();
+        handleReset();
+      } else if (e.key === "ArrowLeft") {
+        goToPrev();
+        handleReset();
+      } else if (e.key === "Escape") {
+        closeLightBox();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, goToNext, goToPrev, closeLightBox]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      const delta = e.deltaY;
+      setScale((prevScale) => {
+        const newScale = delta > 0 ? prevScale - 0.1 : prevScale + 0.1;
+        return Math.min(Math.max(newScale, 1), 5);
+      });
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, [currentImage]);
+
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       <motion.div
         className="lightbox show"
-        key={`lightbox-${currentIndex}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -71,11 +112,11 @@ function LightBox({
 
         <motion.div
           className="lightbox-img-container"
-          key={`lightbox-img-${currentImage}`}
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
           transition={{ duration: 0.5, type: "spring" }}
+          ref={containerRef}
         >
           <motion.img
             src={currentImage.src || currentImage.foto || currentImage}
