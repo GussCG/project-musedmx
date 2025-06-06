@@ -337,10 +337,11 @@ function MuseoDetail() {
                       <div className="museo-section-1-csm">
                         <div className="museo-section-1-right">
                           <div className="museo-section-1-csm-calificacion">
-                            {isLoading ? (
+                            {resenasLoading ||
+                            !Number.isFinite(calificacionPromedio) ? (
                               <Skeleton width={50} />
                             ) : (
-                              <p>{calificacionPromedio.toFixed(1)}</p>
+                              <p>{(calificacionPromedio ?? 0).toFixed(1)}</p>
                             )}
 
                             <img
@@ -354,7 +355,11 @@ function MuseoDetail() {
                             />
                           </div>
                           <div className="museo-section-likes">
-                            <p>{favoritoCount}</p>
+                            {resenasLoading ? (
+                              <Skeleton width={50} />
+                            ) : (
+                              <p>{favoritoCount}</p>
+                            )}
                             <FaHeart />
                           </div>
                         </div>

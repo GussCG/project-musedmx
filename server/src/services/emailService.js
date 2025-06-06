@@ -202,6 +202,199 @@ export function sendOTPEmail({ recipient_email, OTP }) {
   });
 }
 
+export function sendRechazoResenaEmail({
+  recipient_email,
+  motivo,
+  comentario,
+}) {
+  return new Promise((resolve, reject) => {
+    console.log("Sending rejection email to:", recipient_email);
+    const mail_configs = {
+      from: process.env.MY_EMAIL,
+      to: recipient_email,
+      subject: "Reseña Rechazada - MuseDMX",
+      html: `<!DOCTYPE html>
+			<html lang="es">
+
+				<head>
+					<meta charset="UTF-8">
+					<title>Correo de Rechazo de Reseña - MuseDMX</title>
+					<style>
+						h1 {
+							font-family: Raleway, sans-serif;
+							font-optical-sizing: auto;
+							font-weight: 400;
+							font-style: normal;
+							font-size: 1.4em;
+							text-decoration: none;
+								color: #00466a;
+						}
+
+						p {
+							font-family: Quicksand, sans-serif;
+							font-optical-sizing: auto;
+							font-weight: 300;
+							font-style: normal;
+							font-size: 1.1em;
+							color: #333;
+						}
+
+						h2 {
+							font-family: Raleway, sans-serif;
+							font-weight: 700;
+							font-style: normal;
+							font-size: 2em;
+							background: #00466a;
+							margin: 0 auto;
+							width: max-content;
+							padding: 0 10px;
+							color: #fff;
+							border-radius: 4px;
+						}
+
+						.datos p {
+							font-family: Quicksand, sans-serif;
+							font-optical-sizing: auto;
+							font-weight: 300;
+							font-style: normal;
+							font-size: .9em;
+							color: #333;
+						}
+					</style>
+				</head>
+
+				<body>
+					<!-- partial:index.partial.html -->
+					<div>
+						<div style="margin:50px auto;width:70%;padding:20px 0">
+							<div style="border-bottom:1px solid #eee">
+								<img src="cid:logo" alt="MuseDMX Logo" style="width: 150px; height: auto;" />
+							</div>
+							<p>Gracias por usar MuseDMX. Lamentamos informarte que tu reseña ha sido rechazada.</p>
+			  <p><strong>Motivo:</strong> ${motivo}</p>
+			  <p><strong>Comentario:</strong> ${comentario}</p>
+			  											<p>Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.</p>
+							<p>Saludos,<br />MuseDMX</p>
+							<hr style="border:none;border-top:1px solid #eee" />
+							<div class="datos"
+								style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+								<p>MuseDMX Inc</p>
+								<p>Unidad Profesional Adolfo López Mateos, Av. Juan de Dios Bátiz, Nueva Industrial Vallejo</p>
+								<p>Ciudad de México</p>
+							</div>
+						</div>					
+					</div>
+					<!-- partial -->
+				</body>
+			</html>`,
+      attachments: getAttachments(),
+    };
+    transporter.sendMail(mail_configs, function (error, info) {
+      if (error) {
+        console.log(error);
+        return reject({ message: `An error has occured` });
+      }
+      return resolve({ message: "Email sent succesfuly" });
+    });
+  });
+}
+
+export function sendAprobadaResenaEmail({
+  recipient_email,
+  mod_correo,
+  resenaId,
+}) {
+  return new Promise((resolve, reject) => {
+    console.log("Sending approval email to:", recipient_email);
+    const mail_configs = {
+      from: process.env.MY_EMAIL,
+      to: recipient_email,
+      subject: "Reseña Aprobada - MuseDMX",
+      html: `<!DOCTYPE html>
+			<html lang="es">
+
+				<head>
+					<meta charset="UTF-8">
+					<title>Correo de Aprobación de Reseña - MuseDMX</title>
+					<style>
+						h1 {
+							font-family: Raleway, sans-serif;
+							font-optical-sizing: auto;
+							font-weight: 400;
+							font-style: normal;
+							font-size: 1.4em;
+							text-decoration: none;
+								color: #00466a;
+						}
+
+						p {
+							font-family: Quicksand, sans-serif;
+							font-optical-sizing: auto;
+							font-weight: 300;
+							font-style: normal;
+							font-size: 1.1em;
+							color: #333;
+						}
+
+						h2 {
+							font-family: Raleway, sans-serif;
+							font-weight: 700;
+							font-style: normal;
+							font-size: 2em;
+							background: #00466a;
+							margin: 0 auto;
+							width: max-content;
+							padding: 0 10px;
+							color: #fff;
+							border-radius: 4px;
+						}
+
+						.datos p {
+							font-family: Quicksand, sans-serif;
+							font-optical-sizing: auto;
+							font-weight: 300;
+							font-style: normal;
+							font-size: .9em;
+							color: #333;
+						}
+					</style>
+				</head>
+
+				<body>
+					<!-- partial:index.partial.html -->
+					<div>
+						<div style="margin:50px auto;width:70%;padding:20px 0">
+							<div style="border-bottom:1px solid #eee">
+								<img src="cid:logo" alt="MuseDMX Logo" style="width: 150px; height: auto;" />
+							</div>
+							<p>¡Felicidades! Tu reseña ha sido aprobada por el moderador ${mod_correo}.</p>
+							<p>Reseña ID:${resenaId}</p>
+							<p>Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.</p>
+			  				<p>Saludos,<br />MuseDMX</p>
+							<hr style="border:none;border-top:1px solid #eee" />
+							<div class="datos"
+								style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+								<p>MuseDMX Inc</p>
+								<p>Unidad Profesional Adolfo López Mateos, Av. Juan de Dios Bátiz, Nueva Industrial Vallejo</p>
+								<p>Ciudad de México</p>
+							</div>
+						</div>	
+					</div>
+					<!-- partial -->
+				</body>
+			</html>`,
+      attachments: getAttachments(),
+    };
+    transporter.sendMail(mail_configs, function (error, info) {
+      if (error) {
+        console.log(error);
+        return reject({ message: `An error has occured` });
+      }
+      return resolve({ message: "Email sent succesfuly" });
+    });
+  });
+}
+
 export function getAttachments() {
   console.log(path.join(__dirname, "../assets/icons/musedmx-logo.png"));
   return [

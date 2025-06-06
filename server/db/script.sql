@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios` (
 -- ('mod@musedmx.com', 'Mod', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2000-04-02', "+525531933874", NULL, 3,1);
 
 SELECT * FROM usuarios;
-DELETE FROM usuarios WHERE usr_correo = "gusester2002@gmail.com";
+-- DELETE FROM usuarios WHERE usr_correo = "gusester2002@gmail.com";
 
 -- -----------------------------------------------------
 -- Table `musedmx`.`otp`

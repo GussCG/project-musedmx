@@ -7,6 +7,10 @@ import { deleteFromAzure } from "../utils/azureDelete.js";
 import sharp from "sharp";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import {
+  sendRechazoResenaEmail,
+  sendAprobadaResenaEmail,
+} from "../services/emailService.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -100,7 +104,35 @@ export const aprobarResena = async (req, res) => {
   try {
     const { resenaId } = req.params;
     const { modCorreo } = req.body;
-    const resena = await Resena.aprobarResena({ resenaId, modCorreo });
+
+    // Verificar si la reseña existe
+    const resena = await Resena.findById({ id: resenaId });
+    if (!resena) {
+      return res.status(404).json({
+        success: false,
+        message: "Reseña no encontrada",
+      });
+    }
+
+    // Aprobar la reseña
+    const aprobado = await Resena.aprobarResena({
+      resenaId,
+      modCorreo,
+    });
+
+    if (!aprobado) {
+      return res.status(500).json({
+        success: false,
+        message: "Error al aprobar la reseña",
+      });
+    }
+
+    await sendAprobadaResenaEmail({
+      recipient_email: resena[0].visitas_vi_usr_correo,
+      mod_correo: modCorreo,
+      resenaId,
+    });
+
     res.json({
       success: true,
       resenaId,
@@ -401,5 +433,43 @@ export const eliminarFotoResena = async (req, res) => {
     }
   } catch (error) {
     handleHttpError(res, "ERROR_DELETE_FOTO_RESENA", error);
+  }
+};
+
+export const rechazarResena = async (req, res) => {
+  try {
+    const { resenaId } = req.params;
+    const { motivo, comentario } = req.body;
+
+    // Verificar si la reseña existe
+    const resena = await Resena.findById({ id: resenaId });
+    if (!resena) {
+      return res.status(404).json({
+        success: false,
+        message: "Reseña no encontrada",
+      });
+    }
+
+    // Email de notificación al usuario con motivo y comentario
+    await sendRechazoResenaEmail({
+      recipient_email: resena[0].visitas_vi_usr_correo,
+      motivo,
+      comentario,
+    });
+
+    // Eliminar la reseña
+    const eliminado = await Resena.deleteById({ id: resenaId });
+    if (!eliminado) {
+      return res.status(500).json({
+        success: false,
+        message: "Error al eliminar la reseña",
+      });
+    }
+    res.json({
+      success: true,
+      message: "Reseña rechazada y eliminada correctamente",
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_RECHAZAR_RESENA", error);
   }
 };

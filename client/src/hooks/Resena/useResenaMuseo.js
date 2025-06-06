@@ -31,28 +31,31 @@ export default function useResenaMuseo({
 
     const controller = new AbortController();
 
-    const fetchResenasFiltradas = async () => {
+    const fetchAll = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const params = {
-          ...filtros,
-          pagina,
-          porPagina,
-        };
+        const params = { ...filtros, pagina, porPagina };
 
-        const response = await axios.get(
-          `${BACKEND_URL}/api/resena/museo/${museoId}`,
-          {
+        const [filtradasResp, completasResp] = await Promise.all([
+          axios.get(`${BACKEND_URL}/api/resena/museo/${museoId}`, {
             params,
             signal: controller.signal,
-          }
-        );
-        const data = response.data.resenas;
-        setResenas(data.resenas || []);
-        setTotal(data.total || 0);
-        setTotalPaginas(data.totalPages || 0);
+          }),
+          axios.get(`${BACKEND_URL}/api/resena/museo/${museoId}`, {
+            params: { pagina: 1, porPagina: 10000 },
+            signal: controller.signal,
+          }),
+        ]);
+
+        const filtradas = filtradasResp.data.resenas;
+        setResenas(filtradas.resenas || []);
+        setTotal(filtradas.total || 0);
+        setTotalPaginas(filtradas.totalPages || 0);
+
+        const completas = completasResp.data.resenas;
+        setResenasCompleto(completas.resenas || []);
       } catch (err) {
         if (axios.isCancel(err)) return;
         setError(err);
@@ -61,25 +64,7 @@ export default function useResenaMuseo({
       }
     };
 
-    const fetchResenasCompletas = async () => {
-      try {
-        // Aquí NO aplicamos filtros, sólo el museoId
-        const response = await axios.get(
-          `${BACKEND_URL}/api/resena/museo/${museoId}`,
-          {
-            params: { pagina: 1, porPagina: 10000 }, // o un número grande para traer todas
-            signal: controller.signal,
-          }
-        );
-        const data = response.data.resenas;
-        setResenasCompleto(data.resenas || []);
-      } catch (err) {
-        if (axios.isCancel(err)) return;
-      }
-    };
-
-    fetchResenasFiltradas();
-    fetchResenasCompletas();
+    fetchAll();
 
     return () => controller.abort();
   }, [
@@ -93,7 +78,7 @@ export default function useResenaMuseo({
 
   // Promedio calculado solo con resenasCompleto (sin filtro)
   const calificacionPromedio = useMemo(() => {
-    if (resenasCompleto.length === 0) return 0;
+    if (!resenasCompleto.length) return 0;
     const suma = resenasCompleto.reduce(
       (acc, r) => acc + Number(r.res_calif_estrellas || 0),
       0

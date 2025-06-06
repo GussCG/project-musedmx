@@ -1,4 +1,5 @@
 usr_correo,usr_nombre,usr_ap_paterno,usr_ap_materno,usr_contrasenia,usr_fecha_nac,usr_telefono,usr_foto,usr_tipo,usr_verificado
+<<<<<<< HEAD
 modesto43@example.org,Reynaldo,Vaca,Bermúdez,$2b$12$a3P/oFyEZOTJTNNcWY1mz.kpgzxrYqHmg.ZE.RgwqboLWoY6o0Gbi,1949-07-19,+52 2824 1409,https://cdn.nba.com/headshots/nba/latest/1040x760/203076.png,1,1
 teresa91@example.org,Felix,Escobedo,Cisneros,$2b$12$jtyMG0csI5ByZCPR6sU9M.RsKu9WKOy9w2EYPnbRIm.fgTKoO7JSi,1969-06-29,+52 2679 9935,https://cdn.nba.com/headshots/nba/latest/1040x760/1629627.png,1,1
 aracelide-leon@example.org,Minerva,Salcido,Ortiz,$2b$12$FBcAD8X3z6xdDRnECgGLuujxBX.S0nJ2wvk1dgs7WCGTDz9SFWHs2,1953-04-20,+52 2535 4582,https://cdn.nba.com/headshots/nba/latest/1040x760/1629630.png,1,1
@@ -99,3 +100,35 @@ psaldivar@example.com,Amador,Alfaro,Nájera,$2b$12$YmNnkQLoVmVNsVlQAU0T3OV2/WVU4
 jose-mariacollado@example.net,Nayeli,Jaramillo,Luna,$2b$12$Rn12DO2PFcjCbq1n3nNtLOaGAEourpdtJXw6zF2o3AMic7cYQROPq,1986-03-20,+52 9890 8633,https://cdn.nba.com/headshots/nba/latest/1040x760/1630579.png,1,1
 regaladomaximiliano@example.com,Gerardo,Saucedo,Altamirano,$2b$12$5OAl8EEJnCsxIlWNRQUhQe3s2XeAUi6rTL5rzK88C00lHrZW.oCN.,1967-07-26,+52 7381 1320,https://cdn.nba.com/headshots/nba/latest/1040x760/1629027.png,1,1
 luisaalcantar@example.com,Isabela,Rubio,Ocampo,$2b$12$DY0bj4l0i39F2Zh/.l2nCe/gUJtgrYPDp8oeKHnkk4zrpfKqUPPB.,1957-07-11,+52 6763 5892,https://cdn.nba.com/headshots/nba/latest/1040x760/1628369.png,1,1
+=======
+castanedadiana@example.net,Norma,Salcido,Lomeli,$2b$12$DwZe8/J1sM//Zuofq4sozOzYOGPYgUHdWsu4jA25HMdGCOXIppiky,1969-08-08,+52 5595822412,https://cdn.nba.com/headshots/nba/latest/1040x760/1629029.png,1,1
+dsevilla@example.net,Norma,Reyes,Hernandes,$2b$12$oKrmkQYJMMeONY/4IwZ2w./GM5Tq/aKUEsZSa5p4W9qAHK3tBkcaa,2001-07-03,+52 5542868828,https://cdn.nba.com/headshots/nba/latest/1040x760/1629630.png,1,1
+orojo@example.net,Jacobo,Matías,Montes,$2b$12$t58r5uyKOmFgfJd4hE7m5OsTOmaflKqdm5N6DttA4K3YNiVACmifu,1978-08-28,+52 5583197857,https://cdn.nba.com/headshots/nba/latest/1040x760/1629627.png,1,1
+ariadnaiglesias@example.net,Aldonza,Macías,Espinosa,$2b$12$nawWoTOuP6LX3OkXnKhWT.JSYRbVPEjrXg/xOeoRN6/CBrpx8mqK6,1986-11-24,+52 5522575562,https://cdn.nba.com/headshots/nba/latest/1040x760/1629028.png,1,1
+contrerasgustavo@example.com,Benito,Monroy,Rincón,$2b$12$kDD6GKoILGFmhzH0mbmAEeKPRlN6iZ6jQYKJkA4/npmmCAdKc6EG6,2002-10-05,+52 5513561597,https://cdn.nba.com/headshots/nba/latest/1040x760/201566.png,1,1
+robertocasares@example.net,Serafín,Zelaya,Loera,$2b$12$0PILS3KKwZYSMfOEh1F6ZOLNGbHmcU.ceIvNBgmq2GHJ8bicStno6,2001-06-28,+52 5583140807,https://cdn.nba.com/headshots/nba/latest/1040x760/1630579.png,1,1
+porfiriogaona@example.com,Amelia,Laureano,de Anda,$2b$12$kq1/9iitopq0Iz1TNkIHUemkW6XGC4EWdEr8JwFunA0U8FwOIDfNO,1982-10-04,+52 5547338124,https://cdn.nba.com/headshots/nba/latest/1040x760/1630618.png,1,1
+jose-luisceballos@example.org,Mario,Valladares,Jaimes,$2b$12$ebEMeZhbOSII6Gk3Zx71g.a8uzsRxyGWHv.bIGyqd85xBkPdK3Ocq,1973-10-12,+52 5555667651,https://cdn.nba.com/headshots/nba/latest/1040x760/203076.png,1,1
+rodartejoaquin@example.org,Rodolfo,Barraza,Cortez,$2b$12$7XD7S9cTs18G/LOJe5MSr./GK1rh0mzvxSzd4Kd/KWDocN3hTxmbG,1981-12-18,+52 5523718431,https://cdn.nba.com/headshots/nba/latest/1040x760/1629627.png,1,1
+marco-antonio22@example.com,Soledad,Acevedo,Jaime,$2b$12$l.sroxQv5Ek3kxK.e9bDL.LhVnKYUSIkIJXstxLeItLfLwZVV.cTa,1998-09-08,+52 5556164955,https://cdn.nba.com/headshots/nba/latest/1040x760/202699.png,1,1
+ruby42@example.org,Jacobo,Alvarez,Marrero,$2b$12$2fbi59ZdP1wQp7Uz4E/VgOhckOFbW9JvRqcECq0f/.iFUbwVXFYxq,1954-11-27,+52 5571662963,https://cdn.nba.com/headshots/nba/latest/1040x760/201566.png,1,1
+fuentesindira@example.net,Amanda,Osorio,Soto,$2b$12$JH.ZKlQBEanymD1DfOFLruyAa5SvUtyBE1RWCuFPGGruxS1bk2sze,1993-10-12,+52 5584093639,https://cdn.nba.com/headshots/nba/latest/1040x760/201939.png,1,1
+peraltaemilia@example.com,Oswaldo,Saldaña,Ochoa,$2b$12$mEpONJS6Hty6qgtBjtX6BeQz9ZBi3PZGi9uMuLanKX2diD/h47rh.,1950-08-05,+52 5519335534,https://cdn.nba.com/headshots/nba/latest/1040x760/1630163.png,1,1
+alugo@example.org,Aurelio,Sáenz,Barreto,$2b$12$9RiPLe/lTnFZPs4X8YVc1eX467iZ6e2OW64qhSvAnX4idxFit1h7K,1994-11-15,+52 5520709497,https://cdn.nba.com/headshots/nba/latest/1040x760/1629630.png,1,1
+montanoelena@example.com,Ana Luisa,Rojo,Vázquez,$2b$12$H7lqaLPu2TGiUe9xi.TqXOL53ptWYk.DJs3IWTnJXl3.70xtfVsl2,1965-05-26,+52 5570855700,https://cdn.nba.com/headshots/nba/latest/1040x760/201935.png,1,1
+caridad53@example.org,Felipe,Ortega,Lara,$2b$12$XdTUyfXqMbqiXazDSH4hiO573vlmok7S/5Abd6GaTnH3tdwZRWk1e,1996-05-15,+52 5538119557,https://cdn.nba.com/headshots/nba/latest/1040x760/203076.png,1,1
+salasmaria-teresa@example.com,Noemí,Báez,Girón,$2b$12$3ZP6rrTWy8Mo7jCo6sXu9.vyQiI8VMNN4qSrvR81wlN/iM0/djnj2,1948-03-03,+52 5532969840,https://cdn.nba.com/headshots/nba/latest/1040x760/201566.png,1,1
+espartasierra@example.com,José Carlos,Palacios,Loya,$2b$12$ApAHEzjN7slRVO7P.KRRSuupevLCYJBCYulM79TpLkejZCOVWX./y,1984-10-12,+52 5560929647,https://cdn.nba.com/headshots/nba/latest/1040x760/203076.png,1,1
+bblanco@example.net,Germán,Bañuelos,Amador,$2b$12$D9df0IDzvLqbg9uByP/Pou9PSo0Kaw9NTqwPQ5EwnLHq3UHpjDx5K,1980-08-21,+52 5517507864,https://cdn.nba.com/headshots/nba/latest/1040x760/1629630.png,1,1
+pedromontez@example.com,Pamela,Hernandes,Márquez,$2b$12$QJEChjjiDrfPDaftL/Iuke5MjSvIGDUAaH0EM46QHEXB21WFLqV6G,1973-07-17,+52 5563843426,https://cdn.nba.com/headshots/nba/latest/1040x760/203076.png,1,1
+guillerminacuriel@example.org,Jaqueline,Santiago,Villarreal,$2b$12$/6GCEnvDVJgPDqtUkND7puMK91jldfyrSgZjVe.N6EKcOE8NWimQO,1947-05-30,+52 5552235350,https://cdn.nba.com/headshots/nba/latest/1040x760/1629028.png,1,1
+kpaez@example.net,Cristian,Arce,Robles,$2b$12$N/wIt0p8XtU1zNeYGxy.0.lFo9FsuGqif/r.Lp1/YP/yepfpNj.oy,1962-03-25,+52 5571586053,https://cdn.nba.com/headshots/nba/latest/1040x760/1627759.png,1,1
+aparicionoelia@example.org,Cristal,Acuña,Velásquez,$2b$12$ksIusOxyHxGedmjq0ETEoeHIEK80Lg53liVZATie9KJ0By6mtBZ06,1993-07-23,+52 5585345555,https://cdn.nba.com/headshots/nba/latest/1040x760/201566.png,1,1
+echapa@example.org,Andrés,Almonte,Olvera,$2b$12$955d2cwRbZGXDcuazm.cAuP/o3FU7NFpNMnuufdYPCEMvwt94H58K,2003-06-21,+52 5567503414,https://cdn.nba.com/headshots/nba/latest/1040x760/1629027.png,1,1
+ypulido@example.org,Indira,Godoy,Verduzco,$2b$12$xYahPeJkUL60xy6TflH50e0xtkFQtHEm0QHibc8MAhDFTQ1dMd/cm,1960-09-09,+52 5528566572,https://cdn.nba.com/headshots/nba/latest/1040x760/1630624.png,1,1
+modesto43@example.com,Blanca,Villalobos,Gallegos,$2b$12$Bj4KikRst43JnO1AFkbNq.DbKaKvnK66Kb2EdnoUzpk.0FekDhPRi,2004-04-13,+52 5524716857,https://cdn.nba.com/headshots/nba/latest/1040x760/1627759.png,1,1
+victoria75@example.net,Pedro,Guillen,Niño,$2b$12$tsx31CdrKO5GGN1BD3MuQOmOORmN5TMwcFRA8VSScqj/nwnHStbLa,1999-12-07,+52 5566661351,https://cdn.nba.com/headshots/nba/latest/1040x760/202699.png,1,1
+umorales@example.net,María,Rodríquez,Cepeda,$2b$12$RV7w1ylmFcRQvyEmFj49ae3c3e67b.tePiv4XHVh6XWJut.0aI6OK,1997-12-03,+52 5589978790,https://cdn.nba.com/headshots/nba/latest/1040x760/1630543.png,1,1
+brincon@example.org,Gonzalo,Pelayo,Guerrero,$2b$12$igAzmjmvJo357kIhR7X9iua4pfYAfYWfn4OsthUw8CQvDRXAqtOTC,1990-04-16,+52 5525374874,https://cdn.nba.com/headshots/nba/latest/1040x760/201566.png,1,1
+ybarrientos@example.org,Reynaldo,Urbina,Corral,$2b$12$jIaV.WZkLccs5j2ikXSHq.GQp6RoJmIv8Wc6ILH3BuE3RqBCY8Hhu,1964-03-12,+52 5555657579,https://cdn.nba.com/headshots/nba/latest/1040x760/1629029.png,1,1
+>>>>>>> ec5e1c61c60fd0451024504b4e685bb888ae1c5a

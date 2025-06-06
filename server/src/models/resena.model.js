@@ -349,7 +349,6 @@ export default class Resena {
 
   static async edit({ res_id_res, resenaData, museoId, correo }) {
     const connection = await pool.getConnection();
-    console.log("Editando reseña con ID:", res_id_res);
     await connection.beginTransaction();
     try {
       const data = { ...resenaData };

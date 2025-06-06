@@ -75,6 +75,7 @@ const MuseoSlider = memo(function MuseoSlider({
                   sliderType={sliderType}
                   refetchFavoritos={refetchFavoritos}
                   onDeleteFromQV={() => handleDeleteFromQV(correo, museo.id)}
+                  loading={loading}
                 />
               </SwiperSlide>
             )

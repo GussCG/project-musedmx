@@ -34,15 +34,27 @@ const MuseoCard = memo(function MuseoCard({
   const [isFavorite, setIsFavorite] = useState(false);
   const [localeCount, setLocaleCount] = useState(0);
   const { verificarFavorito, getFavoritosCountByMuseoId } = useFavorito();
+  const [loadingFavoritos, setLoadingFavoritos] = useState(true);
+
   useEffect(() => {
     const fetchFavorito = async () => {
-      if (user) {
-        const fav = await verificarFavorito(user.usr_correo, museo.id);
-        setIsFavorite(fav);
+      try {
+        setLoadingFavoritos(true);
+
+        if (user) {
+          const fav = await verificarFavorito(user.usr_correo, museo.id);
+          setIsFavorite(fav);
+        }
+
+        const count = await getFavoritosCountByMuseoId(museo.id);
+        setLocaleCount(count);
+      } catch (error) {
+        console.error("Error al obtener favoritos:", error);
+      } finally {
+        setLoadingFavoritos(false);
       }
-      const count = await getFavoritosCountByMuseoId(museo.id);
-      setLocaleCount(count);
     };
+
     fetchFavorito();
   }, [user, museo.id, getFavoritosCountByMuseoId]);
 
@@ -58,20 +70,26 @@ const MuseoCard = memo(function MuseoCard({
     museoId: museo.id,
   });
 
+  const [isFullyLoaded, setIsFullyLoaded] = useState(false);
+  useEffect(() => {
+    if (!loading && !loadingHorarios && !loadingFavoritos) {
+      setIsFullyLoaded(true);
+    }
+  }, [loading, loadingHorarios, loadingFavoritos]);
+
   return (
     <>
       {museo.tematica && (
         <motion.div
           className="museo-card"
-          layoutId={`${layoutPrefix}museo-card-${museo.id}`}
           key={`${layoutPrefix}card-${museo.id}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut", type: "tween" }}
           style={{
-            backgroundColor: loading
-              ? "white"
+            backgroundColor: !isFullyLoaded
+              ? "#d9d9d9"
               : TEMATICAS[museo.tematica].museoCardColors.background,
           }}
         >
@@ -93,20 +111,15 @@ const MuseoCard = memo(function MuseoCard({
             )}
             <Link
               to={`/Museos/${museo.id}`}
-              onClick={(e) => {
-                e.preventDefault();
-                setTimeout(() => navigate(`/Museos/${museo.id}`), 0);
-              }}
+              onClick={() => navigate(`/Museos/${museo.id}`)}
             >
-              {loading ? (
-                // Mientras los datos no llegaron, un Skeleton general (puede ser un placeholder más simple)
+              {!isFullyLoaded ? (
                 <Skeleton
                   width={"100%"}
                   height={"100%"}
                   style={{ borderRadius: "20px" }}
                 />
               ) : (
-                // Ya tenemos datos, mostramos la imagen con skeleton interno para la carga de la imagen
                 <ImageSkeleton
                   src={museo.img}
                   alt={museo.nombre}
@@ -116,7 +129,7 @@ const MuseoCard = memo(function MuseoCard({
 
               <div className="museo-card-img-rating">
                 <p id="museo-card-rating">
-                  {loading ? (
+                  {!isFullyLoaded ? (
                     <Skeleton count={1} />
                   ) : calificacionPromedio !== 0 ? (
                     calificacionPromedio.toFixed(1)
@@ -126,7 +139,7 @@ const MuseoCard = memo(function MuseoCard({
                 </p>
                 <FaStar
                   style={{
-                    fill: loading
+                    fill: !isFullyLoaded
                       ? "white"
                       : TEMATICAS[museo.tematica].museoCardColors.header,
                   }}
@@ -135,13 +148,13 @@ const MuseoCard = memo(function MuseoCard({
               <div
                 className="museo-card-img-tematica"
                 style={{
-                  backgroundColor: loading
+                  backgroundColor: !isFullyLoaded
                     ? "#d9d9d9"
                     : TEMATICAS[museo.tematica].museoCardColors.header,
                 }}
               >
                 {museo.tematica &&
-                  (loading ? (
+                  (!isFullyLoaded ? (
                     <Skeleton width={"70px"} />
                   ) : (
                     <h2>{TEMATICAS[museo.tematica].nombre}</h2>
@@ -151,12 +164,14 @@ const MuseoCard = memo(function MuseoCard({
               <div
                 className="museo-card-likes"
                 style={{
-                  backgroundColor: loading
+                  backgroundColor: !isFullyLoaded
                     ? "#d9d9d9"
                     : TEMATICAS[museo.tematica].museoCardColors.header,
                 }}
               >
-                <h2>{loading ? <Skeleton width={"30px"} /> : localeCount}</h2>
+                <h2>
+                  {!isFullyLoaded ? <Skeleton width={"20px"} /> : localeCount}
+                </h2>
                 <FaHeart />
               </div>
             </Link>
@@ -165,10 +180,7 @@ const MuseoCard = memo(function MuseoCard({
             <div className="museo-card-info-header">
               <Link
                 to={`/Museos/${museo.id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setTimeout(() => navigate(`/Museos/${museo.id}`), 0);
-                }}
+                onClick={() => navigate(`/Museos/${museo.id}`)}
               >
                 <h2
                   id="museo-card-nombre"
@@ -176,7 +188,7 @@ const MuseoCard = memo(function MuseoCard({
                     color: TEMATICAS[museo.tematica].museoCardColors.header,
                   }}
                 >
-                  {loading ? <Skeleton width={250} /> : museo.nombre}
+                  {!isFullyLoaded ? <Skeleton width={250} /> : museo.nombre}
                 </h2>
               </Link>
               <p
@@ -185,7 +197,7 @@ const MuseoCard = memo(function MuseoCard({
                   color: TEMATICAS[museo.tematica].museoCardColors.text,
                 }}
               >
-                {loading ? <Skeleton width={150} /> : museo.alcaldia}
+                {!isFullyLoaded ? <Skeleton width={150} /> : museo.alcaldia}
               </p>
             </div>
             <div className="museo-card-info-body">
@@ -197,11 +209,10 @@ const MuseoCard = memo(function MuseoCard({
                       color: TEMATICAS[museo.tematica].museoCardColors.header,
                     }}
                   >
-                    {loading ? <Skeleton width={100} /> : "Horarios"}
+                    {!isFullyLoaded ? <Skeleton width={100} /> : "Horarios"}
                   </p>
 
-                  {loading ? (
-                    // Mostrar 2-3 Skeletons como placeholders de horarios
+                  {!isFullyLoaded ? (
                     <>
                       <Skeleton width={150} height={16} />
                       <Skeleton width={120} height={16} />
@@ -224,22 +235,25 @@ const MuseoCard = memo(function MuseoCard({
                       No se encontraron horarios disponibles
                     </p>
                   ) : (
-                    horariosAgrupados.map((horario, index) => (
-                      <p
-                        key={`${horario}-${index}`}
-                        style={{
-                          color: TEMATICAS[museo.tematica].museoCardColors.text,
-                        }}
-                      >
-                        {horario}
-                      </p>
-                    ))
+                    horariosAgrupados.map((horario, index) => {
+                      return (
+                        <p
+                          key={`${horario}-${index}`}
+                          style={{
+                            color:
+                              TEMATICAS[museo.tematica].museoCardColors.text,
+                          }}
+                        >
+                          {horario}
+                        </p>
+                      );
+                    })
                   )}
                 </>
               </div>
 
               <div className="museo-card-info-body-tematica">
-                {loading ? (
+                {!isFullyLoaded ? (
                   <Skeleton
                     circle
                     height="100px"

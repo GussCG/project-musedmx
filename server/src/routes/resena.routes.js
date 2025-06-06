@@ -14,6 +14,7 @@ import {
   registrarResena,
   editarResena,
   eliminarFotoResena,
+  rechazarResena,
 } from "../controllers/resena.controller.js";
 
 const router = Router();
@@ -52,5 +53,6 @@ router.get("/mod/all", getResenasModAll);
 // Para obtener reseñas de mods por museo
 router.get("/mod/museo/:museoId", getResenasModByMuseo);
 router.post("/mod/aprobar/:resenaId", aprobarResena);
+router.delete("/mod/rechazar/:resenaId", rechazarResena);
 
 export default router;

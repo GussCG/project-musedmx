@@ -152,6 +152,58 @@ function SearchBar({
     setShowSuggestions((prev) => !prev);
   };
 
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const activeItemRef = useRef(null);
+
+  useEffect(() => {
+    if (activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [activeIndex]);
+
+  const handleKeyDown = (e) => {
+    if (!showSuggestions || filteredSuggestions.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((prev) =>
+        prev < filteredSuggestions.length - 1 ? prev + 1 : 0
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((prev) =>
+        prev > 0 ? prev - 1 : filteredSuggestions.length - 1
+      );
+    } else if (e.key === "Enter") {
+      if (activeIndex >= 0 && activeIndex < filteredSuggestions.length) {
+        e.preventDefault();
+        handleSuggestionClick(filteredSuggestions[activeIndex]);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (input.length > 0 && Array.isArray(suggestionsRef.current)) {
+      const newFiltered = suggestionsRef.current.filter((item) =>
+        item.toLowerCase().includes(input.toLowerCase())
+      );
+
+      setFilteredSuggestions((prev) => {
+        if (JSON.stringify(prev) !== JSON.stringify(newFiltered)) {
+          setActiveIndex(-1); // 👈 reset
+          return newFiltered;
+        }
+        return prev;
+      });
+    } else {
+      setFilteredSuggestions([]);
+      setActiveIndex(-1); // 👈 reset
+    }
+  }, [input]);
+
   return (
     <form onSubmit={handleSubmit}>
       {searchIcon && (
@@ -168,6 +220,7 @@ function SearchBar({
           onFocus={() => setShowSuggestions(true)}
           onBlur={handleInputBlur}
           autoComplete="off"
+          onKeyDown={handleKeyDown}
         />
         {showSuggestions && (
           <ul className="suggestions-list">
@@ -177,7 +230,13 @@ function SearchBar({
               ? filteredSuggestions.map((suggestion, index) => (
                   <li
                     key={index}
+                    ref={index === activeIndex ? activeItemRef : null}
                     onClick={() => handleSuggestionClick(suggestion)}
+                    style={{
+                      backgroundColor:
+                        activeIndex === index ? "#f0f0f0" : "transparent",
+                      fontWeight: activeIndex === index ? "bold" : "normal",
+                    }}
                   >
                     {highlightMatchedText(suggestion)}
                   </li>
