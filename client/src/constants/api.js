@@ -1,1 +1,1 @@
-export const BACKEND_URL = "musedmx-back-api.azurewebsites.net";
+export const BACKEND_URL = "https://musedmx-back-api.azurewebsites.net";
