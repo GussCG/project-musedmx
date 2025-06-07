@@ -16,7 +16,7 @@ app.use(express.json()); // Middleware para parsear JSON
 
 // Configuración de CORS
 const corsOptions = {
-  origin: process.env.FRONTEND_URL + process.env.FRONTEND_PORT, // URL de frontend
+  origin: "https://musedmx.com.mx", // URL de frontend
   methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
   allowedHeaders: ["Content-Type"], // Cabeceras permitidas
   credentials: true, // Permitir credenciales (cookies, autorización, etc.)
