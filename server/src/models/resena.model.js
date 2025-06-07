@@ -30,8 +30,19 @@ export default class Resena {
           LEFT JOIN respuestas_encuesta resp ON resp.visitas_vi_usr_correo = v.vi_usr_correo
                                   AND resp.visitas_vi_mus_id = v.vi_mus_id
           WHERE r.res_id_res = ?
-          GROUP BY r.res_id_res
-
+          GROUP BY
+            r.res_id_res,
+            r.res_comentario,
+            r.res_calif_estrellas,
+            r.visitas_vi_usr_correo,
+            r.visitas_vi_mus_id,
+            r.visitas_vi_fechahora,
+            r.res_aprobado,
+            u.usr_nombre,
+            u.usr_ap_paterno,
+            u.usr_ap_materno,
+            u.usr_foto,
+            m.mus_id
   `;
 
     const queryParams = [id];
@@ -139,7 +150,19 @@ export default class Resena {
       LEFT JOIN respuestas_encuesta resp ON resp.visitas_vi_usr_correo = v.vi_usr_correo
                               AND resp.visitas_vi_mus_id = v.vi_mus_id
       WHERE ${whereClause}
-      GROUP BY r.res_id_res
+      GROUP BY
+        r.res_id_res,
+        r.res_comentario,
+        r.res_calif_estrellas,
+        r.visitas_vi_usr_correo,
+        r.visitas_vi_mus_id,
+        r.visitas_vi_fechahora,
+        r.res_aprobado,
+        u.usr_nombre,
+        u.usr_ap_paterno,
+        u.usr_ap_materno,
+        u.usr_foto,
+        m.mus_id
       ORDER BY ${orden}
       LIMIT ? OFFSET ?
     `;
@@ -191,7 +214,19 @@ export default class Resena {
             LEFT JOIN respuestas_encuesta resp ON resp.visitas_vi_usr_correo = v.vi_usr_correo
                                     AND resp.visitas_vi_mus_id = v.vi_mus_id
             WHERE v.vi_usr_correo = ?
-            GROUP BY r.res_id_res
+            GROUP BY
+              r.res_id_res,
+              r.res_comentario,
+              r.res_calif_estrellas,
+              r.visitas_vi_usr_correo,
+              r.visitas_vi_mus_id,
+              r.visitas_vi_fechahora,
+              r.res_aprobado,
+              u.usr_nombre,
+              u.usr_ap_paterno,
+              u.usr_ap_materno,
+              u.usr_foto,
+              m.mus_id
           `;
       const [rows] = await connection.query(query, [correo]);
       return rows;

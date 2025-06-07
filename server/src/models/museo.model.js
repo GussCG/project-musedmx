@@ -504,7 +504,7 @@ export default class Museo {
 
   static async findPopulares({ top_n }) {
     try {
-      const endpoint = `${API_URL}/populares`;
+      const endpoint = `${API_URL}/api/v1/recomendaciones/populares`;
       const response = await axios.get(endpoint, {
         params: {
           top_n: top_n,
@@ -535,7 +535,7 @@ export default class Museo {
 
   static async findSugeridosByCorreo({ correo, top_n }) {
     try {
-      const endpoint = `${API_URL}/personalizada/${correo}`;
+      const endpoint = `${API_URL}/api/v1/recomendaciones/personalizada/${correo}`;
       const response = await axios.get(endpoint, {
         params: {
           top_n: top_n,
@@ -561,7 +561,7 @@ export default class Museo {
 
   static async findSimilaresById({ id, top_n }) {
     try {
-      const endpoint = `${API_URL}/similares/${id}`;
+      const endpoint = `${API_URL}/api/v1/recomendaciones/similares/${id}`;
       const response = await axios.get(endpoint, {
         params: {
           top_n: top_n,
@@ -600,7 +600,7 @@ export default class Museo {
 
   static async findCercaById({ id, top_n }) {
     try {
-      const endpoint = `${API_URL}/cercanas/${id}`;
+      const endpoint = `${API_URL}/api/v1/recomendaciones/cercanas/${id}`;
       const response = await axios.get(endpoint, {
         params: {
           top_n: top_n,
@@ -640,7 +640,7 @@ export default class Museo {
 
   static async findAsociacionById({ id, top_n }) {
     try {
-      const endpoint = `${API_URL}/asociadas/${id}`;
+      const endpoint = `${API_URL}/api/v1/recomendaciones/asociadas/${id}`;
       const response = await axios.get(endpoint, {
         params: {
           top_n: top_n,

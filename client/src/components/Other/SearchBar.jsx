@@ -190,17 +190,18 @@ function SearchBar({
       const newFiltered = suggestionsRef.current.filter((item) =>
         item.toLowerCase().includes(input.toLowerCase())
       );
+      console.log("Filtradas:", newFiltered); // <- añade esto
 
       setFilteredSuggestions((prev) => {
         if (JSON.stringify(prev) !== JSON.stringify(newFiltered)) {
-          setActiveIndex(-1); // 👈 reset
+          setActiveIndex(-1);
           return newFiltered;
         }
         return prev;
       });
     } else {
       setFilteredSuggestions([]);
-      setActiveIndex(-1); // 👈 reset
+      setActiveIndex(-1);
     }
   }, [input]);
 

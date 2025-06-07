@@ -180,61 +180,64 @@ function MuseosList({ titulo, tipo }) {
           </div>
 
           <div className="museos-header-section-right">
-            {tipo !== "2" && (
-              <button
-                type="button"
-                className="museos-header-section-right-button"
-                onClick={() => setIsMapView(!isMapView)}
-                title={isMapView ? "Ver lista" : "Ver mapa"}
-                id="ver-lista"
-              >
-                {isMapView ? (
-                  <>
-                    <p>Ver lista</p>
-                    <TbCardsFilled />
-                  </>
-                ) : (
-                  <>
-                    <p>Ver mapa</p>
-                    <FaMap />
-                  </>
-                )}
-              </button>
-            )}
-            {isMapView || isPopulares ? null : (
-              <>
+            <div className="museos-header-section-right-sort">
+              {tipo !== "2" && (
                 <button
+                  type="button"
                   className="museos-header-section-right-button"
-                  title="Ordenar"
-                  onClick={(event) => toggleSortedMenu(event)}
-                  ref={menuSortButtonRef}
+                  onClick={() => setIsMapView(!isMapView)}
+                  title={isMapView ? "Ver lista" : "Ver mapa"}
+                  id="ver-lista"
                 >
-                  <p>Ordenar por</p>
-                  <LuArrowUpDown />
+                  {isMapView ? (
+                    <>
+                      <p>Ver lista</p>
+                      <TbCardsFilled />
+                    </>
+                  ) : (
+                    <>
+                      <p>Ver mapa</p>
+                      <FaMap />
+                    </>
+                  )}
                 </button>
-                {isSortedMenuOpen && (
-                  <MenuSort
-                    ref={menuSortRef}
-                    onSortChange={setSortBy}
-                    sortBy={sortBy}
-                  />
-                )}
-              </>
-            )}
+              )}
+              {isMapView || isPopulares ? null : (
+                <>
+                  <button
+                    className="museos-header-section-right-button"
+                    title="Ordenar"
+                    onClick={(event) => toggleSortedMenu(event)}
+                    ref={menuSortButtonRef}
+                  >
+                    <p>Ordenar por</p>
+                    <LuArrowUpDown />
+                  </button>
 
-            {!isPopulares && (
-              <button
-                type="button"
-                className="museos-header-section-right-button"
-                onClick={(event) => {
-                  abrirMenu();
-                }}
-                title="Filtrar"
-              >
-                <p>Filtrar</p>
-                <FaFilter />
-              </button>
-            )}
+                  {isSortedMenuOpen && (
+                    <MenuSort
+                      ref={menuSortRef}
+                      onSortChange={setSortBy}
+                      sortBy={sortBy}
+                    />
+                  )}
+                </>
+              )}
+
+              {!isPopulares && (
+                <button
+                  type="button"
+                  className="museos-header-section-right-button"
+                  onClick={(event) => {
+                    abrirMenu();
+                  }}
+                  title="Filtrar"
+                >
+                  <p>Filtrar</p>
+                  <FaFilter />
+                </button>
+              )}
+            </div>
           </div>
         </section>
 

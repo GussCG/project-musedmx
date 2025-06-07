@@ -38,7 +38,7 @@ function SignInForm() {
   const password2Ref = useRef(null);
   const imageInputRef = useRef(null);
 
-  const [fileLabel, setFileLabel] = useState("Seleccionar Archivo");
+  const [fileLabel, setFileLabel] = useState("No hay foto");
   const fileNameRef = useRef(null);
 
   // Fecha de nacimiento

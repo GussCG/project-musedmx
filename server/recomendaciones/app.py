@@ -14,7 +14,6 @@ origins = [
     "http://localhost:5173",         # Desarrollo local (React Vite)
     "https://musedmx.com.mx",        # Tu dominio personalizado en producción
     "https://www.musedmx.com.mx",    # Variante con www
-    "witty-ocean-09dbb1910.6.azurestaticapps.net"
 ]
 
 app.add_middleware(
@@ -34,4 +33,4 @@ def health_check():
 
 # Solo para ejecución local
 if __name__ == "__main__":
-    uvicorn.run("recomendaciones.app:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("recomendaciones.app:app", host="127.0.0.1", port=8000, reload=True)

@@ -98,8 +98,8 @@
 
         .index-slider-search-bar {
           width: 90%;
-          max-width: 600px;
           height: auto;
+          max-width: 600px;
           min-height: 50px;
           background-color: rgba(255, 255, 255, 1);
           display: flex;
@@ -203,11 +203,13 @@
       }
     }
 
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 700px) {
       flex-direction: row;
       top: auto;
-      right: auto;
+      right: 40%;
+      transform: translateX(40%);
       bottom: 20px;
+      scale: 0.5;
     }
   }
 }

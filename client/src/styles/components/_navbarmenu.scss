@@ -162,18 +162,18 @@
 
     .menu-header-button {
       position: fixed;
-      top: 20px;
-      right: 20px;
+      top: 10px;
+      right: 10px;
       background-color: black;
       border: none;
-      width: 60px;
-      height: 60px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       display: flex;
 
       svg {
-        width: 40px;
-        height: 40px;
+        width: 50%;
+        height: auto;
         color: white;
 
         transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;

@@ -118,36 +118,62 @@
         opacity: 0.7;
       }
 
-      .museos-header-section-right-button {
-        width: fit-content;
+      .museos-header-section-right-sort {
+        position: relative;
+        width: 100%;
         height: 50px;
         border: none;
-        background-color: transparent;
-        cursor: pointer;
-        font-family: $font-primary;
-        font-weight: $font-w-bold;
-        font-size: 18px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 10px;
-        color: var(--color-a-2);
+        justify-content: space-between;
+        gap: 32px;
 
-        transition: opacity 0.3s ease-in-out;
+        .museos-header-section-right-button {
+          position: relative;
+          width: fit-content;
+          height: 50px;
+          border: none;
+          background-color: transparent;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
 
-        svg {
-          width: 30px;
-          height: auto;
-        }
+          transition: opacity 0.3s ease-in-out;
 
-        &:hover {
-          opacity: 0.7;
-        }
-
-        @media (max-width: 1473px) {
-          p {
-            display: none;
+          &:hover {
+            opacity: 0.7;
           }
+
+          p {
+            font-size: 1rem;
+            font-family: $font-primary;
+            color: var(--font-color-primary);
+            font-weight: $font-w-bold;
+            color: var(--color-a-2);
+          }
+
+          svg {
+            width: 30px;
+            height: auto;
+            color: var(--color-a-2);
+          }
+        }
+      }
+
+      @media (max-width: 700px) {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 1473px) {
+        p {
+          display: none;
         }
       }
     }
@@ -265,38 +291,6 @@
     }
   }
 
-  .no-results {
-    width: 90%;
-    height: auto;
-
-    background-color: var(--no-results-bg);
-
-    border-radius: 25px;
-
-    margin: 0 auto;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-
-    padding: 50px 100px;
-
-    p {
-      width: 100%;
-      text-align: center;
-      font-size: 1.6rem;
-      color: var(--font-color-primary);
-      font-weight: $font-w-bold;
-
-      &:nth-child(2) {
-        font-size: 1.2rem;
-        font-weight: $font-w-regular;
-      }
-    }
-  }
-
   .museos-container-map-section {
     flex: 1;
     width: 100%;
@@ -332,13 +326,12 @@
 @media screen and (max-width: 600px) {
   .museo-card {
     width: auto;
-    // max-width: 200px;
     height: auto;
-    max-height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin: 0 auto;
+    scale: 0.75;
 
     .museo-card-img-container {
       .museo-card-img-tematica {
@@ -359,5 +352,24 @@
         display: none;
       }
     }
+  }
+}
+
+@media screen and (max-width: 560px) {
+  #btn-map-user-location {
+    bottom: 350px !important;
+  }
+  #btn-map-get-location {
+    bottom: 290px !important;
+    left: 10px !important;
+  }
+
+  #dd-map-type {
+    left: 55px !important;
+    bottom: 10px !important;
+  }
+
+  #dd-travel-mode {
+    left: 140px !important;
   }
 }

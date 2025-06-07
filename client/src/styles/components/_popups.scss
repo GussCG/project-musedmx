@@ -193,7 +193,7 @@
   }
 
   h1 {
-    font-size: 1.8rem;
+    font-size: clamp(1.2rem, 2vw, 2rem);
     margin-top: 10px;
     font-family: $font-tertiary;
   }
@@ -212,7 +212,7 @@
       width: 100%;
       height: auto;
       font-family: $font-tertiary;
-      font-size: 1.3rem;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
       font-weight: $font-w-bold;
       text-align: left;
     }
@@ -221,7 +221,7 @@
       width: 100%;
       height: auto;
       font-family: $font-primary;
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 2vw, 1rem);
       font-weight: $font-w-light;
       text-align: justify;
 
@@ -244,7 +244,7 @@
         height: auto;
         text-align: justify;
         font-family: $font-primary;
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 2vw, 1rem);
         font-weight: $font-w-light;
       }
     }
@@ -268,7 +268,7 @@
 
         p {
           font-family: $font-primary;
-          font-size: 0.8rem;
+          font-size: clamp(0.8rem, 2vw, 1.2rem);
           font-weight: $font-w-semibold;
           text-align: center;
         }
@@ -283,6 +283,10 @@
     justify-content: center;
     align-items: center;
     gap: 30px;
+
+    label {
+      font-size: clamp(0.8rem, 2vw, 1rem);
+    }
 
     .switch-button-dm {
       display: inline-block;
@@ -707,14 +711,14 @@
     text-align: center;
 
     h1 {
-      font-size: 2rem;
+      font-size: clamp(1.5rem, 2vw, 2rem);
       margin: 0;
       color: var(--font-color-primary);
       font-family: $font-tertiary;
     }
 
     p {
-      font-size: 1rem;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
       color: var(--font-color-primary);
       font-family: $font-primary;
       font-weight: $font-w-regular;
@@ -724,6 +728,12 @@
 
   .registros-field {
     width: 80%;
+  }
+
+  input[type="number"] {
+    width: clamp(40px, 2vw, 60px) !important;
+    height: clamp(50px, 2vw, 60px) !important;
+    font-size: clamp(1rem, 2vw, 1.2rem) !important;
   }
 
   input::-webkit-outer-spin-button,

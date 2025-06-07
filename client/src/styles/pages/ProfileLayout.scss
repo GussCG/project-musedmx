@@ -46,13 +46,13 @@
     align-items: flex-start;
 
     h1 {
-      font-size: 24px;
+      font-size: clamp(1rem, 2vw, 1.3rem);
       font-weight: $font-w-bold;
       color: var(--font-color-primary);
     }
 
     p {
-      font-size: 16px;
+      font-size: clamp(0.8rem, 2vw, 1rem);
     }
 
     .header-tematicas-container {
@@ -64,7 +64,7 @@
       align-items: flex-start;
 
       p {
-        font-size: 1rem;
+        font-size: clamp(0.8rem, 2vw, 1rem);
         font-weight: $font-w-semibold;
         color: var(--font-color-primary);
         padding: 5px 0;
@@ -91,11 +91,11 @@
           justify-content: center;
           align-items: center;
           padding: 0 10px;
-          font-size: 0.9rem;
 
           span {
             font-weight: $font-w-semibold;
             color: black;
+            font-size: clamp(0.6rem, 2vw, 0.9rem);
           }
         }
       }
@@ -222,7 +222,7 @@
         flex: 1;
         width: fit-content;
         max-width: 400px;
-        font-size: 1.7rem;
+        font-size: clamp(1.2rem, 2vw, 1.7rem);
         font-weight: $font-w-bold;
         color: var(--font-color-primary);
         gap: 10px;
@@ -250,7 +250,7 @@
 }
 
 /* Responsive */
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1980px) {
   #header-user-info {
     align-items: center;
   }
@@ -258,10 +258,6 @@
   #header-user-buttons {
     flex-direction: column;
     gap: 20px;
-  }
-
-  .section-header h2 {
-    font-size: 24px;
   }
 
   .nav-bar {
@@ -309,7 +305,7 @@
 
         h2 {
           height: 100%;
-          font-size: 1.8rem;
+          font-size: clamp(1.2rem, 2vw, 1.7rem);
           justify-content: center;
           align-items: center;
           padding: 0;

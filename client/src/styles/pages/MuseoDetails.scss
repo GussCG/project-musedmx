@@ -103,7 +103,7 @@
 
         h1 {
           font-family: $font-tertiary;
-          font-size: $museo-detail-h1-size;
+          font-size: clamp(1.3rem, 2vw, $museo-detail-h1-size);
           font-weight: $font-w-bold;
           color: var(--font-color-primary);
           margin: 0;
@@ -117,7 +117,7 @@
         justify-content: flex-start;
         align-items: center;
         gap: 10px;
-        font-size: 16px;
+        font-size: clamp(0.8rem, 1.5vw, 16px);
         font-weight: $font-w-medium;
 
         svg {
@@ -134,7 +134,7 @@
         justify-content: flex-start;
         align-items: center;
         gap: 15px;
-        font-size: 1rem;
+        font-size: clamp(0.6rem, 1.5vw, 1rem);
         opacity: 0.5;
         margin: 20px 0;
       }
@@ -1273,21 +1273,6 @@
     }
   }
 
-  // #museo-section-2 {
-  //   min-width: 90vw;
-  //   .museo-section-2-calificaciones,
-  //   .museo-section-2-servicios {
-  //     display: none;
-  //   }
-
-  //   .museo-section-2-descripcion {
-  //     width: 100%;
-  //     p {
-  //       font-size: 16px;
-  //     }
-  //   }
-  // }
-
   #museo-section-horario,
   #museo-section-2,
   #museo-section-3,
@@ -1295,35 +1280,4 @@
   #museo-section-5 {
     display: none;
   }
-
-  // #museo-section-5 {
-  //   .museo-section-5-resenas {
-  //     .museo-section-5-resena {
-  //       .resena-comentario-container {
-  //         .resena-comentario-header {
-  //           text-align: center;
-  //           #nombre-user {
-  //             font-size: 20px;
-  //           }
-
-  //           #fecha-resena {
-  //             font-size: 16px;
-  //           }
-
-  //           .resena-calificacion {
-  //             img {
-  //               width: 20px;
-  //             }
-  //           }
-  //         }
-
-  //         .resena-comentario-body {
-  //           p {
-  //             font-size: 16px;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 }

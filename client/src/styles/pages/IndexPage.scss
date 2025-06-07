@@ -23,13 +23,12 @@
       text-align: center;
       font-family: $font-primary;
       font-weight: $font-w-extrabold;
-      font-size: $index-main-font-s-title;
+      font-size: clamp(1.5rem, 5vw, $index-main-font-s-title);
       color: white;
     }
 
     a {
-      width: 200px;
-      max-width: 90%;
+      width: clamp(200px, 50vw, 400px);
       height: auto;
       background-color: $index-main-button-bg;
       color: $index-main-button-font-color;

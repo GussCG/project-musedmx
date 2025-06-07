@@ -24,6 +24,7 @@
 .filtro-menu-container {
   width: fit-content;
   min-width: 600px;
+  max-width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -56,7 +57,7 @@
     position: relative;
 
     h1 {
-      font-size: 1.8rem;
+      font-size: clamp(1.4rem, 2vw, 2rem);
       font-weight: $font-w-bold;
       color: var(--font-color-primary);
       font-family: $font-tertiary;
@@ -103,7 +104,7 @@
       h2 {
         font-size: 1.4rem;
         font-weight: $font-w-bold;
-        padding-left: 100px;
+        padding-left: clamp(80px, 2vw, 100px);
         color: var(--font-color-primary);
       }
 
@@ -130,6 +131,7 @@
 
     .filtro-menu-filter-body {
       width: 100%;
+      min-width: 480px;
       max-height: 0;
       overflow: hidden;
       display: flex;

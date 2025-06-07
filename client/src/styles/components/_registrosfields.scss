@@ -15,7 +15,7 @@
     align-items: center;
 
     h1 {
-      font-size: 36px;
+      font-size: clamp(1.08rem, 5vw, 2rem);
       margin: 60px 0 30px 0;
       text-align: center;
       color: var(--font-color-primary);
@@ -155,7 +155,7 @@
           }
 
           h1 {
-            font-size: 36px;
+            font-size: clamp(1.08rem, 5vw, 2rem);
             color: var(--font-color-primary);
             font-family: $font-tertiary;
           }
@@ -189,7 +189,7 @@
   align-items: center;
 
   h1 {
-    font-size: 36px;
+    font-size: clamp(1rem, 5vw, 2rem);
     margin: 50px 0;
     color: var(--font-color-primary);
     font-family: $font-tertiary;
@@ -208,7 +208,7 @@
     #encuesta-contestada {
       text-align: center;
       font-family: $font-primary;
-      font-size: 16px;
+      font-size: clamp(0.8rem, 2vw, 1rem);
       font-weight: $font-w-semibold;
       color: var(--font-color-primary);
       opacity: 0.5;
@@ -275,7 +275,7 @@
     }
 
     h1 {
-      font-size: 2rem;
+      font-size: clamp(1.08rem, 5vw, 2rem);
       font-family: $font-tertiary;
       padding: 40px 0 0 0;
     }
@@ -292,6 +292,10 @@
 .registros-field {
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   input {
     border: none;
@@ -301,7 +305,7 @@
     width: 100%;
     font-family: $font-primary;
     color: var(--font-color-primary);
-    font-size: 16px;
+    font-size: clamp(0.7rem, 2vw, 1rem);
     padding: 10px;
   }
 
@@ -310,9 +314,9 @@
     border: none;
     border-bottom: 1px solid gray;
     outline: none;
-    width: 100%;
+    width: 90%;
     font-family: $font-primary;
-    font-size: 16px;
+    font-size: clamp(0.7rem, 2vw, 1rem);
     padding: 10px;
     height: 100px;
     overflow-y: auto;
@@ -321,14 +325,14 @@
     resize: none;
   }
 
-  .registros-field-header {
+  h2 {
     width: 90%;
-    margin: 0 auto;
-
-    h2 {
-      padding-left: 45px;
-      color: var(--font-color-primary);
-    }
+    font-family: $font-primary;
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    font-weight: $font-w-bold;
+    color: var(--font-color-primary);
+    text-align: center;
+    margin-bottom: 10px;
   }
 
   .frm-label {
@@ -336,7 +340,7 @@
     left: 15px;
     top: 10px;
     font-family: $font-primary;
-    font-size: 16px;
+    font-size: clamp(0.7rem, 2vw, 1rem);
     font-weight: $font-w-semibold;
     transform-origin: 0 0;
     transition: transform 0.3s ease;
@@ -419,24 +423,24 @@
   h2 {
     width: 100%;
     font-family: $font-primary;
-    font-size: 24px;
+    font-size: clamp(1.08rem, 2vw, 1.5rem);
     font-weight: $font-w-bold;
     color: var(--font-color-primary);
-    text-align: left;
+    text-align: center;
     margin-bottom: 20px;
   }
 
   label {
     width: 100%;
     font-family: $font-primary;
-    font-size: 16px;
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
     font-weight: $font-w-bold;
     color: var(--font-color-primary);
     text-align: left;
+    margin-bottom: 10px;
   }
 
   .registros-calendar {
-    padding: 20px;
     .rdp-today {
       color: var(--calendar-today);
       font-weight: $font-w-semibold;
@@ -503,6 +507,10 @@
       font-weight: $font-w-regular;
       color: var(--font-color-primary);
       font-size: 18px;
+    }
+
+    @media screen and (max-width: 500px) {
+      scale: 0.7;
     }
   }
 }
@@ -672,7 +680,7 @@
 
   legend {
     font-family: $font-primary;
-    font-size: 18px;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     font-weight: $font-w-regular;
     color: var(--font-color-primary);
     opacity: 0.5;
@@ -682,7 +690,7 @@
 
   label {
     font-family: $font-primary;
-    font-size: 16px;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     font-weight: $font-w-semibold;
     color: var(--font-color-primary);
     opacity: 0.5;
@@ -782,7 +790,7 @@
   border: none;
   border-bottom: 1px solid black;
   font-family: $font-primary;
-  font-size: 16px;
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
   padding: 10px;
   outline: none;
   font-weight: $font-w-light;
@@ -892,7 +900,7 @@
     h2 {
       color: var(--font-color-primary);
       font-family: $font-tertiary;
-      font-size: 2rem;
+      font-size: clamp(1.08rem, 5vw, 2rem);
     }
 
     .foto-input {
@@ -907,7 +915,7 @@
         width: fit-content;
         max-width: 300px;
         height: 45px;
-        font-size: 18px;
+        font-size: clamp(0.9rem, 2vw, 1.2rem);
         font-weight: $font-w-light;
         color: var(--font-color-primary);
         background-color: rgba(0, 0, 0, 0.082);
@@ -917,13 +925,14 @@
         align-items: center;
         padding: 10px 20px;
         overflow: hidden;
+        text-align: center;
       }
     }
   }
 
   img {
     width: 8vw;
-    max-width: 150px;
+    max-width: clamp(150px, 20vw, 200px);
     height: auto;
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.2);
@@ -943,10 +952,10 @@
   h2 {
     width: 100%;
     font-family: $font-primary;
-    font-size: 24px;
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
     font-weight: $font-w-bold;
     color: var(--font-color-primary);
-    text-align: left;
+    text-align: center;
   }
 }
 
@@ -984,7 +993,7 @@
 
   h2 {
     font-family: $font-primary;
-    font-size: 24px;
+    font-size: clamp(0.9rem, 2vw, 1.5rem);
     font-weight: $font-w-bold;
     color: var(--font-color-primary);
     padding: 10px;
@@ -1015,7 +1024,7 @@
     label {
       margin-top: 10px;
       font-family: $font-primary;
-      font-size: 16px;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
       font-weight: $font-w-regular;
       text-align: center;
       color: var(--font-color-primary);
@@ -1046,7 +1055,7 @@
     .details {
       span {
         font-family: $font-primary;
-        font-size: 16px;
+        font-size: clamp(0.9rem, 2vw, 1.2rem);
         font-weight: $font-w-semibold;
         color: var(--font-color-primary);
         opacity: 0.5;
@@ -1174,7 +1183,7 @@
 
   h1 {
     font-family: $font-tertiary;
-    font-size: 2rem;
+    font-size: clamp(1.08rem, 5vw, 2.5rem);
     margin: 50px;
     color: var(--font-color-primary);
   }
@@ -1200,7 +1209,7 @@
 
     h2 {
       width: 100%;
-      font-size: 1.2rem;
+      font-size: clamp(1.08rem, 5vw, 2rem);
       font-weight: $font-w-semibold;
       color: var(--font-color-primary);
       text-align: center;
@@ -1225,7 +1234,7 @@
     align-items: flex-start;
 
     h2 {
-      font-size: 1.2rem;
+      font-size: clamp(1.08rem, 5vw, 2rem);
       font-weight: $font-w-semibold;
       color: var(--font-color-primary);
     }
@@ -1251,7 +1260,7 @@
 
   h1 {
     font-family: $font-tertiary;
-    font-size: 2rem;
+    font-size: clamp(1.08rem, 5vw, 2.5rem);
     color: var(--font-color-primary);
     margin: 50px 0 0 0;
   }
@@ -1274,7 +1283,7 @@
   align-items: center;
 
   h1 {
-    font-size: 2rem;
+    font-size: clamp(1.08rem, 5vw, 2.5rem);
     color: var(--font-color-primary);
     font-family: $font-tertiary;
   }
@@ -1306,7 +1315,7 @@
         justify-content: center;
         gap: 10px;
         font-family: $font-primary;
-        font-size: 1rem;
+        font-size: clamp(0.9rem, 2vw, 1.2rem);
         color: var(--font-color-primary);
       }
     }
@@ -1334,7 +1343,7 @@
           height: auto;
           text-align: justify;
           font-family: $font-primary;
-          font-size: 1rem;
+          font-size: clamp(0.9rem, 2vw, 1.2rem);
           color: var(--font-color-primary);
           background-color: var(--bg-row-fotos);
           border-radius: 20px;
@@ -1346,7 +1355,7 @@
 
           h2 {
             width: 100%;
-            font-size: 1.2rem;
+            font-size: clamp(1.08rem, 5vw, 2rem);
             font-weight: $font-w-semibold;
             color: var(--font-color-primary);
             padding: 10px 0;
@@ -1373,7 +1382,7 @@
         min-height: 270px;
         text-align: justify;
         font-family: $font-primary;
-        font-size: 1rem;
+        font-size: clamp(0.9rem, 2vw, 1.2rem);
         color: var(--font-color-primary);
         padding: 20px;
         background-color: var(--bg-row-fotos);

@@ -19,7 +19,7 @@
     align-items: center;
 
     h1 {
-      font-size: 36px;
+      font-size: clamp(1.08rem, 5vw, 2.5rem);
       margin-bottom: 62px;
       color: var(--font-color-primary);
 
@@ -27,8 +27,8 @@
     }
 
     form {
-      width: 80%;
-      max-width: 400px;
+      width: 90%;
+      max-width: clamp(300px, 100%, 400px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -38,7 +38,7 @@
 
     a {
       font-family: $font-primary;
-      font-size: 1rem;
+      font-size: clamp(0.7rem, 2vw, 1rem);
       font-weight: $font-w-semibold;
       color: var(--color-a);
       line-height: 23px;
@@ -54,7 +54,7 @@
       width: 100%;
       text-align: center;
       color: var(--font-color-primary);
-      font-size: 1rem;
+      font-size: clamp(0.7rem, 2vw, 1rem);
     }
 
     .error-message-container {
@@ -62,6 +62,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+      font-family: $font-primary;
+      font-size: clamp(0.8rem, 3vw, 1rem);
     }
 
     .login-field {
@@ -77,7 +80,7 @@
         width: 100%;
         font-family: $font-primary;
         color: var(--font-color-primary);
-        font-size: 16px;
+        font-size: clamp(0.8rem, 3vw, 1rem);
         padding: 10px;
       }
 
@@ -86,7 +89,7 @@
         left: 15px;
         top: 10px;
         font-family: $font-primary;
-        font-size: 16px;
+        font-size: clamp(0.8rem, 3vw, 1rem);
         font-weight: $font-w-semibold;
         color: var(--font-color-primary);
         transform-origin: 0 0;
@@ -135,10 +138,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  // background-color: white;
 
   h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.08rem, 5vw, 2.5rem);
     margin-bottom: 45px;
     text-align: center;
     color: var(--font-color-primary);
@@ -159,7 +161,7 @@
     p {
       width: 100%;
       text-align: center;
-      font-size: 1rem;
+      font-size: clamp(0.7rem, 2vw, 1rem);
       color: var(--font-color-primary);
     }
   }
@@ -181,7 +183,7 @@
     padding: 30px;
 
     h1 {
-      font-size: 2.5rem;
+      font-size: clamp(1.08rem, 5vw, 2.5rem);
       text-align: center;
       color: var(--font-color-primary);
     }
@@ -189,7 +191,7 @@
     p {
       width: 80%;
       text-align: center;
-      font-size: 1rem;
+      font-size: clamp(0.7rem, 2vw, 1rem);
       color: var(--font-color-primary);
       margin-bottom: 20px;
     }

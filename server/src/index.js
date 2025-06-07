@@ -14,9 +14,14 @@ const app = express();
 app.use(express.urlencoded({ extended: true })); // Middleware para parsear URL-encoded
 app.use(express.json()); // Middleware para parsear JSON
 
+const origins = [
+  // process.env.FRONTEND_ULR + process.env.FRONTEND_PORT, // URL de frontend
+  "http://localhost:5173", // URL de desarrollo
+];
+
 // Configuración de CORS
 const corsOptions = {
-  origin: "musedmx.com", // URL de frontend
+  origin: origins, // URL de frontend
   methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
   allowedHeaders: ["Content-Type"], // Cabeceras permitidas
   credentials: true, // Permitir credenciales (cookies, autorización, etc.)

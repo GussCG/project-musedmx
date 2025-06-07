@@ -69,6 +69,7 @@ footer {
 
         li {
           margin: 10px 0;
+          text-align: center;
 
           a {
             text-decoration: none;
@@ -184,7 +185,7 @@ footer {
 
 @media (max-width: 730px) {
   footer {
-    padding-top: 50px;
+    padding: 50px 0;
     height: auto;
     display: flex;
     flex-direction: column;
