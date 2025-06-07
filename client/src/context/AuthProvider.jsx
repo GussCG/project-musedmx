@@ -62,6 +62,8 @@ function AuthProvider({ children }) {
         withCredentials: true,
       });
 
+      console.log("Respuesta del login:", response);
+
       const user = response.data.usuario; // Desestructurar la respuesta del backend
       const token = response.data.token; // Obtener el token de la respuesta
 
