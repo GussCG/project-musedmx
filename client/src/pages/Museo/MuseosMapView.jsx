@@ -13,7 +13,7 @@ const {
 } = Icons;
 import { AnimatePresence, motion } from "framer-motion";
 // Para obtener la API de Google Maps
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import { BACKEND_URL } from "../../constants/api";
 import { TRAVEL_MODES, MAP_TYPES } from "../../constants/catalog";
 import PopupPortal from "../../components/Other/PopupPortal";
 
