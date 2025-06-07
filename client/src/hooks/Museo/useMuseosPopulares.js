@@ -14,6 +14,7 @@ export const useMuseosPopulares = () => {
     try {
       setLoading(true);
       const endpoint = `${BACKEND_URL}/api/museos/populares`;
+      console.log("Fetching popular museums from:", endpoint);
       const response = await axios.get(endpoint, {
         params: { top_n },
       });
