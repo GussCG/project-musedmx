@@ -36,6 +36,7 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
       const response = await axios.post(endpoint, resenaData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         withCredentials: true,
       });
@@ -56,6 +57,7 @@ export const useResenaUsuario = ({ usr_correo } = {}) => {
       const response = await axios.post(endpoint, resenaData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         withCredentials: true,
       });

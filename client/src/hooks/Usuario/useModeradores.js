@@ -65,6 +65,7 @@ export const useModeradores = () => {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${usuario.token}`, // Asegúrate de enviar el token si es necesario
         },
       });
       return response;
@@ -99,6 +100,7 @@ export const useModeradores = () => {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setModeradores(response.data.map((mod) => new Mod(mod)));
