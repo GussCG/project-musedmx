@@ -505,6 +505,7 @@ export default class Museo {
   static async findPopulares({ top_n }) {
     try {
       const endpoint = `${API_URL}/api/v1/recomendaciones/populares`;
+      console.log("Fetching populares from:", endpoint);
       const response = await axios.get(endpoint, {
         params: {
           top_n: top_n,
