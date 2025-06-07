@@ -10,10 +10,13 @@ export const authMiddleware = (req, res, next) => {
     return res.status(401).json({ message: "Token no proporcionado" });
   }
 
+  console.log("Token recibido:", token);
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.usuario = decoded;
     next();
+    console.log("Token verificado con éxito:", decoded);
   } catch (error) {
     console.error("Error verificando token:", error);
     return res.status(401).json({ message: "Token inválido" });
