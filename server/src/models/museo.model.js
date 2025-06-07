@@ -503,6 +503,7 @@ export default class Museo {
   }
 
   static async findPopulares({ top_n }) {
+    console.log(API_URL);
     try {
       const endpoint = `${API_URL}/api/v1/recomendaciones/populares`;
       console.log("Fetching populares from:", endpoint);
