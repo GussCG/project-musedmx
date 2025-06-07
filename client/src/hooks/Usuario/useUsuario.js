@@ -43,6 +43,7 @@ export const useUsuario = () => {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setUser(response.data.usuario.usuario);
