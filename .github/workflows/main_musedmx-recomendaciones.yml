@@ -38,7 +38,8 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip . -x "venv/*"
+          cd server/recomendaciones
+zip -r ../../release.zip * -x "venv/*"
         working-directory: server/recomendaciones
 
       - name: Upload artifact for deployment jobs
@@ -65,6 +66,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
+        working-directory: server/recomendaciones
 
       - name: Login to Azure
         uses: azure/login@v2
