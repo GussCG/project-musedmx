@@ -1,6 +1,7 @@
 # Backend
 fastapi==0.95.2
 uvicorn[standard]==0.22.0  # Incluye 'watchfiles', 'httptools', 'uvloop', etc. (ideal en producción)
+gunicorn==21.2.0  # Servidor WSGI para producción
 
 # Database
 mysql-connector-python==8.0.33
