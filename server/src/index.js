@@ -15,8 +15,9 @@ app.use(express.urlencoded({ extended: true })); // Middleware para parsear URL-
 app.use(express.json()); // Middleware para parsear JSON
 
 const origins = [
-  "musedmx.com", // URL de frontend
-  // "http://localhost:5173", // URL de desarrollo
+  "https://musedmx.com",
+  "https://www.musedmx.com",
+  "http://localhost:5173", // si necesitas desarrollo local
 ];
 
 // Configuración de CORS
