@@ -23,8 +23,8 @@ const origins = [
 // Configuración de CORS
 const corsOptions = {
   origin: origins, // URL de frontend
-  methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
-  allowedHeaders: ["Content-Type"], // Cabeceras permitidas
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Métodos permitidos
+  allowedHeaders: ["Content-Type", "Authorization"], // Cabeceras permitidas
   credentials: true, // Permitir credenciales (cookies, autorización, etc.)
 };
 app.use(cors(corsOptions));
