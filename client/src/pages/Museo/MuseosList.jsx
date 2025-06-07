@@ -313,7 +313,7 @@ function MuseosList({ titulo, tipo }) {
           <section className="museos-container-section">
             <>
               <div className="museos-container">
-                {museos.length === 0 ? (
+                {museos?.length === 0 ? (
                   <motion.div
                     className="no-results"
                     initial={{ opacity: 0, y: 20 }}
@@ -326,7 +326,7 @@ function MuseosList({ titulo, tipo }) {
                     <p>Intenta con otra búsqueda o filtros</p>
                   </motion.div>
                 ) : (
-                  museos.map((museo) => (
+                  museos?.map((museo) => (
                     <MuseoCard
                       key={museo.id}
                       museo={museo}
