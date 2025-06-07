@@ -30,6 +30,10 @@ jobs:
           pip install -r requirements.txt
         working-directory: server/recomendaciones
 
+      - name: Make startup script executable
+        run: chmod +x startup.sh
+        working-directory: server/recomendaciones
+
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
