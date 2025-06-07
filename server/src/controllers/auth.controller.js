@@ -62,7 +62,7 @@ export const logIn = async (req, res) => {
     // Guardar el token en una cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // Cambiar a true en producción
+      secure: true, // Cambiar a true en producción
       sameSite: "Lax", // Cambiar a 'None' si se usa HTTPS
     });
 

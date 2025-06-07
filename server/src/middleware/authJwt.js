@@ -1,17 +1,21 @@
-import jwt from 'jsonwebtoken';
-
 export const authMiddleware = (req, res, next) => {
-	const token = req.cookies?.token;
-	if (!token) {
-		return res.status(401).json({ message: "Token no proporcionado" });
-	}
-  
-	try {
-	  	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	  	req.usuario = decoded;
-	  	next();
-	} catch (error) {
-		console.error("Error verificando token:", error);
-	  	return res.status(401).json({ message: 'Token inválido' });
-	}
-  };
+  let token = req.cookies?.token;
+
+  // Si no hay token en cookie, busca en el header Authorization
+  if (!token && req.headers.authorization?.startsWith("Bearer ")) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    return res.status(401).json({ message: "Token no proporcionado" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.usuario = decoded;
+    next();
+  } catch (error) {
+    console.error("Error verificando token:", error);
+    return res.status(401).json({ message: "Token inválido" });
+  }
+};
