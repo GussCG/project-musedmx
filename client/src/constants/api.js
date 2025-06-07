@@ -1,3 +1,1 @@
-export const BACKEND_URL = process.env.VITE_BACKEND_URL;
-
-console.log("BACKEND_URL:", BACKEND_URL);
+export const BACKEND_URL = "musedmx-back-api.azurewebsites.net";
