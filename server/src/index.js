@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true })); // Middleware para parsear URL-
 app.use(express.json()); // Middleware para parsear JSON
 
 const origins = [
-  process.env.FRONTEND_ULR + process.env.FRONTEND_PORT, // URL de frontend
+  "musedmx.com", // URL de frontend
   // "http://localhost:5173", // URL de desarrollo
 ];
 
