@@ -12,9 +12,12 @@ import { motion, AnimatePresence, m } from "framer-motion";
 import MapaPopulares from "./MapaPopulares";
 import MapaCambiarCentro from "./MapaCambiarCentro";
 import LoadingMessage from "./LoadingMessage";
-import CustomAdvancedMarker from "./CustomAdvancedMarker";
-import MapaMuseosCercaDeMuseo from "./MapaMuseosCercaDeMuseo";
 import ToastMessage from "../Other/ToastMessage";
+import {
+  VITE_MAP_DETAIL_ID,
+  VITE_MAP_DARKMODE_DETAIL_ID,
+  VITE_MAP_RETROMODE_DETAIL_ID,
+} from "../../constants/api";
 
 function MapMuseo({
   radioKM,
@@ -51,10 +54,10 @@ function MapMuseo({
 
   const mapId = useMemo(() => {
     return isRetroMode
-      ? import.meta.env.VITE_MAP_RETROMODE_DETAIL_ID
+      ? VITE_MAP_RETROMODE_DETAIL_ID
       : isDarkMode
-      ? import.meta.env.VITE_MAP_DARKMODE_DETAIL_ID
-      : import.meta.env.VITE_MAP_DETAIL_ID;
+      ? VITE_MAP_DARKMODE_DETAIL_ID
+      : VITE_MAP_DETAIL_ID;
   }, [isDarkMode, isRetroMode]);
 
   useEffect(() => {
