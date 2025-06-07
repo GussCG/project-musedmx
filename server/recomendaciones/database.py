@@ -19,13 +19,13 @@ class Database:
         try:
             self.pool = pooling.MySQLConnectionPool(
                 pool_name="musedmx_pool",
-                pool_size=int(os.getenv("DB_POOL_SIZE", 10)),
+                pool_size=int(os.getenv("DB_POOL_SIZE")),
                 pool_reset_session=True,
-                host=os.getenv('DB_HOST', 'localhost'),
-                database=os.getenv('DB_NAME', 'musedmx'),
-                user=os.getenv('DB_USER', 'root'),
-                password=os.getenv('DB_PASSWORD', ''),
-                port=int(os.getenv('DB_PORT', 3306))
+                host=os.getenv('DB_HOST'),
+                database=os.getenv('DB_NAME'),
+                user=os.getenv('DB_USER'),
+                password=os.getenv('DB_PASSWORD'),
+                port=int(os.getenv('DB_PORT'))
             )
             print("✅ Pool de conexiones MySQL exitosa")
         except Error as e:
