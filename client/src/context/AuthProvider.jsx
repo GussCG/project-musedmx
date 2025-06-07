@@ -63,9 +63,13 @@ function AuthProvider({ children }) {
       });
 
       const user = response.data.usuario; // Desestructurar la respuesta del backend
-      console.log("Usuario logueado: ", user);
+      const token = response.data.token; // Obtener el token de la respuesta
+
       setUser(user);
       setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
+
+      setToken(token); // Guardar el token en el estado
+      localStorage.setItem("token", token); // Guardar el token en el localStorage
       localStorage.setItem("user", JSON.stringify(user)); // Guardar el usuario en el localStorage
       localStorage.setItem(
         "tipoUsuario",
