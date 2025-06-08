@@ -36,7 +36,6 @@ export const useUsuario = () => {
   const editarUsuario = async (usuario, usr_correo) => {
     try {
       setLoading(true);
-      console.log("token", localStorage.getItem("token"));
       const encodedCorreo = encodeURIComponent(usr_correo);
       const endpoint = `${BACKEND_URL}/api/auth/update/${encodedCorreo}`;
 
@@ -44,7 +43,6 @@ export const useUsuario = () => {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setUser(response.data.usuario.usuario);
