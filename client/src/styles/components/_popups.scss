@@ -601,8 +601,8 @@
     position: absolute;
     top: 20px;
     right: 20px;
-    width: 40px;
-    height: 40px;
+    width: clamp(30px, 3vw, 40px);
+    height: auto;
     border: none;
     background-color: transparent;
     cursor: pointer;
@@ -674,6 +674,10 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+  }
+
+  .button {
+    min-width: 200px;
   }
 }
 

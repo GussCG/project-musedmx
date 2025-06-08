@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import { motion } from "framer-motion";
 import Icons from "../../components/Other/IconProvider";
@@ -22,6 +22,17 @@ function ProfileHistory() {
   const { fetchResenasByCorreo, eliminarResena } = useResenaUsuario();
   const { user } = useAuth();
 
+  const [shouldRefetch, setShouldRefetch] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.refetch) {
+      setShouldRefetch(true);
+      // limpia el estado para evitar loops si el usuario vuelve hacia atrás
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
@@ -37,8 +48,11 @@ function ProfileHistory() {
         }
       }
     };
+
     fetchData();
-  }, [user]);
+
+    if (shouldRefetch) setShouldRefetch(false);
+  }, [user, shouldRefetch]);
 
   // Funcion para eliminar una visita del historial
   const handleEliminar = (resenaId) => {

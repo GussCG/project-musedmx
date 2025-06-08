@@ -370,12 +370,19 @@
 
     .PhoneInputCountry {
       width: 60px;
-      height: 100%;
+      height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 5px;
       background-color: var(--bg-grad-color-2);
+
+      option {
+        font-family: $font-primary;
+        font-size: 0.9rem;
+        font-weight: $font-w-regular;
+        color: var(--font-color-primary);
+      }
     }
 
     .PhoneInputInput {
@@ -952,7 +959,7 @@
   h2 {
     width: 100%;
     font-family: $font-primary;
-    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    font-size: clamp(0.9rem, 2vw, 1rem);
     font-weight: $font-w-bold;
     color: var(--font-color-primary);
     text-align: center;
@@ -1209,7 +1216,7 @@
 
     h2 {
       width: 100%;
-      font-size: clamp(1.08rem, 5vw, 2rem);
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
       font-weight: $font-w-semibold;
       color: var(--font-color-primary);
       text-align: center;
@@ -1234,7 +1241,7 @@
     align-items: flex-start;
 
     h2 {
-      font-size: clamp(1.08rem, 5vw, 2rem);
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
       font-weight: $font-w-semibold;
       color: var(--font-color-primary);
     }
@@ -1260,7 +1267,7 @@
 
   h1 {
     font-family: $font-tertiary;
-    font-size: clamp(1.08rem, 5vw, 2.5rem);
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
     color: var(--font-color-primary);
     margin: 50px 0 0 0;
   }
@@ -1283,7 +1290,7 @@
   align-items: center;
 
   h1 {
-    font-size: clamp(1.08rem, 5vw, 2.5rem);
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
     color: var(--font-color-primary);
     font-family: $font-tertiary;
   }

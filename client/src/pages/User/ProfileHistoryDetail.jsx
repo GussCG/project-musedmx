@@ -113,7 +113,7 @@ function ProfileHistoryDetail() {
             mensaje: "Espera a que un moderador revise tu reseña y la apruebe",
             position: "top-right",
           });
-          navigate("/Usuario/Historial");
+          navigate("/Usuario/Historial", { state: { refetch: true } });
         }
       } else {
         ToastMessage({

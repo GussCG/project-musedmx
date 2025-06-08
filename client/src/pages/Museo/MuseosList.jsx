@@ -152,6 +152,11 @@ function MuseosList({ titulo, tipo }) {
     }
   }, [tipo, tituloSearch, filters, sortBy]);
 
+  const isMobile = useMemo(() => {
+    if (typeof navigator === "undefined") return false;
+    return /Mobi|Android|iPhone|iPod/i.test(navigator.userAgent);
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -312,7 +317,14 @@ function MuseosList({ titulo, tipo }) {
         ) : (
           <section className="museos-container-section">
             <>
-              <div className="museos-container">
+              <div
+                className="museos-container"
+                style={{
+                  width: !isMobile ? "100%" : "calc(100% - 300px)",
+                  marginLeft: !isMobile ? "0" : "300px",
+                  marginTop: !isMobile ? "0" : "20px",
+                }}
+              >
                 {museos?.length === 0 ? (
                   <motion.div
                     className="no-results"

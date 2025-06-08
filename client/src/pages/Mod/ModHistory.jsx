@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import Icons from "../../components/Other/IconProvider";
 const { LuArrowUpDown, LuEye, IoIosArrowBack, IoIosArrowForward } = Icons;
 import { motion } from "framer-motion";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { useResenaMods } from "../../hooks/Resena/useResenaMods";
 import { useMuseo } from "../../hooks/Museo/useMuseo";
 import ReactPaginate from "react-paginate";
@@ -24,6 +24,8 @@ function ModHistory() {
   const { fetchAllResenas, fetchAllResenasByMuseo } = useResenaMods();
   const { fetchMuseo } = useMuseo();
 
+  const [shouldRefetch, setShouldRefetch] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,7 +45,9 @@ function ModHistory() {
       }
     };
     fetchData();
-  }, [museoId]);
+    // reset flag
+    if (shouldRefetch) setShouldRefetch(false);
+  }, [museoId, shouldRefetch]); // ← actualiza también si cambia shouldRefetch
 
   const columns = useMemo(
     () => [
@@ -122,6 +126,16 @@ function ModHistory() {
   });
 
   const pageCount = Math.ceil(resenas.length / pagination.pageSize);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.refetch) {
+      setShouldRefetch(true);
+      // limpia el estado para evitar loops si el usuario vuelve hacia atrás
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   return (
     <motion.div

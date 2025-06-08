@@ -28,7 +28,7 @@ function Footer() {
                 <Link to="/Museos/Populares">Populares</Link>
               </li>
               <li>
-                <Link to="/Museos/CercaDeMi">Cerca de mi</Link>
+                <Link to="/Museos/CercaDeMi">Cerca de mí</Link>
               </li>
             </ul>
           </div>
@@ -46,7 +46,7 @@ function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a href="https://www.instagram.com/musedmx/">
                   <div className="footer-social-media">
                     <FaSquareInstagram />
                     <p>Instagram</p>
@@ -67,7 +67,7 @@ function Footer() {
         <div id="footer-contacto" className="footer-div">
           <div className="footer-div-container">
             <p className="footer-title">Contáctenos</p>
-            <p id="footer-contacto-p">musedmxof@musedmx.com</p>
+            <p id="footer-contacto-p">musedmxof@gmail.com</p>
           </div>
         </div>
       </div>

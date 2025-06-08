@@ -48,7 +48,7 @@ function ModRechazar({ onClose }) {
           tipo: "success",
           mensaje: "Reseña rechazada exitosamente, se notificará al usuario.",
         });
-        navigate("/Mod/VerResenas");
+        navigate("/Mod/VerResenas", { state: { refetch: true } });
       } else {
         ToastMessage({
           tipo: "error",

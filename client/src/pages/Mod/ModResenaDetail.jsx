@@ -39,7 +39,7 @@ function ModResenaDetail() {
           mensaje: "Reseña aprobada exitosamente.",
           position: "top-right",
         });
-        navigate(`/Mod/VerResenas/${resena.mus_id}`);
+        navigate("/Mod/VerResenas", { state: { refetch: true } });
       }
     } catch (error) {
       console.error("Error al aprobar la reseña:", error);

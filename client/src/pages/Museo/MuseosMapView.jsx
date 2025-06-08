@@ -87,14 +87,6 @@ function MuseosMapView({
     setRangoRadio(e.target.value);
   };
 
-  useEffect(() => {
-    const dontShowAgain =
-      localStorage.getItem("dontShowMapIndicaciones") === "true";
-    if (!dontShowAgain) {
-      setShowIndicaciones(true);
-    }
-  }, []);
-
   const handleInstrucciones = () => {
     setShowIndicaciones(true);
   };
@@ -108,6 +100,19 @@ function MuseosMapView({
       return MuseosMostrados;
     }
   }, [MuseosMostrados, MuseosCercanos, mostrarCercanos]);
+
+  const isMobile = useMemo(() => {
+    if (typeof navigator === "undefined") return false;
+    return /Mobi|Android|iPhone|iPod/i.test(navigator.userAgent);
+  }, []);
+
+  useEffect(() => {
+    const dontShowAgain =
+      localStorage.getItem("dontShowMapIndicaciones") === "true";
+    if (!dontShowAgain && !isMobile) {
+      setShowIndicaciones(true);
+    }
+  }, [isMobile]);
 
   return (
     <>
@@ -152,39 +157,6 @@ function MuseosMapView({
                   </select>
                   <IoIosArrowDown className="select-arrow-icon" />
                 </div>
-                {/* <label
-                  htmlFor="museos-range-ubicacion"
-                  id="frm-range-ubicacion"
-                >
-                  <b>Tamaño de Radio:</b>
-                  <br />{" "}
-                  <output>
-                    {rangoRadio < 1
-                      ? `${(rangoRadio * 1000).toFixed(0)} m`
-                      : `${rangoRadio} km`}
-                  </output>
-                </label>
-                <input
-                  type="range"
-                  min="0.1"
-                  max="10"
-                  step="0.1"
-                  value={rangoRadio}
-                  id="museos-range-ubicacion"
-                  name="museos-range-ubicacion"
-                  placeholder="Rango de Ubicación"
-                  list="museos-range-ubicacion-list"
-                  onChange={handleRangeChange}
-                  required
-                />
-                <datalist id="museos-range-ubicacion-list">
-                  <option value="0.1" label="100 m" />
-                  <option value="0.5" label="500 m" />
-                  <option value="1" label="1 km" />
-                  <option value="2" label="2 km" />
-                  <option value="5" label="5 km" />
-                  <option value="10" label="10 km" />
-                </datalist> */}
               </div>
             ) : null}
           </div>

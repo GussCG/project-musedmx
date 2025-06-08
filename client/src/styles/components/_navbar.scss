@@ -62,7 +62,7 @@
       background-color: inherit;
       font-family: $font-primary;
       font-weight: $font-w-light;
-      font-size: clamp(0.9rem, 0.8rem, $navbar-font-s);
+      font-size: clamp(1rem, 1rem, $navbar-font-s);
     }
 
     input:focus {
@@ -111,7 +111,7 @@
         cursor: pointer;
         font-family: $font-primary;
         font-weight: $font-w-light;
-        font-size: $navbar-font-s;
+        font-size: clamp(1rem, 1rem, $navbar-font-s);
         text-align: left;
 
         transition: color 0.3s ease-in-out, font-weight 0.3s ease-in-out,
