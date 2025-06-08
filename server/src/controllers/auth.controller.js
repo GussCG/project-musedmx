@@ -59,14 +59,6 @@ export const logIn = async (req, res) => {
       }
     );
 
-    // Guardar el token en una cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true, // Cambiar a true en producción
-      sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000, // 1 día
-    });
-
     res.status(200).json({
       success: true,
       message: "Usuario logueado",
@@ -197,6 +189,7 @@ export const verifyUser = async (req, res) => {
     }
 
     res.status(200).json({
+      success: true,
       usuario,
     });
   } catch (error) {
@@ -210,11 +203,13 @@ export const updateUser = async (req, res) => {
     const correoParam = req.params.usr_correo; // Correo del usuario a editar
     const correoToken = req.usuario.correo; // viene del token decodificado
 
-    // Evita que editen a otro usuario
-    if (correoToken !== correoParam) {
-      return res
-        .status(403)
-        .json({ message: "No autorizado para editar este usuario" });
+    // Validación más robusta
+    if (correoToken.toLowerCase() !== correoParam.toLowerCase()) {
+      return res.status(403).json({
+        success: false,
+        message: "No tienes permisos para editar este usuario",
+        details: `Token: ${correoToken}, Param: ${correoParam}`,
+      });
     }
 
     // Obtener el usuario actual de la BD
