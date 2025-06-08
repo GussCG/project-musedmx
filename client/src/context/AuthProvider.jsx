@@ -42,21 +42,30 @@ function AuthProvider({ children }) {
   const login = async (userData) => {
     try {
       setIsLoading(true);
-      setError(null);
+      setError(null); // Limpiar errores
 
+      // Ruta para iniciar sesión (Backend)
       const endpoint = `${BACKEND_URL}/api/auth/login`;
       const response = await axios.post(endpoint, userData);
 
       const user = response.data.usuario;
-      const token = response.data.token; // <--- asegúrate que el backend lo envíe
+      const token = response.data.token;
 
       setUser(user);
+      setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
       localStorage.setItem("user", JSON.stringify(user));
-      if (token) localStorage.setItem("token", token); // <--- guardas token
+      localStorage.setItem("token", token); // Guardar el token
+      localStorage.setItem(
+        "tipoUsuario",
+        JSON.stringify(TIPOS_USUARIO[user.usr_tipo].id)
+      );
 
-      // etc...
+      setIsLogginPopupOpen(false);
+      navigate(TIPOS_USUARIO[user.usr_tipo].redirectPath);
     } catch (error) {
-      // manejo de errores...
+      console.error("Error de login: ", error);
+      setError(error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -67,17 +76,11 @@ function AuthProvider({ children }) {
     try {
       setError(null);
       const endpoint = `${BACKEND_URL}/api/auth/logout`;
-      await axios.post(
-        endpoint,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post(endpoint, {});
 
       localStorage.removeItem("user");
       localStorage.removeItem("tipoUsuario");
-      localStorage.removeItem("token");
+      localStorage.removeItem("token"); // Eliminar el token
       setUser(null);
       setTipoUsuario(0);
       navigate("/");
@@ -87,7 +90,7 @@ function AuthProvider({ children }) {
     }
   };
 
-  // Verificar si hay un usuario loggeado al iniciar la aplicación
+  // Verificar usuario
   useEffect(() => {
     const checkLoggedInUser = async () => {
       try {
@@ -116,7 +119,11 @@ function AuthProvider({ children }) {
         }
       } catch (error) {
         if (error.response?.status === 401) {
-          console.log("No hay sesión activa");
+          console.log("Token inválido o expirado");
+          // Limpiar datos de sesión inválida
+          localStorage.removeItem("user");
+          localStorage.removeItem("tipoUsuario");
+          localStorage.removeItem("token");
         } else {
           console.error("Error inesperado:", error);
           setError(error);
@@ -125,7 +132,6 @@ function AuthProvider({ children }) {
         setIsLoading(false);
       }
     };
-
     checkLoggedInUser();
   }, []);
 
