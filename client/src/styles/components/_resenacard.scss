@@ -65,6 +65,7 @@
 
           #nombre-user {
             width: fit-content;
+            max-width: 300px;
             font-size: 1.2rem;
             font-weight: $font-w-bold;
             color: var(--font-color-primary);
