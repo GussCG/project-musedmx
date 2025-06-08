@@ -335,7 +335,8 @@
       flex-direction: column;
       justify-content: center;
       margin: 0 auto;
-      scale: 0.6;
+      transform: scale(0.7);
+      transform-origin: center;
 
       .museo-card-img-container {
         .museo-card-img-tematica {
