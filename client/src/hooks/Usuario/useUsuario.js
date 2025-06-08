@@ -112,7 +112,10 @@ export const useUsuario = () => {
       const encodedCorreo = encodeURIComponent(usr_correo);
       const endpoint = `${BACKEND_URL}/api/auth/usuario/${encodedCorreo}`;
       const response = await axios.get(endpoint, {
-        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       if (response.data.usuario.usuario) {
