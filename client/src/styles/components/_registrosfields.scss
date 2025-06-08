@@ -1357,13 +1357,13 @@
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: center;
+          justify-content: flex-start;
           padding: 20px;
 
           h2 {
             width: 100%;
-            font-size: clamp(1.08rem, 5vw, 2rem);
-            font-weight: $font-w-semibold;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            font-weight: $font-w-bold;
             color: var(--font-color-primary);
             padding: 10px 0;
           }

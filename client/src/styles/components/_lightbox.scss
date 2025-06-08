@@ -40,8 +40,8 @@
     position: absolute;
     top: 20px;
     left: 20px;
-    width: 50px;
-    height: 50px;
+    width: clamp(20px, 5vw, 50px);
+    height: clamp(20px, 5vw, 50px);
     border-radius: 100px;
     background: rgb(255, 255, 255);
     border: none;
@@ -75,8 +75,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
+    width: clamp(20px, 5vw, 50px);
+    height: clamp(20px, 5vw, 50px);
     border-radius: 100px;
     border: none;
     background: rgb(255, 255, 255);
@@ -128,8 +128,8 @@
     .left-controls,
     .right-controls {
       button {
-        width: 40px;
-        height: 40px;
+        width: clamp(20px, 5vw, 50px);
+        height: clamp(20px, 5vw, 50px);
         border: none;
         background-color: rgba(0, 0, 0, 0.2);
         border-radius: 50%;
@@ -163,7 +163,7 @@
 
       p {
         padding: 10px 20px;
-        font-size: 0.8rem;
+        font-size: clamp(12px, 2vw, 16px);
         color: black;
         font-weight: $font-w-regular;
         background-color: rgba(0, 0, 0, 0.2);
@@ -171,8 +171,8 @@
       }
 
       button {
-        width: 40px;
-        height: 40px;
+        width: clamp(20px, 5vw, 50px);
+        height: clamp(20px, 5vw, 50px);
         border: none;
         background-color: rgba(0, 0, 0, 0.2);
         border-radius: 50%;

@@ -660,9 +660,9 @@ function MuseoDetail() {
                           </div>
                         </div>
                       </div>
-                      {user?.usr_tipo !== 2 && user?.usr_tipo !== 3 ? (
-                        <div className="museo-section-5-registrar">
-                          <h2>Acciones</h2>
+                      <div className="museo-section-5-registrar">
+                        <h2>Acciones</h2>
+                        {user?.usr_tipo !== 2 && user?.usr_tipo !== 3 && (
                           <div className="museo-section-5-botones">
                             <Link
                               to={`/Museos/${museoId}/RegistrarVisita`}
@@ -699,11 +699,8 @@ function MuseoDetail() {
                               <RiSurveyFill />
                             </Link>
                           </div>
-                        </div>
-                      ) : null}
-
-                      {user && user?.usr_tipo === 3 ? (
-                        <div className="museo-section-5-registrar">
+                        )}
+                        {user && user?.usr_tipo === 3 && (
                           <Link
                             to={`/${TIPOS_USUARIO[tipoUsuario].nombre}/VerResenas/${museoId}`}
                             // id="museo-section-5-registrar-button"
@@ -711,8 +708,8 @@ function MuseoDetail() {
                           >
                             Ver las reseñas de este museo
                           </Link>
-                        </div>
-                      ) : null}
+                        )}
+                      </div>
                     </div>
                     <div className="museo-section-5-resenas">
                       {resenas.map((resena) => (

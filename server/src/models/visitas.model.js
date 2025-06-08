@@ -110,22 +110,21 @@ export default class Visitas {
     await connection.beginTransaction();
     try {
       const query = `
-        SELECT * FROM visitas
-        WHERE vi_usr_correo = ? AND vi_mus_id = ?
-      `;
+      SELECT 1 FROM resenia
+      WHERE visitas_vi_usr_correo = ? AND visitas_vi_mus_id = ? AND res_aprobado = 1
+      LIMIT 1
+    `;
       const queryParams = [vi_usr_correo, vi_mus_id];
       const [result] = await connection.query(query, queryParams);
-      if (result.length > 0) {
-        await connection.commit();
-        return true; // Visita existe
-      } else {
-        await connection.rollback();
-        return false; // Visita no existe
-      }
+
+      await connection.commit();
+      return result.length > 0; // true si hay al menos una reseña aprobada
     } catch (error) {
       await connection.rollback();
-      console.error("Error al verificar visita:", error);
-      throw new Error("Error al verificar visita");
+      console.error("Error al verificar reseña aprobada:", error);
+      throw new Error("Error al verificar reseña aprobada");
+    } finally {
+      connection.release();
     }
   }
 }

@@ -19,14 +19,14 @@
 
   h1 {
     font-family: $font-tertiary;
-    font-size: $museo-detail-h1-size;
+    font-size: clamp(1.3rem, 2vw, $museo-detail-h1-size);
     font-weight: $font-w-bold;
     color: var(--font-color-primary);
     margin: 0;
   }
 
   p {
-    font-size: 1rem;
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
     font-weight: $font-w-light;
     color: var(--font-color-secondary);
     text-align: center;
@@ -74,7 +74,7 @@
 
         h2 {
           font-family: $font-tertiary;
-          font-size: 1.6rem;
+          font-size: clamp(1rem, 2vw, 1.6rem);
           font-weight: $font-w-bold;
           color: var(--font-color-primary);
           margin: 0;
@@ -88,7 +88,7 @@
 
           p {
             color: var(--font-color-primary);
-            font-size: 1rem;
+            font-size: clamp(0.8rem, 2vw, 1rem);
             font-weight: $font-w-regular;
             text-align: center;
             padding: 0 16px;
@@ -113,7 +113,7 @@
             align-items: center;
             gap: 10px;
 
-            font-size: 1.1rem;
+            font-size: clamp(0.8rem, 2vw, 1rem);
             font-weight: $font-w-regular;
             text-align: center;
           }
@@ -158,7 +158,7 @@
 
           p {
             color: white;
-            font-size: 1rem;
+            font-size: clamp(0.8rem, 2vw, 1rem);
             font-weight: $font-w-bold;
             text-align: center;
             padding: 10px;
@@ -166,7 +166,7 @@
         }
 
         .cerrado {
-          font-size: 1rem;
+          font-size: clamp(0.8rem, 2vw, 1rem);
           font-weight: $font-w-light;
         }
       }
@@ -215,9 +215,9 @@
   .swiper-controllers {
     width: 100%;
     height: auto;
+    min-height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 50px;
   }
 }
