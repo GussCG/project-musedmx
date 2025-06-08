@@ -1,6 +1,10 @@
 {
   "routes": [
     {
+      "route": "/assets/*",
+      "allowedRoles": ["anonymous"]
+    },
+    {
       "route": "/*",
       "rewrite": "/index.html"
     }
