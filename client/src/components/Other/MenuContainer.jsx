@@ -108,7 +108,7 @@ const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
                   transition={{ delay: 0.4 }}
                 >
                   <Link to="/Museos/CercaDeMi" onClick={toggleMenu}>
-                    Cerca de mi
+                    Cerca de mí
                   </Link>
                 </motion.li>
                 <motion.li

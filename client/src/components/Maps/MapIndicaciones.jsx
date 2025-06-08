@@ -46,12 +46,12 @@ function MapIndicaciones({ isOpen, onClose }) {
                 >
                   Aceleración por hardware
                 </span>{" "}
-                en el navegador. Para ver como activarla{" "}
+                en el navegador. Para ver cómo activarla{" "}
                 <a
                   target="_blank"
                   href="https://doc.milestonesys.com/2023r3/es-ES/standard_features/sf_mc/sf_mcnodes/sf_3devices/mc_enableordisablehardwareacceleration_devices.htm?TocPath=XProtect%20Productos%20VMS%7CXProtect%20Administrador%20manual%20VMS%7CConfiguraci%C3%B3n%7CDispositivos%20-%20Detecci%C3%B3n%20de%20movimiento%7C_____3"
                 >
-                  click aquí
+                  clic aquí
                 </a>
                 .
               </p>
@@ -72,7 +72,7 @@ function MapIndicaciones({ isOpen, onClose }) {
                   >
                     No
                   </span>{" "}
-                  permitiste obtener la ubicación o hubo algun error, puedes
+                  permitiste obtener la ubicación o hubo algún error, puedes
                   ingresar una dirección, código postal o un lugar en el botón
                   de cambiar de ubicación.
                 </li>

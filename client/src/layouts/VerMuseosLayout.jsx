@@ -27,7 +27,7 @@ function VerMuseosRoutes() {
         />
         <Route
           path="CercaDeMi"
-          element={<MuseosList titulo="Museos cerca de mi" tipo="2" />}
+          element={<MuseosList titulo="Museos cerca de mí" tipo="2" />}
         />
         <Route
           path="Populares"

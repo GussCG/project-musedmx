@@ -417,7 +417,7 @@ function MuseoDetail() {
                     <div className="museo-section-2-calificaciones museo-detail-item">
                       <div className="museo-section-header">
                         <h1 className="h1-section">Calificaciones</h1>
-                        <p>De acuerdo con los usuarios el museo es</p>
+                        <p>De acuerdo con los usuarios, el museo es:</p>
                       </div>
                       {Object.values(calificaciones).length === 0 ? (
                         <div className="no-results" style={{ width: "90%" }}>
@@ -465,7 +465,7 @@ function MuseoDetail() {
                     <div className="museo-section-2-servicios museo-detail-item">
                       <div className="museo-section-header">
                         <h1>Servicios</h1>
-                        <p>De acuerdo con los usuarios el museo cuenta con</p>
+                        <p>De acuerdo con los usuarios, el museo cuenta con:</p>
                       </div>
 
                       {serviciosTotales.length === 0 ? (
