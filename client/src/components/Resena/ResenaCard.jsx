@@ -11,11 +11,8 @@ import Skeleton from "react-loading-skeleton";
 import { useAuth } from "../../context/AuthProvider";
 
 function ResenaCard({ resena = {}, loadingResena = true }) {
-  loadingResena = false;
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
-
-  console.log("Reseña:", resena);
 
   return (
     <>
