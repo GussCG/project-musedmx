@@ -2,7 +2,7 @@ import placeholderUserImage from "../../assets/images/placeholders/user_placehol
 import { Link } from "react-router-dom";
 import ImagenesSlider from "../../components/Resena/ImagenesSlider";
 import Icons from "../Other/IconProvider";
-const { FaStar } = Icons;
+const { FaStar, MdEdit } = Icons;
 import { formatName } from "../../utils/formatName";
 import { formatearFechaRelativaCompleta } from "../../utils/formatearFechas";
 import { SERVICIOS } from "../../constants/catalog";
@@ -51,10 +51,10 @@ function ResenaCard({ resena = {}, loadingResena = true }) {
                 </div>
                 {user?.usr_correo === resena.visitas_vi_usr_correo && (
                   <Link
-                    className="button-link"
+                    className="edit-resena"
                     to={`/Usuario/Historial/${resena.res_id_res}`}
                   >
-                    <label>Editar</label>
+                    <MdEdit />
                   </Link>
                 )}
               </div>

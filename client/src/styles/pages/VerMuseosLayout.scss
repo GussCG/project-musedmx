@@ -324,32 +324,37 @@
 }
 
 @media screen and (max-width: 600px) {
-  .museo-card {
-    width: auto;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 0 auto;
-    scale: 0.75;
+  .museos-container {
+    gap: 0 !important;
+    padding: 0 !important;
 
-    .museo-card-img-container {
-      .museo-card-img-tematica {
-        display: none;
-      }
-    }
+    .museo-card {
+      width: auto;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: 0 auto;
+      scale: 0.6;
 
-    .museo-card-info-container {
-      .museo-card-info-header {
-        width: 100%;
-
-        #museo-card-nombre {
-          font-size: 1rem;
+      .museo-card-img-container {
+        .museo-card-img-tematica {
+          display: none;
         }
       }
 
-      .museo-card-info-body {
-        display: none;
+      .museo-card-info-container {
+        .museo-card-info-header {
+          width: 100%;
+
+          #museo-card-nombre {
+            font-size: 1rem;
+          }
+        }
+
+        .museo-card-info-body {
+          display: none;
+        }
       }
     }
   }
