@@ -42,30 +42,21 @@ function AuthProvider({ children }) {
   const login = async (userData) => {
     try {
       setIsLoading(true);
-      setError(null); // Limpiar errores
+      setError(null);
 
-      // Ruta para iniciar sesión (Backend)
       const endpoint = `${BACKEND_URL}/api/auth/login`;
-      const response = await axios.post(endpoint, userData, {
-        withCredentials: true,
-      });
+      const response = await axios.post(endpoint, userData);
 
       const user = response.data.usuario;
+      const token = response.data.token; // <--- asegúrate que el backend lo envíe
 
       setUser(user);
-      setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem(
-        "tipoUsuario",
-        JSON.stringify(TIPOS_USUARIO[user.usr_tipo].id)
-      );
+      if (token) localStorage.setItem("token", token); // <--- guardas token
 
-      setIsLogginPopupOpen(false);
-      navigate(TIPOS_USUARIO[user.usr_tipo].redirectPath);
+      // etc...
     } catch (error) {
-      console.error("Error de login: ", error);
-      setError(error);
-      throw error;
+      // manejo de errores...
     } finally {
       setIsLoading(false);
     }
@@ -86,6 +77,7 @@ function AuthProvider({ children }) {
 
       localStorage.removeItem("user");
       localStorage.removeItem("tipoUsuario");
+      localStorage.removeItem("token");
       setUser(null);
       setTipoUsuario(0);
       navigate("/");
@@ -99,9 +91,17 @@ function AuthProvider({ children }) {
   useEffect(() => {
     const checkLoggedInUser = async () => {
       try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setIsLoading(false);
+          return;
+        }
+
         const endpoint = `${BACKEND_URL}/api/auth/verify`;
         const response = await axios.get(endpoint, {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (response.data?.usuario) {
@@ -111,7 +111,7 @@ function AuthProvider({ children }) {
           localStorage.setItem("user", JSON.stringify(userVerified));
           localStorage.setItem(
             "tipoUsuario",
-            JSON.stringify(TIPOS_USUARIO[user.usr_tipo].id || 0)
+            JSON.stringify(TIPOS_USUARIO[userVerified.usr_tipo]?.id || 0)
           );
         }
       } catch (error) {
@@ -125,6 +125,7 @@ function AuthProvider({ children }) {
         setIsLoading(false);
       }
     };
+
     checkLoggedInUser();
   }, []);
 

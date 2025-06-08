@@ -37,14 +37,17 @@ export const useUsuario = () => {
     try {
       setLoading(true);
       const encodedCorreo = encodeURIComponent(usr_correo);
+      const token = localStorage.getItem("token");
       const endpoint = `${BACKEND_URL}/api/auth/update/${encodedCorreo}`;
 
       const response = await axios.post(endpoint, usuario, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`, // <--- aquí agregas el token
         },
       });
+
       setUser(response.data.usuario.usuario);
       localStorage.setItem(
         "user",

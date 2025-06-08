@@ -71,7 +71,7 @@ export const logIn = async (req, res) => {
       success: true,
       message: "Usuario logueado",
       usuario,
-      token, // Enviar el token en la respuesta
+      token,
     });
   } catch (error) {
     handleHttpError(res, "ERROR_LOGIN_USER", error);
