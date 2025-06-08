@@ -63,7 +63,8 @@ export const logIn = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true, // Cambiar a true en producción
-      sameSite: "Lax", // Cambiar a 'None' si se usa HTTPS
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000, // 1 día
     });
 
     res.status(200).json({
