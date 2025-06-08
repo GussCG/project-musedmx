@@ -466,6 +466,16 @@
         }
       }
     }
+
+    .no-results {
+      h2 {
+        width: 100%;
+        text-align: center;
+        font-size: clamp(1.2rem, 2vw, 1.5rem);
+        font-weight: $font-w-bold;
+        margin: 20px 0;
+      }
+    }
   }
 
   .museo-section-2-servicios {
@@ -538,6 +548,16 @@
           display: block;
           filter: invert(1);
         }
+      }
+    }
+
+    .no-results {
+      h2 {
+        width: 100%;
+        text-align: center;
+        font-size: clamp(1.2rem, 2vw, 1.5rem);
+        font-weight: $font-w-bold;
+        margin: 20px 0;
       }
     }
   }

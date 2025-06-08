@@ -421,7 +421,7 @@ function MuseoDetail() {
                       </div>
                       {Object.values(calificaciones).length === 0 ? (
                         <div className="no-results" style={{ width: "90%" }}>
-                          <h2>No hay calificaciones aun</h2>
+                          <h2>No hay calificaciones aún</h2>
                         </div>
                       ) : (
                         <div className="museo-section-2-calificaciones-container">
