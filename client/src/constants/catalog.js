@@ -319,8 +319,8 @@ export const SERVICIOS = {
 
 export const CALIFICACIONES_RUBROS = {
   5: [
-    { valor: 3, titulo: "Adultos", icono: Icons.adultoIcon },
-    { valor: 2, titulo: "Familiar", icono: Icons.familiarIcon },
+    { valor: 1, titulo: "Adultos", icono: Icons.adultoIcon },
+    { valor: 1, titulo: "Familiar", icono: Icons.familiarIcon },
     { valor: 1, titulo: "Niños", icono: Icons.ninoIcon },
   ],
   1: [
