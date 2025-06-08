@@ -203,6 +203,9 @@ export const updateUser = async (req, res) => {
     const correoParam = req.params.usr_correo; // Correo del usuario a editar
     const correoToken = req.usuario.correo; // viene del token decodificado
 
+    console.log("Correo del token:", correoToken);
+    console.log("Correo del parámetro:", correoParam);
+
     // Validación más robusta
     if (correoToken.toLowerCase() !== correoParam.toLowerCase()) {
       return res.status(403).json({
