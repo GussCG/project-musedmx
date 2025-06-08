@@ -1,13 +1,11 @@
+import jwt from "jsonwebtoken";
+
 export const authMiddleware = (req, res, next) => {
   let token = null;
 
   // Opción 1: Bearer token
   if (req.headers.authorization?.startsWith("Bearer ")) {
     token = req.headers.authorization.split(" ")[1];
-  }
-  // Opción 2: Query parameter (para pruebas)
-  else if (req.query.token) {
-    token = req.query.token;
   }
 
   if (!token) {
