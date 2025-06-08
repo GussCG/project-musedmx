@@ -317,14 +317,7 @@ function MuseosList({ titulo, tipo }) {
         ) : (
           <section className="museos-container-section">
             <>
-              <div
-                className="museos-container"
-                style={{
-                  width: !isMobile ? "100%" : "calc(100% - 300px)",
-                  marginLeft: !isMobile ? "0" : "300px",
-                  marginTop: !isMobile ? "0" : "20px",
-                }}
-              >
+              <div className={`museos-container ${isMobile ? "mobile" : ""}`}>
                 {museos?.length === 0 ? (
                   <motion.div
                     className="no-results"

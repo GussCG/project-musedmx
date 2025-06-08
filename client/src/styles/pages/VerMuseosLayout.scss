@@ -270,6 +270,16 @@
       text-align: center;
     }
 
+    .museos-container.mobile {
+      width: 100%;
+      height: auto;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
     .loading-more-indicator {
       width: 100%;
       display: flex;
