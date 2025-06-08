@@ -22,10 +22,16 @@ const origins = [
 
 // Configuración de CORS
 const corsOptions = {
-  origin: origins, // URL de frontend
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Métodos permitidos
-  allowedHeaders: ["Content-Type", "Authorization"], // Cabeceras permitidas
-  credentials: true, // Permitir credenciales (cookies, autorización, etc.)
+  origin: function (origin, callback) {
+    if (!origin || origins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  credentials: true,
 };
 app.use(cors(corsOptions));
 

@@ -4,14 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../constants/api";
 import { TIPOS_USUARIO } from "../constants/catalog";
 
-// Crear el contexto de autenticación
 const AuthContext = createContext();
 
-// Proveedor de autenticación
 function AuthProvider({ children }) {
-  // Estado del usuario
   const [user, setUser] = useState(() => {
-    // Verificar si hay un usuario en el localStorage
     const storedUser = localStorage.getItem("user");
     try {
       return storedUser && storedUser !== "undefined"
@@ -19,12 +15,10 @@ function AuthProvider({ children }) {
         : null;
     } catch (e) {
       console.error("Error al parsear el usuario del localStorage:", e);
-      localStorage.removeItem("user"); // limpia lo dañado
+      localStorage.removeItem("user");
       return null;
     }
   });
-
-  const navigate = useNavigate();
 
   const [tipoUsuario, setTipoUsuario] = useState(() => {
     const storedTipoUsuario = localStorage.getItem("tipoUsuario");
@@ -39,16 +33,10 @@ function AuthProvider({ children }) {
     }
   });
 
-  // Gestionar el estado de carga
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-
-  // Manejar errores
   const [error, setError] = useState(null);
-
   const [isLogginPopupOpen, setIsLogginPopupOpen] = useState(false);
-  const [token, setToken] = useState(() => {
-    return localStorage.getItem("token") || null;
-  });
 
   // Función para iniciar sesión
   const login = async (userData) => {
@@ -62,25 +50,18 @@ function AuthProvider({ children }) {
         withCredentials: true,
       });
 
-      console.log("Respuesta del login:", response);
-
-      const user = response.data.usuario; // Desestructurar la respuesta del backend
-      const token = response.data.token; // Obtener el token de la respuesta
+      const user = response.data.usuario;
 
       setUser(user);
       setTipoUsuario(TIPOS_USUARIO[user.usr_tipo].id);
-
-      setToken(token); // Guardar el token en el estado
-      localStorage.setItem("token", token); // Guardar el token en el localStorage
-      localStorage.setItem("user", JSON.stringify(user)); // Guardar el usuario en el localStorage
+      localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem(
         "tipoUsuario",
         JSON.stringify(TIPOS_USUARIO[user.usr_tipo].id)
       );
 
-      setIsLogginPopupOpen(false); // Cerrar el popup
-
-      navigate(TIPOS_USUARIO[user.usr_tipo].redirectPath); // Redirigir a la ruta correspondiente
+      setIsLogginPopupOpen(false);
+      navigate(TIPOS_USUARIO[user.usr_tipo].redirectPath);
     } catch (error) {
       console.error("Error de login: ", error);
       setError(error);
@@ -93,26 +74,23 @@ function AuthProvider({ children }) {
   // Función para cerrar sesión
   const logout = async () => {
     try {
-      setError(null); // Limpiar errores
-      // Ruta para cerrar sesión (Backend)
+      setError(null);
       const endpoint = `${BACKEND_URL}/api/auth/logout`;
       await axios.post(
         endpoint,
         {},
         {
-          withCredentials: true, // para que se borre la cookie
+          withCredentials: true,
         }
       );
 
       localStorage.removeItem("user");
       localStorage.removeItem("tipoUsuario");
-      localStorage.removeItem("token");
       setUser(null);
       setTipoUsuario(0);
-      setToken(null); // Limpiar el token del estado
-      navigate("/"); // Redirigir a la página de inicio
+      navigate("/");
     } catch (error) {
-      console.error(error);
+      console.error("Error al cerrar sesión:", error);
       setError(error);
     }
   };
@@ -121,7 +99,6 @@ function AuthProvider({ children }) {
   useEffect(() => {
     const checkLoggedInUser = async () => {
       try {
-        // Obtener la información del usuario (Backend)
         const endpoint = `${BACKEND_URL}/api/auth/verify`;
         const response = await axios.get(endpoint, {
           withCredentials: true,
@@ -160,7 +137,6 @@ function AuthProvider({ children }) {
         isLoading,
         error,
         tipoUsuario,
-        token,
         isLogginPopupOpen,
         setIsLogginPopupOpen,
         setUser,
