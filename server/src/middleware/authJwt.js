@@ -6,11 +6,6 @@ export const authMiddleware = (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  // O seguir usando cookie si está
-  if (!token && req.cookies?.token) {
-    token = req.cookies.token;
-  }
-
   if (!token) {
     return res.status(401).json({ message: "Token no proporcionado" });
   }
