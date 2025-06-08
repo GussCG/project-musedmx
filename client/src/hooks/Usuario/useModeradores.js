@@ -62,10 +62,9 @@ export const useModeradores = () => {
       const encodedCorreo = encodeURIComponent(usuario.usr_correo);
       const endpoint = `${BACKEND_URL}/api/auth/mod/delete/${encodedCorreo}`;
       const response = await axios.delete(endpoint, {
-        withCredentials: true,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${usuario.token}`, // Asegúrate de enviar el token si es necesario
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       return response;

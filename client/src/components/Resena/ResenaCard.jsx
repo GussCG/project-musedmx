@@ -4,11 +4,7 @@ import ImagenesSlider from "../../components/Resena/ImagenesSlider";
 import Icons from "../Other/IconProvider";
 const { FaStar } = Icons;
 import { formatName } from "../../utils/formatName";
-import {
-  formatearFecha,
-  formatearFechaRelativa,
-  formatearFechaRelativaCompleta,
-} from "../../utils/formatearFechas";
+import { formatearFechaRelativaCompleta } from "../../utils/formatearFechas";
 import { SERVICIOS } from "../../constants/catalog";
 import { useTheme } from "../../context/ThemeProvider";
 import Skeleton from "react-loading-skeleton";
@@ -18,6 +14,9 @@ function ResenaCard({ resena = {}, loadingResena = true }) {
   loadingResena = false;
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
+
+  console.log("Reseña:", resena);
+
   return (
     <>
       <div className="resena-card">
