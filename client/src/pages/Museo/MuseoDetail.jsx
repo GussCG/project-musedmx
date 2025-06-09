@@ -90,15 +90,30 @@ function MuseoDetail() {
     loading: redesSocialesLoading,
     error: redesSocialesError,
   } = useMuseoRedesSociales(museoIdNumber);
-  const {
-    respuestas: respuestasTotales,
-    servicios: serviciosTotales,
-    loading: respuestasLoading,
-    error: respuestasError,
-  } = useRespuestasTotales({
-    encuestaId: 1,
-    museoId: museoIdNumber,
-  });
+  const { loading: respuestasLoading, fetchRespuestasTotales } =
+    useRespuestasTotales();
+
+  const [respuestasTotales, setRespuestasTotales] = useState([]);
+  const [serviciosTotales, setServiciosTotales] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchRespuestasTotales({
+          encuestaId: 1,
+          museoId: museoIdNumber,
+        });
+        setRespuestasTotales(response.respuestas);
+        setServiciosTotales(response.servicios);
+        console.log("Respuestas totales:", response.respuestas);
+        console.log("Servicios totales:", response.servicios);
+      } catch (error) {
+        console.error("Error fetching respuestas totales:", error);
+      }
+    };
+    fetchData();
+  }, [museoIdNumber]);
+
   const [favoritoCount, setFavoritoCount] = useState(0);
   const { getFavoritosCountByMuseoId } = useFavorito({
     museoId: museoIdNumber,

@@ -417,7 +417,8 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`visitas` (
 --  INDEX `id_Museo` (`vi_mus_id` ASC) VISIBLE
   ) ENGINE=InnoDB;
 
-SELECT * FROM visitas WHERE vi_mus_id = 673 AND vi_usr_correo = "narguello@example.com";
+SELECT * FROM visitas WHERE vi_usr_correo = "gusester2002@gmail.com";
+DELETE FROM visitas WHERE vi_mus_id = 2190 AND vi_usr_correo = "gusester2002@gmail.com";
 -- DELETE FROM visitas WHERE vi_mus_id = 606 AND vi_usr_correo = "narguello@example.com";
 -- -----------------------------------------------------
 -- Table `musedmx`.`resenia`
@@ -567,7 +568,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas_encuesta` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-SELECT * FROM respuestas_encuesta WHERE visitas_vi_usr_correo = "narguello@example.com" AND visitas_vi_mus_id = 673;
+SELECT * FROM respuestas_servicios WHERE visitas_vi_usr_correo = "gusester2002@gmail.com" AND visitas_vi_mus_id = 2190;
 
 CREATE TABLE IF NOT EXISTS `musedmx`.`respuestas_servicios` (
   `visitas_vi_usr_correo` VARCHAR(75) NOT NULL,

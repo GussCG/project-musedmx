@@ -114,33 +114,42 @@ export default class Encuesta {
   static async findRespuestasTotales({ encuestaId, museoId }) {
     const [respuestas] = await pool.query(
       `
-      SELECT
-        p.preg_id,
-        AVG(CAST(r.res_respuesta AS UNSIGNED)) AS promedio_respuesta
-      FROM respuestas_encuesta r
-      JOIN preguntas p ON r.preguntas_preg_id = p.preg_id
-      WHERE 
-        p.encuesta_enc_cve = ?
-        AND r.visitas_vi_mus_id = ?
-        AND r.visitas_vi_usr_correo IS NOT NULL
-      GROUP BY p.preg_id
-      ORDER BY p.preg_id
-    `,
+        SELECT
+          p.preg_id,
+          AVG(CAST(r.res_respuesta AS UNSIGNED)) AS promedio_respuesta
+        FROM respuestas_encuesta r
+        JOIN preguntas p ON r.preguntas_preg_id = p.preg_id
+        JOIN resenia re ON 
+          re.visitas_vi_usr_correo = r.visitas_vi_usr_correo AND 
+          re.visitas_vi_mus_id = r.visitas_vi_mus_id
+        WHERE 
+          p.encuesta_enc_cve = ?
+          AND r.visitas_vi_mus_id = ?
+          AND r.visitas_vi_usr_correo IS NOT NULL
+          AND re.res_aprobado = 1
+        GROUP BY p.preg_id
+        ORDER BY p.preg_id
+        `,
       [encuestaId, museoId]
     );
 
     const [servicios] = await pool.query(
       `
-      SELECT
-        s.ser_id,
-        s.ser_nombre,
-        COUNT(*) AS veces_seleccionado
-      FROM respuestas_servicios rs
-      JOIN servicios s ON rs.servicios_ser_id = s.ser_id
-      WHERE rs.visitas_vi_mus_id = ?
-      GROUP BY s.ser_id, s.ser_nombre
-      ORDER BY veces_seleccionado DESC
-    `,
+        SELECT
+          s.ser_id,
+          s.ser_nombre,
+          COUNT(*) AS veces_seleccionado
+        FROM respuestas_servicios rs
+        JOIN servicios s ON rs.servicios_ser_id = s.ser_id
+        JOIN resenia re ON 
+          re.visitas_vi_usr_correo = rs.visitas_vi_usr_correo AND 
+          re.visitas_vi_mus_id = rs.visitas_vi_mus_id
+        WHERE 
+          rs.visitas_vi_mus_id = ?
+          AND re.res_aprobado = 1
+        GROUP BY s.ser_id, s.ser_nombre
+        ORDER BY veces_seleccionado DESC
+        `,
       [museoId]
     );
 
@@ -281,6 +290,45 @@ export default class Encuesta {
     } catch (error) {
       if (connection) await connection.rollback();
       console.error("Error en updateEncuesta:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async deleteEncuesta({ museoId, correo }) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      // Eliminar respuestas de encuesta
+      const [deleteRespuestas] = await connection.query(
+        `DELETE FROM respuestas_encuesta 
+             WHERE visitas_vi_usr_correo = ?
+               AND visitas_vi_mus_id = ?`,
+        [correo, museoId]
+      );
+      console.log("Respuestas eliminadas:", deleteRespuestas.affectedRows);
+
+      // Eliminar respuestas de servicios
+      const [deleteServicios] = await connection.query(
+        `DELETE FROM respuestas_servicios
+             WHERE visitas_vi_usr_correo = ?
+               AND visitas_vi_mus_id = ?`,
+        [correo, museoId]
+      );
+      console.log("Servicios eliminados:", deleteServicios.affectedRows);
+
+      await connection.commit();
+      return {
+        success: true,
+        affectedRows: {
+          respuestas: deleteRespuestas.affectedRows,
+          servicios: deleteServicios.affectedRows,
+        },
+      };
+    } catch (error) {
+      if (connection) await connection.rollback();
+      console.error("Error en deleteEncuesta:", error);
       throw error;
     } finally {
       connection.release();

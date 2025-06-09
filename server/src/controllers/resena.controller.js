@@ -11,6 +11,7 @@ import {
   sendRechazoResenaEmail,
   sendAprobadaResenaEmail,
 } from "../services/emailService.js";
+import Encuesta from "../models/encuesta.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -189,6 +190,13 @@ export const eliminarResena = async (req, res) => {
       }
     }
 
+    // Eliminar las respuestas de la encuesta asociada a la visita
+    const deleteEncuesta = await Encuesta.deleteEncuesta({
+      museoId: visitas_vi_mus_id,
+      correo: visitas_vi_usr_correo,
+    });
+    console.log("Encuesta eliminada:", deleteEncuesta);
+
     // Eliminar la visita
     const result = await Visitas.delete({
       vi_usr_correo: visitas_vi_usr_correo,
@@ -200,6 +208,7 @@ export const eliminarResena = async (req, res) => {
       success: true,
       message: "Reseña eliminada correctamente",
       result,
+      deleteEncuesta,
     });
   } catch (error) {
     handleHttpError(res, "ERROR_DELETE_RESENA", error);
