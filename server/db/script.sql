@@ -418,7 +418,7 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`visitas` (
   ) ENGINE=InnoDB;
 
 SELECT * FROM visitas WHERE vi_usr_correo = "gusester2002@gmail.com";
-DELETE FROM visitas WHERE vi_mus_id = 2190 AND vi_usr_correo = "gusester2002@gmail.com";
+-- DELETE FROM visitas WHERE vi_mus_id = 2190 AND vi_usr_correo = "gusester2002@gmail.com";
 -- DELETE FROM visitas WHERE vi_mus_id = 606 AND vi_usr_correo = "narguello@example.com";
 -- -----------------------------------------------------
 -- Table `musedmx`.`resenia`
