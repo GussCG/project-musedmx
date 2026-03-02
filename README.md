@@ -76,3 +76,7 @@ Variables de entorno necesarias:
   npm install
   npm run dev
 ```
+
+### Sistema de Recomendaciones
+
+[musedmx-recomendaciones](https://github.com/GussCG/musedmx-recomendaciones/tree/main)
