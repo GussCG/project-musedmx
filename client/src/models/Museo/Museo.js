@@ -1,3 +1,7 @@
+import { HorarioPrecio } from "./HorarioPrecio";
+import { RedSocial } from "./RedSocial";
+import { FotoGaleria } from "./FotoGaleria";
+
 export default class Museo {
   constructor({
     mus_id,
@@ -14,8 +18,11 @@ export default class Museo {
     mus_g_latitud,
     mus_g_longitud,
     galeria = [],
-    horarios_precios = [],
-    redes_sociales = [],
+    horarios = [],
+    redes = [],
+    total_resenias = 0,
+    total_favoritos = 0,
+    mus_calificacion = 0,
   }) {
     this.id = mus_id;
     this.nombre = mus_nombre;
@@ -30,12 +37,13 @@ export default class Museo {
     this.img = mus_foto;
     this.g_latitud = mus_g_latitud;
     this.g_longitud = mus_g_longitud;
+    this.total_resenias = total_resenias;
+    this.total_favoritos = total_favoritos;
+    this.mus_calificacion = mus_calificacion;
 
     // Subestructuras
     this.galeria = galeria.map((foto) => new FotoGaleria(foto));
-    this.horarios_precios = horarios_precios.map(
-      (horario) => new HorarioPrecio(horario)
-    );
-    this.redes_sociales = redes_sociales.map((red) => new RedSocial(red));
+    this.horarios = horarios.map((horario) => new HorarioPrecio(horario));
+    this.redes_sociales = redes.map((red) => new RedSocial(red));
   }
 }

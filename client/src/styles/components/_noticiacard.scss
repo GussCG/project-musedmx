@@ -1,0 +1,443 @@
+@use "../variables" as *;
+
+.noticia-card {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-resena-bg);
+  color: var(--font-color-primary);
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+
+  .buttons {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .button-card {
+      background-color: transparent;
+      color: white;
+      font-family: $font-primary;
+      font-size: clamp(0.75rem, 1vw, 0.85rem);
+      text-align: start;
+      font-weight: $font-w-medium;
+      text-decoration: none;
+      border: none;
+
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        svg {
+          transform: translate(5px, -5px);
+          opacity: 1;
+        }
+      }
+
+      svg {
+        font-size: 1.2rem;
+        color: white;
+        opacity: 0;
+        transition:
+          opacity 0.3s ease-in-out,
+          transform 0.3s ease-in-out;
+      }
+    }
+  }
+
+  .source-date {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .tag {
+    position: relative;
+    width: fit-content;
+    padding: 5px 10px;
+    background-color: var(--highlight-color);
+    font-family: $font-primary;
+    font-size: clamp(0.675rem, 2vw, 0.75rem);
+    line-height: 1.5;
+    font-weight: $font-w-bold;
+    color: white;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid var(--highlight-color);
+      top: 100%;
+      left: 15px;
+      transform: translateX(-50%);
+    }
+  }
+
+  .source,
+  .date {
+    font-family: $font-primary;
+    font-size: clamp(0.75rem, 2vw, 0.9rem);
+    line-height: 1.5;
+    margin: 0;
+    font-weight: $font-w-regular;
+    color: white;
+    text-transform: uppercase;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .title {
+    font-family: "Noto Serif", serif;
+    font-size: clamp(1.25rem, 5vw, 1.5rem);
+    line-height: 1.1;
+    margin: 0;
+    font-weight: $font-w-semibold;
+    color: white;
+    letter-spacing: -0.08em;
+  }
+
+  .summary {
+    font-family: $font-primary;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    line-height: 1.5;
+    margin: 0;
+    font-weight: $font-w-light;
+    color: white;
+    letter-spacing: 0.02em;
+  }
+
+  &.main .content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 20px;
+    gap: 10px;
+
+    justify-content: end;
+    color: white;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.5) 50%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+
+  &.side {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    padding: 20px;
+    background: rgb(255, 255, 255);
+    border-left: 3px solid var(--highlight-color);
+
+    .source,
+    .date {
+      font-family: $font-primary;
+      font-size: clamp(0.675rem, 3vw, 0.9rem);
+      line-height: 1.5;
+      margin: 0;
+      font-weight: $font-w-regular;
+      color: black;
+      text-transform: uppercase;
+
+      margin-bottom: 0.5rem;
+    }
+
+    .title {
+      font-family: "Noto Serif", serif;
+      font-size: clamp(0.875rem, 5vw, 1.25rem);
+      line-height: 1.1;
+      margin: 0;
+      font-weight: $font-w-semibold;
+      color: black;
+      letter-spacing: -0.08em;
+    }
+
+    .summary {
+      font-family: $font-primary;
+      font-size: clamp(0.675rem, 2vw, 1rem);
+      line-height: 1.5;
+      margin-top: 0.5rem;
+      font-weight: $font-w-light;
+      color: black;
+      letter-spacing: 0.02em;
+    }
+
+    .button-card {
+      color: black;
+
+      svg {
+        color: var(--highlight-color);
+      }
+    }
+
+    &.dark {
+      background: rgb(41, 41, 41);
+      border-left: 3px solid white;
+
+      .source,
+      .title,
+      .summary,
+      .date {
+        color: white;
+      }
+
+      .button-card {
+        color: white;
+
+        svg {
+          color: white;
+        }
+      }
+    }
+  }
+
+  &.hero-card {
+    position: relative;
+    min-height: 500px;
+    z-index: 10;
+
+    .content {
+      width: 100%;
+      height: 100%;
+      padding: clamp(20px, 3vw, 40px);
+
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      gap: 20px;
+
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.5) 50%,
+        rgba(0, 0, 0, 0) 100%
+      );
+    }
+    .title {
+      width: 80%;
+      font-family: "Noto Serif", serif;
+      font-size: clamp(1rem, 2vw, 3rem);
+      color: white;
+      font-weight: $font-w-semibold;
+      letter-spacing: -0.08em;
+    }
+
+    .summary {
+      width: 60%;
+      font-family: $font-primary;
+      font-size: clamp(0.875rem, 0.9vw, 1rem);
+      line-height: 1.5;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 50px;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+        opacity: 0.5;
+      }
+    }
+  }
+
+  &.standard {
+    background-color: var(--card-bg);
+    flex-direction: column;
+
+    .image-container {
+      position: relative;
+      width: 100%;
+      height: 200px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .source-name-tag {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: var(--card-bg);
+        color: var(--font-color-primary);
+        padding: 5px 10px;
+        font-family: $font-primary;
+        font-size: clamp(0.6rem, 3vw, 0.75rem);
+        line-height: 1.5;
+        font-weight: $font-w-bold;
+        text-transform: uppercase;
+        border-radius: 50px;
+        letter-spacing: 0.02em;
+      }
+    }
+
+    .text-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 1.5rem;
+      gap: 0.8rem;
+
+      .title {
+        font-family: "Noto Serif", serif;
+        font-size: clamp(1rem, 1vw, 1.2rem);
+        line-height: 1.2;
+        margin: 0;
+        font-weight: $font-w-bold;
+        color: var(--font-color-primary);
+        letter-spacing: -0.08em;
+      }
+
+      .summary {
+        font-family: $font-primary;
+        font-size: clamp(0.875rem, 0.9vw, 1rem);
+        line-height: 1.5;
+        margin: 0;
+        font-weight: $font-w-regular;
+        color: var(--font-color-primary);
+        letter-spacing: 0.02em;
+      }
+    }
+
+    .footer-card {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .date {
+        font-family: $font-primary;
+        line-height: 1.5;
+        margin-top: 1rem;
+        font-weight: $font-w-regular;
+        color: var(--font-color-primary);
+        opacity: 0.7;
+      }
+
+      .buttons {
+        .button-card {
+          color: var(--font-color-primary);
+
+          svg {
+            color: var(--highlight-color);
+          }
+        }
+      }
+    }
+  }
+
+  &.featured {
+    background-color: var(--card-bg);
+    flex-direction: row;
+    justify-content: space-between;
+
+    height: 100%;
+
+    .image-container {
+      width: 50%;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .text-content {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 1rem;
+      padding: 2rem;
+
+      .header-card {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-family: $font-primary;
+        font-size: clamp(0.675rem, 3vw, 0.8rem);
+
+        .source-name {
+          text-transform: uppercase;
+          line-height: 1.5;
+          letter-spacing: -0.02em;
+          font-weight: $font-w-semibold;
+          color: var(--highlight-color);
+        }
+
+        .time-ago {
+          font-weight: $font-w-regular;
+          color: var(--font-color-primary);
+          opacity: 0.7;
+        }
+      }
+
+      .title {
+        font-family: "Noto Serif", serif;
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        line-height: 1.1;
+        margin: 0;
+        font-weight: $font-w-bold;
+        color: var(--font-color-primary);
+        letter-spacing: -0.08em;
+      }
+
+      .summary {
+        font-family: $font-primary;
+        font-size: clamp(0.875rem, 0.9vw, 1rem);
+        line-height: 1.5;
+        margin: 0.8rem 0;
+        font-weight: $font-w-regular;
+        color: var(--font-color-primary);
+        letter-spacing: 0.02em;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        margin: 1rem 0;
+      }
+
+      .buttons {
+        .button-card {
+          color: var(--font-color-primary);
+
+          svg {
+            color: var(--highlight-color);
+          }
+        }
+      }
+    }
+  }
+}

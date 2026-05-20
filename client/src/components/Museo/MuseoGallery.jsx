@@ -4,12 +4,23 @@ import useLightBox from "../../hooks/Other/useLightBox";
 import { useMemo } from "react";
 import LoadingIndicator from "../Other/LoadingIndicator";
 
-function MuseoGallery({ images, loading }) {
+function MuseoGallery({ images, loading = false }) {
   const lightbox = useLightBox(images);
-
   const imagesMemo = useMemo(() => {
-    return images.map((image) => ({
-      src: image.gal_foto,
+    if (!images || images.length === 0) return [];
+
+    const shuffled = [...images];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    const seleccionadas = shuffled.slice(0, 10);
+
+    return seleccionadas.map((image) => ({
+      src: image.img,
+      id: image.id,
     }));
   }, [images]);
 
@@ -30,13 +41,10 @@ function MuseoGallery({ images, loading }) {
             <LoadingIndicator />
           </div>
         ) : (
-          <div
-            className={`museo-section-3-galeria count-${images.length}`}
-            // onClick={openLightBox}
-          >
+          <div className={`museo-section-3-galeria count-${imagesMemo.length}`}>
             {imagesMemo.map((image, index) => (
               <div
-                key={index}
+                key={image.id || index}
                 className={`museo-galeria-foto foto-${index + 1}`}
                 onClick={() => lightbox.openLightBox(index)}
               >

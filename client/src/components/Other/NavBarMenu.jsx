@@ -4,12 +4,13 @@ import { Link } from "react-router-dom";
 import userPlaceholder from "../../assets/images/placeholders/user_placeholder.png";
 
 import Icons from "./IconProvider";
-const { MuseDMXLogo, IoMenu } = Icons;
+const { MuseDMXLogo, IoMenu, MdFlashlightOff, MdFlashlightOn } = Icons;
 
 import MenuContainer from "./MenuContainer";
 import { useAuth } from "../../context/AuthProvider";
 import MenuUsuario from "../User/MenuUsuario";
 import UserImage from "../User/UserImage";
+import { useTheme } from "../../context/ThemeProvider";
 
 function NavBarMenu() {
   const { user } = useAuth();
@@ -23,6 +24,8 @@ function NavBarMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const botonRef = useRef(null);
   const menuRef = useRef(null);
+
+  const { toggleTheme, isDarkMode } = useTheme();
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -91,9 +94,14 @@ function NavBarMenu() {
               Cerca de mí
             </Link>
           </li>
-          <li className="nav-a" id="ver-populares">
-            <Link className="navbarmenu-link" to="/Museos/Populares">
-              Populares
+          <li className="nav-a" id="ver-comunidad">
+            <Link className="navbarmenu-link" to="/Comunidad">
+              Comunidad
+            </Link>
+          </li>
+          <li className="nav-a" id="ver-noticias">
+            <Link className="navbarmenu-link" to="/Noticias">
+              Noticias
             </Link>
           </li>
           {/* Si el usuario esta loggeado se cambia por un link a su perfil */}
@@ -113,16 +121,25 @@ function NavBarMenu() {
               <MenuUsuario className={showMenu ? "show" : ""} />
             </li>
           ) : (
-            <li className="nav-a">
-              <Link
-                to="/Auth/Iniciar"
-                className="button-link"
-                id="nav-button"
-                style={{ minWidth: "150px" }}
-              >
-                <label>Iniciar Sesión</label>
-              </Link>
-            </li>
+            <div className="right-buttons">
+              <li className="nav-a">
+                <Link
+                  to="/Auth/Iniciar"
+                  className="button-link"
+                  id="nav-button"
+                  style={{
+                    minWidth: "150px",
+                    minHeight: "30px",
+                    fontSize: "16px",
+                  }}
+                >
+                  <label>Iniciar Sesión</label>
+                </Link>
+              </li>
+              <button className="theme-toggle-button" onClick={toggleTheme}>
+                {isDarkMode ? <MdFlashlightOn /> : <MdFlashlightOff />}
+              </button>
+            </div>
           )}
         </ul>
         <button

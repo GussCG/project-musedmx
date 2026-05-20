@@ -17,15 +17,6 @@
   padding: 0 80px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .museo-detail-item {
-    view-timeline-name: --item-timeline;
-    animation: appear both;
-    animation-timeline: --item-timeline;
-    animation-range: entry 0% cover 25%;
-  }
-}
-
 .museo-detail-sections {
   display: flex;
   flex-direction: column;

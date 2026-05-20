@@ -78,7 +78,7 @@ const MuseoSlider = memo(function MuseoSlider({
                   loading={loading}
                 />
               </SwiperSlide>
-            )
+            ),
           )}
 
           {listaMuseos.length > 3 && (

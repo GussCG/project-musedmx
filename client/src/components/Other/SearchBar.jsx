@@ -40,7 +40,7 @@ function SearchBar({
   useEffect(() => {
     if (input.length > 0 && Array.isArray(suggestionsRef.current)) {
       const newFiltered = suggestionsRef.current.filter((item) =>
-        item.toLowerCase().includes(input.toLowerCase())
+        item.toLowerCase().includes(input.toLowerCase()),
       );
 
       setFilteredSuggestions((prev) => {
@@ -113,7 +113,7 @@ function SearchBar({
       parts.push(
         <span key={match.index} className="highlighted-text">
           {match[0]}
-        </span>
+        </span>,
       );
 
       lastIndex = match.index + match[0].length;
@@ -146,6 +146,8 @@ function SearchBar({
     setFilteredSuggestions([]);
     setShowSuggestions(false);
     setError(null);
+
+    onSearch?.("");
   };
 
   const toggleShowSuggestions = () => {
@@ -170,12 +172,12 @@ function SearchBar({
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setActiveIndex((prev) =>
-        prev < filteredSuggestions.length - 1 ? prev + 1 : 0
+        prev < filteredSuggestions.length - 1 ? prev + 1 : 0,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActiveIndex((prev) =>
-        prev > 0 ? prev - 1 : filteredSuggestions.length - 1
+        prev > 0 ? prev - 1 : filteredSuggestions.length - 1,
       );
     } else if (e.key === "Enter") {
       if (activeIndex >= 0 && activeIndex < filteredSuggestions.length) {
@@ -188,7 +190,7 @@ function SearchBar({
   useEffect(() => {
     if (input.length > 0 && Array.isArray(suggestionsRef.current)) {
       const newFiltered = suggestionsRef.current.filter((item) =>
-        item.toLowerCase().includes(input.toLowerCase())
+        item.toLowerCase().includes(input.toLowerCase()),
       );
       console.log("Filtradas:", newFiltered); // <- añade esto
 
@@ -263,9 +265,11 @@ function SearchBar({
           )}
       </div>
       <div className="button-container">
-        <button type="button" onClick={handleClearInput}>
-          <CgClose />
-        </button>
+        {input && (
+          <button type="button" onClick={handleClearInput}>
+            <CgClose />
+          </button>
+        )}
         <button type="button" onClick={toggleShowSuggestions}>
           <IoMdArrowDropdown
             style={{

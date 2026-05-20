@@ -13,6 +13,12 @@ const {
   FaMoon,
   SiRetroarch,
   MdMuseum,
+  FaUserEdit,
+  TbReportSearch,
+  MdOutlineAddHome,
+  BsShieldCheck,
+  LiaComments,
+  BiLogOut,
 } = Icons;
 import { useAuth } from "../../context/AuthProvider";
 import UserImage from "./UserImage";
@@ -28,8 +34,8 @@ function MenuUsuario({ className }) {
   const [modo] = isDarkMode
     ? ["Modo Oscuro"]
     : isRetroMode
-    ? ["Modo Retro"]
-    : ["Modo Claro"];
+      ? ["Modo Retro"]
+      : ["Modo Claro"];
 
   return (
     <motion.div
@@ -58,7 +64,7 @@ function MenuUsuario({ className }) {
       <div className="menu-usuario-body">
         <div className="menu-usuario-body-item">
           <div className="menu-usuario-body-item-img-container">
-            <img src={editarPerfilIcon} alt="Editar Perfil" />
+            <FaUserEdit title="Editar Usuario" />
           </div>
           <Link
             id="body-item-link"
@@ -70,7 +76,7 @@ function MenuUsuario({ className }) {
         {user?.usr_tipo === 1 && (
           <div className="menu-usuario-body-item">
             <div className="menu-usuario-body-item-img-container">
-              <img src={historialIcon} alt="Historial de visitas" />
+              <TbReportSearch title="Historial de visitas" />
             </div>
             <Link
               id="body-item-link"
@@ -125,6 +131,7 @@ function MenuUsuario({ className }) {
       </div>
       <hr />
       <div className="menu-usuario-darkmode-container">
+        {isDarkMode ? <FaMoon /> : isRetroMode ? <SiRetroarch /> : <IoSunny />}
         <label className={isRetroMode ? "retrobg" : ""}>{modo}</label>
         <div className="switch-button-dm">
           <input
@@ -143,21 +150,13 @@ function MenuUsuario({ className }) {
             animate={isDarkMode ? { rotate: 0 } : { rotate: 180 }}
             transition={{ duration: 0.3, type: "spring", stiffness: 100 }}
             id="switch-button-span"
-          >
-            {isDarkMode ? (
-              <FaMoon />
-            ) : isRetroMode ? (
-              <SiRetroarch />
-            ) : (
-              <IoSunny />
-            )}
-          </motion.div>
+          ></motion.div>
         </div>
       </div>
       <hr />
       <div className="menu-usuario-footer">
         <button id="menu-usuario-btn-logout" onClick={logout}>
-          Cerrar Sesión
+          <BiLogOut /> Cerrar Sesión
         </button>
       </div>
     </motion.div>

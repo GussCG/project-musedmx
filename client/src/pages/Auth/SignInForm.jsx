@@ -91,7 +91,9 @@ function SignInForm() {
       return;
     }
     setSelectedTematicas((prev) =>
-      checked ? [...prev, value] : prev.filter((tematica) => tematica !== value)
+      checked
+        ? [...prev, value]
+        : prev.filter((tematica) => tematica !== value),
     );
   };
 
@@ -138,14 +140,14 @@ function SignInForm() {
         esMayusculaValida &&
         esMinusculaValida &&
         esCaracterEspecialValido &&
-        esLongitudValida
+        esLongitudValida,
     );
   }, [password]);
 
   // Validar la confirmación de la contraseña
   useEffect(() => {
     setIsPasswordMatch(
-      password !== "" && password2 !== "" && password === password2
+      password !== "" && password2 !== "" && password === password2,
     );
   }, [password, password2]);
 
@@ -397,7 +399,7 @@ function SignInForm() {
                           selectedDate
                             ? `Seleccionaste el ${formatearFechaBDDATE(
                                 selectedDate,
-                                "dd-MM-yyyy"
+                                "dd-MM-yyyy",
                               )}`
                             : "Selecciona una fecha"
                         }
@@ -501,7 +503,7 @@ function SignInForm() {
                                 value={tematica.nombre}
                                 onChange={handleTematicaChange}
                                 checked={selectedTematicas.includes(
-                                  tematica.nombre
+                                  tematica.nombre,
                                 )}
                               />
                               <label htmlFor={tematica.nombre}>
@@ -514,44 +516,46 @@ function SignInForm() {
                     </div>
                     <hr />
                     <div className="registros-field-foto">
-                      <div className="registros-field-foto-input">
-                        <h2>Foto de perfil</h2>
-                        <div className="foto-input">
-                          <button
-                            className="file-btn"
-                            type="button"
-                            onClick={() =>
-                              document
-                                .getElementById("registros-frm-foto")
-                                .click()
-                            }
-                            value="Seleccionar Archivo"
-                          >
-                            Seleccionar Archivo
-                          </button>
-                          <span id="file-name" ref={fileNameRef}>
-                            {formatFileName(fileLabel)}
-                          </span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            name="signinfrmfoto"
-                            ref={imageInputRef}
-                            id="registros-frm-foto"
-                            style={{ display: "none" }}
-                            onChange={(e) => {
-                              handleImageChange(e, setFieldValue);
-                            }}
-                          />
+                      <h2>Foto de perfil</h2>
+                      <div className="registros-field-foto-container">
+                        <div className="registros-field-foto-input">
+                          <div className="foto-input">
+                            <button
+                              className="file-btn"
+                              type="button"
+                              onClick={() =>
+                                document
+                                  .getElementById("registros-frm-foto")
+                                  .click()
+                              }
+                              value="Seleccionar Archivo"
+                            >
+                              Seleccionar Archivo
+                            </button>
+                            <span id="file-name" ref={fileNameRef}>
+                              {formatFileName(fileLabel)}
+                            </span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              name="signinfrmfoto"
+                              ref={imageInputRef}
+                              id="registros-frm-foto"
+                              style={{ display: "none" }}
+                              onChange={(e) => {
+                                handleImageChange(e, setFieldValue);
+                              }}
+                            />
+                          </div>
                         </div>
+                        {imagePreview && (
+                          <UserImage
+                            src={imagePreview}
+                            alt="Foto de Perfil"
+                            className="user-image"
+                          />
+                        )}
                       </div>
-                      {imagePreview && (
-                        <UserImage
-                          src={imagePreview}
-                          alt="Foto de Perfil"
-                          className="user-image"
-                        />
-                      )}
                     </div>
                   </div>
                 </div>

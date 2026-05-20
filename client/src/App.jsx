@@ -35,6 +35,9 @@ import ScrollToTopButton from "./components/Other/ScrollToTopButton.jsx";
 import PassForm from "./pages/Auth/PassForm.jsx";
 import { MuseoFilterProvider } from "./context/MuseoFilterProvider.jsx";
 import { MapTourProvider } from "./context/MapTourProvider.jsx";
+import NewIndexPage from "./pages/Common/NewIndexPage.jsx";
+import ComunidadPage from "./pages/Common/ComunidadPage.jsx";
+import NoticiasPage from "./pages/Common/NoticiasPage.jsx";
 
 function App() {
   const location = useLocation();
@@ -50,7 +53,9 @@ function App() {
               <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                   {/* INDEX */}
-                  <Route path="/" element={<IndexPage />} />
+                  <Route path="/" element={<NewIndexPage />} />
+                  <Route path="Comunidad" element={<ComunidadPage />} />
+                  <Route path="Noticias" element={<NoticiasPage />} />
 
                   {/* Autenticación */}
                   <Route path="Auth" element={<AuthLayout />}>

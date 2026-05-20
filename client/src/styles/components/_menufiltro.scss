@@ -12,7 +12,9 @@
   top: 0;
   left: 0;
 
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  transition:
+    opacity 0.3s ease-in-out,
+    visibility 0.3s ease-in-out;
 }
 
 .bg-opaco.open {
@@ -57,15 +59,17 @@
     position: relative;
 
     h1 {
-      font-size: clamp(1.4rem, 2vw, 2rem);
+      display: none;
+      font-size: 1.8rem;
       font-weight: $font-w-bold;
       color: var(--font-color-primary);
-      font-family: $font-tertiary;
+      font-family: "Noto Serif", serif;
+      letter-spacing: -0.08em;
     }
 
     .filtro-menu-close-button {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       border: none;
       background-color: transparent;
       position: absolute;
@@ -75,8 +79,8 @@
       transition: transform 0.3s ease-in-out;
 
       svg {
-        width: 50px;
-        height: 50px;
+        width: 100%;
+        height: auto;
         color: var(--font-color-primary);
       }
 
@@ -102,10 +106,11 @@
       align-items: center;
 
       h2 {
-        font-size: 1.4rem;
+        font-size: clamp(1rem, 2vw, 1.4rem);
         font-weight: $font-w-bold;
         padding-left: clamp(80px, 2vw, 100px);
         color: var(--font-color-primary);
+        letter-spacing: -0.05em;
       }
 
       button {
@@ -151,9 +156,10 @@
         gap: 10px;
 
         label {
-          font-size: 1.2rem;
+          font-size: clamp(1rem, 1vw, 1.25rem);
           padding-left: 110px;
           color: var(--font-color-primary);
+          letter-spacing: -0.05em;
         }
 
         .filtro-chk {
@@ -331,26 +337,37 @@
     margin-bottom: 30px;
 
     .filtro-menu-boton {
-      width: 200px;
-      height: 68px;
-      border: none;
-      border-radius: 20px;
-      background-color: #d9d9d9;
-      color: black;
-      font-size: 1.4rem;
+      background-color: rgb(240, 240, 240);
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
       font-weight: $font-w-bold;
+      color: rgb(26, 26, 26);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      border: 2px solid var(--border-color);
 
-      transition: transform 0.3s ease-in-out;
+      transition: all 0.3s ease;
 
       &:hover {
-        cursor: pointer;
-        transform: scale(1.1);
+        background-color: rgb(26, 26, 26);
+        color: white;
+        border: 2px solid transparent;
+        transform: translateY(-2px);
       }
-    }
 
-    .black {
-      background-color: black;
-      color: white;
+      &.black {
+        background-color: black;
+        color: white;
+        border: 2px solid transparent;
+
+        &:hover {
+          background-color: rgb(240, 240, 240);
+          color: rgb(26, 26, 26);
+          border: 2px solid var(--border-color);
+          transform: translateY(-2px);
+        }
+      }
     }
   }
 
@@ -405,7 +422,8 @@
       align-items: center;
       justify-content: flex-start;
 
-      transition: background-color 0.3s ease-in-out,
+      transition:
+        background-color 0.3s ease-in-out,
         justify-content 0.3s ease-in-out;
 
       .switch-button-slider {
@@ -444,7 +462,8 @@
       justify-content: flex-end;
       background-color: #747474;
 
-      transition: justify-content 0.3s ease-in-out,
+      transition:
+        justify-content 0.3s ease-in-out,
         background-color 0.3s ease-in-out;
 
       .switch-button-slider {
@@ -458,7 +477,8 @@
       justify-content: flex-start;
       background-color: black;
 
-      transition: justify-content 0.3s ease-in-out,
+      transition:
+        justify-content 0.3s ease-in-out,
         background-color 0.3s ease-in-out;
 
       .switch-button-slider {

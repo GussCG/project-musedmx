@@ -3,6 +3,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap");
 
 // VARIABLES
 // Fuentes
@@ -19,8 +20,8 @@ $w-dove: #f0efe7;
 $filter-checkbox-bg: #d9d9d9;
 
 /* NAV */
-$nav-ul-font-s: 24px;
-$nav-login-font-s: 24px;
+$nav-ul-font-s: 18px;
+$nav-login-font-s: 18px;
 
 /* NAVBAR */
 $navbar-font-s: 18px;
@@ -84,7 +85,7 @@ $museo-detail-h1-size: 1.8rem;
 
 // Z-indexes
 $z-menu-container: 1000;
-$z-popups: 500;
+$z-popups: 999;
 $z-menu-filtros: 500;
 $z-lightbox: 500;
 $z-navbar-menu: 300;

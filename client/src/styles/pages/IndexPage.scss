@@ -39,7 +39,9 @@
       border-radius: 20px;
       padding: 20px;
 
-      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out,
+      transition:
+        background-color 0.3s ease-in-out,
+        color 0.3s ease-in-out,
         transform 0.3s ease-in-out;
     }
 
@@ -78,5 +80,463 @@
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 
     transition: content 0.2s ease-in-out;
+  }
+}
+
+#n-index-main {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+
+  display: block;
+  margin: 0;
+  padding: 0;
+
+  & > section {
+    width: 100%;
+    height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .index-main {
+    position: relative;
+
+    width: 100%;
+    height: 90vh;
+
+    display: flex;
+    align-items: center;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    .index-main-content {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 5%;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      z-index: 2;
+
+      .index-main-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.5rem, 5vw, 6rem);
+        line-height: 1.1;
+        margin: 0 0 40px 0;
+        font-weight: $font-w-regular;
+        color: var(--font-color-primary);
+        letter-spacing: -0.08em;
+
+        i {
+          font-style: italic;
+          font-weight: $font-w-light;
+        }
+      }
+
+      .index-main-subtitle {
+        font-family: $font-primary;
+        font-size: clamp(0.775rem, 3vw, 0.9rem);
+        line-height: 1.5;
+        letter-spacing: 0.15em;
+        margin: 0;
+        font-weight: $font-w-medium;
+        color: var(--color-a);
+      }
+
+      .nav-bar {
+        margin: 0 !important;
+        box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.2);
+        background: white;
+      }
+
+      .index-museum-name {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+        font-family: $font-primary;
+        font-size: clamp(0.775rem, 3vw, 0.9rem);
+        font-weight: $font-w-extralight;
+        color: white;
+      }
+    }
+  }
+
+  .index-museos-destacados {
+    width: 100%;
+    padding: 20px 5% 40px 5%;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    scroll-snap-type: start;
+
+    .museos-destacados-header {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .title {
+        .index-museos-destacados-title {
+          font-family: "Noto Serif", serif;
+          font-style: italic;
+          font-size: clamp(1.5rem, 3vw, 2rem);
+          color: var(--font-color-primary);
+          font-weight: $font-w-semibold;
+          letter-spacing: -0.08em;
+        }
+
+        .index-museos-destacados-subtitle {
+          font-family: $font-primary;
+          font-size: clamp(0.775rem, 3vw, 0.9rem);
+          line-height: 1.5;
+          margin: 0 6px;
+          font-weight: $font-w-regular;
+          color: var(--font-color-primary);
+          letter-spacing: 0.02em;
+        }
+      }
+
+      .controllers {
+        display: flex;
+        gap: 10px;
+
+        button {
+          width: 40px;
+          height: 40px;
+          border: 1px solid var(--border-color);
+          background-color: transparent;
+          color: var(--font-color-primary);
+          font-size: 1.2rem;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 50%;
+          transition: background-color 0.3s ease-in-out;
+
+          &:hover {
+            background-color: var(--bg-hover-button);
+          }
+        }
+      }
+    }
+
+    .swiper {
+      width: 100%;
+      height: 100%;
+      max-height: 600px;
+    }
+
+    .swiper-slide {
+      height: auto;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .index-museo-card {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .image-container {
+        flex-shrink: 0;
+        width: 100%;
+        height: 500px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 20px;
+
+          transition: opacity 0.3s ease-in-out;
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+      }
+
+      .tematica {
+        flex-shrink: 0;
+        margin: 20px 0 10px 0;
+        font-family: $font-primary;
+        font-size: clamp(0.775rem, 3vw, 0.8rem);
+        line-height: 1.5;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        font-weight: $font-w-medium;
+        color: var(--highlight-color);
+      }
+
+      .nombre {
+        font-family: $font-primary;
+        font-size: clamp(0.875rem, 5vw, 1.25rem);
+        line-height: 1.1;
+        margin-bottom: 10px;
+        font-weight: $font-w-semibold;
+        color: var(--font-color-primary);
+        letter-spacing: -0.05em;
+      }
+
+      .ubicacion {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        font-family: $font-primary;
+        font-size: clamp(0.775rem, 3vw, 0.9rem);
+        line-height: 1.5;
+        font-weight: $font-w-light;
+        color: var(--font-color-primary);
+        letter-spacing: 0.05em;
+      }
+    }
+
+    .no-museos-message {
+      width: 100%;
+      padding: 40px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-family: $font-primary;
+      font-size: clamp(0.775rem, 3vw, 0.9rem);
+      line-height: 1.5;
+      font-weight: $font-w-regular;
+      color: var(--font-color-primary);
+      letter-spacing: 0.05em;
+    }
+  }
+
+  .index-noticias {
+    width: 100%;
+    padding: 20px 5% 40px 5%;
+    justify-content: start;
+
+    .index-noticias-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      a {
+        text-decoration: none;
+      }
+
+      .index-noticias-title {
+        display: flex;
+
+        h2 {
+          font-family: "Noto Serif", serif;
+          font-style: italic;
+          font-size: clamp(1.5rem, 3vw, 2rem);
+          color: var(--font-color-primary);
+          font-weight: $font-w-semibold;
+          letter-spacing: -0.08em;
+        }
+
+        &:hover {
+          svg {
+            opacity: 1;
+            transform: translate(5px, -5px);
+          }
+        }
+
+        svg {
+          font-size: 1.5rem;
+          margin-left: 10px;
+          color: var(--highlight-color);
+          opacity: 0;
+          transition:
+            opacity 0.3s ease-in-out,
+            transform 0.3s ease-in-out;
+        }
+      }
+    }
+
+    .index-noticias-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      grid-template-rows: repeat(2, 1fr);
+      gap: 20px;
+      height: 800px;
+
+      .noticia-card:nth-child(1),
+      .noticia-skeleton:nth-child(1) {
+        grid-column: 1 / 2;
+        grid-row: 1 / 3;
+      }
+    }
+
+    @media (max-width: 1072px) {
+      .index-noticias-grid {
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+
+  .index-mobile {
+    width: 90%;
+    padding: 100px 5%;
+    margin: 0 auto;
+    height: fit-content;
+
+    background-color: rgba(14, 22, 173, 0.357);
+    border-radius: 40px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .index-mobile-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+
+      .title {
+        font-family: "Noto Serif", serif;
+        font-size: clamp(1.25rem, 5vw, 2rem);
+        line-height: 1.1;
+        font-weight: $font-w-bold;
+        text-align: center;
+        color: var(--font-color-primary);
+        letter-spacing: -0.08em;
+      }
+
+      .description {
+        display: inline;
+        font-family: $font-primary;
+        font-size: clamp(0.775rem, 3vw, 1rem);
+        line-height: 1.5;
+        margin: 0;
+        font-weight: $font-w-regular;
+        color: var(--font-color-primary);
+        text-align: center;
+        letter-spacing: -0.05em;
+
+        .logo-inline {
+          width: auto;
+          height: 1.25rem;
+          margin: 0 4px;
+
+          vertical-align: middle;
+          display: inline-block;
+        }
+      }
+
+      .app-links {
+        display: flex;
+        gap: 20px;
+
+        a {
+          width: fit-content;
+          min-width: 200px;
+          height: auto;
+          background-color: var(--highlight-color);
+          color: white;
+          text-decoration: none;
+
+          display: flex;
+          gap: 10px;
+          border-radius: 50px;
+          padding: 10px 20px;
+
+          transition:
+            opacity 0.3s ease-in-out,
+            transform 0.3s ease-in-out;
+
+          &:hover {
+            opacity: 0.8;
+            transform: translateY(-5px);
+          }
+
+          .link-msg {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+
+            .msg {
+              display: flex;
+              flex-direction: column;
+              font-size: clamp(0.675rem, 3vw, 1rem);
+              align-items: flex-start;
+              justify-content: center;
+              font-weight: $font-w-semibold;
+
+              .download {
+                font-size: clamp(0.55rem, 2vw, 0.6rem);
+                font-weight: $font-w-light;
+                text-transform: uppercase;
+                margin: 0;
+              }
+            }
+
+            svg {
+              font-size: 1.5rem;
+            }
+          }
+
+          &.app-store {
+            background-color: rgb(0, 102, 204);
+          }
+
+          &.play-store {
+            background-color: white;
+            color: black;
+            border: 1px solid var(--border-color);
+          }
+        }
+      }
+    }
+
+    .index-mobile-render {
+      width: 100%;
+
+      img {
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+        object-fit: cover;
+
+        filter: drop-shadow(0px 5px 15px rgba(0, 0, 0, 0.3));
+      }
+    }
   }
 }

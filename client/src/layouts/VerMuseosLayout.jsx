@@ -2,10 +2,11 @@ import { Routes, Route, Outlet } from "react-router-dom";
 import NavBarMenu from "../components/Other/NavBarMenu";
 import Footer from "../components/Other/Footer";
 import MuseosList from "../pages/Museo/MuseosList";
-import MuseoDetail from "../pages/Museo/MuseoDetail";
 import RegistroVisita from "../pages/Museo/RegistroVisita";
 import "../styles/pages/VerMuseosLayout.scss";
 import MuseoEncuesta from "../pages/Museo/MuseoEncuesta";
+import NMuseoDetail from "../pages/Museo/NMuseoDetail";
+// import MuseoDetail from "../pages/Museo/MuseoDetail";
 
 function VerMuseosLayout() {
   return (
@@ -39,7 +40,7 @@ function VerMuseosRoutes() {
           element={<MuseosList titulo="Resultados de la búsqueda" tipo="4" />}
         />
 
-        <Route path=":museoId" element={<MuseoDetail />} />
+        <Route path=":museoId" element={<NMuseoDetail />} />
 
         <Route path=":museoId/RegistrarVisita" element={<RegistroVisita />} />
         <Route path=":museoId/ContestarEncuesta" element={<MuseoEncuesta />} />

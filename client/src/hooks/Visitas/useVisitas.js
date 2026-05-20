@@ -74,6 +74,22 @@ export const useVisitas = ({ museoId } = {}) => {
     }
   };
 
+  const fetchVisitasCountDistinct = async (correo) => {
+    try {
+      setLoading(true);
+      const encodedCorreo = encodeURIComponent(correo);
+      const endpoint = `${BACKEND_URL}/api/visitas/numero-distinct/${encodedCorreo}`;
+      const response = await axios.get(endpoint);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching distinct visitas count:", error);
+      setError(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const yaVisitoMuseo = async (correo, museoId) => {
     try {
       setLoading(true);
@@ -90,6 +106,22 @@ export const useVisitas = ({ museoId } = {}) => {
     }
   };
 
+  const fetchCountResenasUsuario = async (correo) => {
+    try {
+      setLoading(true);
+      const encodedCorreo = encodeURIComponent(correo);
+      const endpoint = `${BACKEND_URL}/api/resena/usuario/count/${encodedCorreo}`;
+      const response = await axios.get(endpoint);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching reseñas count:", error);
+      setError(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     visitas,
     loading,
@@ -98,7 +130,9 @@ export const useVisitas = ({ museoId } = {}) => {
     fetchVisitas,
     removeVisita,
     fetchCountVisitas,
+    fetchVisitasCountDistinct,
     fetchVisitas,
     yaVisitoMuseo,
+    fetchCountResenasUsuario,
   };
 };

@@ -16,6 +16,20 @@
   padding: 10px 15px;
   margin: 0 auto;
 
+  &.hero-search-variant {
+    max-width: 100%;
+    width: 100%;
+    background-color: var(--bg-navbar);
+    box-shadow: none;
+    padding: 10px 20px;
+    margin: 0;
+    min-width: 0;
+
+    form {
+      gap: 10px;
+    }
+  }
+
   form {
     width: 100%;
     display: flex;
@@ -114,7 +128,9 @@
         font-size: clamp(1rem, 1rem, $navbar-font-s);
         text-align: left;
 
-        transition: color 0.3s ease-in-out, font-weight 0.3s ease-in-out,
+        transition:
+          color 0.3s ease-in-out,
+          font-weight 0.3s ease-in-out,
           background-color 0.3s ease-in-out;
 
         &:hover {

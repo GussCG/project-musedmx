@@ -6,9 +6,11 @@ import { TEMATICAS } from "../../constants/catalog";
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
 import { useAuth } from "../../context/AuthProvider";
 import { useEffect, useState } from "react";
+import { useTheme } from "../../context/ThemeProvider";
 
 function MuseoCercaItem({ museo, travelMode }) {
   const { user } = useAuth();
+  const { isDarkMode } = useTheme();
   const { verificarFavorito, getFavoritosCountByMuseoId } = useFavorito();
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -40,6 +42,10 @@ function MuseoCercaItem({ museo, travelMode }) {
       : `${(metros / 1000).toFixed(1)} km`;
   };
 
+  const colors = isDarkMode
+    ? TEMATICAS[museo.tematica]?.museoCardColorsDark
+    : TEMATICAS[museo.tematica]?.museoCardColorsLight;
+
   return (
     <motion.li
       key={museo.id}
@@ -54,7 +60,7 @@ function MuseoCercaItem({ museo, travelMode }) {
         stiffness: 50,
       }}
       style={{
-        backgroundColor: TEMATICAS[museo.tematica]?.museoCardColors.background,
+        backgroundColor: colors.background,
       }}
     >
       <div className="museo-list-item-img">
@@ -64,8 +70,7 @@ function MuseoCercaItem({ museo, travelMode }) {
         <div
           className="museo-list-item-distance"
           style={{
-            backgroundColor:
-              TEMATICAS[museo.tematica]?.museoCardColors.backgroundImage,
+            backgroundColor: colors.backgroundImage,
           }}
         >
           <p>{formatearDistancia(museo.distancia)}</p>
@@ -82,7 +87,7 @@ function MuseoCercaItem({ museo, travelMode }) {
           <Link to={`/Museos/${museo.id}`}>
             <p
               style={{
-                color: TEMATICAS[museo.tematica]?.museoCardColors.header,
+                color: colors.header,
               }}
             >
               {museo.nombre}
@@ -92,7 +97,7 @@ function MuseoCercaItem({ museo, travelMode }) {
         <div className="museo-list-item-tiempo">
           <p
             style={{
-              color: TEMATICAS[museo.tematica]?.museoCardColors.text,
+              color: colors.text,
             }}
           >
             {museo.tiempoEstimado} min - {timeLabels[travelMode]}

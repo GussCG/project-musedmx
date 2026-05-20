@@ -68,7 +68,7 @@ function QVSearch({ correo, agregarQV, refreshQV, museosQV }) {
 
       // Buscar museos que coincidan exactamente
       const exactMatch = museumSuggestions.find(
-        (m) => m.mus_nombre.toLowerCase() === searchTerm.toLowerCase()
+        (m) => m.mus_nombre.toLowerCase() === searchTerm.toLowerCase(),
       );
 
       if (exactMatch) {
@@ -76,7 +76,7 @@ function QVSearch({ correo, agregarQV, refreshQV, museosQV }) {
       } else {
         // Si no hay coincidencia exacta, buscar similares
         const similarMuseums = museumSuggestions.filter((m) =>
-          m.mus_nombre.toLowerCase().includes(searchTerm.toLowerCase())
+          m.mus_nombre.toLowerCase().includes(searchTerm.toLowerCase()),
         );
 
         if (similarMuseums.length === 1) {
@@ -103,7 +103,7 @@ function QVSearch({ correo, agregarQV, refreshQV, museosQV }) {
 
   return (
     <div
-      className="nav-bar"
+      className="nav-bar qv-search"
       onTouchStart={(e) => e.stopPropagation()}
       style={{ overscrollBehavior: "contain" }}
     >

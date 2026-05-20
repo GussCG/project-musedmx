@@ -15,8 +15,8 @@ const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
   const [modo] = isDarkMode
     ? ["Modo Oscuro"]
     : isRetroMode
-    ? ["Modo Retro"]
-    : ["Modo Claro"];
+      ? ["Modo Retro"]
+      : ["Modo Claro"];
 
   const buttonPosition = { x: "100%", y: "0" };
 
@@ -63,19 +63,7 @@ const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
                 <CgClose />
               </button>
             </div>
-            <div className="menu-header">
-              <motion.div
-                key={"MenuContainerHeader"}
-                className="menu-header-icon"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: 0.4 }}
-              >
-                <h1>Menú</h1>
-                {/* <img src={MuseDMXLogoVertical} alt="MuseDMX Icon" /> */}
-              </motion.div>
-            </div>
+            <div className="menu-header"></div>
             <div className="menu-body">
               <ul>
                 <motion.li
@@ -112,14 +100,25 @@ const MenuContainer = forwardRef(({ isOpen, toggleMenu }, ref) => {
                   </Link>
                 </motion.li>
                 <motion.li
-                  key={"Populares"}
+                  key={"Comunidad"}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <Link to="/Museos/Populares" onClick={toggleMenu}>
-                    Populares
+                  <Link to="/Comunidad" onClick={toggleMenu}>
+                    Comunidad
+                  </Link>
+                </motion.li>
+                <motion.li
+                  key={"Noticias"}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <Link to="/Noticias" onClick={toggleMenu}>
+                    Noticias
                   </Link>
                 </motion.li>
                 {user && (

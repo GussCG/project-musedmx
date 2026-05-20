@@ -3,11 +3,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import MenuFiltroMuseo from "../../components/Museo/MenuFiltroMuseo";
 import { useSearchParams, useLocation } from "react-router";
 import MuseoCard from "../../components/Museo/MuseoCard";
+import NMuseoCard from "../../components/Museo/NMuseoCard";
 import MuseosMapView from "./MuseosMapView";
 import MenuSort from "../../components/Other/MenuSort";
 import MapIndicaciones from "../../components/Maps/MapIndicaciones";
 import Icons from "../../components/Other/IconProvider";
-import MuseumSearch from "../../components/Museo/MuseumSearch";
 import { TEMATICAS } from "../../constants/catalog";
 import ReactPaginate from "react-paginate";
 import { useMuseos } from "../../hooks/Museo/useMuseos";
@@ -15,6 +15,7 @@ import { useMuseoFilters } from "../../context/MuseoFilterProvider";
 import LoadingIndicator from "../../components/Other/LoadingIndicator";
 import { useMuseosPopulares } from "../../hooks/Museo/useMuseosPopulares";
 import { scrollToTop } from "../../components/Other/ScrollToTop";
+import MuseosListHero from "../../components/Museo/MuseosListHero";
 
 const {
   LuArrowUpDown,
@@ -44,17 +45,31 @@ function MuseosList({ titulo, tipo }) {
   useEffect(() => {
     if (tipo === "2") {
       setIsMapView(true);
+      scrollToMain();
     } else {
       setIsMapView(false); // siempre forzar modo lista en otros tipos
     }
   }, [tipo]);
 
   // Filtros
-  const { filters, sortBy, setSortBy, applyFilters, removeFilter } =
-    useMuseoFilters();
+  const {
+    filters,
+    sortBy,
+    setSortBy,
+    applyFilters: applyFiltershook,
+    removeFilter,
+  } = useMuseoFilters();
+
+  const handleApplyFilters = (newFilters) => {
+    applyFiltershook(newFilters);
+    scrollToMain();
+  };
 
   const handleFilterRemove = (type, value) => {
     removeFilter(type, value);
+    setTimeout(() => {
+      scrollToMain();
+    }, 100);
   };
 
   // Fetch de museos
@@ -68,7 +83,7 @@ function MuseosList({ titulo, tipo }) {
       sortBy: isPopulares ? null : sortBy,
       isMapView: isPopulares ? false : isMapView,
     }),
-    [tipo, tituloSearch, filters, sortBy, isMapView, isPopulares]
+    [tipo, tituloSearch, filters, sortBy, isMapView, isPopulares],
   );
 
   const {
@@ -139,6 +154,7 @@ function MuseosList({ titulo, tipo }) {
   const handlePageClick = (event) => {
     const newPage = event.selected + 1;
     fetchMuseos(newPage);
+    scrollToMain();
   };
 
   const abrirMenu = (event) => {
@@ -157,6 +173,24 @@ function MuseosList({ titulo, tipo }) {
     return /Mobi|Android|iPhone|iPod/i.test(navigator.userAgent);
   }, []);
 
+  const scrollToMain = () => {
+    setTimeout(() => {
+      const mainSection = document.getElementById("vermuseos-main");
+      if (mainSection) {
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = mainSection.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    }, 100);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -164,11 +198,16 @@ function MuseosList({ titulo, tipo }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <MuseumSearch swiperRef={null} />
+      <MuseosListHero
+        onOpenFilters={abrirMenu}
+        currentFilters={filters}
+        onSearchAction={scrollToMain}
+      />
+
       <MenuFiltroMuseo
         menuVisible={menuVisible}
         setMenuVisible={setMenuVisible}
-        onFilterApply={applyFilters}
+        onFilterApply={handleApplyFilters}
         onFilterRemove={removeFilter}
         currentFilters={filters}
       />
@@ -190,7 +229,10 @@ function MuseosList({ titulo, tipo }) {
                 <button
                   type="button"
                   className="museos-header-section-right-button"
-                  onClick={() => setIsMapView(!isMapView)}
+                  onClick={() => {
+                    setIsMapView(!isMapView);
+                    scrollToMain();
+                  }}
                   title={isMapView ? "Ver lista" : "Ver mapa"}
                   id="ver-lista"
                 >
@@ -227,20 +269,6 @@ function MuseosList({ titulo, tipo }) {
                     />
                   )}
                 </>
-              )}
-
-              {!isPopulares && (
-                <button
-                  type="button"
-                  className="museos-header-section-right-button"
-                  onClick={(event) => {
-                    abrirMenu();
-                  }}
-                  title="Filtrar"
-                >
-                  <p>Filtrar</p>
-                  <FaFilter />
-                </button>
               )}
             </div>
           </div>
@@ -332,7 +360,7 @@ function MuseosList({ titulo, tipo }) {
                   </motion.div>
                 ) : (
                   museos?.map((museo) => (
-                    <MuseoCard
+                    <NMuseoCard
                       key={museo.id}
                       museo={museo}
                       editMode={false}
@@ -351,7 +379,6 @@ function MuseosList({ titulo, tipo }) {
                 nextLabel={<IoIosArrowForward />}
                 onPageChange={(event) => {
                   handlePageClick(event);
-                  scrollToTop();
                 }}
                 pageRangeDisplayed={1}
                 marginPagesDisplayed={1}

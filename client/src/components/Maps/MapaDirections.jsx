@@ -4,7 +4,8 @@ import Icons from "../Other/IconProvider";
 const { CgClose, FaInfo, TbRouteSquare } = Icons;
 import { motion, AnimatePresence } from "framer-motion";
 import { TEMATICAS } from "../../constants/catalog";
-import ToastMessage from "../Other/ToastMessage";
+import { toast, Bounce } from "react-toastify";
+import { useTheme } from "../../context/ThemeProvider";
 
 function Directions({ userLocation, museosMostrados, travelMode }) {
   const museo = museosMostrados[0]; // Solo se usa el primer museo para la ruta
@@ -21,7 +22,12 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
   const [isCalculating, setIsCalculating] = useState(false);
   const [hasCalculatedRoute, setHasCalculatedRoute] = useState(false);
 
+  const { isDarkMode } = useTheme();
+
   const tema = TEMATICAS[museo.tematica];
+  const colors = isDarkMode
+    ? tema.museoCardColorsDark
+    : tema.museoCardColorsLight;
 
   useEffect(() => {
     if (!map || !routesLib) return;
@@ -31,7 +37,7 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
       map,
       suppressMarkers: true,
       polylineOptions: {
-        strokeColor: tema.museoCardColors.text,
+        strokeColor: colors.text,
         strokeOpacity: 0.8,
         strokeWeight: 6,
       },
@@ -52,11 +58,18 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
 
   const calculateRoute = () => {
     if (!userLocation) {
-      ToastMessage({
-        tipo: "error",
-        mensaje: "No tienes una ubicación establecida.",
+      // 2. Usamos el disparador directo de la librería
+      toast.warning("No tienes una ubicación establecida.", {
         position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Bounce,
+        className: "musedmx-toast warning",
       });
+      return; // 3. IMPORTANTE: Ponemos un return para que detenga la ejecución aquí
     }
 
     if (!directionsService || !directionsRenderer) return;

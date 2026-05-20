@@ -12,10 +12,11 @@ export function useMuseo(museoId) {
   const fetchMuseo = async (id) => {
     try {
       setLoading(true);
-      const endpoint = `${BACKEND_URL}/api/museos/detalle/${id}`;
+      const endpoint = `${BACKEND_URL}/api/museos/detalleFull/${id}`;
       const response = await axios.get(endpoint);
 
       const museoData = new Museo(response.data.museo);
+      console.log("Museo data fetched:", museoData);
       setMuseo(museoData);
       setLoading(false);
       return museoData;

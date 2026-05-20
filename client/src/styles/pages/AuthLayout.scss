@@ -2,10 +2,12 @@
 
 #login-main {
   width: 80%;
+  height: 85vh;
 
   display: grid;
   grid-template-columns: 0.7fr 0.05fr 1fr;
   padding: 30px;
+  align-items: center;
 
   overflow: hidden;
 
@@ -19,9 +21,11 @@
     align-items: center;
 
     h1 {
-      font-size: clamp(1.08rem, 5vw, 2.5rem);
+      font-family: "Noto Serif", monospace;
+      font-size: clamp(2.2rem, 1vw, 3rem);
       margin-bottom: 62px;
       color: var(--font-color-primary);
+      letter-spacing: -0.08em;
 
       padding: 50px 0 0 0;
     }
@@ -44,6 +48,7 @@
       line-height: 23px;
       text-decoration: none;
       transition: opacity 0.3s ease-in-out;
+      letter-spacing: -0.05em;
 
       &:hover {
         opacity: 0.5;
@@ -55,16 +60,7 @@
       text-align: center;
       color: var(--font-color-primary);
       font-size: clamp(0.7rem, 2vw, 1rem);
-    }
-
-    .error-message-container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      font-family: $font-primary;
-      font-size: clamp(0.8rem, 3vw, 1rem);
+      letter-spacing: -0.05em;
     }
 
     .login-field {
@@ -82,6 +78,7 @@
         color: var(--font-color-primary);
         font-size: clamp(0.8rem, 3vw, 1rem);
         padding: 10px;
+        letter-spacing: -0.05em;
       }
 
       label {
@@ -95,6 +92,7 @@
         transform-origin: 0 0;
         transition: transform 0.3s ease;
         opacity: 0.5;
+        letter-spacing: -0.05em;
       }
 
       input:focus + label,
@@ -140,10 +138,12 @@
   align-items: center;
 
   h1 {
+    font-family: "Noto Serif", serif;
     font-size: clamp(1.08rem, 5vw, 2.5rem);
     margin-bottom: 45px;
     text-align: center;
     color: var(--font-color-primary);
+    letter-spacing: -0.08em;
   }
 
   form {
@@ -157,12 +157,14 @@
     justify-content: center;
     gap: 50px;
     color: var(--font-color-primary);
+    letter-spacing: -0.05em;
 
     p {
       width: 100%;
       text-align: center;
       font-size: clamp(0.7rem, 2vw, 1rem);
       color: var(--font-color-primary);
+      letter-spacing: -0.05em;
     }
   }
 }
@@ -183,9 +185,11 @@
     padding: 30px;
 
     h1 {
+      font-family: "Noto Serif", serif;
       font-size: clamp(1.08rem, 5vw, 2.5rem);
       text-align: center;
       color: var(--font-color-primary);
+      letter-spacing: -0.08em;
     }
 
     p {
@@ -193,6 +197,7 @@
       text-align: center;
       font-size: clamp(0.7rem, 2vw, 1rem);
       color: var(--font-color-primary);
+      letter-spacing: -0.05em;
       margin-bottom: 20px;
     }
   }
@@ -217,6 +222,7 @@
     width: 70%;
     min-width: 300px;
     grid-template-columns: 1fr;
+    align-items: center;
 
     #login-linea,
     #login-imagen {

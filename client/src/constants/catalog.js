@@ -1,4 +1,3 @@
-import { redirect } from "react-router";
 import Icons from "../components/Other/IconProvider";
 
 export const TEMATICAS = {
@@ -6,11 +5,17 @@ export const TEMATICAS = {
     id: 1,
     nombre: "Antropología",
     icon: Icons.antropologiaIcon,
-    museoCardColors: {
-      background: "#dcffd4",
-      header: "#0b891e",
-      text: "#198e2b",
+    museoCardColorsLight: {
+      background: "#edffe9",
+      header: "#009016",
+      text: "#1b6c27",
       backgroundImage: "#004700",
+    },
+    museoCardColorsDark: {
+      background: "#212820",
+      header: "#009016",
+      text: "#c8ffd1",
+      backgroundImage: "#c7ffc7",
     },
     museoDetailBGColors: {
       background_1: "#dcffd4",
@@ -25,10 +30,16 @@ export const TEMATICAS = {
     id: 2,
     nombre: "Arte",
     icon: Icons.arteIcon,
-    museoCardColors: {
-      background: "#b6c3ff",
-      header: "#3548a7",
-      text: "#3548a7",
+    museoCardColorsLight: {
+      background: "#dbe1ff",
+      header: "#3254ff",
+      text: "#25389c",
+      backgroundImage: "#000d47",
+    },
+    museoCardColorsDark: {
+      background: "#202334",
+      header: "#3254ff",
+      text: "#b6c2ff",
       backgroundImage: "#000d47",
     },
     museoDetailBGColors: {
@@ -44,10 +55,16 @@ export const TEMATICAS = {
     id: 3,
     nombre: "Arte Alternativo",
     icon: Icons.arteAlternativoIcon,
-    museoCardColors: {
-      background: "#e3c6ff",
-      header: "#7001ab",
-      text: "#74269e",
+    museoCardColorsLight: {
+      background: "#f1e1ff",
+      header: "#6b00a5",
+      text: "#50007b",
+      backgroundImage: "#44027d",
+    },
+    museoCardColorsDark: {
+      background: "#362f3c",
+      header: "#6b00a5",
+      text: "#c6a3ff",
       backgroundImage: "#44027d",
     },
     museoDetailBGColors: {
@@ -63,10 +80,16 @@ export const TEMATICAS = {
     id: 4,
     nombre: "Arqueología",
     icon: Icons.arqueologiaIcon,
-    museoCardColors: {
-      background: "#e5c1a0",
+    museoCardColorsLight: {
+      background: "#ffeddd",
       header: "#7d4f05",
       text: "#754e00",
+      backgroundImage: "#7d5002",
+    },
+    museoCardColorsDark: {
+      background: "#3b3229",
+      header: "#7d4f05",
+      text: "#ffd3b1",
       backgroundImage: "#7d5002",
     },
     museoDetailBGColors: {
@@ -82,10 +105,16 @@ export const TEMATICAS = {
     id: 5,
     nombre: "Ciencia y Tecnología",
     icon: Icons.cienciayTecnologiaIcon,
-    museoCardColors: {
-      background: "#ffb6b6",
-      header: "#920b0b",
-      text: "#731313",
+    museoCardColorsLight: {
+      background: "#ffd9d9",
+      header: "#910000",
+      text: "#570707",
+      backgroundImage: "#580101",
+    },
+    museoCardColorsDark: {
+      background: "#301e1e",
+      header: "#910000",
+      text: "#ffc2c2",
       backgroundImage: "#580101",
     },
     museoDetailBGColors: {
@@ -101,10 +130,16 @@ export const TEMATICAS = {
     id: 6,
     nombre: "Especializado",
     icon: Icons.especializadoIcon,
-    museoCardColors: {
-      background: "#97cab2",
-      header: "#2a4d3e",
-      text: "#1d4832",
+    museoCardColorsLight: {
+      background: "#cfe0d8",
+      header: "#2c634b",
+      text: "#0a3d23",
+      backgroundImage: "#223633",
+    },
+    museoCardColorsDark: {
+      background: "#1c201e",
+      header: "#2c634b",
+      text: "#d8ffeb",
       backgroundImage: "#223633",
     },
     museoDetailBGColors: {
@@ -120,10 +155,16 @@ export const TEMATICAS = {
     id: 7,
     nombre: "Historia",
     icon: Icons.historiaIcon,
-    museoCardColors: {
-      background: "#fff7d2",
-      header: "#8c842f",
-      text: "#8d7e2b",
+    museoCardColorsLight: {
+      background: "#fff9dc",
+      header: "#9f9500",
+      text: "#a28a00",
+      backgroundImage: "#928900",
+    },
+    museoCardColorsDark: {
+      background: "#333125",
+      header: "#9f9500",
+      text: "#fff3ae",
       backgroundImage: "#928900",
     },
     museoDetailBGColors: {
@@ -139,7 +180,13 @@ export const TEMATICAS = {
     id: 8,
     nombre: "Otro",
     icon: Icons.otroIcon,
-    museoCardColors: {
+    museoCardColorsLight: {
+      background: "#ebebeb",
+      header: "#545454",
+      text: "#434343",
+      backgroundImage: "#2f2f2f",
+    },
+    museoCardColorsDark: {
       background: "#ebebeb",
       header: "#545454",
       text: "#434343",

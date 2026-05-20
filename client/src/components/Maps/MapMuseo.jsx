@@ -8,11 +8,11 @@ const { FaPerson } = Icons;
 import { useTheme } from "../../context/ThemeProvider";
 import MapaDirections from "./MapaDirections";
 import MapaCercaDeMi from "./MapaCercaDeMi";
-import { motion, AnimatePresence, m } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import MapaPopulares from "./MapaPopulares";
 import MapaCambiarCentro from "./MapaCambiarCentro";
 import LoadingMessage from "./LoadingMessage";
-import ToastMessage from "../Other/ToastMessage";
+import { toast, Bounce } from "react-toastify";
 import {
   VITE_MAP_DETAIL_ID,
   VITE_MAP_DARKMODE_DETAIL_ID,
@@ -56,8 +56,8 @@ function MapMuseo({
     return isRetroMode
       ? VITE_MAP_RETROMODE_DETAIL_ID
       : isDarkMode
-      ? VITE_MAP_DARKMODE_DETAIL_ID
-      : VITE_MAP_DETAIL_ID;
+        ? VITE_MAP_DARKMODE_DETAIL_ID
+        : VITE_MAP_DETAIL_ID;
   }, [isDarkMode, isRetroMode]);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ function MapMuseo({
         map.panTo(newLocation);
       }
     },
-    [map, setLocation]
+    [map, setLocation],
   );
 
   // Inicializar el mapa
@@ -121,7 +121,7 @@ function MapMuseo({
     museosParaCalculo.forEach((museo) => {
       if (museo?.g_latitud && museo?.g_longitud) {
         bounds.extend(
-          new window.google.maps.LatLng(museo.g_latitud, museo.g_longitud)
+          new window.google.maps.LatLng(museo.g_latitud, museo.g_longitud),
         );
       }
     });
@@ -134,8 +134,8 @@ function MapMuseo({
       fallback.extend(
         new window.google.maps.LatLng(
           location.userLocation.lat,
-          location.userLocation.lng
-        )
+          location.userLocation.lng,
+        ),
       );
       setMapBounds(fallback);
     }
@@ -151,8 +151,8 @@ function MapMuseo({
         bounds.extend(
           new window.google.maps.LatLng(
             parseFloat(museo.g_latitud),
-            parseFloat(museo.g_longitud)
-          )
+            parseFloat(museo.g_longitud),
+          ),
         );
       }
     });
@@ -238,7 +238,7 @@ function MapMuseo({
         location.userLocation.lat,
         location.userLocation.lng,
         museo.g_latitud,
-        museo.g_longitud
+        museo.g_longitud,
       );
       return distancia <= radioKM / 1000;
     });
@@ -250,11 +250,19 @@ function MapMuseo({
   useEffect(() => {
     if (tipo === "2") {
       if (!location?.userLocation && !haMostradoMensajeUbicacion.current) {
-        ToastMessage({
-          tipo: "error",
-          mensaje: "No tienes una ubicación definida para calcular distancias.",
-          position: "top-right",
-        });
+        toast.error(
+          "No tienes una ubicación definida para calcular distancias.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            transition: Bounce,
+            className: "musedmx-toast error",
+          },
+        );
         haMostradoMensajeUbicacion.current = true;
       } else if (
         location?.userLocation &&
@@ -262,12 +270,19 @@ function MapMuseo({
         museosDentroDelRadio.length === 0 &&
         !haMostradoMensajeVacio.current
       ) {
-        ToastMessage({
-          tipo: "info",
-          mensaje:
-            "No se encontraron museos en tu área seleccionada. Ajusta el radio o cambia de ubicación.",
-          position: "top-right",
-        });
+        toast.info(
+          "No se encontraron museos en tu área seleccionada. Ajusta el radio o cambia de ubicación.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            transition: Bounce,
+            className: "musedmx-toast info",
+          },
+        );
         haMostradoMensajeVacio.current = true;
       }
     }
@@ -301,12 +316,12 @@ function MapMuseo({
     const bounds = new window.google.maps.LatLngBounds(
       new window.google.maps.LatLng(
         lat - RADIUS_IN_DEGREES,
-        lng - RADIUS_IN_DEGREES
+        lng - RADIUS_IN_DEGREES,
       ),
       new window.google.maps.LatLng(
         lat + RADIUS_IN_DEGREES,
-        lng + RADIUS_IN_DEGREES
-      )
+        lng + RADIUS_IN_DEGREES,
+      ),
     );
 
     map.fitBounds(bounds);

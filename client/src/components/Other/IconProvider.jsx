@@ -52,7 +52,7 @@ import buscarIcon from "../../assets/icons/buscar-icon.svg";
 import editarIcon from "../../assets/icons/editar-w-icon.svg";
 
 // Mod History
-import { LuArrowUpDown } from "react-icons/lu";
+import { LuArrowUpDown, LuMapPin } from "react-icons/lu";
 import verIcon from "../../assets/icons/eye-opened-icon.png";
 
 // Mod List
@@ -143,7 +143,7 @@ import { RiMapPinUserFill } from "react-icons/ri";
 import { SiRetroarch } from "react-icons/si";
 import { FaAngleDoubleUp } from "react-icons/fa";
 
-import { MdMuseum } from "react-icons/md";
+import { MdHome, MdMuseum } from "react-icons/md";
 import { IoMenu } from "react-icons/io5";
 import { TbRouteSquare } from "react-icons/tb";
 
@@ -191,6 +191,33 @@ import { LuRadius } from "react-icons/lu";
 import { RiSurveyFill } from "react-icons/ri";
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
+
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { MdArrowOutward } from "react-icons/md";
+import { FaGooglePlay } from "react-icons/fa";
+import { IoLogoAppleAppstore } from "react-icons/io5";
+
+import { MdAccessTime } from "react-icons/md";
+import { FaQuoteRight } from "react-icons/fa6";
+
+import { MdReviews } from "react-icons/md";
+import { HiMapPin } from "react-icons/hi2";
+import { FaArrowRight } from "react-icons/fa6";
+import { IoMdTime } from "react-icons/io";
+import { FaMoneyBills } from "react-icons/fa6";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdFlashlightOff } from "react-icons/md";
+import { MdFlashlightOn } from "react-icons/md";
+
+import { TbReportSearch } from "react-icons/tb";
+import { MdOutlineAddHome } from "react-icons/md";
+import { BsShieldCheck } from "react-icons/bs";
+import { LiaComments } from "react-icons/lia";
+import { BiLogOut } from "react-icons/bi";
+
+import { FaInfoCircle } from "react-icons/fa";
+import { FaGear } from "react-icons/fa6";
+import { FaChevronDown } from "react-icons/fa6";
 
 const Icons = {
   MuseDMXLogo,
@@ -328,6 +355,31 @@ const Icons = {
   RiSurveyFill,
   GrFormPrevious,
   GrFormNext,
+  FaChevronLeft,
+  FaChevronRight,
+  LuMapPin,
+  MdArrowOutward,
+  FaGooglePlay,
+  IoLogoAppleAppstore,
+  MdHome,
+  MdAccessTime,
+  FaQuoteRight,
+  MdReviews,
+  HiMapPin,
+  FaArrowRight,
+  IoMdTime,
+  FaMoneyBills,
+  MdKeyboardDoubleArrowRight,
+  MdFlashlightOn,
+  MdFlashlightOff,
+  TbReportSearch,
+  MdOutlineAddHome,
+  BsShieldCheck,
+  LiaComments,
+  BiLogOut,
+  FaInfoCircle,
+  FaGear,
+  FaChevronDown,
 };
 
 export default Icons;

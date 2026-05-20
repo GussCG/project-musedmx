@@ -54,7 +54,8 @@
         background-repeat: no-repeat;
         background-position: center;
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-        transition: transform 0.3s ease-in-out,
+        transition:
+          transform 0.3s ease-in-out,
           background-image 0.3s ease-in-out;
 
         img {
@@ -340,6 +341,241 @@
           opacity: 0.1;
         }
       }
+    }
+  }
+}
+
+.n-museo-card {
+  @extend .museo-card;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 500px;
+  overflow: hidden;
+  box-shadow: none;
+
+  .museo-card-img-container {
+    min-height: 250px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+
+    .museo-card-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
+    .rating-pill {
+      min-width: 64px;
+      position: absolute;
+      top: 16px;
+      right: 14px;
+      z-index: 31;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--museo-card-rating-pill-bg);
+      padding: 4px 12px;
+
+      border-radius: 12px;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        font-size: 0.9rem;
+        color: var(--museo-card-rating-pill-color);
+        font-weight: $font-w-bold;
+        font-family: $font-primary;
+
+        svg {
+          width: 16px;
+          height: auto;
+        }
+      }
+    }
+  }
+
+  .museo-card-info-container {
+    z-index: 30;
+    padding: 20px;
+    gap: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .info-header {
+      width: 100%;
+      // height: 40px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .tematica-pill {
+        height: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 16px;
+        background-color: var(--museo-card-rating-pill-bg);
+
+        color: white;
+        font-size: clamp(0.7rem, 1vw, 0.8rem);
+        font-weight: $font-w-semibold;
+        font-family: $font-primary;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .info-header-right {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+
+        span {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 4px;
+
+          color: var(--font-color-primary);
+
+          &.likes {
+            pointer-events: all;
+
+            .fav-button-container {
+              position: relative;
+              .fav-button-span {
+                filter: none;
+              }
+            }
+
+            svg {
+              height: auto;
+              fill: rgb(255, 49, 49);
+            }
+          }
+
+          svg {
+            width: 22px;
+            height: auto;
+          }
+        }
+      }
+    }
+
+    .info-body {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      flex: 1;
+      gap: 8px;
+
+      #museo-card-nombre {
+        width: 80%;
+        font-family: "Noto Serif", serif;
+        font-size: clamp(1.2rem, 2vw, 1.35rem);
+        min-height: 3.2rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; // Corta en la segunda línea
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+
+        text-align: left;
+        color: var(--font-color-primary);
+        font-weight: $font-w-bold;
+        letter-spacing: -0.08em;
+      }
+
+      .horarios {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        gap: 4px;
+
+        h3 {
+          font-size: clamp(1.2rem, 1.5vw, 1.35rem);
+          font-weight: $font-w-semibold;
+          font-family: $font-primary;
+        }
+
+        p {
+          font-size: clamp(0.85rem, 1.5vw, 0.9rem);
+          font-weight: $font-w-regular;
+          font-family: $font-primary;
+        }
+      }
+    }
+
+    hr {
+      width: 100%;
+      border: none;
+      opacity: 0.25;
+      margin-top: auto;
+      margin-bottom: 12px;
+    }
+
+    .info-footer {
+      z-index: 31;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .location {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+
+        font-weight: $font-w-semibold;
+        font-size: clamp(0.85rem, 1vw, 1rem);
+      }
+
+      .goto-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        transition: all 0.3s ease-in-out;
+        pointer-events: all;
+
+        svg {
+          width: 16px;
+          height: auto;
+          fill: white;
+        }
+
+        &:hover {
+          transform: translateX(4px);
+        }
+      }
+    }
+
+    .museo-card-tematica-icon {
+      position: absolute;
+      bottom: -40px;
+      right: 10px;
+      width: 230px;
+
+      opacity: 0.05;
+
+      z-index: 0;
     }
   }
 }

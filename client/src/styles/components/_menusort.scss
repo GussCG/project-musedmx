@@ -2,9 +2,8 @@
 
 .menu-sort-container {
   position: absolute;
-  top: 65px;
-  right: 50%;
-  transform: translateX(50%);
+  top: calc(100% + 5px);
+  right: 0;
   z-index: 1000;
 
   background-color: var(--bg-menu-sort);
@@ -29,6 +28,7 @@
     font-size: 1rem;
     color: black;
     font-weight: $font-w-regular;
+    letter-spacing: -0.02em;
 
     .filtro-rad {
       input {

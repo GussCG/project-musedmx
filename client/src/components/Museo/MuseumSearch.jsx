@@ -6,7 +6,11 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useMuseos } from "../../hooks/Museo/useMuseos";
 
-function MuseumSearch({ swiperRef = null }) {
+function MuseumSearch({
+  swiperRef = null,
+  className = "",
+  onSearchAction = () => {},
+}) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
@@ -24,8 +28,11 @@ function MuseumSearch({ swiperRef = null }) {
   const handleSearch = useCallback(
     (searchTerm) => {
       navigate(`/Museos/busqueda?search=${encodeURIComponent(searchTerm)}`);
+      setTimeout(() => {
+        onSearchAction();
+      }, 1000);
     },
-    [navigate]
+    [navigate, onSearchAction],
   );
 
   // Memoiza las sugerencias
@@ -57,7 +64,7 @@ function MuseumSearch({ swiperRef = null }) {
   return (
     <motion.div
       id="museum-search"
-      className="nav-bar"
+      className={`nav-bar ${className}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

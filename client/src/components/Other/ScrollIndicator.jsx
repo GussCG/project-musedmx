@@ -1,16 +1,14 @@
 import Icons from "./IconProvider";
-const { MdKeyboardDoubleArrowDown } = Icons;
+const { FaChevronDown } = Icons;
 
-function ScrollIndicator({ ...props }) {
+function ScrollIndicator({ color }) {
   return (
     <div
       className="scroll-indicator"
-      style={props.style}
-      title="Desplázate hacia abajo para ver más contenido"
+      title="Desplázate hacia abajo para más información"
+      {...(color && { style: { borderColor: color } })}
     >
-      <div className="scroll-indicator-icon">
-        <MdKeyboardDoubleArrowDown />
-      </div>
+      <FaChevronDown className="scroll-icon" {...(color && { color })} />
     </div>
   );
 }

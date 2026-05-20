@@ -1,58 +1,46 @@
-import { useEffect, useMemo, useState, useCallback, use } from "react";
-import { m, motion } from "framer-motion";
-import Icons from "../Other/IconProvider";
-const { corazonIcon } = Icons;
-import MuseoSlider from "../Museo/MuseoSlider";
-import QVSearch from "../Museo/QVSearch";
+import { useEffect } from "react";
+import { motion } from "framer-motion";
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
 import { useAuth } from "../../context/AuthProvider";
 import { useMuseosSugeridos } from "../../hooks/Usuario/useUsuarioMuseosSugeridos";
 import { useQV } from "../../hooks/QuieroVisitar/useQV";
+import NMuseoSlider from "../Museo/NMuseoSlider";
 
 function UsuarioPage() {
-  const [editMode, setEditMode] = useState(false);
   const { user } = useAuth();
 
-  const {
-    museosFavoritos,
-    loading: loadingFavoritos,
-    fetchMuseosFavoritosUsuario,
-  } = useFavorito();
+  const { museosFavoritos, fetchMuseosFavoritosUsuario } = useFavorito();
+  const { museos: museosSugeridosData, refetch: refetchSugeridos } =
+    useMuseosSugeridos({
+      top_n: 10,
+      correo: user?.usr_correo,
+    });
 
   const {
-    museos: museosSugeridosData,
-    loading: loadingSugeridos,
-    refetch,
-  } = useMuseosSugeridos({
-    top_n: 10,
-    correo: user.usr_correo,
-  });
-
-  const [museosSugeridos, setMuseosSugeridos] = useState([]);
-
-  // Actualiza el estado local cuando cambie el hook
-  useEffect(() => {
-    setMuseosSugeridos(museosSugeridosData || []);
-  }, [museosSugeridosData]);
-
-  // Nueva función que hace refetch y actualiza el estado local
-  const refreshSugeridos = useCallback(async () => {
-    await refetch();
-  }, [refetch]);
-
-  const {
-    museosQV,
+    museos: museosQV,
     loading: loadingQV,
     fetchMuseosQVUsuario,
     agregarQV,
-  } = useQV();
+    eliminarQV,
+  } = useQV({ correo: user?.usr_correo });
 
   useEffect(() => {
-    if (user) {
+    if (user?.usr_correo) {
       fetchMuseosFavoritosUsuario(user.usr_correo);
       fetchMuseosQVUsuario(user.usr_correo);
     }
   }, [user]);
+
+  const handleDeleteFromQV = async (museoId) => {
+    await eliminarQV(user.usr_correo, museoId);
+    fetchMuseosQVUsuario(user.usr_correo);
+    refetchSugeridos();
+  };
+
+  const handleAddFromQV = async (museoId) => {
+    await agregarQV(user.usr_correo, museoId);
+    fetchMuseosQVUsuario(user.usr_correo);
+  };
 
   return (
     <motion.div
@@ -62,68 +50,33 @@ function UsuarioPage() {
       transition={{ duration: 0.3, type: "spring", bounce: 0.18 }}
     >
       <main id="perfil-main">
-        <section className="perfil-section-museo perfil-section-item">
-          <div className="section-header">
-            <h2>Museos Sugeridos</h2>
-          </div>
-          <MuseoSlider
-            listaMuseos={museosSugeridos}
-            sliderType="Sugeridos"
-            refetchFavoritos={() => {
-              fetchMuseosFavoritosUsuario(user.usr_correo);
-            }}
-            refreshSugeridos={refreshSugeridos}
-            loading={loadingSugeridos}
-          />
-        </section>
+        <NMuseoSlider
+          museos={museosSugeridosData}
+          title="Museos Sugeridos"
+          subtitle="Basados en tus visitas y preferencias"
+          refetchFavoritos={() => {
+            fetchMuseosFavoritosUsuario(user.usr_correo);
+          }}
+        />
         <hr />
-        <section className="perfil-section-museo perfil-section-item">
-          <div className="section-header">
-            <h2>
-              Museos Favoritos <img src={corazonIcon} id="corazon-icon" />
-            </h2>
-          </div>
-          <MuseoSlider
-            listaMuseos={museosFavoritos}
-            loading={loadingFavoritos}
-            sliderType="Favoritos"
-            refetchFavoritos={() =>
-              fetchMuseosFavoritosUsuario(user.usr_correo)
-            }
-          />
-        </section>
+        <NMuseoSlider
+          museos={museosFavoritos}
+          title="Museos Favoritos"
+          refetchFavoritos={() => {
+            fetchMuseosFavoritosUsuario(user.usr_correo);
+          }}
+        />
         <hr />
-        <section className="perfil-section-museo perfil-section-item">
-          <div className="section-header">
-            <h2>Museos que quiero visitar</h2>
-            <div className="section-header-controller">
-              <QVSearch
-                correo={user.usr_correo}
-                agregarQV={agregarQV}
-                refreshQV={() => fetchMuseosQVUsuario(user.usr_correo)}
-                museosQV={museosQV}
-              />
-              <button
-                type="button"
-                id="editar-button"
-                onClick={() => setEditMode(!editMode)}
-              >
-                <span>{editMode ? "Salir" : "Editar"}</span>
-              </button>
-            </div>
-          </div>
-          <MuseoSlider
-            listaMuseos={museosQV}
-            editMode={editMode}
-            sliderType="Quiero-visitar"
-            refetchFavoritos={() => {
-              fetchMuseosFavoritosUsuario(user.usr_correo);
-            }}
-            refreshQV={() => fetchMuseosQVUsuario(user.usr_correo)}
-            correo={user.usr_correo}
-            loading={loadingQV}
-          />
-        </section>
+        <NMuseoSlider
+          museos={museosQV || []}
+          title="Museos que quiero visitar"
+          museosQV={museosQV || []}
+          editMode={true}
+          correo={user?.usr_correo}
+          onDeleteFromQV={handleDeleteFromQV}
+          onAddFromQV={handleAddFromQV}
+          isLoading={loadingQV}
+        />
       </main>
     </motion.div>
   );

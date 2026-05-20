@@ -16,11 +16,11 @@ export const ThemeProvider = ({ children }) => {
   });
 
   const [toggleCount, setToggleCount] = useState(
-    Number(localStorage.getItem("toggleCount")) || 0
+    Number(localStorage.getItem("toggleCount")) || 0,
   );
 
   const [isRetroMode, setIsRetroMode] = useState(
-    localStorage.getItem("theme") === "retro"
+    localStorage.getItem("theme") === "retro",
   );
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export const ThemeProvider = ({ children }) => {
   }, [isDarkMode, isRetroMode, toggleCount, user]);
 
   const toggleTheme = () => {
-    if (!user) return; // No hacer nada si no hay usuario autenticado
+    // if (!user) return; // No hacer nada si no hay usuario autenticado
 
     const newCount = toggleCount + 1;
     setToggleCount(newCount);

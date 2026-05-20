@@ -1,17 +1,16 @@
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
-import loginImage from "../../assets/images/others/museo-login-image.png";
 import Icons from "../../components/Other/IconProvider";
-const { LuEye, LuEyeClosed, MuseDMXIcon, MuseDMXLogoVertical } = Icons;
-import LoginErrorMessage from "../../components/Forms/LoginErrorMessage";
+const { LuEye, LuEyeClosed, MuseDMXLogoVertical } = Icons;
 import AuthOTPModal from "../../components/Forms/AuthOTPModal";
+import ToastMessage from "../../components/Other/ToastMessage";
 
 function LoginForm() {
   // Usar el hook useAuth para obtener las funciones y estados de autenticación
-  const { login, isLoading, error } = useAuth();
+  const { login, isLoading } = useAuth();
   const [shown, setShown] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -43,12 +42,16 @@ function LoginForm() {
             }}
             onSubmit={async (values, { setSubmitting }) => {
               try {
+                setErrorMessage("");
                 await login({
                   usr_correo: values.login_frm_email,
                   usr_contrasenia: values.login_frm_password,
                 });
               } catch (error) {
-                setErrorMessage(error.response.data.message);
+                const msg =
+                  error.response?.data?.message ||
+                  "Ocurrió un error inesperado.";
+                setErrorMessage(String(msg));
               } finally {
                 setSubmitting(false);
               }
@@ -92,48 +95,22 @@ function LoginForm() {
                   </motion.div>
                 </div>
 
-                <AnimatePresence mode="popLayout">
-                  {errorMessage && (
-                    <motion.div
-                      layout
-                      className="error-message-container"
-                      key={"error-message"}
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{
-                        scale: 1,
-                        opacity: 1,
-                      }}
-                      exit={{
-                        scale: 0,
-                        opacity: 0,
-                      }}
-                      transition={{
-                        duration: 0.3,
-                        ease: "easeInOut",
-                        type: "spring",
-                        bounce: 0.4,
-                        stiffness: 100,
-                        damping: 20,
-                      }}
-                      style={{
-                        overflow: "hidden",
-                      }}
-                    >
-                      <LoginErrorMessage
-                        error={errorMessage}
-                        onClose={clearError}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {!!errorMessage && (
+                  <ToastMessage
+                    tipo="error"
+                    mensaje={errorMessage}
+                    onClose={clearError}
+                  />
+                )}
 
-                <input
+                <button
                   type="submit"
-                  value={isLoading ? "Cargando..." : "Iniciar Sesión"}
                   className="button"
                   id="login-button"
                   disabled={isSubmitting || isLoading}
-                />
+                >
+                  {isLoading ? "Cargando..." : "Entrar"}
+                </button>
               </Form>
             )}
           </Formik>

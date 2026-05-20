@@ -19,7 +19,7 @@ export const useMuseosPopulares = () => {
         params: { top_n },
       });
       const museosData = response.data.museos.museos.map(
-        (museo) => new Museo(museo)
+        (museo) => new Museo(museo),
       );
       setMuseos(museosData);
       return museosData;
@@ -29,7 +29,7 @@ export const useMuseosPopulares = () => {
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 1500); // Simular un retraso de carga
+      }, 1500);
     }
   };
 

@@ -14,6 +14,7 @@ import { useFavorito } from "../../hooks/Favorito/useFavorito";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ImageSkeleton from "../Other/ImageSkeleton";
+import { useTheme } from "../../context/ThemeProvider";
 
 const MuseoCard = memo(function MuseoCard({
   museo,
@@ -29,6 +30,7 @@ const MuseoCard = memo(function MuseoCard({
   // Para obtener el usuario autenticado pero aun no se ha implementado el backend
   const { user, setIsLogginPopupOpen } = useAuth();
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
 
   const [isClicked, setIsClicked] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -77,6 +79,10 @@ const MuseoCard = memo(function MuseoCard({
     }
   }, [loading, loadingHorarios, loadingFavoritos]);
 
+  const colors = isDarkMode
+    ? TEMATICAS[museo.tematica].museoCardColorsDark
+    : TEMATICAS[museo.tematica].museoCardColorsLight;
+
   return (
     <>
       {museo.tematica && (
@@ -88,9 +94,7 @@ const MuseoCard = memo(function MuseoCard({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut", type: "tween" }}
           style={{
-            backgroundColor: !isFullyLoaded
-              ? "#d9d9d9"
-              : TEMATICAS[museo.tematica].museoCardColors.background,
+            backgroundColor: !isFullyLoaded ? "#d9d9d9" : colors.background,
           }}
         >
           <div className="museo-card-img-container">
@@ -139,18 +143,14 @@ const MuseoCard = memo(function MuseoCard({
                 </p>
                 <FaStar
                   style={{
-                    fill: !isFullyLoaded
-                      ? "white"
-                      : TEMATICAS[museo.tematica].museoCardColors.header,
+                    fill: !isFullyLoaded ? "white" : colors.header,
                   }}
                 />
               </div>
               <div
                 className="museo-card-img-tematica"
                 style={{
-                  backgroundColor: !isFullyLoaded
-                    ? "#d9d9d9"
-                    : TEMATICAS[museo.tematica].museoCardColors.header,
+                  backgroundColor: !isFullyLoaded ? "#d9d9d9" : colors.header,
                 }}
               >
                 {museo.tematica &&
@@ -164,9 +164,7 @@ const MuseoCard = memo(function MuseoCard({
               <div
                 className="museo-card-likes"
                 style={{
-                  backgroundColor: !isFullyLoaded
-                    ? "#d9d9d9"
-                    : TEMATICAS[museo.tematica].museoCardColors.header,
+                  backgroundColor: !isFullyLoaded ? "#d9d9d9" : colors.header,
                 }}
               >
                 <h2>
@@ -185,7 +183,7 @@ const MuseoCard = memo(function MuseoCard({
                 <h2
                   id="museo-card-nombre"
                   style={{
-                    color: TEMATICAS[museo.tematica].museoCardColors.header,
+                    color: colors.header,
                   }}
                 >
                   {!isFullyLoaded ? <Skeleton width={250} /> : museo.nombre}
@@ -194,7 +192,7 @@ const MuseoCard = memo(function MuseoCard({
               <p
                 id="museo-card-alcaldia"
                 style={{
-                  color: TEMATICAS[museo.tematica].museoCardColors.text,
+                  color: colors.text,
                 }}
               >
                 {!isFullyLoaded ? <Skeleton width={150} /> : museo.alcaldia}
@@ -206,7 +204,7 @@ const MuseoCard = memo(function MuseoCard({
                   <p
                     className="semibold"
                     style={{
-                      color: TEMATICAS[museo.tematica].museoCardColors.header,
+                      color: colors.header,
                     }}
                   >
                     {!isFullyLoaded ? <Skeleton width={100} /> : "Horarios"}
@@ -221,7 +219,7 @@ const MuseoCard = memo(function MuseoCard({
                   ) : cerrado ? (
                     <p
                       style={{
-                        color: TEMATICAS[museo.tematica].museoCardColors.text,
+                        color: colors.text,
                       }}
                     >
                       Cerrado
@@ -229,7 +227,7 @@ const MuseoCard = memo(function MuseoCard({
                   ) : horarios.length === 0 ? (
                     <p
                       style={{
-                        color: TEMATICAS[museo.tematica].museoCardColors.text,
+                        color: colors.text,
                       }}
                     >
                       No se encontraron horarios disponibles
@@ -240,8 +238,7 @@ const MuseoCard = memo(function MuseoCard({
                         <p
                           key={`${horario}-${index}`}
                           style={{
-                            color:
-                              TEMATICAS[museo.tematica].museoCardColors.text,
+                            color: colors.text,
                           }}
                         >
                           {horario}

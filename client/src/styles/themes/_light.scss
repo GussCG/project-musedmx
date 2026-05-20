@@ -1,8 +1,10 @@
 [data-theme="light"] {
   /* ! Colores Originales */
   // Colores del fondo de la página
-  --bg-grad-color-1: #4d4d4d;
-  --bg-grad-color-2: #f2f2f2;
+  // --bg-grad-color-1: #4d4d4d;
+  // --bg-grad-color-2: #f2f2f2;
+  --bg-grad-color-1: #ffffff;
+  --bg-grad-color-2: #ffffff;
   --bg-grad-color-3: #ffffff;
   --bg-main: #ffffff;
   // Colores de texto
@@ -24,6 +26,8 @@
   --nav-font-hover-color: #000000;
   --nav-login-bg-color: #000;
   --nav-login-font-color: #fff;
+  --nav-logo-shadow-color: rgba(0, 0, 0, 0.45);
+
   --color-a: #0033e1; // Color de los links
   --color-a-2: #0d0048; // Color de los links 2
 
@@ -117,19 +121,23 @@
 
   --toast-error-bg-color: #ffd0d0;
   --toast-error-text-color: #310e0e;
+  --toast-error-border-color: #ff8282;
 
   --toast-success-bg-color: #d0ffd0;
   --toast-success-text-color: #0e310e;
+  --toast-success-border-color: #059c00;
 
   --toast-warning-bg-color: #ffeeb5;
   --toast-warning-text-color: #6b5000;
+  --toast-warning-border-color: #c69500;
 
   --toast-info-bg-color: #c8edff;
   --toast-info-text-color: #00639c;
+  --toast-info-border-color: #0080ca;
 
   --tr-border-color: rgba(0, 0, 0, 0.3);
 
-  --bg-scroll-indicator: #ffffff;
+  --bg-scroll-indicator: rgba(255, 255, 255, 1);
   --boxshadow-scroll-indicator: 0 4px 8px rgba(0, 0, 0, 0.2);
 
   --popover-bg: #f7f7f7;
@@ -137,4 +145,40 @@
 
   --bg-select: #cecece;
   --bg-select-options: #fafafa;
+
+  // Nuevos Colores (chance y tengo que limpiar los anteriores)
+  --highlight-color: #4c00ff;
+  --border-color: rgba(0, 0, 0, 0.3);
+  --bg-hover-button: rgba(0, 0, 0, 0.1);
+
+  --button-primary-bg: #0d0048;
+  --button-primary-color: #fff;
+  --button-secondary-bg: #ffffff;
+  --button-secondary-color: #0d0048;
+
+  --card-bg: #ffffff;
+
+  --b2up-bg: #ffffff;
+  --b2up-color: #000000;
+
+  --comunidad-bg-gradient-1: rgba(255, 255, 255, 0.3);
+  --comunidad-bg-gradient-2: rgba(255, 255, 255, 0.7);
+  --comunidad-bg-gradient-3: #fffaf0;
+
+  --museo-card-rating-pill-bg: #dcdcdc;
+  --museo-card-rating-pill-color: #000000;
+
+  --icon-bg: rgba(85, 0, 255, 0.1);
+  --rating-bg: #dadada;
+  --today-highlight-bg: #ffffff;
+
+  --highlight-item-bg: #ffffff;
+  --highlight-item-bronze-bg: #753b0070;
+  --highlight-item-bronze-color: #452300;
+  --highlight-item-plata-bg: #d4d4d4;
+  --highlight-item-plata-color: #4f4f4f;
+  --highlight-item-gold-color: #9d5b00;
+  --highlight-item-gold-bg: #ffc65d;
+  --highlight-item-platino-color: #006a55;
+  --highlight-item-platinum-bg: #c4fff2c2;
 }

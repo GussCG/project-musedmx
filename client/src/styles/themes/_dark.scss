@@ -1,11 +1,13 @@
 [data-theme="dark"] {
   /* ! Colores Darkmode */
   // Colores del fondo de la página
-  --bg-grad-color-1: #5c5c5c;
-  --bg-grad-color-2: #292929;
-  --bg-grad-color-3: #1e1e1e;
+  // --bg-grad-color-1: #5c5c5c;
+  // --bg-grad-color-2: #292929;
+  --bg-grad-color-1: #1e1e1e;
+  --bg-grad-color-2: #1e1e1e;
+  --bg-grad-color-3: #000000;
   // Fondos de Main y Componentes
-  --bg-main: #353535;
+  --bg-main: #1c1c1d;
   // Colores de texto
   --color-1: #b9afa5;
   // Colores de la parte de la reseña
@@ -26,6 +28,8 @@
   --nav-font-hover-color: #fff;
   --nav-login-bg-color: #000;
   --nav-login-font-color: #fff;
+  --nav-logo-shadow-color: rgba(255, 255, 255, 0.25);
+
   --color-a: #8c9acc; // Color de los links
   --color-a-2: #d2d2d2; // Color de los links 2
   // Colores de las cartas de museo
@@ -114,18 +118,23 @@
 
   --toast-bg-color: #292929;
   --toast-text-color: #fff;
+  --toast-border-color: #555555;
 
   --toast-error-bg-color: #4a3838;
   --toast-error-text-color: #ffcccc;
+  --toast-error-border-color: #ff5e5e;
 
   --toast-success-bg-color: #2e432e;
   --toast-success-text-color: #cbffcb;
+  --toast-success-border-color: #07d100;
 
   --toast-warning-bg-color: #5c5338;
   --toast-warning-text-color: #fff0c4;
+  --toast-warning-border-color: #fffd6c;
 
   --toast-info-bg-color: #3d4d55;
   --toast-info-text-color: #d7fcff;
+  --toast-info-border-color: #83d1ff;
 
   --tr-border-color: rgba(255, 255, 255, 0.3);
 
@@ -137,4 +146,40 @@
 
   --bg-select: #4e4e4e;
   --bg-select-options: #292929;
+
+  // Nuevos Colores (chance y tengo que limpiar los anteriores)
+  --highlight-color: #ad89ff;
+  --border-color: rgba(255, 255, 255, 0.3);
+  --bg-hover-button: rgba(255, 255, 255, 0.1);
+
+  --button-primary-bg: #ffffff;
+  --button-primary-color: #000000;
+  --button-secondary-bg: #ffffff4d;
+  --button-secondary-color: #000000;
+
+  --card-bg: #131313;
+
+  --b2up-bg: #292929;
+  --b2up-color: #fff;
+
+  --comunidad-bg-gradient-1: rgba(41, 41, 41, 0.3);
+  --comunidad-bg-gradient-2: rgba(41, 41, 41, 0.7);
+  --comunidad-bg-gradient-3: #1e1e1e;
+
+  --museo-card-rating-pill-bg: #232323;
+  --museo-card-rating-pill-color: #ffffff;
+
+  --icon-bg: rgba(133, 72, 255, 0.1);
+  --rating-bg: #343434;
+  --today-highlight-bg: #1b1b1b;
+
+  --highlight-item-bg: #292929;
+  --highlight-item-bronze-bg: #5c2e0092;
+  --highlight-item-bronze-color: #ff8000;
+  --highlight-item-plata-bg: #ffffff81;
+  --highlight-item-plata-color: #ffffff;
+  --highlight-item-gold-color: #ffe600;
+  --highlight-item-gold-bg: #ffd00059;
+  --highlight-item-platino-color: #00d2a8;
+  --highlight-item-platinum-bg: #29ffd13e;
 }

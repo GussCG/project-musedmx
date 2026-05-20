@@ -10,7 +10,7 @@ const {
 
 function Footer() {
   return (
-    <footer>
+    <footer className="footer-container">
       <div className="footer-info-container">
         <div id="footer-logo" className="footer-div">
           <Link to="/">

@@ -23,7 +23,9 @@ const ImageSkeleton = ({ src, alt, className }) => {
           width={"100%"}
           height={"100%"}
           style={{
-            borderRadius: "20px",
+            borderRadius: "0",
+            borderTopLeftRadius: "20px",
+            borderTopRightRadius: "20px",
             position: "absolute",
             top: 0,
             left: 0,
@@ -45,10 +47,11 @@ const ImageSkeleton = ({ src, alt, className }) => {
           opacity: imgLoaded ? 1 : 0,
           transition:
             "opacity 0.3s ease-in-out, filter 0.3s ease-in-out, transform 0.3s ease-in-out",
-          borderRadius: "20px",
+          // borderRadius: "20px",
           width: "100%",
           height: "100%",
           objectFit: "cover",
+          objectPosition: "center",
           position: imgLoaded ? "static" : "absolute",
           top: 0,
           left: 0,

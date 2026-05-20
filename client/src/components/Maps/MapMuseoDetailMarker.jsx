@@ -5,9 +5,10 @@ import { Link } from "react-router-dom";
 import Icons from "../Other/IconProvider";
 import { buildImage } from "../../utils/buildImage";
 import FavoritoButton from "../Museo/FavoritoButton";
-const { museoIcon, CgClose, FaStar } = Icons;
+const { museoIcon, CgClose, FaStar, FaHeart, MdReviews } = Icons;
 import { useFavorito } from "../../hooks/Favorito/useFavorito";
 import { useAuth } from "../../context/AuthProvider";
+import parseCalificacion from "../../utils/parseCalificacion";
 
 const MapMuseoDetailMarker = React.memo(
   ({ museo, isActive, onActivate, isPrincipal }) => {
@@ -43,7 +44,7 @@ const MapMuseoDetailMarker = React.memo(
         setWasClicked(true);
         onActivate(museo);
       },
-      [museo, onActivate]
+      [museo, onActivate],
     );
 
     const handleMouseEnter = useCallback(() => {
@@ -64,7 +65,7 @@ const MapMuseoDetailMarker = React.memo(
         setWasClicked(false);
         onActivate(null);
       },
-      [onActivate]
+      [onActivate],
     );
 
     return (
@@ -110,41 +111,44 @@ const MapMuseoDetailMarker = React.memo(
                     }}
                     key={museo.id}
                   >
-                    <button
-                      className="info-window-close-btn"
-                      onClick={handleClose}
-                      aria-label="Cerrar ventana"
-                    >
-                      <CgClose />
-                    </button>
                     <div className="info-window-content">
                       <div className="info-window-img">
                         <img
                           src={museo.img}
                           alt={museo.nombre}
                           className="info-window-image"
-                          loading="auto"
+                          loading="lazy"
                         />
 
                         <div className="info-window-img-overlay">
-                          <div className="info-window-img-rate">
-                            <span className="info-window-img-rate-text">
-                              {museo.calificacion || 3.5}
-                            </span>
-                            <span className="info-window-img-rate-icon">
-                              <FaStar />
-                            </span>
+                          <button
+                            className="close-button"
+                            onClick={handleClose}
+                          >
+                            <CgClose size={20} />
+                          </button>
+
+                          <div className="info-window-badge">
+                            <div className="badge-item favorite">
+                              <FaHeart /> {localeCount}
+                            </div>
+                            <div className="badge-item reviews">
+                              <MdReviews /> {museo.total_resenias || 0}
+                            </div>
+                            <div className="badge-item rating">
+                              <FaStar />{" "}
+                              {parseCalificacion(
+                                museo.mus_calificacion,
+                              ).toFixed(1) || 0}
+                            </div>
                           </div>
-                          <FavoritoButton
-                            museoId={museo.id}
-                            refetchFavoritos={null}
-                            isFavorite={isFavorite}
-                            setIsFavorite={setIsFavorite}
-                          />
+
+                          <div className="info-window-title">
+                            <Link to={`/Museos/${museo.id}`}>
+                              {museo.nombre}
+                            </Link>
+                          </div>
                         </div>
-                      </div>
-                      <div className="info-window-title">
-                        <Link to={`/Museos/${museo.id}`}>{museo.nombre}</Link>
                       </div>
                     </div>
                   </motion.div>
@@ -155,7 +159,7 @@ const MapMuseoDetailMarker = React.memo(
         </>
       )
     );
-  }
+  },
 );
 
 export default MapMuseoDetailMarker;

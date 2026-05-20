@@ -76,7 +76,7 @@ function ProfileEdit() {
       return;
     }
     setSelectedTematicas((prev) =>
-      checked ? [...prev, value] : prev.filter((t) => t !== value)
+      checked ? [...prev, value] : prev.filter((t) => t !== value),
     );
   };
 
@@ -345,14 +345,14 @@ function ProfileEdit() {
                             setSelectedDate(date);
                             setFieldValue(
                               "signinfrmnacimiento",
-                              date?.toISOString()
+                              date?.toISOString(),
                             );
                           }}
                           footer={
                             selectedDate
                               ? `Seleccionaste el ${formatearFechaBDDATE(
                                   selectedDate,
-                                  "dd-MM-yyyy"
+                                  "dd-MM-yyyy",
                                 )}`
                               : "Selecciona una fecha"
                           }
@@ -389,7 +389,7 @@ function ProfileEdit() {
                                       value={tematica.nombre}
                                       onChange={handleTematicaChange}
                                       checked={selectedTematicas.includes(
-                                        tematica.nombre
+                                        tematica.nombre,
                                       )}
                                     />
                                     <label htmlFor={tematica.nombre}>
@@ -402,43 +402,46 @@ function ProfileEdit() {
                           </div>
                           <hr />
                           <div className="registros-field-foto">
-                            <div className="registros-field-foto-input">
-                              <h2>Foto de perfil</h2>
-                              <div className="foto-input">
-                                <button
-                                  className="file-btn"
-                                  type="button"
-                                  onClick={() =>
-                                    document
-                                      .getElementById("registros-frm-foto")
-                                      .click()
-                                  }
-                                  value="Seleccionar Archivo"
-                                >
-                                  Seleccionar Archivo
-                                </button>
-                                <span id="file-name" ref={fileNameRef}>
-                                  {formatFileName(fileLabel)}
-                                </span>
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  name="signinfrmfoto"
-                                  id="registros-frm-foto"
-                                  style={{ display: "none" }}
-                                  onChange={(event) =>
-                                    handleImageChange(event, setFieldValue)
-                                  }
-                                />
+                            <h2>Foto de perfil</h2>
+                            <div className="registros-field-foto-container">
+                              <div className="registros-field-foto-input">
+                                <div className="foto-input">
+                                  <button
+                                    className="file-btn"
+                                    type="button"
+                                    onClick={() =>
+                                      document
+                                        .getElementById("registros-frm-foto")
+                                        .click()
+                                    }
+                                    value="Seleccionar Archivo"
+                                  >
+                                    Seleccionar Archivo
+                                  </button>
+                                  <span id="file-name" ref={fileNameRef}>
+                                    {formatFileName(fileLabel)}
+                                  </span>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    name="signinfrmfoto"
+                                    id="registros-frm-foto"
+                                    style={{ display: "none" }}
+                                    onChange={(event) =>
+                                      handleImageChange(event, setFieldValue)
+                                    }
+                                  />
+                                </div>
                               </div>
+                              {imagePreview && (
+                                <UserImage
+                                  src={imagePreview}
+                                  alt="Foto de Perfil"
+                                  id="foto-preview"
+                                  className="user-image"
+                                />
+                              )}
                             </div>
-                            {imagePreview && (
-                              <UserImage
-                                src={imagePreview}
-                                alt="Foto de Perfil"
-                                id="foto-preview"
-                              />
-                            )}
                           </div>
                         </div>
                       </>

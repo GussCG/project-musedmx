@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthProvider";
 import { useTheme } from "../../context/ThemeProvider";
 import { AnimatePresence, motion } from "framer-motion";
 import HeaderMuseoButtons from "../../components/Museo/HeaderMuseoButtons";
-import "../../styles/pages/MuseoDetails.scss";
+// import "../../styles/pages/MuseoDetails.scss";
 import Icons from "../../components/Other/IconProvider";
 const {
   FaFilter,
@@ -186,20 +186,20 @@ function MuseoDetail() {
       if (isDarkMode) {
         htmlElement.style.setProperty(
           "--bg-grad-color-1",
-          tema.museoDetailBGColorsDM.background_1
+          tema.museoDetailBGColorsDM.background_1,
         );
         htmlElement.style.setProperty(
           "--bg-grad-color-2",
-          tema.museoDetailBGColorsDM.background_2
+          tema.museoDetailBGColorsDM.background_2,
         );
       } else {
         htmlElement.style.setProperty(
           "--bg-grad-color-1",
-          tema.museoDetailBGColors.background_1
+          tema.museoDetailBGColors.background_1,
         );
         htmlElement.style.setProperty(
           "--bg-grad-color-2",
-          tema.museoDetailBGColors.background_2
+          tema.museoDetailBGColors.background_2,
         );
       }
     }
@@ -212,7 +212,7 @@ function MuseoDetail() {
   }, [tema, isDarkMode]);
 
   const redCorreo = redesSociales.find(
-    (redSocial) => redSocial.mhrs_cve_rs === 2
+    (redSocial) => redSocial.mhrs_cve_rs === 2,
   );
 
   const [filtrosResena, setFiltrosResena] = useState({
@@ -290,7 +290,7 @@ function MuseoDetail() {
                       setIsFavorite={setIsFavorite}
                       onFavoritoChange={async () => {
                         const count = await getFavoritosCountByMuseoId(
-                          museoInfo.id
+                          museoInfo.id,
                         );
                         setFavoritoCount(count);
                       }}
@@ -328,7 +328,7 @@ function MuseoDetail() {
                       {redCorreo && (
                         <div className="museo-section-1-info-correo">
                           {createElement(
-                            REDES_SOCIALES[redCorreo.mhrs_cve_rs]?.icon
+                            REDES_SOCIALES[redCorreo.mhrs_cve_rs]?.icon,
                           )}
                           {isLoading ? (
                             <Skeleton width={300} />
@@ -397,7 +397,7 @@ function MuseoDetail() {
                                   }
                                 >
                                   {createElement(
-                                    REDES_SOCIALES[redSocial.mhrs_cve_rs]?.icon
+                                    REDES_SOCIALES[redSocial.mhrs_cve_rs]?.icon,
                                   )}
                                 </a>
                               );
@@ -687,7 +687,7 @@ function MuseoDetail() {
                                   e.preventDefault();
                                   localStorage.setItem(
                                     "redirectPath",
-                                    `/Museos/${museoId}/RegistrarVisita`
+                                    `/Museos/${museoId}/RegistrarVisita`,
                                   );
                                   setIsLogginPopupOpen(true);
                                 }
@@ -704,7 +704,7 @@ function MuseoDetail() {
                                   e.preventDefault();
                                   localStorage.setItem(
                                     "redirectPath",
-                                    `/Museos/${museoId}/RegistrarVisita`
+                                    `/Museos/${museoId}/RegistrarVisita`,
                                   );
                                   setIsLogginPopupOpen(true);
                                 }
