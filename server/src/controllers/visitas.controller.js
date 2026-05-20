@@ -54,16 +54,29 @@ export const deleteVisita = async (req, res) => {
   }
 };
 
-export const getVisitasCount = async (req, res) => {
+export const getVisitasCountDistinct = async (req, res) => {
   try {
     const { correo } = req.params;
-    const count = await Visitas.getVisitasCount(correo);
+    const count = await Visitas.getVisitasCountDistinct(correo);
     const totalMuseos = await Visitas.getTotalMuseos();
 
     res.json({
       success: true,
       count,
       totalMuseos,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_VI_COUNT", error);
+  }
+};
+
+export const getVisitasCount = async (req, res) => {
+  try {
+    const { correo } = req.params;
+    const count = await Visitas.getVisitasCount(correo);
+    res.json({
+      success: true,
+      count,
     });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_VI_COUNT", error);

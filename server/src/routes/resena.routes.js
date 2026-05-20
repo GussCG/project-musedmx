@@ -15,6 +15,8 @@ import {
   editarResena,
   eliminarFotoResena,
   rechazarResena,
+  getAllResenas,
+  getCountResenasByCorreo,
 } from "../controllers/resena.controller.js";
 
 const router = Router();
@@ -24,24 +26,27 @@ const resenaUploads = upload.fields([
   { name: "fotos", maxCount: 5 },
 ]);
 
+router.get("/", getAllResenas);
+
 router.get("/detalle/:id", getResenasById);
 router.get("/pendientes", getResenasPendientes);
 router.get("/detalle/:id/fotos", getResenasFoto);
 
 // Para obtener todas las reseñas de usuarios
 router.get("/usuario/all/:correo", getResenasByCorreo);
+router.get("/usuario/count/:correo", getCountResenasByCorreo);
 router.delete("/usuario/delete/:id", eliminarResena);
 router.post(
   "/usuario/registrar/:museoId",
   resenaUploads,
   authMiddleware,
-  registrarResena
+  registrarResena,
 );
 router.post(
   "/usuario/editar/:resenaId",
   authMiddleware,
   upload.array("fotos", 10),
-  editarResena
+  editarResena,
 ); // Asumiendo que esta ruta es para editar una reseña
 router.delete("/usuario/eliminar-foto/:resenaId/:fotoId", eliminarFotoResena);
 

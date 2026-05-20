@@ -22,6 +22,7 @@ import {
   deleteByDia,
   uploadFotosGaleria,
   eliminarFotoGaleria,
+  getMuseoFullById,
 } from "../controllers/museo.controller.js";
 
 const router = Router();
@@ -49,8 +50,10 @@ router.post("/horarios/eliminarByDia/:id", deleteByDia);
 router.post(
   "/galeria/agregar-fotos/:id",
   upload.array("fotos"),
-  uploadFotosGaleria
+  uploadFotosGaleria,
 );
 router.delete("/galeria/eliminar-foto/:id/:galFotoId", eliminarFotoGaleria);
+
+router.get("/detalleFull/:id", getMuseoFullById);
 
 export default router;

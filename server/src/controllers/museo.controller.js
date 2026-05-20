@@ -94,6 +94,20 @@ export const getMuseoById = async (req, res) => {
   }
 };
 
+export const getMuseoFullById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const museo = await Museo.findFullById({ id: id });
+    res.json({
+      success: true,
+      id,
+      museo,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_MUSEO_FULL_ID", error);
+  }
+};
+
 export const getGaleriaById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -190,7 +204,7 @@ export const createMuseo = async (req, res) => {
         "imagenes-museos",
         bufferJpg,
         blobName,
-        "image/jpeg"
+        "image/jpeg",
       );
 
       console.log("URL Blob:", urlBlob);
@@ -269,7 +283,7 @@ export const updateMuseo = async (req, res) => {
 
     if (req.file) {
       const nombreMuseoFormateado = formatMuseoImageName(
-        museoExistente.mus_nombre
+        museoExistente.mus_nombre,
       );
       console.log(museoExistente.mus_nombre);
       console.log("Nombre museo formateado:", nombreMuseoFormateado);
@@ -283,7 +297,7 @@ export const updateMuseo = async (req, res) => {
         "imagenes-museos",
         bufferJpg,
         blobName,
-        "image/jpeg"
+        "image/jpeg",
       );
 
       console.log("URL Blob:", urlBlob);
@@ -525,7 +539,7 @@ export const uploadFotosGaleria = async (req, res) => {
       const indices = fotos.map((foto) => {
         const url = foto.gal_foto;
         const nombreArchivo = decodeURIComponent(
-          new URL(url).pathname.split("/").pop()
+          new URL(url).pathname.split("/").pop(),
         );
         // Extraer el último número antes de la extensión
         const match = nombreArchivo.match(/_(\d+)(?=\.\w+$)/);
@@ -551,7 +565,7 @@ export const uploadFotosGaleria = async (req, res) => {
           containerName,
           bufferJpg,
           blobName,
-          "image/jpeg"
+          "image/jpeg",
         );
         urlFotos.push(url);
       }
@@ -596,7 +610,7 @@ export const eliminarFotoGaleria = async (req, res) => {
     const fotoUrl = fotoGaleria.galeria.gal_foto;
     const blobNameEncoded = new URL(fotoUrl).pathname.replace(
       /^\/[^\/]+\//,
-      ""
+      "",
     );
     const blobName = decodeURIComponent(blobNameEncoded);
 

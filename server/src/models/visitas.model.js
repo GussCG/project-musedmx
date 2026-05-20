@@ -65,7 +65,7 @@ export default class Visitas {
   }
 
   // Obtiene cuantos museos ha visitado un usuario
-  static async getVisitasCount(correo) {
+  static async getVisitasCountDistinct(correo) {
     const connection = await pool.getConnection();
     await connection.beginTransaction();
     try {
@@ -77,6 +77,26 @@ export default class Visitas {
       const [result] = await connection.query(query, [correo]);
       await connection.commit();
       return result[0].museos_visitados;
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async getVisitasCount(correo) {
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+    try {
+      const query = `
+        SELECT COUNT(*) AS total_visitas
+        FROM visitas
+        WHERE vi_usr_correo = ?
+      `;
+      const [result] = await connection.query(query, [correo]);
+      await connection.commit();
+      return result[0].total_visitas;
     } catch (error) {
       await connection.rollback();
       throw error;

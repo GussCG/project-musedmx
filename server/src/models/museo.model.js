@@ -21,9 +21,13 @@ export default class Museo {
           SELECT 
             m.*,
             AVG(r.res_calif_estrellas) AS mus_calificacion,
-            COUNT(r.res_id_res) AS total_resenias
+            COUNT(DISTINCT r.res_id_res) AS total_resenias,
+            COUNT(DISTINCT f.fav_usr_correo) AS total_favoritos
           FROM museos m
-          LEFT JOIN resenia r ON r.visitas_vi_mus_id = m.mus_id AND r.res_aprobado = 1
+          LEFT JOIN resenia r 
+            ON r.visitas_vi_mus_id = m.mus_id AND r.res_aprobado = 1
+          LEFT JOIN favoritos f 
+            ON f.fav_mus_id = m.mus_id
           WHERE 1=1
       `;
     const queryParams = [];
@@ -55,6 +59,12 @@ export default class Museo {
           break;
         case "worst-rating":
           query += ` ORDER BY AVG(r.res_calif_estrellas) ASC, total_resenias DESC`;
+          break;
+        case "most-liked":
+          query += ` ORDER BY total_favoritos DESC`;
+          break;
+        case "most-reviewed":
+          query += ` ORDER BY total_resenias DESC`;
           break;
         default:
           query += ` ORDER BY mus_nombre ASC`;
@@ -124,6 +134,51 @@ export default class Museo {
     queryParams.push(id);
     const [rows] = await pool.query(query, queryParams);
     return rows[0];
+  }
+
+  static async findFullById({ id }) {
+    const query = `
+      SELECT 
+        m.*,
+        AVG(r.res_calif_estrellas) AS mus_calificacion,
+        COUNT(DISTINCT r.res_id_res) AS total_resenias,
+        COUNT(DISTINCT f.fav_usr_correo) AS total_favoritos
+      FROM museos m
+      LEFT JOIN resenia r ON r.visitas_vi_mus_id = m.mus_id AND r.res_aprobado = 1
+      LEFT JOIN favoritos f ON f.fav_mus_id = m.mus_id
+      WHERE m.mus_id = ?
+      GROUP BY m.mus_id
+      LIMIT 1
+    `;
+    const queryParams = [];
+    queryParams.push(id);
+    const [rows] = await pool.query(query, queryParams);
+    const museo = rows[0];
+
+    if (!museo) return null;
+
+    // Para mandar horarios, redes sociales y galeria
+    const [horarios, galeria, redes] = await Promise.all([
+      pool.query(
+        `SELECT * FROM horarios_precios_museo WHERE mh_mus_id = ? ORDER BY mh_id`,
+        [id],
+      ),
+      pool.query(
+        `SELECT * FROM galeria WHERE gal_mus_id = ? ORDER BY gal_foto_id`,
+        [id],
+      ),
+      pool.query(
+        `SELECT * FROM museos_have_red_soc WHERE mhrs_mus_id = ? ORDER BY mhrs_cve_rs`,
+        [id],
+      ),
+    ]);
+
+    return {
+      ...museo,
+      horarios: horarios[0],
+      galeria: galeria[0],
+      redes: redes[0],
+    };
   }
 
   static async findGaleriaById({ id, limit }) {
@@ -351,7 +406,7 @@ export default class Museo {
           mus_foto,
           mus_g_latitud,
           mus_g_longitud,
-        ]
+        ],
       );
 
       const mus_id = result.insertId;
@@ -380,7 +435,7 @@ export default class Museo {
             )
             VALUES (?,?,?,?,?,?,?,?)
           `,
-          [mus_id, dia, "00:00:00", "00:00:00", "0", "0", "0", "0"]
+          [mus_id, dia, "00:00:00", "00:00:00", "0", "0", "0", "0"],
         );
       }
 
@@ -393,7 +448,7 @@ export default class Museo {
             )
             VALUES (?,?)
           `,
-          [mus_id, enc_cve]
+          [mus_id, enc_cve],
         );
       }
 
@@ -421,9 +476,9 @@ export default class Museo {
                 )
                 VALUES (?,?,?)
               `,
-              [mus_id, red.id, red.link]
-            )
-          )
+              [mus_id, red.id, red.link],
+            ),
+          ),
         );
       }
 
@@ -467,7 +522,7 @@ export default class Museo {
             DELETE FROM museos_have_red_soc
             WHERE mhrs_mus_id = ?
           `,
-          [id]
+          [id],
         );
 
         // Insertar las nuevas redes sociales
@@ -482,9 +537,9 @@ export default class Museo {
                 )
                 VALUES (?,?,?)
               `,
-              [id, red.id, red.link]
-            )
-          )
+              [id, red.id, red.link],
+            ),
+          ),
         );
       }
 

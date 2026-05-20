@@ -16,6 +16,28 @@ import Encuesta from "../models/encuesta.model.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+export const getAllResenas = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 0;
+    const limit = 20;
+    const offset = page * limit;
+
+    const resenas = await Resena.findAll({
+      order: [["visitas_vi_fechahora", "DESC"]],
+      limit: limit,
+      offset: offset,
+    });
+
+    res.json({
+      success: true,
+      page,
+      resenas,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_ALL_RESENAS", error);
+  }
+};
+
 export const getResenasById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -58,17 +80,29 @@ export const getResenasFoto = async (req, res) => {
 export const getResenasByMuseo = async (req, res) => {
   try {
     const { museoId } = req.params;
-    const { pagina = 1, porPagina = 10, ...filtros } = req.query;
+    const { pagina = 1, porPagina = 6 } = req.query;
 
-    const resenas = await Resena.findByMuseo({
-      museoId,
-      pagina: Number(pagina),
-      porPagina: Number(porPagina),
-      filtros,
+    const offset = (parseInt(pagina) - 1) * parseInt(porPagina);
+
+    const resenas = await Resena.findAll({
+      where: {
+        visitas_vi_mus_id: museoId,
+        res_aprobado: 1,
+      },
+      order: [["res_id_res", "DESC"]],
+      limit: parseInt(porPagina),
+      offset: offset,
     });
+
+    const total = resenas.length > 0 ? resenas[0].total_count : 0;
+    const totalPages = Math.ceil(total / parseInt(porPagina));
 
     res.json({
       success: true,
+      pagina: parseInt(pagina),
+      total: total,
+      totalPages: totalPages,
+      totalEnPagina: resenas.length,
       resenas,
     });
   } catch (error) {
@@ -154,6 +188,19 @@ export const getResenasByCorreo = async (req, res) => {
     });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_RESENAS_BY_CORREO", error);
+  }
+};
+
+export const getCountResenasByCorreo = async (req, res) => {
+  try {
+    const { correo } = req.params;
+    const count = await Resena.countByCorreo({ correo });
+    res.json({
+      success: true,
+      count,
+    });
+  } catch (error) {
+    handleHttpError(res, "ERROR_COUNT_RESENAS_BY_CORREO", error);
   }
 };
 
@@ -257,7 +304,7 @@ export const registrarResena = async (req, res) => {
         containerName,
         bufferJpg,
         blobName,
-        "image/jpeg"
+        "image/jpeg",
       );
       if (!urlEntrada) {
         return res.status(400).json({
@@ -287,7 +334,7 @@ export const registrarResena = async (req, res) => {
             containerName,
             bufferJpg,
             blobName,
-            "image/jpeg"
+            "image/jpeg",
           );
 
           if (url) urlFotos.push(url);
@@ -368,7 +415,7 @@ export const editarResena = async (req, res) => {
           containerName,
           bufferJpg,
           blobName,
-          "image/jpeg"
+          "image/jpeg",
         );
         url_fotos.push(url);
       }

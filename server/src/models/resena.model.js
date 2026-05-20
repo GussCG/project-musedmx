@@ -1,6 +1,49 @@
 import { pool } from "../db.js";
 
 export default class Resena {
+  static async findAll(options = {}) {
+    let query = `
+    SELECT 
+      r.*, 
+      CONCAT(u.usr_nombre, ' ', u.usr_ap_paterno, ' ', u.usr_ap_materno) AS nombre_usuario, 
+      u.usr_foto AS foto_perfil, 
+      m.mus_nombre AS nombre_museo,
+      (SELECT COUNT(*) FROM resenia r2 WHERE r2.visitas_vi_mus_id = r.visitas_vi_mus_id AND r2.res_aprobado = 1) AS total_count
+    FROM resenia r
+    INNER JOIN usuarios u ON r.visitas_vi_usr_correo = u.usr_correo
+    INNER JOIN museos m ON r.visitas_vi_mus_id = m.mus_id
+  `;
+
+    let params = [];
+
+    if (options.where) {
+      const whereClauses = Object.keys(options.where).map((key) => {
+        params.push(options.where[key]);
+        return `r.${key} = ?`;
+      });
+      if (whereClauses.length > 0)
+        query += " WHERE " + whereClauses.join(" AND ");
+    }
+
+    if (options.order) {
+      const orderClauses = options.order.map(([col, dir]) => `r.${col} ${dir}`);
+      query += ` ORDER BY ${orderClauses.join(", ")}`;
+    }
+
+    if (options.limit !== undefined) {
+      query += " LIMIT ?";
+      params.push(options.limit);
+    }
+
+    if (options.offset !== undefined) {
+      query += " OFFSET ?";
+      params.push(options.offset);
+    }
+
+    const [rows] = await pool.query(query, params);
+    return rows;
+  }
+
   static async findById({ id, aprobada = true }) {
     let query = `
             SELECT 
@@ -238,6 +281,26 @@ export default class Resena {
     }
   }
 
+  static async countByCorreo({ correo }) {
+    const connection = await pool.getConnection();
+    try {
+      const query = `
+        SELECT COUNT(*) AS count
+        FROM resenia r
+        JOIN visitas v ON r.visitas_vi_usr_correo = v.vi_usr_correo 
+                      AND r.visitas_vi_mus_id = v.vi_mus_id
+        WHERE v.vi_usr_correo = ?
+      `;
+      const [rows] = await connection.query(query, [correo]);
+      return rows[0].count;
+    } catch (error) {
+      console.error("Error fetching reseñas count by correo:", error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
   static async findAllMods() {
     const connection = await pool.getConnection();
     try {
@@ -399,7 +462,7 @@ export default class Resena {
         const setClauses = campos.map((campo) => `${campo} = ?`);
         setClauses.push("res_aprobado = 0"); // Marcar como no aprobado si hubo cambios
         const query = `UPDATE resenia SET ${setClauses.join(
-          ", "
+          ", ",
         )} WHERE res_id_res = ?`;
         await connection.query(query, [...Object.values(data), res_id_res]);
       }
