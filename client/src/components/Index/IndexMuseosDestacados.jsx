@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import { useMuseosPopulares } from "../../hooks/Museo/useMuseosPopulares";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
@@ -12,6 +12,27 @@ const { FaChevronLeft, FaChevronRight } = Icons;
 function IndexMuseosDestacados() {
   const { museos, loading: isLoadingPopulares } = useMuseosPopulares();
   const swiperRef = useRef(null);
+
+  const swiperParams = {
+    modules: [Navigation],
+    spaceBetween: 30,
+    slidesPerView: 3,
+    onBeforeInit: (swiper) => {
+      swiperRef.current = swiper;
+    },
+    breakpoints: {
+      // Cuando la pantalla sea <= 768px (móvil)
+      0: {
+        slidesPerView: 1,
+        spaceBetween: 16,
+      },
+      // Pantallas medianas/escritorio
+      768: {
+        slidesPerView: 3, // o la cantidad que uses en escritorio
+        spaceBetween: 20,
+      },
+    },
+  };
 
   return (
     <section className="index-museos-destacados">
@@ -39,14 +60,7 @@ function IndexMuseosDestacados() {
         </div>
       )}
 
-      <Swiper
-        modules={[Navigation]}
-        spaceBetween={30}
-        slidesPerView={3}
-        onBeforeInit={(swiper) => {
-          swiperRef.current = swiper;
-        }}
-      >
+      <Swiper {...swiperParams}>
         {isLoadingPopulares
           ? Array(3)
               .fill(0)

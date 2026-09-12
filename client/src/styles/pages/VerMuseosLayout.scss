@@ -194,7 +194,8 @@
     justify-content: center;
     align-items: flex-start;
 
-    margin: 10px 40px;
+    margin: 10px 0;
+    padding: 0 20px;
 
     h3 {
       font-size: 1rem;
@@ -209,7 +210,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      padding: 10px;
+      padding: 10px 0;
       align-items: center;
       justify-content: flex-start;
 
@@ -256,6 +257,13 @@
             transform: scale(1.1);
           }
         }
+      }
+    }
+    @media screen and (max-width: 600px) {
+      padding: 0 15px;
+
+      .filtros-aplicados-list {
+        gap: 8px;
       }
     }
   }
@@ -310,7 +318,42 @@
     }
 
     @media screen and (max-width: 600px) {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      .museos-container {
+        padding: 10px !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .museo-card,
+        .n-museo-card {
+          width: 100%;
+          max-width: 100%;
+          min-height: auto; // Permite que el alto crezca naturalmente según el contenido
+          margin: 0 auto !important;
+          transform: none !important; // Elimina la escala reducida (0.7) que recortaba la tarjeta
+
+          .museo-card-img-container {
+            min-height: 200px;
+            height: 200px; // Altura adecuada de la imagen en pantalla móvil
+
+            .museo-card-img-tematica {
+              display: none;
+            }
+          }
+
+          .museo-card-info-container {
+            padding: 15px;
+
+            .info-body {
+              #museo-card-nombre {
+                width: 100%;
+                font-size: 1.1rem;
+                min-height: auto;
+              }
+            }
+          }
+        }
+      }
     }
   }
 

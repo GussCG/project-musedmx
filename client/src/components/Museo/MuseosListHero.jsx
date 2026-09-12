@@ -34,7 +34,8 @@ function MuseosListHero({ onOpenFilters, currentFilters, onSearchAction }) {
               type="button"
               onClick={onOpenFilters}
             >
-              <FaFilter /> Filtrar
+              <FaFilter />
+              <span>Filtrar</span>
             </button>
           </div>
         </div>

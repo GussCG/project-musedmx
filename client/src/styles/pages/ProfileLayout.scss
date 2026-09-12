@@ -86,7 +86,7 @@
       h1 {
         width: 80%;
         font-family: "Noto Serif", serif;
-        font-size: clamp(2.2rem, 3vw, 3.6rem);
+        font-size: clamp(1.5rem, 3vw, 3.6rem);
         color: var(--font-color-primary);
         font-weight: $font-w-bold;
         letter-spacing: -0.08em;
@@ -240,6 +240,37 @@
         }
       }
     }
+
+    @media (max-width: 1000px) {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+
+      #header-image {
+        padding: 20px;
+      }
+
+      #header-user-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+
+        h1 {
+          width: 90%;
+          text-align: center;
+        }
+
+        .header-tematicas-container {
+          .tematicas-list {
+            justify-content: center;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -368,6 +399,29 @@
 
   .qv-search {
     margin-bottom: 20px;
+  }
+
+  @media (max-width: 768px) {
+    width: 90%;
+    padding: 15px;
+
+    .perfil-section-museo {
+      .section-header {
+        h2 {
+          padding-left: 0;
+          margin-top: 10px;
+          white-space: normal;
+          max-width: 100%;
+          font-size: 1.5rem;
+        }
+
+        .section-header-controller {
+          width: 100%;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+      }
+    }
   }
 }
 

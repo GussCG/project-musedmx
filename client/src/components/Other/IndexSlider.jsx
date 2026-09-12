@@ -19,11 +19,8 @@ import Museo1 from "../../assets/images/others/museo-main-1.jpg";
 import Museo2 from "../../assets/images/others/museo-main-2.jpg";
 import Museo3 from "../../assets/images/others/museo-main-3.jpg";
 import Museo4 from "../../assets/images/others/museo-main-4.jpg";
-import Museo5 from "../../assets/images/others/museo-main-5.jpg";
 
-import Icons from "./IconProvider";
 import MuseumSearch from "../Museo/MuseumSearch";
-const { IoSearch } = Icons;
 
 // Contenido de los slides
 const slidesContent = [

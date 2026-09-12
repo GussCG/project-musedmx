@@ -211,22 +211,52 @@
 }
 
 @media (max-width: 730px) {
-  footer {
-    padding: 50px 0;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+  .footer-container {
+    padding: 30px 5%;
+    box-sizing: border-box;
 
     .footer-info-container {
-      height: auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      grid-template-rows: auto;
-      justify-content: center;
-      gap: 20px;
+      flex-direction: column; // Cambia las columnas por una sola lista vertical
+      align-items: flex-start;
+      gap: 30px;
+
+      & > div {
+        width: 100%; // Cada sección toma todo el ancho
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .footer-div {
+        align-items: flex-start;
+
+        ul {
+          padding: 0;
+          margin: 0;
+
+          li {
+            text-align: left;
+          }
+        }
+
+        .footer-div-container {
+          align-items: flex-start;
+          margin-top: 0;
+
+          #footer-contacto-p {
+            padding: 10px 0 0 0;
+          }
+        }
+      }
+    }
+
+    hr {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .footer-copyright-container {
+      justify-content: flex-start;
+      text-align: left;
     }
   }
 }

@@ -280,6 +280,17 @@
       }
     }
   }
+
+  @media (max-width: 1072px) {
+    padding: 20px;
+    .description {
+      width: 100%;
+    }
+
+    .resenas-summary {
+      width: 100%;
+    }
+  }
 }
 
 .museo-hus {
@@ -449,6 +460,7 @@
   }
 
   @media (max-width: 1072px) {
+    padding: 20px;
     .hus-ubicacion {
       display: none;
     }
@@ -557,6 +569,10 @@
     @media (max-width: 480px) {
       grid-template-columns: 1fr;
     }
+  }
+
+  @media (max-width: 1072px) {
+    padding: 20px;
   }
 }
 
@@ -731,6 +747,26 @@
     scrollbar-width: thin;
     scrollbar-color: var(--thumb-color, var(--highlight-color)) transparent;
   }
+
+  @media (max-width: 768px) {
+    padding: 20px;
+
+    .resenas-horizontal-container {
+      padding: 0;
+
+      .resenas-grid {
+        grid-template-rows: auto;
+        grid-auto-columns: 85vw;
+        padding: 0;
+        gap: 15px;
+      }
+    }
+
+    .resena-link .cta-card {
+      padding: 25px 20px;
+      border-radius: 16px;
+    }
+  }
 }
 
 .museo-detail-relacionados {
@@ -788,6 +824,10 @@
     font-weight: $font-w-regular;
     color: var(--font-color-primary);
     letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 1072px) {
+    padding: 20px;
   }
 }
 

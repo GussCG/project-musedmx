@@ -134,6 +134,38 @@
         }
       }
     }
+
+    @media (max-width: 768px) {
+      width: 90%;
+      padding: 1.2rem 1.2rem;
+      bottom: -60px;
+
+      .search-title {
+        font-size: clamp(0.8rem, 1.5vw, 1rem);
+        text-align: center;
+      }
+
+      .nav-bar-filter {
+        align-items: stretch;
+        gap: 0.8rem;
+
+        .museum-search-input {
+          width: 100%;
+        }
+
+        .right-section {
+          justify-content: space-between; // Alinea los botones a los extremos
+
+          .right-section-button {
+            justify-content: center;
+
+            span {
+              display: none;
+            }
+          }
+        }
+      }
+    }
   }
 
   &.noticias {

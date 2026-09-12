@@ -347,15 +347,18 @@
 
 .n-museo-card {
   @extend .museo-card;
-  display: flex;
+  display: flex !important;
   flex-direction: column;
-  height: auto;
-  min-height: 500px;
+  height: auto !important;
+  max-height: none !important;
+  min-height: unset;
   overflow: hidden;
   box-shadow: none;
 
   .museo-card-img-container {
+    height: 250px;
     min-height: 250px;
+    flex-shrink: 0;
     width: 100%;
     overflow: hidden;
     position: relative;
@@ -366,6 +369,7 @@
       border-radius: 0;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
+      object-fit: cover;
     }
 
     .rating-pill {
@@ -477,7 +481,7 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: flex-start;
 
       flex: 1;
@@ -504,6 +508,16 @@
         flex-direction: column;
         text-align: left;
         gap: 4px;
+        max-height: 120px;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+          width: 4px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+        }
 
         h3 {
           font-size: clamp(1.2rem, 1.5vw, 1.35rem);
@@ -522,12 +536,14 @@
     hr {
       width: 100%;
       border: none;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
       opacity: 0.25;
       margin-top: auto;
       margin-bottom: 12px;
     }
 
     .info-footer {
+      flex-shrink: 0;
       z-index: 31;
       width: 100%;
       display: flex;
