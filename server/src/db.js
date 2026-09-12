@@ -12,6 +12,8 @@ const isSSLRequired =
   process.env.DB_SSL === "true" ||
   (dbHost && dbHost.includes("aivencloud.com"));
 
+console.log("Conectando al Host DB:", JSON.stringify(process.env.DB_HOST));
+
 export const pool = createPool({
   database: dbName,
   host: dbHost,
