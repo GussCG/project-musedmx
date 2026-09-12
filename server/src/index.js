@@ -18,6 +18,7 @@ const origins = [
   "https://musedmx.com",
   "https://www.musedmx.com",
   "http://localhost:5173", // si necesitas desarrollo local
+  "https://musedmx-eight.vercel.app/",
 ];
 
 // Configuración de CORS
