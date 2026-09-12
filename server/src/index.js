@@ -18,22 +18,24 @@ const origins = [
   "https://musedmx.com",
   "https://www.musedmx.com",
   "http://localhost:5173",
-  process.env.FRONTEND_URL,
-].filter(Boolean); // Elimina valores undefined
+  "https://musedmx-eight.vercel.app",
+  process.env.FRONTEND_URL, // Asegura tomar la variable de Render si la definiste
+].filter(Boolean); // Limpia valores undefined
 
-// Configuración de CORS
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || origins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      console.error(`[CORS Blocked] Origen no permitido: ${origin}`);
+      callback(new Error(`Not allowed by CORS: ${origin}`));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true,
 };
+
 app.use(cors(corsOptions));
 
 app.use(cookieParser()); // Middleware para parsear cookies
