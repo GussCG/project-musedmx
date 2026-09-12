@@ -17,9 +17,9 @@ app.use(express.json()); // Middleware para parsear JSON
 const origins = [
   "https://musedmx.com",
   "https://www.musedmx.com",
-  "http://localhost:5173", // si necesitas desarrollo local
-  "https://musedmx-eight.vercel.app/",
-];
+  "http://localhost:5173",
+  process.env.FRONTEND_URL,
+].filter(Boolean); // Elimina valores undefined
 
 // Configuración de CORS
 const corsOptions = {
