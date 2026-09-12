@@ -21,7 +21,7 @@
 
   .museo-info-container {
     z-index: 1;
-    padding: 80px 40px;
+    padding: 80px 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -117,7 +117,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     gap: 40px;
+
+    width: fit-content;
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 15px 30px;
 
     .item-container {
       display: flex;
@@ -128,6 +134,9 @@
       .item-icon {
         width: 40px;
         height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        flex-shrink: 0;
         border-radius: 50%;
         background-color: var(--icon-bg);
 
@@ -137,7 +146,8 @@
 
         svg {
           width: 20px;
-          height: auto;
+          height: 20px;
+          flex-shrink: 0;
           color: var(--highlight-color);
         }
       }
@@ -145,6 +155,8 @@
       .item-text {
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        text-align: left;
 
         font-family: $font-primary;
         color: var(--font-color-primary);
@@ -162,6 +174,30 @@
           font-weight: $font-w-black;
           letter-spacing: -0.05em;
         }
+
+        @media (max-width: 768px) {
+          display: contents;
+        }
+      }
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 8px;
+
+        .item-title {
+          order: 1;
+        }
+
+        .item-icon {
+          order: 2;
+        }
+
+        .item-value {
+          order: 3;
+          text-align: center;
+        }
       }
     }
 
@@ -170,6 +206,10 @@
       height: 40px;
       background-color: var(--highlight-color);
       opacity: 1;
+
+      @media (max-width: 768px) {
+        height: 70px;
+      }
     }
   }
 }
@@ -795,6 +835,80 @@
     justify-content: space-between;
     gap: 20px;
     padding: 20px 0;
+  }
+
+  .museo-similares-item {
+    .swiper-slide {
+      height: auto !important;
+      display: flex;
+      align-items: stretch;
+
+      /* --- TARJETA REAL --- */
+      .museo-card-slider {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .image-container {
+          width: 100%;
+          height: 250px !important; /* Altura estándar desktop */
+          flex-shrink: 0;
+          overflow: hidden;
+          border-radius: 20px;
+
+          @media (max-width: 768px) {
+            height: 180px !important; /* Altura reducida para móvil */
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+      }
+
+      .museo-card-skeleton {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .skeleton-image-wrapper {
+          width: 100%;
+          height: 250px;
+          flex-shrink: 0;
+
+          @media (max-width: 768px) {
+            height: 170px;
+          }
+
+          .skeleton-image {
+            width: 100%;
+            height: 100%;
+            display: block;
+          }
+        }
+
+        .skeleton-content {
+          margin-top: 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .skeleton-tematica {
+            margin: 0 20px;
+          }
+
+          .skeleton-titulo {
+            margin: 0 20px;
+          }
+
+          .skeleton-ubicacion {
+            margin: 0 20px;
+          }
+        }
+      }
+    }
   }
 
   .swiper {

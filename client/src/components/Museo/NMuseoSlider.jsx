@@ -68,7 +68,6 @@ const NMuseoSlider = memo(function NMuseoSlider({
       )}
 
       <Swiper
-        swiperRef={swiperRef}
         modules={[Navigation]}
         spaceBetween={20}
         onBeforeInit={(swiper) => {

@@ -31,7 +31,7 @@ export const procesarHorarioActual = (horarios) => {
     estaCerrado,
     textoEstado: estaCerrado
       ? "Cerrado hoy"
-      : `Abierto hasta las ${formatearHora(actual.hora_fin)}`,
+      : `Cierra a las ${formatearHora(actual.hora_fin)}`,
     precioDesde: precioMinimo === 0 ? "Gratis" : `$${precioMinimo} MXN`,
     esGratis: precioMinimo === 0 && !estaCerrado,
     aceptaDonativos:
