@@ -8,15 +8,13 @@ import { toast, Bounce } from "react-toastify";
 import { useTheme } from "../../context/ThemeProvider";
 
 function Directions({ userLocation, museosMostrados, travelMode }) {
-  const museo = museosMostrados[0]; // Solo se usa el primer museo para la ruta
   const map = useMap();
   const routesLib = useMapsLibrary("routes");
+
   const [directionsService, setDirectionsService] = useState(null);
   const [directionsRenderer, setDirectionsRenderer] = useState(null);
   const [routes, setRoutes] = useState([]);
-  const [routeIndex, setRouteIndex] = useState(0); // Para manejar rutas alternativas
-  const selectedRoute = routes[routeIndex]; // Ruta seleccionada
-  const leg = selectedRoute?.legs[0]; // Obtener la primera ruta y su primer segmento
+  const [routeIndex, setRouteIndex] = useState(0);
   const [showInfo, setShowInfo] = useState(false);
   const [showInfoButton, setShowInfoButton] = useState(true);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -24,10 +22,18 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
 
   const { isDarkMode } = useTheme();
 
-  const tema = TEMATICAS[museo.tematica];
-  const colors = isDarkMode
-    ? tema.museoCardColorsDark
-    : tema.museoCardColorsLight;
+  // 2. Extraer el museo y resolver variables calculadas
+  const museo =
+    museosMostrados && museosMostrados.length > 0 ? museosMostrados[0] : null;
+  const selectedRoute = routes[routeIndex];
+  const leg = selectedRoute?.legs[0];
+
+  const tema = museo ? TEMATICAS[museo.tematica] : null;
+  const colors = tema
+    ? isDarkMode
+      ? tema.museoCardColorsDark
+      : tema.museoCardColorsLight
+    : { bg: "#ffffff", text: "#000000" };
 
   useEffect(() => {
     if (!map || !routesLib) return;
@@ -137,6 +143,10 @@ function Directions({ userLocation, museosMostrados, travelMode }) {
     setShowInfo(false);
     setShowInfoButton(true); // Mostrar el botón al cerrar la información
   };
+
+  if (!museo) {
+    return null; // Si no hay museo cargado, no dibuja el UI, pero NO rompe los hooks
+  }
 
   return (
     <>

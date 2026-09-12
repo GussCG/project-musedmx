@@ -17,6 +17,9 @@ const MapMuseoDetailMarker = React.memo(
 
     const [isFavorite, setIsFavorite] = useState(false);
     const [localeCount, setLocaleCount] = useState(0);
+    const lat = Number(museo?.g_latitud);
+    const lng = Number(museo?.g_longitud);
+    const hasValidPosition = Number.isFinite(lat) && Number.isFinite(lng);
 
     useEffect(() => {
       const fetchFavorito = async () => {
@@ -70,13 +73,12 @@ const MapMuseoDetailMarker = React.memo(
 
     return (
       museo &&
-      museo.g_latitud &&
-      museo.g_longitud && (
+      hasValidPosition && (
         <>
           <AdvancedMarker
             position={{
-              lat: museo.g_latitud,
-              lng: museo.g_longitud,
+              lat,
+              lng,
             }}
             onClick={handleMarkerClick}
             onMouseOver={handleMouseEnter}
@@ -94,8 +96,8 @@ const MapMuseoDetailMarker = React.memo(
               <div className="info-window-container">
                 <InfoWindow
                   position={{
-                    lat: museo.g_latitud,
-                    lng: museo.g_longitud,
+                    lat,
+                    lng,
                   }}
                   onCloseClick={handleClose}
                   className="info-window"

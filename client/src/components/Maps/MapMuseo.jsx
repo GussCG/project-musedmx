@@ -19,6 +19,17 @@ import {
   VITE_MAP_RETROMODE_DETAIL_ID,
 } from "../../constants/api";
 
+const getMuseoPosition = (museo) => {
+  const lat = Number(museo?.g_latitud);
+  const lng = Number(museo?.g_longitud);
+
+  return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+};
+
+const isValidPosition = (position) =>
+  Number.isFinite(Number(position?.lat)) &&
+  Number.isFinite(Number(position?.lng));
+
 function MapMuseo({
   radioKM,
   museosMostrados,
@@ -29,7 +40,6 @@ function MapMuseo({
 }) {
   const { isDarkMode, isRetroMode } = useTheme();
   const [activeMuseo, setActiveMuseo] = useState(null);
-  const [userInteracted, setUserInteracted] = useState(false);
   const [mapInitialized, setMapInitialized] = useState(false);
   const map = useMap();
   const [mapKey, setMapKey] = useState(0); // Clave para forzar la recarga del mapa
@@ -91,26 +101,31 @@ function MapMuseo({
   useEffect(() => {
     if (!map) return;
 
-    const center = {
-      lat: museosMostrados?.[0]?.g_latitud || location?.userLocation?.lat,
-      lng: museosMostrados?.[0]?.g_longitud || location?.userLocation?.lng,
-    };
+    const rawLat =
+      museosMostrados?.[0]?.g_latitud ?? location?.userLocation?.lat;
+    const rawLng =
+      museosMostrados?.[0]?.g_longitud ?? location?.userLocation?.lng;
 
-    map.setOptions({
-      gestureHandling: "greedy",
-      center: new window.google.maps.LatLng(center.lat, center.lng),
-      keyboardShortcuts: false,
-      disableDoubleClickZoom: true,
-      zoom: zoom || 18,
-      zoomControl: true,
-      mapTypeControl: false,
-      fullscreenControl: false,
-      scaleControl: false,
-      streetViewControl: true,
-    });
-    setMapInitialized(true);
-  }, [map, location.userLocation, zoom]);
+    const lat = Number(rawLat);
+    const lng = Number(rawLng);
 
+    // Solo establecer opciones si las coordenadas son finitas y válidas
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      map.setOptions({
+        gestureHandling: "greedy",
+        center: new window.google.maps.LatLng(lat, lng),
+        keyboardShortcuts: false,
+        disableDoubleClickZoom: true,
+        zoom: zoom || 18,
+        zoomControl: true,
+        mapTypeControl: false,
+        fullscreenControl: false,
+        scaleControl: false,
+        streetViewControl: true,
+      });
+      setMapInitialized(true);
+    }
+  }, [map, museosMostrados, location?.userLocation, zoom]);
   // Ajustar el zoom del mapa al tamaño de la pantalla
   useEffect(() => {
     if (tipo === "2" || !map || !museosMostrados?.length) return;
@@ -119,22 +134,21 @@ function MapMuseo({
     const museosParaCalculo = museosMostrados.slice(0, 35);
 
     museosParaCalculo.forEach((museo) => {
-      if (museo?.g_latitud && museo?.g_longitud) {
-        bounds.extend(
-          new window.google.maps.LatLng(museo.g_latitud, museo.g_longitud),
-        );
+      const position = getMuseoPosition(museo);
+      if (position) {
+        bounds.extend(new window.google.maps.LatLng(position));
       }
     });
 
     // Asegurar que son validos
     if (!bounds.isEmpty()) {
       setMapBounds(bounds);
-    } else if (location.userLocation) {
+    } else if (isValidPosition(location.userLocation)) {
       const fallback = new window.google.maps.LatLngBounds();
       fallback.extend(
         new window.google.maps.LatLng(
-          location.userLocation.lat,
-          location.userLocation.lng,
+          Number(location.userLocation.lat),
+          Number(location.userLocation.lng),
         ),
       );
       setMapBounds(fallback);
@@ -147,13 +161,9 @@ function MapMuseo({
     const bounds = new window.google.maps.LatLngBounds();
 
     museosMostrados.forEach((museo) => {
-      if (museo?.g_latitud && museo?.g_longitud) {
-        bounds.extend(
-          new window.google.maps.LatLng(
-            parseFloat(museo.g_latitud),
-            parseFloat(museo.g_longitud),
-          ),
-        );
+      const position = getMuseoPosition(museo);
+      if (position) {
+        bounds.extend(new window.google.maps.LatLng(position));
       }
     });
 
@@ -167,13 +177,9 @@ function MapMuseo({
       return;
 
     const museo = museosMostrados[0];
+    const museoLocation = getMuseoPosition(museo);
 
-    if (museo?.g_latitud && museo?.g_longitud) {
-      const museoLocation = {
-        lat: parseFloat(museo.g_latitud),
-        lng: parseFloat(museo.g_longitud),
-      };
-
+    if (museoLocation) {
       map.setCenter(museoLocation);
 
       setLocation((prev) => ({
@@ -204,13 +210,12 @@ function MapMuseo({
   // Cuando sea un solo museo se desplaza el mapa a su ubicación
   useEffect(() => {
     if (map && museosMostrados.length === 1) {
-      const museoLocation = {
-        lat: parseFloat(museosMostrados[0].g_latitud),
-        lng: parseFloat(museosMostrados[0].g_longitud),
-      };
+      const museoLocation = getMuseoPosition(museosMostrados[0]);
 
-      map.panTo(museoLocation); // Desplazar el mapa a la ubicación del museo
-      map.setZoom(18); // Ajustar el zoom al museo
+      if (museoLocation) {
+        map.panTo(museoLocation); // Desplazar el mapa a la ubicación del museo
+        map.setZoom(18); // Ajustar el zoom al museo
+      }
     }
   }, [map, museosMostrados]);
 
@@ -297,21 +302,23 @@ function MapMuseo({
   }, []);
 
   useEffect(() => {
-    if (!map || !location?.userLocation) return;
+    if (!map || !isValidPosition(location?.userLocation)) return;
 
     map.panTo({
-      lat: location.userLocation.lat,
-      lng: location.userLocation.lng,
+      lat: Number(location.userLocation.lat),
+      lng: Number(location.userLocation.lng),
     });
   }, [location?.userLocation]);
 
   useEffect(() => {
-    if (!map || tipo !== "2" || !location?.userLocation) return;
+    if (!map || tipo !== "2" || !isValidPosition(location?.userLocation))
+      return;
 
     // Convertir el radio a grados aproximados (1 grado ~ 111 km)
     const RADIUS_IN_DEGREES = radioKM / 1000 / 111;
 
-    const { lat, lng } = location.userLocation;
+    const lat = Number(location.userLocation.lat);
+    const lng = Number(location.userLocation.lng);
 
     const bounds = new window.google.maps.LatLngBounds(
       new window.google.maps.LatLng(
@@ -336,11 +343,14 @@ function MapMuseo({
       transition={{ duration: 0.5, type: "spring", stiffness: 50 }}
       key={`map-container-${mapKey}`}
     >
-      {location?.mapCenter && (
+      {isValidPosition(location?.mapCenter) && (
         <Map
           key={`map-${mapKey}`}
           defaultZoom={zoom || 18}
-          defaultCenter={location.mapCenter}
+          defaultCenter={{
+            lat: Number(location.mapCenter.lat),
+            lng: Number(location.mapCenter.lng),
+          }}
           mapId={currentMapId}
           mapTypeId={mapType}
           onCenterChanged={handleCenterChanged}
@@ -415,7 +425,7 @@ function MapMuseo({
           <MapaCambiarCentro onPlaceSelected={handlePlaceSelected} />
 
           {/* Marcador del usuario */}
-          {location.userLocation?.lat && location.userLocation?.lng && (
+          {isValidPosition(location.userLocation) && (
             <AdvancedMarker
               key={`user-marker-${location.userLocation.lat}-${location.userLocation.lng}`}
               position={{

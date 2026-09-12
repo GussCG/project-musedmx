@@ -1,5 +1,7 @@
 // export const BACKEND_URL = "https://musedmx-back-api.azurewebsites.net";
-export const BACKEND_URL = "http://localhost:3000";
+// export const BACKEND_URL = "http://localhost:3000"; (local)
+
+export const BACKEND_URL = "https://project-musedmx-backend.onrender.com"; // (Render)
 
 export const VITE_MAP_DETAIL_ID = "5ccd7616dfe3fb66";
 
