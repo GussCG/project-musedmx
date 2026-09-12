@@ -23,12 +23,12 @@ CREATE TABLE IF NOT EXISTS `musedmx`.`usuarios` (
 -- INSERT INTO musedmx.usuarios 
 -- (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo, usr_verificado)
 -- VALUES
--- ('admin@musedmx.com', 'Admin', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2002-09-30', "+525527167255", NULL, 2, 1);
+-- ('admin@musedmx.com', 'Admin', 'Sistema', 'musedmx', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2002-09-30', "+525527167255", NULL, 2, 1);
 
 -- INSERT INTO musedmx.usuarios 
 -- (usr_correo, usr_nombre, usr_ap_paterno, usr_ap_materno, usr_contrasenia, usr_fecha_nac, usr_telefono, usr_foto, usr_tipo, usr_verificado)
 -- VALUES
--- ('mod@musedmx.com', 'Mod', 'Sistema', 'MuseDMX', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2000-04-02', "+525531933874", NULL, 3,1);
+-- ('mod@musedmx.com', 'Mod', 'Sistema', 'musedmx', '$2a$12$.XBh/8KCrhawxxq/mE9Lpe9AL.WxTauVT59hHaPZfyfSFZ1vD0Sc6', '2000-04-02', "+525531933874", NULL, 3,1);
 
 SELECT * FROM usuarios;
 -- DELETE FROM usuarios WHERE usr_correo = "gusester2002@gmail.com";
