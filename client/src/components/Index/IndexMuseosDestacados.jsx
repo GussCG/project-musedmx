@@ -14,6 +14,7 @@ function IndexMuseosDestacados() {
   const swiperRef = useRef(null);
 
   const swiperParams = {
+    autoHeight: true,
     modules: [Navigation],
     spaceBetween: 30,
     slidesPerView: 3,
