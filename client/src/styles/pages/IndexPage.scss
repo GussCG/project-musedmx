@@ -336,8 +336,26 @@
 
     @media (max-width: 768px) {
       .index-museo-card {
+        /* Limitamos el tamaño de la imagen dinámicamente según la pantalla */
         .image-container {
-          height: 220px;
+          height: 40vh !important; // Toma máximo el 40% del alto visible del teléfono
+          max-height: 240px !important; // Límite para que nunca crezca demasiado
+        }
+
+        /* Reducimos los márgenes verticales para apretar el contenido */
+        .tematica {
+          margin: 8px 0 2px 0 !important;
+          font-size: 0.75rem;
+        }
+
+        .nombre {
+          font-size: 1rem !important;
+          margin-bottom: 4px !important;
+          line-height: 1.2;
+        }
+
+        .ubicacion {
+          font-size: 0.8rem !important;
         }
       }
     }
