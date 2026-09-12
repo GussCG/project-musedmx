@@ -3,7 +3,7 @@ import Skeleton from "react-loading-skeleton";
 function MuseoCardSliderSkeleton() {
   return (
     <div style={{ marginBottom: "20px", width: "100%" }}>
-      <Skeleton height={450} borderRadius={20} />
+      <Skeleton height={350} borderRadius={20} />
 
       <div style={{ marginTop: "15px" }}>
         <Skeleton width={30} height={15} style={{ marginLeft: "10px" }} />

@@ -14,7 +14,7 @@ function IndexMuseosDestacados() {
   const swiperRef = useRef(null);
 
   const swiperParams = {
-    autoHeight: true,
+    autoHeight: false, // <-- Cambiar a false
     modules: [Navigation],
     spaceBetween: 30,
     slidesPerView: 3,
@@ -22,15 +22,15 @@ function IndexMuseosDestacados() {
       swiperRef.current = swiper;
     },
     breakpoints: {
-      // Cuando la pantalla sea <= 768px (móvil)
       0: {
         slidesPerView: 1,
         spaceBetween: 16,
+        autoHeight: false, // <-- Cambiar a false
       },
-      // Pantallas medianas/escritorio
       768: {
-        slidesPerView: 3, // o la cantidad que uses en escritorio
+        slidesPerView: 3,
         spaceBetween: 20,
+        autoHeight: false, // <-- Cambiar a false
       },
     },
   };
