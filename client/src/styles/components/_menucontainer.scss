@@ -3,6 +3,7 @@
 .menu-container {
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   position: fixed;
   z-index: $z-menu-container;
   background-color: black;
@@ -12,8 +13,8 @@
   justify-content: center;
   top: 0;
   left: 0;
-
-  overflow: hidden;
+  padding: 60px 20px 20px;
+  overflow-y: auto;
 
   .boton-cerrar {
     position: absolute;
@@ -68,7 +69,7 @@
     align-items: center;
     justify-content: center;
 
-    padding: 20px 0;
+    padding: 10px 0;
 
     .menu-header-icon {
       width: 100%;
@@ -79,17 +80,17 @@
       margin: 0 auto;
 
       h1 {
-        font-size: 1.5rem;
+        font-size: clamp(1.1rem, 4vw, 1.3rem);
         font-family: $font-tertiary;
         font-weight: $font-w-bold;
         color: white;
         text-align: center;
-        margin: 20px 0 0 0;
+        margin: 10px 0 0 0;
       }
 
       img,
       svg {
-        width: 100px;
+        width: 60px;
         height: auto;
       }
     }
@@ -97,11 +98,11 @@
 
   .menu-body {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: auto 0;
 
     ul {
       width: 100%;
@@ -110,19 +111,19 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 40px;
+      gap: 20px;
       padding: 0;
       margin: 0;
       list-style: none;
 
       li {
         a {
-          font-size: 1.2rem;
+          font-size: clamp(0.95rem, 3.5vw, 1.1rem);
           font-weight: $font-w-thin;
           color: white;
           text-decoration: none;
           transition: font-weight 0.3s ease-in-out;
-          padding: 10px 20px;
+          padding: 6px 16px;
           border-radius: 4px;
 
           &:hover {
@@ -132,12 +133,12 @@
       }
 
       hr {
-        width: 50%;
-        height: 2px;
+        width: 70%;
+        height: 1px;
         background-color: white;
         border: none;
-        margin: 0 auto;
-        opacity: 0.1;
+        margin: 5px auto;
+        opacity: 0.2;
         border-radius: 2px;
       }
     }
@@ -146,25 +147,25 @@
   .menu-footer {
     width: 100%;
     height: auto;
-    padding-bottom: 40px;
+    padding-bottom: 20px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 
     a,
     button {
       width: auto;
-      height: 40px;
-      padding: 0 20px;
+      height: 30px;
+      padding: 0 24px;
       background-color: white;
       border: none;
       border-radius: 50px;
       font-family: $font-primary;
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: $font-w-semibold;
-      letter-spacing: -0.08em;
+      letter-spacing: -0.04em;
       color: black;
       text-decoration: none;
 
@@ -191,17 +192,18 @@
     min-width: 100px;
     height: auto;
 
-    padding: 5px;
+    padding: 0;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
 
     label {
       font-weight: $font-w-semibold;
       color: white;
+      display: none;
     }
 
     .retrobg {
@@ -221,8 +223,8 @@
     .switch-button-dm {
       display: inline-block;
       position: relative;
-      width: 4rem;
-      height: 2rem;
+      width: 3.2rem;
+      height: 1.6rem;
       user-select: none;
 
       .switch-button__checkbox {
@@ -251,8 +253,8 @@
           justify-content 0.3s ease-in-out;
 
         .switch-button-slider {
-          width: 2rem;
-          height: 2rem;
+          width: 1.6rem;
+          height: 1.6rem;
           border-radius: 50%;
           background-color: white;
           box-shadow: inset 0 0.1rem 0.3rem rgba(0, 0, 0, 0.2);
@@ -272,11 +274,11 @@
         z-index: 100;
         top: 0;
         left: 0;
-        padding: 0 0.5rem;
+        padding: 0 0.4rem;
 
         svg {
           color: black;
-          font-size: 1.2rem;
+          font-size: 0.9rem;
         }
       }
 
@@ -285,7 +287,7 @@
 
         .switch-button-slider {
           transform: translateX(
-            calc(100% - 1.8rem)
+            calc(100% - 1.6rem)
           ); // Ajustado al nuevo tamaño
         }
       }
@@ -376,8 +378,8 @@
 }
 
 .nav-user-img-container {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   overflow: hidden;
 

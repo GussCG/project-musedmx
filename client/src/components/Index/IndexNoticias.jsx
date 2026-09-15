@@ -1,4 +1,3 @@
-import React from "react";
 import Icons from "../Other/IconProvider";
 import NoticiaCard from "../Museo/NoticiaCard";
 import NoticiaCardSkeleton from "../Museo/NoticiaSkeletonCard";

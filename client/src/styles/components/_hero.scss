@@ -169,7 +169,8 @@
   }
 
   &.noticias {
-    height: 85vh;
+    height: auto;
+    min-height: 85vh;
     justify-content: flex-start;
     gap: 2rem;
     padding: 2rem 4rem;
@@ -196,7 +197,7 @@
 
       .title {
         font-family: "Noto Serif", serif;
-        font-size: clamp(3rem, 4vw, 6rem);
+        font-size: clamp(2.2rem, 4vw, 6rem);
         color: var(--font-color-primary);
         font-weight: $font-w-bold;
         letter-spacing: -0.08em;
@@ -210,7 +211,7 @@
         color: var(--font-color-primary);
         opacity: 0.8;
 
-        text-align: justify;
+        text-align: left;
         white-space: pre-wrap;
         word-break: break-word;
         line-height: 1.4;
@@ -224,6 +225,13 @@
           width: 100%;
         }
       }
+    }
+
+    @media (max-width: 768px) {
+      height: auto;
+      min-height: auto;
+      padding: 2rem 1.25rem;
+      gap: 1.5rem;
     }
   }
 
