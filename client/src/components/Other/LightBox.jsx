@@ -41,7 +41,7 @@ function LightBox({
     y.set(0);
   };
 
-  const currentImage = images[currentIndex];
+  const currentImage = images[currentIndex] || images[0];
 
   useEffect(() => {
     const handleKeyDown = (e) => {

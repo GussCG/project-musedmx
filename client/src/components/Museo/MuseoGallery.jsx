@@ -5,7 +5,6 @@ import { useMemo } from "react";
 import LoadingIndicator from "../Other/LoadingIndicator";
 
 function MuseoGallery({ images, loading = false }) {
-  const lightbox = useLightBox(images);
   const imagesMemo = useMemo(() => {
     if (!images || images.length === 0) return [];
 
@@ -23,6 +22,8 @@ function MuseoGallery({ images, loading = false }) {
       id: image.id,
     }));
   }, [images]);
+
+  const lightbox = useLightBox(imagesMemo);
 
   return (
     <>

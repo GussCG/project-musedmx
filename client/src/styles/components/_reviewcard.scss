@@ -10,13 +10,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: inset var(--reviewcard-box-shadow);
 
   transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
   }
 
   &.featured {
@@ -49,7 +48,7 @@
   }
 
   &.accent {
-    background-color: var(--highlight-color);
+    background-color: $reviewcard-accent-color;
     color: white;
 
     .card-header,
@@ -66,10 +65,10 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: var(--font-color-primary);
+      color: white;
 
       .user-initial {
-        background: rgba(255, 255, 255, 0.388);
+        background: rgba(255, 255, 255, 0.4);
         width: 35px;
         height: 35px;
         display: flex;
